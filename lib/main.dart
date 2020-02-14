@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      supportedLocales: getSupportedLocaled(),
+      supportedLocales: getSupportedLocales(),
       localizationsDelegates: [
         const AppLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
@@ -52,8 +52,10 @@ class HelloPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(getString(context, 'hello_message')),
+            Text(getString(context, 'hello_message'),
+                key: Key('hello_message')),
             RaisedButton(
+              key: Key('page2_btn'),
               onPressed: () => openSecondPage(context),
               child: Text(getString(context, 'open_page_2')),
             ),
@@ -99,7 +101,7 @@ class SecondPage extends StatelessWidget {
         title: Text(arguments.title),
       ),
       body: Center(
-        child: Text(arguments.text),
+        child: Text(arguments.text, key: Key('second_page_text')),
       ),
     );
   }
