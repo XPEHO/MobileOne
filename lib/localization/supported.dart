@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
-List<Locale> getSupportedLocaled() {
-  return [
-    const Locale('en', 'US'),
-    const Locale('fr', 'FR'),
-  ];
+List<Locale> _supportedLocales = [
+  const Locale('en', 'US'),
+  const Locale('fr', 'FR'),
+];
+
+void setSupportedLocales(List<Locale> locales) {
+  _supportedLocales = locales;
+}
+
+List<Locale> getSupportedLocales() {
+  return _supportedLocales;
 }
 
 List<String> getSupportedLanguages() {
-  return getSupportedLocaled().map((locale) => locale.languageCode).toList();
+  return getSupportedLocales().map((locale) => locale.languageCode).toList();
 }

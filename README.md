@@ -24,6 +24,20 @@ Provider is used for data providing in screens. More information about [provider
 
 To translate any string in the app use the `getString(context, key)` method
 
+# Tests
+
+## Unit tests
+
+To run unit test type `flutter test test/supported_test.dart` in a terminal
+
+## Widget tests
+
+To run integration test type `flutter test test/widget_test.dart` in a terminal
+
+## Integration tests
+
+To run integration test type `flutter drive --target=test_driver/app.dart` in a terminal
+
 # CI/CD
 
 We choosed Codemagic continuous integration/delivery
