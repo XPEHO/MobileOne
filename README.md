@@ -20,6 +20,10 @@ We use named routes for screen navigation. More information on [router pattern h
 
 Provider is used for data providing in screens. More information about [provider here](https://pub.dev/packages/provider)
 
+# Internationalization
+
+To translate any string in the app use the `getString(context, key)` method
+
 # CI/CD
 
 We choosed Codemagic continuous integration/delivery
