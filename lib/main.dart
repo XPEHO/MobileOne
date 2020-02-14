@@ -1,4 +1,8 @@
+import 'package:MobileOne/localization/delegate.dart';
+import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/localization/supported.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:webfeed/webfeed.dart';
@@ -10,7 +14,23 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      supportedLocales: getSupportedLocaled(),
+      localizationsDelegates: [
+        const AppLocalizationsDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate
+      ],
+      localeResolutionCallback:
+          (Locale locale, Iterable<Locale> supportedLocales) {
+        for (Locale supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode ||
+              supportedLocale.countryCode == locale.countryCode) {
+            return supportedLocale;
+          }
+        }
+
+        return supportedLocales.first;
+      },
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -32,14 +52,14 @@ class HelloPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text("Hello XPEHO"),
+            Text(getString(context, 'hello_message')),
             RaisedButton(
               onPressed: () => openSecondPage(context),
-              child: Text("Open page 2"),
+              child: Text(getString(context, 'open_page_2')),
             ),
             RaisedButton(
               onPressed: () => openProviderPage(context),
-              child: Text("Open provider page"),
+              child: Text(getString(context, 'open_provider_page')),
             ),
           ],
         ),
@@ -50,7 +70,10 @@ class HelloPage extends StatelessWidget {
   void openSecondPage(context) {
     Navigator.of(context).pushNamed(
       '/secondPage',
-      arguments: SecondPageArguments("Hello XPEHO", "This is the second page"),
+      arguments: SecondPageArguments(
+        getString(context, 'hello_message'),
+        getString(context, 'second_page_text'),
+      ),
     );
   }
 
