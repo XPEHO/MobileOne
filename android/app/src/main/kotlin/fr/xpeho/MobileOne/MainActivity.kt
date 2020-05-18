@@ -1,4 +1,4 @@
-package com.example.MobileOne
+package fr.xpeho.MobileOne
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
