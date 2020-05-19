@@ -1,9 +1,8 @@
 {
     "app_name": "MobileOne",
-    "hello_message": "Hello XPEHO",
-    "open_page_2": "Open page 2",
-    "open_provider_page": "Open provider page",
-    "second_page_text": "this is the second page",
+    "open_main_page": "Main page",
+    "company_name": "XPEHO",
+   
     "login": "login",
     "password": "password",
     "forgot_password": "Forgot password ?",
@@ -14,5 +13,16 @@
     "signout": "Sign out",
     "google_signin": "Google signed in",
     "no_user": "No user signed in",
-    "signed_out": "User signed out"
+    "signed_out": "User signed out",
+    
+    "loyalty_cards":"Cards",
+    "my_lists":"My Lists",
+    "shared":"Shared",
+    "profile":"Profile",
+
+    "center_icon_newlist":"New list",
+    "center_icon_share":"Share",
+    "center_icon_profile":"Picture",
+    "center_icon_loyaltycards":"New card"
+
 }
