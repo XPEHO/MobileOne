@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Google authentication
 - Sign out method
+- Add main screen navigation
 
 ### Changed
 

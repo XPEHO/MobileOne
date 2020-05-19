@@ -2,6 +2,7 @@ import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:MobileOne/pages/Mainpage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
@@ -44,8 +45,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HelloPage(),
-        '/secondPage': (context) => SecondPage(),
-        '/provider': (context) => ProviderPage()
+        '/mainpage': (context) => MainPage(),
       },
     );
   }
@@ -59,23 +59,17 @@ class HelloPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(getString(context, 'hello_message'),
-                key: Key('hello_message')),
+            Text(getString(context, 'app_name')),
             RaisedButton(
-              key: Key('page2_btn'),
-              onPressed: () => openSecondPage(context),
-              child: Text(getString(context, 'open_page_2')),
-            ),
-            RaisedButton(
-              onPressed: () => openProviderPage(context),
-              child: Text(getString(context, 'open_provider_page')),
+              onPressed: () => openMainPage(context),
+              child: Text(getString(context, 'open_main_page')),
             ),
             RaisedButton.icon(
               onPressed: () async { 
                               AuthenticationService().googleSignIn()
                               .then((FirebaseUser user) {
                                 _user = user;
-                                openSecondPage(context);
+                                openMainPage(context);
                                 Fluttertoast.showToast(msg: getString(context, 'google_signin'));
                               })
                               .catchError((e) => Fluttertoast.showToast(msg: e)); 
@@ -102,42 +96,12 @@ class HelloPage extends StatelessWidget {
     );
   }
 
-  void openSecondPage(context) {
+  void openMainPage(context) {
     Navigator.of(context).pushNamed(
-      '/secondPage',
-      arguments: SecondPageArguments(
-        getString(context, 'hello_message'),
-        getString(context, 'second_page_text'),
-      ),
+      '/mainpage',
     );
   }
 
-  void openProviderPage(context) {
-    Navigator.of(context).pushNamed('/provider');
-  }
-}
-
-class SecondPageArguments {
-  final String title;
-  final String text;
-
-  SecondPageArguments(this.title, this.text);
-}
-
-class SecondPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final SecondPageArguments arguments =
-        ModalRoute.of(context).settings.arguments;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(arguments.title),
-      ),
-      body: Center(
-        child: Text(arguments.text, key: Key('second_page_text')),
-      ),
-    );
-  }
 }
 
 class RssProvider extends ChangeNotifier {
