@@ -1,11 +1,18 @@
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/localization/supported.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:webfeed/webfeed.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'authentication_service.dart';
+
+import 'localization/localization.dart';
+
+FirebaseUser _user;
 
 void main() => runApp(MyApp());
 
@@ -63,6 +70,30 @@ class HelloPage extends StatelessWidget {
               onPressed: () => openProviderPage(context),
               child: Text(getString(context, 'open_provider_page')),
             ),
+            RaisedButton(
+              onPressed: () async { 
+                              AuthenticationService().googleSignIn()
+                              .then((FirebaseUser user) {
+                                _user = user;
+                                openSecondPage(context);
+                                Fluttertoast.showToast(msg: "Google signed in");
+                              })
+                              .catchError((e) => Fluttertoast.showToast(msg: e)); 
+                            },
+              child: Text(getString(context, 'google')),
+            ),
+            RaisedButton(
+              onPressed: () async {
+                if (_user == null) {
+                  Fluttertoast.showToast(msg: "No user signed in");
+                } else {
+                  AuthenticationService().signOut();
+                  _user = null;
+                  Fluttertoast.showToast(msg: "User signed out");
+                }
+              },
+              child: Text(getString(context, 'signout')),
+            )
           ],
         ),
       ),
