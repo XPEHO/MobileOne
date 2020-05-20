@@ -11,5 +11,8 @@
     "google": "Google",
     "twitter": "Twitter",
     "facebook": "Facebook",
-    "signout": "Se déconnecter"
+    "signout": "Se déconnecter",
+    "google_signin": "Connecté avec google",
+    "no_user": "Aucun utilisateur connecté",
+    "signed_out": "Utilisateur déconnecté"
 }
