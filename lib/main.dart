@@ -76,7 +76,7 @@ class HelloPage extends StatelessWidget {
                               .then((FirebaseUser user) {
                                 _user = user;
                                 openSecondPage(context);
-                                Fluttertoast.showToast(msg: "Google signed in");
+                                Fluttertoast.showToast(msg: getString(context, 'google_signin'));
                               })
                               .catchError((e) => Fluttertoast.showToast(msg: e)); 
                             },
@@ -85,11 +85,11 @@ class HelloPage extends StatelessWidget {
             RaisedButton(
               onPressed: () async {
                 if (_user == null) {
-                  Fluttertoast.showToast(msg: "No user signed in");
+                  Fluttertoast.showToast(msg: getString(context, 'no_user'));
                 } else {
                   AuthenticationService().signOut();
                   _user = null;
-                  Fluttertoast.showToast(msg: "User signed out");
+                  Fluttertoast.showToast(msg: getString(context, 'signed_out'));
                 }
               },
               child: Text(getString(context, 'signout')),
