@@ -70,7 +70,7 @@ class HelloPage extends StatelessWidget {
               onPressed: () => openProviderPage(context),
               child: Text(getString(context, 'open_provider_page')),
             ),
-            RaisedButton(
+            RaisedButton.icon(
               onPressed: () async { 
                               AuthenticationService().googleSignIn()
                               .then((FirebaseUser user) {
@@ -80,7 +80,9 @@ class HelloPage extends StatelessWidget {
                               })
                               .catchError((e) => Fluttertoast.showToast(msg: e)); 
                             },
-              child: Text(getString(context, 'google')),
+              label: Text(getString(context, 'google'), style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),), 
+              color: Colors.white,
+              icon: new Image.asset('lib/assets/images/Google_g.png', width: 20,),              
             ),
             RaisedButton(
               onPressed: () async {
