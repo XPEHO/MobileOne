@@ -3,5 +3,13 @@
     "hello_message": "Hello XPEHO",
     "open_page_2": "Open page 2",
     "open_provider_page": "Open provider page",
-    "second_page_text": "this is the second page"
+    "second_page_text": "this is the second page",
+    "login": "login",
+    "password": "password",
+    "forgot_password": "Forgot password ?",
+    "create_account": "Create account",
+    "google": "Google",
+    "twitter": "Twitter",
+    "facebook": "Facebook",
+    "signout": "Sign out"
 }
