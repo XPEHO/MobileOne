@@ -5,18 +5,18 @@ on:
   pull_request:
     branches:
       - '*'
-name: Build Android
+name: Build IOS
 jobs:
   build:
-    name: Build Android apk
-    runs-on: ubuntu-latest
+    name: Build IOS app
+    runs-on: macos-latest
     steps:
       - uses: actions/checkout@v1
       - name: fetch firebase config
         env:
-          FIREBASE_CONFIG: ${{ secrets.ANDROID_GOOGLE_SERVICES }}
+          FIREBASE_CONFIG: ${{ secrets.IOS_GOOGLE_SERVICES }}
         run: |
-          echo $FIREBASE_CONFIG > ./android/app/google-services.json
+          echo $FIREBASE_CONFIG > ./ios/Runner/GoogleService-Info.plist
       - uses: actions/setup-java@v1
         with:
           java-version: '12.x'
@@ -25,4 +25,4 @@ jobs:
           flutter-version: '1.17'
       - run: flutter pub get
       - run: flutter test
-      - run: flutter build apk --debug
+      - run: flutter build ios --debug --no-codesign

@@ -29,6 +29,7 @@
 .pub-cache/
 .pub/
 /build/
+pubspec.lock
 
 # Web related
 lib/generated_plugin_registrant.dart
@@ -39,3 +40,9 @@ lib/generated_plugin_registrant.dart
 # Firebase
 /android/app/google-services.json
 /ios/Runner/GoogleService-Info.plist
+
+# Android settings
+android/app/.settings/
+
+# IOS settings
+ios/Flutter/.last_build_id
