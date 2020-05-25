@@ -2,6 +2,12 @@
 
 Fisrt mobile app created by XPEHO
 
+# Build status
+
+![Build Android](https://github.com/XPEHO/MobileOne/workflows/Build%20Android/badge.svg)
+
+![Build IOS](https://github.com/XPEHO/MobileOne/workflows/Build%20IOS/badge.svg)
+
 # Design & wirframes
 
 We choosed Figma to create, edit and share screens and design mockups
