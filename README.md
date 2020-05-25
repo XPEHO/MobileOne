@@ -46,6 +46,22 @@ To run integration test type `flutter drive --target=test_driver/app.dart` in a 
 
 # CI/CD
 
-We choosed Codemagic continuous integration/delivery
+We choosed `Github actions` for continuous integration/delivery
 
-Please visit [Codemagic.io](https://codemagic.io/start/) for more information.
+## Github actions infos
+
+Please visit [Github actions page](https://github.com/features/actions) for more information.
+
+All available actions can be found on the [Github Marketplace](https://github.com/marketplace?type=actions)
+
+## Used actions in this project
+
+[checkout](https://github.com/marketplace/actions/checkout)
+
+[setup java](https://github.com/marketplace/actions/setup-java-jdk)
+
+[flutter action](https://github.com/marketplace/actions/flutter-action)
+
+[create a release](https://github.com/marketplace/actions/create-a-release)
+
+[upload a release asset](https://github.com/marketplace/actions/upload-a-release-asset)
