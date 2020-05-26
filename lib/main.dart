@@ -1,19 +1,17 @@
+import 'package:MobileOne/pages/authentication-page.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/localization/supported.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:MobileOne/pages/Mainpage.dart';
+import 'package:MobileOne/pages/register-page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:webfeed/webfeed.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'authentication_service.dart';
 
 import 'localization/localization.dart';
 
-FirebaseUser _user;
 
 void main() => runApp(MyApp());
 
@@ -44,8 +42,9 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => HelloPage(),
         '/mainpage': (context) => MainPage(),
+        '/': (context) => AuthenticationPage(),
+        '/registerPage': (context) => RegisterPage(),
       },
     );
   }
@@ -64,32 +63,6 @@ class HelloPage extends StatelessWidget {
               onPressed: () => openMainPage(context),
               child: Text(getString(context, 'open_main_page')),
             ),
-            RaisedButton.icon(
-              onPressed: () async { 
-                              AuthenticationService().googleSignIn()
-                              .then((FirebaseUser user) {
-                                _user = user;
-                                openMainPage(context);
-                                Fluttertoast.showToast(msg: getString(context, 'google_signin'));
-                              })
-                              .catchError((e) => Fluttertoast.showToast(msg: e)); 
-                            },
-              label: Text(getString(context, 'google'), style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),), 
-              color: Colors.white,
-              icon: new Image.asset('lib/assets/images/Google_g.png', width: 20,),              
-            ),
-            RaisedButton(
-              onPressed: () async {
-                if (_user == null) {
-                  Fluttertoast.showToast(msg: getString(context, 'no_user'));
-                } else {
-                  AuthenticationService().signOut();
-                  _user = null;
-                  Fluttertoast.showToast(msg: getString(context, 'signed_out'));
-                }
-              },
-              child: Text(getString(context, 'signout')),
-            )
           ],
         ),
       ),

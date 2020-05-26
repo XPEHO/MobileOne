@@ -88,7 +88,7 @@ class MainPageState extends State<MainPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children:<Widget>[
                         Icon(Icons.list),
-                        Text(getString(context,'my_lists'))
+                        Text(getString(context,'my_lists'), key: Key("Lists"),)
                       ]
                     )
                   ),

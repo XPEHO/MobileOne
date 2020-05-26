@@ -1,13 +1,8 @@
-// Imports the Flutter Driver API.
+import "package:test/test.dart";
 import 'package:flutter_driver/flutter_driver.dart';
-import 'package:test/test.dart';
 
 void main() {
-  group('MobileOne App', () {
-    final textFinder = find.byValueKey('hello_message');
-    final secondPageTextFinder = find.byValueKey('second_page_text');
-    final buttonFinder = find.byValueKey('page2_btn');
-
+  group("Auth tests", () {
     FlutterDriver driver;
 
     // Connect to the Flutter driver before running any tests.
@@ -22,18 +17,40 @@ void main() {
       }
     });
 
-    test('Says hello at start', () async {
-      // Then, verify the counter text is incremented by 1.
-      expect(await driver.getText(textFinder), "Hello XPEHO");
+    test('Create an account', () async {
+      await driver.tap(find.byValueKey("register_page_button"));
+      await driver.tap(find.byValueKey("email_label"));
+      await driver.enterText("test@test.test");
+      await driver.tap(find.byValueKey("password_label"));
+      await driver.enterText("test123");
+      await driver.tap(find.byValueKey("confirm_password_label"));
+      await driver.enterText("test123");
+      await driver.tap(find.byValueKey("create_account_button"));
+      String value = await driver.getText(find.byValueKey("authentication_page_text"));
+
+      await Future<Null>.delayed(Duration(seconds: 2));
+      expect(value, "Login to your account");
     });
 
-    test('Open the second page', () async {
-      // First, tap the button.
-      await driver.tap(buttonFinder);
+    test('Sign in this account', () async {
+      await driver.tap(find.byValueKey("auth_email_label"));
+      await driver.enterText("test@test.test");
+      await driver.tap(find.byValueKey("auth_password_label"));
+      await driver.enterText("test123");
+      await driver.tap(find.byValueKey("sign_in_button"));
+      String value = await driver.getText(find.byValueKey("Lists"));
 
-      // Then, verify the counter text is incremented by 1.
-      expect(await driver.getText(secondPageTextFinder),
-          "this is the second page");
+      await Future<Null>.delayed(Duration(seconds: 2));
+      expect(value, "My Lists");
+    });
+
+    test('Delete this account', () async {
+      await driver.tap(find.byValueKey("Profile"));
+      await driver.tap(find.byValueKey("debug_delete_account_button"));
+      String value = await driver.getText(find.byValueKey("authentication_page_text"));
+
+      await Future<Null>.delayed(Duration(seconds: 2));
+      expect(value, "Login to your account");
     });
   });
 }

@@ -14,7 +14,7 @@ description: A new Flutter project.
 version: 1.0.0+1
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '>=2.2.0 <3.0.0'
 
 dependencies:
   flutter:
@@ -26,7 +26,7 @@ dependencies:
   # Add the dependencies for any other Firebase products you want to use in your app
   # For example, to use Firebase Authentication and Cloud Firestore
   firebase_auth: ^0.16.0
-  google_sign_in: ^4.5.0
+  google_sign_in: ^4.5.1
   
   flutter_localizations:
     sdk: flutter
@@ -34,7 +34,6 @@ dependencies:
   http: ^0.12.0+4
   webfeed: ^0.4.2
   fluttertoast: ^4.0.0
-
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -47,6 +46,7 @@ dev_dependencies:
     sdk: flutter
   flutter_test:
     sdk: flutter
+
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -61,7 +61,7 @@ flutter:
   assets:
     - resources/lang/en.json
     - resources/lang/fr.json
-    - lib/assets/images/
+    - assets/images/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see
