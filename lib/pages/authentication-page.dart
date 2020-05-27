@@ -48,13 +48,11 @@ class AuthenticationPageState extends State<AuthenticationPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Flexible(
-                  flex: 1,
-                  child: Container()
-                ),
+                Flexible(flex: 1, child: Container()),
                 Flexible(
                   flex: 5,
-                  child: Text(getString(context, 'authentication_page_text'), 
+                  child: Text(
+                    getString(context, 'authentication_page_text'),
                     key: Key("authentication_page_text"),
                     style: TextStyle(
                       fontSize: 25,
@@ -82,15 +80,16 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                             key: Key("auth_email_label"),
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey[300],
-                              labelText: getString(context, 'email_label'),
-                              labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              )),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                labelText: getString(context, 'email_label'),
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                )),
                             controller: _emailController,
                             onChanged: (text) => handleSubmittedEmail(text),
                           ),
@@ -108,15 +107,16 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                             key: Key("auth_password_label"),
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey[300],
-                              labelText: getString(context, 'password_label'),
-                              labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              )),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                labelText: getString(context, 'password_label'),
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                )),
                             controller: _passwordController,
                             obscureText: true,
                             onChanged: (text) => handleSubmittedPassword(text),
@@ -137,7 +137,8 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                 ),
                 Flexible(
                   flex: 1,
-                  child: Text(getString(context, 'or'), 
+                  child: Text(
+                    getString(context, 'or'),
                     style: TextStyle(
                       fontSize: 20,
                     ),
@@ -146,39 +147,58 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                 Flexible(
                   flex: 1,
                   child: RaisedButton.icon(
-                    onPressed: () async { 
-                      AuthenticationService().googleSignIn()
-                        .then((FirebaseUser user) {
-                          UserService().user = user;
-                            Fluttertoast.showToast(msg: getString(context, 'google_signin'));
-                        })
-                        .catchError((e) => Fluttertoast.showToast(msg: e)); 
-                    },
-                    label: Text(getString(context, 'google'), style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),), 
-                    color: Colors.white,
-                    icon: new Image.asset('assets/images/Google_g.png', width: 20,),              
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: RaisedButton.icon(
                     onPressed: () async {
-
-                      },
-                    label: Text(getString(context, 'facebook'), style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),), 
+                      AuthenticationService()
+                          .googleSignIn()
+                          .then((FirebaseUser user) {
+                        UserService().user = user;
+                        Fluttertoast.showToast(
+                            msg: getString(context, 'google_signin'));
+                        openMainPage(context);
+                      }).catchError((e) => Fluttertoast.showToast(msg: e));
+                    },
+                    label: Text(
+                      getString(context, 'google'),
+                      style: TextStyle(
+                          color: Colors.grey[600], fontWeight: FontWeight.bold),
+                    ),
                     color: Colors.white,
-                    icon: new Image.asset('assets/images/facebook_f.png', width: 20,),              
+                    icon: new Image.asset(
+                      'assets/images/Google_g.png',
+                      width: 20,
+                    ),
                   ),
                 ),
                 Flexible(
                   flex: 1,
                   child: RaisedButton.icon(
-                    onPressed: () async { 
-                        
-                    },
-                    label: Text(getString(context, 'twitter'), style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),), 
+                    onPressed: () async {},
+                    label: Text(
+                      getString(context, 'facebook'),
+                      style: TextStyle(
+                          color: Colors.grey[600], fontWeight: FontWeight.bold),
+                    ),
                     color: Colors.white,
-                    icon: new Image.asset('assets/images/twitter.png', width: 20,),              
+                    icon: new Image.asset(
+                      'assets/images/facebook_f.png',
+                      width: 20,
+                    ),
+                  ),
+                ),
+                Flexible(
+                  flex: 1,
+                  child: RaisedButton.icon(
+                    onPressed: () async {},
+                    label: Text(
+                      getString(context, 'twitter'),
+                      style: TextStyle(
+                          color: Colors.grey[600], fontWeight: FontWeight.bold),
+                    ),
+                    color: Colors.white,
+                    icon: new Image.asset(
+                      'assets/images/twitter.png',
+                      width: 20,
+                    ),
                   ),
                 ),
                 Flexible(
@@ -190,7 +210,8 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                         key: Key("register_page_button"),
                         color: Colors.transparent,
                         onPressed: () => openRegisterPage(context),
-                        child: Text(getString(context, 'create_account'), 
+                        child: Text(
+                          getString(context, 'create_account'),
                           style: TextStyle(
                             color: Colors.blue,
                           ),
@@ -200,7 +221,8 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                         key: Key("forgotten_password_button"),
                         color: Colors.transparent,
                         onPressed: () => null,
-                        child: Text(getString(context, 'forgotten_password'), 
+                        child: Text(
+                          getString(context, 'forgotten_password'),
                           style: TextStyle(
                             color: Colors.blue,
                           ),
@@ -208,10 +230,10 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                       ),
                     ],
                   ),
-                ),                
+                ),
               ],
-            ), 
-          ), 
+            ),
+          ),
         ),
       ),
     );
@@ -219,7 +241,8 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   Future<void> signInUser() async {
     try {
-      UserService().user = await AuthenticationService().signIn(_email, _password);
+      UserService().user =
+          await AuthenticationService().signIn(_email, _password);
       if (UserService().user != null) {
         openMainPage(context);
         Fluttertoast.showToast(msg: getString(context, 'signed_in'));

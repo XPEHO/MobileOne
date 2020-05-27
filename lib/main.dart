@@ -12,7 +12,6 @@ import 'package:webfeed/webfeed.dart';
 
 import 'localization/localization.dart';
 
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -74,7 +73,6 @@ class HelloPage extends StatelessWidget {
       '/mainpage',
     );
   }
-
 }
 
 class RssProvider extends ChangeNotifier {
