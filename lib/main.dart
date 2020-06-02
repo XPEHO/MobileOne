@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:MobileOne/pages/authentication-page.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/localization.dart';
@@ -9,10 +10,19 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:webfeed/webfeed.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'localization/localization.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  Crashlytics.instance.enableInDevMode = true;
+
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+
+  runZoned(() {
+    runApp(MyApp());
+  }, onError: Crashlytics.instance.recordError);
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
