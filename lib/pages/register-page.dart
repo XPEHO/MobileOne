@@ -2,6 +2,7 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:get_it/get_it.dart';
 import '../localization/localization.dart';
 
 String emailRegexp = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
@@ -22,6 +23,8 @@ class RegisterPageState extends State<RegisterPage> {
   String _email;
   String _password;
   String _confirmPassword;
+
+  final _authService = GetIt.I.get<AuthenticationService>();
 
   @override
   void dispose() {
@@ -204,7 +207,7 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> createAccount() async {
-    String result = await AuthenticationService().register(_email, _password);
+    String result = await _authService.register(_email, _password);
     switch (result) {
       case "success":
         Fluttertoast.showToast(msg: getString(context, 'successful_registration'));

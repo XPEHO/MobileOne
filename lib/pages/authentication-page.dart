@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:get_it/get_it.dart';
 import '../localization/localization.dart';
 
 class AuthenticationPage extends StatefulWidget {
@@ -19,6 +20,9 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   final _passwordController = new TextEditingController();
   String _email;
   String _password;
+
+  final _authService = GetIt.I.get<AuthenticationService>();
+  final _userService = GetIt.I.get<UserService>();
 
   @override
   void dispose() {
@@ -148,10 +152,10 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                   flex: 1,
                   child: RaisedButton.icon(
                     onPressed: () async {
-                      AuthenticationService()
+                      _authService
                           .googleSignIn()
                           .then((FirebaseUser user) {
-                        UserService().user = user;
+                        _userService.user = user;
                         Fluttertoast.showToast(
                             msg: getString(context, 'google_signin'));
                         openMainPage(context);
@@ -241,9 +245,9 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   Future<void> signInUser() async {
     try {
-      UserService().user =
-          await AuthenticationService().signIn(_email, _password);
-      if (UserService().user != null) {
+      _userService.user =
+          await _authService.signIn(_email, _password);
+      if (_userService.user != null) {
         openMainPage(context);
         Fluttertoast.showToast(msg: getString(context, 'signed_in'));
       }

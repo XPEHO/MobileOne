@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:mockito/mockito.dart';
 
 Widget buildTestableWidget(Widget widget) {
@@ -39,8 +40,10 @@ class FirebaseAuthMock extends Mock implements FirebaseAuth {}
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
   testWidgets('Tests Profile Page', (WidgetTester tester) async {
-    final FirebaseAuth auth = FirebaseAuthMock();
+    final auth = FirebaseAuthMock();
     final FirebaseUser user = FirebaseUserMock();
+
+    GetIt.I.registerSingleton<FirebaseAuth>(auth);
 
     when(auth.currentUser()).thenAnswer((realInvocation) => Future.value(user));
 

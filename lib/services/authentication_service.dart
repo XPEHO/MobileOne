@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthenticationService {
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final _authService = GetIt.I.get<FirebaseAuth>();
+  final _googleService = GetIt.I.get<GoogleSignIn>();
 
   Future<FirebaseUser> googleSignIn() async {
-    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAccount googleUser = await _googleService.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
@@ -14,11 +15,11 @@ class AuthenticationService {
       idToken: googleAuth.idToken,
     );
 
-    return (await _auth.signInWithCredential(credential)).user;
+    return (await _authService.signInWithCredential(credential)).user;
   }
 
   Future<FirebaseUser> signIn(String email, String password) async {
-      FirebaseUser _user = (await _auth.signInWithEmailAndPassword(
+      FirebaseUser _user = (await _authService.signInWithEmailAndPassword(
         email: email,
         password: password,
       )).user;
@@ -27,7 +28,7 @@ class AuthenticationService {
 
   Future<String> register(String email, String password) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
+      await _authService.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -44,7 +45,7 @@ class AuthenticationService {
   }
 
   void signOut(FirebaseUser user) async {
-    await _auth.signOut();
+    await _authService.signOut();
     user = null;
   }
 }

@@ -5,8 +5,14 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/Mainpage.dart';
 import 'package:MobileOne/pages/register-page.dart';
+import 'package:MobileOne/services/analytics_service.dart';
+import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/user_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'package:webfeed/webfeed.dart';
@@ -14,7 +20,19 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import 'localization/localization.dart';
 
+GetIt getIt = GetIt.instance;
+
+void instantiateServices() {
+  getIt.registerSingleton<UserService>(UserService());
+  getIt.registerSingleton<AnalyticsService>(AnalyticsService());
+  getIt.registerSingleton<GoogleSignIn>(GoogleSignIn());
+  getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
+  getIt.registerSingleton<AuthenticationService>(AuthenticationService());
+}
+
 void main() {
+  instantiateServices();
+
   Crashlytics.instance.enableInDevMode = true;
 
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
