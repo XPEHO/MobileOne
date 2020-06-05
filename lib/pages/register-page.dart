@@ -5,7 +5,8 @@ import 'package:MobileOne/services/authentication_service.dart';
 import 'package:get_it/get_it.dart';
 import '../localization/localization.dart';
 
-String emailRegexp = r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
+String emailRegexp =
+    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 const int PASSWORD_MINIMAL_LENGHT = 6;
 
 class RegisterPage extends StatefulWidget {
@@ -65,7 +66,8 @@ class RegisterPageState extends State<RegisterPage> {
                 ),
                 Flexible(
                   flex: 1,
-                  child: Text(getString(context, 'register_page_text'), 
+                  child: Text(
+                    getString(context, 'register_page_text'),
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -82,7 +84,7 @@ class RegisterPageState extends State<RegisterPage> {
                         Container(
                           width: MediaQuery.of(context).size.width - 10,
                           height: 90,
-                          child : TextFormField(
+                          child: TextFormField(
                             validator: (value) {
                               if (value.isEmpty) {
                                 return getString(context, 'fill_email');
@@ -96,15 +98,16 @@ class RegisterPageState extends State<RegisterPage> {
                             key: Key("email_label"),
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey[300],
-                              labelText: getString(context, 'email_label'),
-                              labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              )),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                labelText: getString(context, 'email_label'),
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                )),
                             controller: _emailController,
                             onChanged: (text) => handleSubmittedEmail(text),
                           ),
@@ -112,7 +115,7 @@ class RegisterPageState extends State<RegisterPage> {
                         Container(
                           width: MediaQuery.of(context).size.width - 10,
                           height: 90,
-                          child : TextFormField(
+                          child: TextFormField(
                             validator: (value) {
                               if (value.isEmpty) {
                                 return getString(context, 'fill_password');
@@ -125,15 +128,16 @@ class RegisterPageState extends State<RegisterPage> {
                             key: Key("password_label"),
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey[300],
-                              labelText: getString(context, 'password_label'),
-                              labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              )),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                labelText: getString(context, 'password_label'),
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                )),
                             controller: _passwordController,
                             obscureText: true,
                             onChanged: (text) => handleSubmittedPassword(text),
@@ -142,31 +146,36 @@ class RegisterPageState extends State<RegisterPage> {
                         Container(
                           width: MediaQuery.of(context).size.width - 10,
                           height: 90,
-                          child : TextFormField(
+                          child: TextFormField(
                             validator: (value) {
                               if (value.isEmpty) {
-                                return getString(context, 'fill_confirm_password');
+                                return getString(
+                                    context, 'fill_confirm_password');
                               }
                               if (_password != _confirmPassword) {
-                                return getString(context, 'password_not_confirmed');
+                                return getString(
+                                    context, 'password_not_confirmed');
                               }
                               return null;
                             },
                             key: Key("confirm_password_label"),
                             textAlign: TextAlign.start,
                             decoration: InputDecoration(
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(color: Colors.transparent),
-                              ),
-                              filled: true,
-                              fillColor: Colors.grey[300],
-                              labelText: getString(context, 'confirm_password_label'),
-                              labelStyle: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              )),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.transparent),
+                                ),
+                                filled: true,
+                                fillColor: Colors.grey[300],
+                                labelText: getString(
+                                    context, 'confirm_password_label'),
+                                labelStyle: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                )),
                             controller: _confirmPasswordController,
                             obscureText: true,
-                            onChanged: (text) => handleSubmittedConfirmPassword(text),
+                            onChanged: (text) =>
+                                handleSubmittedConfirmPassword(text),
                           ),
                         ),
                         RaisedButton(
@@ -189,7 +198,8 @@ class RegisterPageState extends State<RegisterPage> {
                       FlatButton(
                         color: Colors.transparent,
                         onPressed: () => openAuthenticationPage(context),
-                        child: Text(getString(context, 'authentication_page_button'), 
+                        child: Text(
+                          getString(context, 'authentication_page_button'),
                           style: TextStyle(
                             color: Colors.blue,
                           ),
@@ -200,7 +210,7 @@ class RegisterPageState extends State<RegisterPage> {
                 ),
               ],
             ),
-          ), 
+          ),
         ),
       ),
     );
@@ -210,7 +220,8 @@ class RegisterPageState extends State<RegisterPage> {
     String result = await _authService.register(_email, _password);
     switch (result) {
       case "success":
-        Fluttertoast.showToast(msg: getString(context, 'successful_registration'));
+        Fluttertoast.showToast(
+            msg: getString(context, 'successful_registration'));
         openAuthenticationPage(context);
         break;
       case "format_error":

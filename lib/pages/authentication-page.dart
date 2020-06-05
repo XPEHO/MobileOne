@@ -152,9 +152,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                   flex: 1,
                   child: RaisedButton.icon(
                     onPressed: () async {
-                      _authService
-                          .googleSignIn()
-                          .then((FirebaseUser user) {
+                      _authService.googleSignIn().then((FirebaseUser user) {
                         _userService.user = user;
                         Fluttertoast.showToast(
                             msg: getString(context, 'google_signin'));
@@ -245,8 +243,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   Future<void> signInUser() async {
     try {
-      _userService.user =
-          await _authService.signIn(_email, _password);
+      _userService.user = await _authService.signIn(_email, _password);
       if (_userService.user != null) {
         openMainPage(context);
         Fluttertoast.showToast(msg: getString(context, 'signed_in'));

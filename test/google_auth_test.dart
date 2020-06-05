@@ -6,10 +6,16 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mockito/mockito.dart';
 
 class MockUser extends Mock implements FirebaseUser {}
+
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
+
 class MockFirebaseAuth extends Mock implements FirebaseAuth {}
+
 class MockGoogleSignInAccount extends Mock implements GoogleSignInAccount {}
-class MockGoogleSignInAuthentication extends Mock implements GoogleSignInAuthentication {}
+
+class MockGoogleSignInAuthentication extends Mock
+    implements GoogleSignInAuthentication {}
+
 class MockAuthResult extends Mock implements AuthResult {}
 
 final service = AuthenticationService();
