@@ -2,6 +2,7 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/change_password.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/provider/camera_provider.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
