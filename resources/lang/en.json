@@ -4,7 +4,7 @@
     "company_name": "XPEHO",
     "login": "login",
     "password": "password",
-    "change_password": "Change my password",
+    "change_user_password": "Change my password",
     "forgot_password": "Forgot password ?",
     "create_account": "Create account",
     "google": "Sign in with Google",

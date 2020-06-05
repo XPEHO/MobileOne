@@ -5,7 +5,7 @@
 
     "login": "nom d'utilisateur",
     "password": "mot de passe",
-    "change_password": "Changer mon mot de passe",
+    "change_user_password": "Changer mon mot de passe",
     "forgot_password": "Mot de passe oublie ?",
     "create_account": "Créer un compte",
     "google": "Se connecter avec Google",

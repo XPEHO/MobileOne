@@ -31,6 +31,28 @@ class MainPageState extends State<MainPage> {
 
   final PageStorageBucket _bucket = PageStorageBucket();
 
+  _savePicturePreferences(String _picture, FirebaseUser user) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('picture' + user.uid, _picture);
+  }
+
+  Future _getImage(provider) async {
+    // Pick picture
+    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
+
+    if (pickedFile != null) {
+      // Save picture path into Provider
+      provider.selectedPicturePath = pickedFile.path;
+
+      // Save image into phone gallery
+      GallerySaver.saveImage(pickedFile.path,
+          albumName: getString(context, "app_name"));
+
+      // Save select picture path to shared preferences
+      _savePicturePreferences(pickedFile.path, UserService().user);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
