@@ -3,7 +3,6 @@ import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 const int CARD_PAGE = 0;
@@ -49,6 +48,7 @@ class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key("Mainn"),
       body: PageStorage(bucket: _bucket, child: _currentScreen),
       floatingActionButton: FloatingActionButton(
         child: Icon(_centerIcons[_currentTab]),
@@ -166,7 +166,7 @@ class MainPageState extends State<MainPage> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        _currentScreen = Profile(FirebaseAuth.instance);
+                        _currentScreen = Profile();
                         _currentTab = PROFILE_PAGE;
 
                         _cardsColor = BLACK;

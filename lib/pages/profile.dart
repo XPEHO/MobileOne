@@ -1,25 +1,26 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/pages/authentication-page.dart';
 import 'package:MobileOne/pages/change_password.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:MobileOne/services/authentication_service.dart';
+import 'package:get_it/get_it.dart';
 
 const double FONT_SIZE = 15;
 
 class Profile extends StatefulWidget {
-  final FirebaseAuth auth;
-
-  Profile(this.auth);
-
   ProfileState createState() => ProfileState();
 }
 
 class ProfileState extends State<Profile> {
+  var _authenticationService = GetIt.I.get<AuthenticationService>();
+  final auth = GetIt.I.get<FirebaseAuth>();
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: widget.auth.currentUser(),
+      future: auth.currentUser(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return buildContent(context, snapshot.data);
@@ -123,7 +124,8 @@ class ProfileState extends State<Profile> {
                 ),
                 child: Padding(
                   padding: EdgeInsets.only(left: 20.0, top: 15.0),
-                  child: Text(user.email,
+                  child: Text(
+                      user.displayName != null ? user.displayName : user.email,
                       style: TextStyle(
                           fontSize: FONT_SIZE, color: const Color(0xFF9E9E9E))),
                 ),
@@ -150,6 +152,15 @@ class ProfileState extends State<Profile> {
               child: Text(
                 getString(context, 'debug_delete_account_button'),
               ),
+            ),
+            RaisedButton(
+              color: Colors.grey,
+              onPressed: () async {
+                await _authenticationService.signOut(user);
+                Navigator.of(context).push((MaterialPageRoute(
+                    builder: (context) => AuthenticationPage())));
+              },
+              child: Text(getString(context, 'signout_user')),
             ),
           ],
         ),

@@ -45,7 +45,9 @@ lib/generated_plugin_registrant.dart
 
 # Android settings
 android/app/.settings/
+android/.settings/org.eclipse.buildship.core.prefs
 
 # IOS settings
 ios/Flutter/.last_build_id
 ios/Podfile.lock
+

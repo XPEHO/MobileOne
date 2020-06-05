@@ -45,6 +45,8 @@
     "no_user_found": "Aucun utilisateur relié à cette adresse email",
     "wrong_password": "Le mot de passe est incorrect",
     "debug_delete_account_button": "Supprimer le compte",
+    "debug_signout_user_button": "Déconnecter l'utilisateur ",
+    "signout_user":"Déconnexion",
     "debug_account_deleted": "Le compte a été supprimé",
     "authentication_page_text": "Connectez-vous",
     "register_page_text": "Créer votre compte",

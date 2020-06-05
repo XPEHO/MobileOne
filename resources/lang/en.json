@@ -41,6 +41,8 @@
     "no_user_found": "There is no user corresponding to this email address",
     "wrong_password": "The password is incorrect",
     "debug_delete_account_button": "Delete account",
+    "debug_signout_user_button": "Signout user",
+    "signout_user":"Signout",
     "debug_account_deleted": "Account as been deleted",
     "authentication_page_text": "Login to your account",
     "register_page_text": "Create your account",

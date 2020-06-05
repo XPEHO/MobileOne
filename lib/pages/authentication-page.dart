@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:get_it/get_it.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../localization/localization.dart';
 
 class AuthenticationPage extends StatefulWidget {
@@ -21,8 +22,8 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   String _email;
   String _password;
 
-  final _authService = GetIt.I.get<AuthenticationService>();
-  final _userService = GetIt.I.get<UserService>();
+  var _userService = GetIt.I.get<UserService>();
+  var _authenticationService = GetIt.I.get<AuthenticationService>();
 
   @override
   void dispose() {
@@ -39,9 +40,33 @@ class AuthenticationPageState extends State<AuthenticationPage> {
     _email = input;
   }
 
+  Future<bool> loginSkip() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString("mode") == "emailpassword") {
+      _userService.user = await _authenticationService.signIn(
+          prefs.getString("email"), prefs.getString("password"));
+      return true;
+    } else if (prefs.getString("mode") == "google") {
+      _userService.user = await _authenticationService.googleSignInSilently();
+      return true;
+    }
+    return false;
+  }
+
+  @override
+  void initState() {
+    loginSkip().then((skip) {
+      if (skip) {
+        openMainPage(context);
+      }
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: Key("authentication"),
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Center(
@@ -152,7 +177,12 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                   flex: 1,
                   child: RaisedButton.icon(
                     onPressed: () async {
-                      _authService.googleSignIn().then((FirebaseUser user) {
+                      _authenticationService
+                          .googleSignIn()
+                          .then((FirebaseUser user) async {
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.setString('mode', "google");
                         _userService.user = user;
                         Fluttertoast.showToast(
                             msg: getString(context, 'google_signin'));
@@ -243,11 +273,13 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   Future<void> signInUser() async {
     try {
-      _userService.user = await _authService.signIn(_email, _password);
+      _userService.user =
+          await _authenticationService.signIn(_email, _password);
+
       if (_userService.user != null) {
         if (_userService.user.isEmailVerified == false) {
-          bool verif =
-              await _authService.sendVerificationEmail(_userService.user);
+          bool verif = await _authenticationService
+              .sendVerificationEmail(_userService.user);
           switch (verif) {
             case true:
               Fluttertoast.showToast(
@@ -259,6 +291,11 @@ class AuthenticationPageState extends State<AuthenticationPage> {
               break;
           }
         }
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('mode', "emailpassword");
+        await prefs.setString('email', _email);
+        await prefs.setString('password', _password);
+
         openMainPage(context);
         Fluttertoast.showToast(msg: getString(context, 'signed_in'));
       }
