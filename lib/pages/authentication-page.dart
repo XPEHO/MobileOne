@@ -245,6 +245,20 @@ class AuthenticationPageState extends State<AuthenticationPage> {
     try {
       _userService.user = await _authService.signIn(_email, _password);
       if (_userService.user != null) {
+        if (_userService.user.isEmailVerified == false) {
+          bool verif =
+              await _authService.sendVerificationEmail(_userService.user);
+          switch (verif) {
+            case true:
+              Fluttertoast.showToast(
+                  msg: getString(context, 'verification_email_sent'));
+              break;
+            case false:
+              Fluttertoast.showToast(
+                  msg: getString(context, 'verification_email_error'));
+              break;
+          }
+        }
         openMainPage(context);
         Fluttertoast.showToast(msg: getString(context, 'signed_in'));
       }

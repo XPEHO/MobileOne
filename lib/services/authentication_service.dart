@@ -46,6 +46,15 @@ class AuthenticationService {
     }
   }
 
+  Future<bool> sendVerificationEmail(FirebaseUser _user) async {
+    try {
+      await _user.sendEmailVerification();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
   void signOut(FirebaseUser user) async {
     await _authService.signOut();
     user = null;

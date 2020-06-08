@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Login/password registration
 - Login/password authentication
 - Add profile page
+- Add verification email
 
 ### Changed
 

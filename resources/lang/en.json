@@ -46,5 +46,8 @@
     "register_page_text": "Create your account",
     "or": "or",
     "mobile_one": "MobileOne",
-    "forgotten_password": "Forgot password ?"
+    "forgotten_password": "Forgot password ?",
+    "verification_email_sent": "A verification email as been sent",
+    "verification_email_error": "An error occured on the email verification",
+    "email_already_verified": "This email is already verified"
 }
