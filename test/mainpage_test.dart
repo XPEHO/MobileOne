@@ -38,8 +38,5 @@ void main() {
 
     await tester.pumpWidget(buildTestableWidget(_widget));
     await tester.pump(new Duration(milliseconds: 1000));
-
-   await tester.tap(find.byKey(Key('Cam')));
-   expect(find.text('_isCameraOn').evaluate().isNotEmpty,false);
   });
 }

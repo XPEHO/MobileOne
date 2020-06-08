@@ -17,6 +17,8 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
   Widget _currentScreen = Lists();
+  File imageFinale;
+
   final List _centerIcons = [
     Icons.scanner,
     Icons.add,
