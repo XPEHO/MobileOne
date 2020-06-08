@@ -56,7 +56,7 @@ void main() {
 
   testWidgets('TESTS', (WidgetTester tester) async {
 final FirebaseAuth auth = FirebaseAuthMock();
-    Profile _widget = new Profile(auth);
+    Profile _widget = new Profile();
 
     await tester.pumpWidget(buildTestableWidget(_widget));
     await tester.pump(new Duration(milliseconds: 1000));
