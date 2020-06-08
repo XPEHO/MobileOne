@@ -4,6 +4,7 @@ import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/Mainpage.dart';
+import 'package:MobileOne/pages/forgotten_password.dart';
 import 'package:MobileOne/pages/register-page.dart';
 import 'package:MobileOne/services/analytics_service.dart';
 import 'package:MobileOne/services/authentication_service.dart';
@@ -72,6 +73,7 @@ class MyApp extends StatelessWidget {
         '/mainpage': (context) => MainPage(),
         '/': (context) => AuthenticationPage(),
         '/registerPage': (context) => RegisterPage(),
+        '/forgottenPasswordPage': (context) => ForgottenPasswordPage(),
       },
     );
   }

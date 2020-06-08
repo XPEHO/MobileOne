@@ -222,7 +222,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                       FlatButton(
                         key: Key("forgotten_password_button"),
                         color: Colors.transparent,
-                        onPressed: () => null,
+                        onPressed: () => openForgottenPasswordPage(context),
                         child: Text(
                           getString(context, 'forgotten_password'),
                           style: TextStyle(
@@ -282,5 +282,9 @@ class AuthenticationPageState extends State<AuthenticationPage> {
     Navigator.of(context).pushNamed(
       '/mainpage',
     );
+  }
+
+  void openForgottenPasswordPage(context) {
+    Navigator.of(context).pushNamed('/forgottenPasswordPage');
   }
 }

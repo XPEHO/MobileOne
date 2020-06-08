@@ -55,6 +55,21 @@ class AuthenticationService {
     }
   }
 
+  Future<String> resetPassword(String email) async {
+    try {
+      await _authService.sendPasswordResetEmail(email: email);
+      return "success";
+    } catch (e) {
+      if (e.code == "ERROR_INVALID_EMAIL") {
+        return "format_error";
+      } else if (e.code == "ERROR_USER_NOT_FOUND") {
+        return "email_does_not_exist";
+      } else {
+        return e.message;
+      }
+    }
+  }
+
   void signOut(FirebaseUser user) async {
     await _authService.signOut();
     user = null;
