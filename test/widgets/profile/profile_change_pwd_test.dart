@@ -74,7 +74,5 @@ void main() {
 
     //THEN
     expect(find.text('Changer mon mot de passe'), findsOneWidget);
-
-    expect(find.text('Changer mon mot de passe'), findsOneWidget);
   });
 }

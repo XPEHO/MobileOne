@@ -40,10 +40,10 @@ class ProfileState extends State<Profile> {
     final pickedFile = await _picker.getImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
+      isInGallery = true;
       provider.selectedPicturePath = pickedFile.path;
     }
-    _savePicturePreferencesGallery(pickedFile.path,UserService().user);
-    
+    _savePicturePreferencesGallery(pickedFile.path, UserService().user);
   }
 
   Widget buildContent(BuildContext context, FirebaseUser user) {
@@ -74,6 +74,7 @@ class ProfileState extends State<Profile> {
                   left: MediaQuery.of(context).size.width / 2 - 24,
                   top: 180,
                   child: Material(
+                    key: Key("gallery_test"),
                     borderRadius: BorderRadius.circular(24),
                     elevation: 8.0,
                     child: _buildProfilePicture(user),
