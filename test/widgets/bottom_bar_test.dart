@@ -32,15 +32,11 @@ Widget buildTestableWidget(Widget widget) {
       home: widget);
 }
 
-class FirebaseAuthMock extends Mock implements FirebaseAuth {}
-
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
   var onItemSelected;
 
   testWidgets('Go the the specifical page', (WidgetTester tester) async {
-    final FirebaseAuth auth = FirebaseAuthMock();
-
     MainPage _widget = new MainPage();
 
     //GIVEN

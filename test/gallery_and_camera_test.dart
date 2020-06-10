@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:mockito/mockito.dart';
 
 Widget buildTestableWidget(Widget widget) {
   return MaterialApp(
@@ -35,30 +35,20 @@ Widget buildTestableWidget(Widget widget) {
 class FirebaseAuthMock extends Mock implements FirebaseAuth {}
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
-  /*testWidgets('Camera and Gallery tests', (WidgetTester tester) async {
-    final FirebaseAuth auth = FirebaseAuthMock();
-    Profile _widget = new Profile(auth);
- await tester.pumpWidget(buildTestableWidget(_widget));
-    await tester.pump(new Duration(milliseconds: 1000));
 
-   // await tester.tap(find.byKey(Key("Gallery")));
-
-    expect(find.byKey(Key("gallery")), findsOneWidget);
-   // await tester.tap(find.byKey(Key("Gallery"))).then((isInGallery) => true);
-//await tester.tap(find.byKey(Key("Gallery")));
-    // expect(isInGallery, true);
-  });*/
-
-
-  testWidgets('TESTS', (WidgetTester tester) async {
+  testWidgets('Tests about gallery', (WidgetTester tester) async {
 final FirebaseAuth auth = FirebaseAuthMock();
-    Profile _widget = new Profile(auth);
-
-    await tester.pumpWidget(buildTestableWidget(_widget));
+      MainPage widget = MainPage();
+     await tester.pumpWidget(buildTestableWidget(widget));
     await tester.pump(new Duration(milliseconds: 1000));
 
-    //await tester.tap(find.byKey(Key("gallery")));
-   expect(find.byKey(Key("gallery")), findsOneWidget);
+    //await tester.tap(find.byKey(Key("gallery_test")));
+   expect(find.byKey(Key("Share")), findsOneWidget);
 
   });
+
+
+
+
+
 }

@@ -66,7 +66,6 @@ void main() {
     when(user.email).thenReturn(_email);
 
     when(user.photoUrl).thenReturn("");
-    expect(user.photoUrl,"");
 
     //WHEN
     await tester.pumpWidget(widget);
@@ -76,6 +75,6 @@ void main() {
     //THEN
     expect(find.text('Changer mon mot de passe'), findsOneWidget);
 
+    expect(find.text('Changer mon mot de passe'), findsOneWidget);
   });
 }
-
