@@ -9,6 +9,8 @@ import 'package:MobileOne/services/authentication_service.dart';
 import 'package:get_it/get_it.dart';
 
 const double FONT_SIZE = 15;
+const KEY_PASSWORD = "Password";
+const KEY_DELETE_ACCOUNT = "debug_delete_account_button";
 
 class Profile extends StatefulWidget {
   ProfileState createState() => ProfileState();
@@ -125,9 +127,12 @@ class ProfileState extends State<Profile> {
                 child: Padding(
                   padding: EdgeInsets.only(left: 20.0, top: 15.0),
                   child: Text(
-                      user.displayName != null ? user.displayName : user.email,
-                      style: TextStyle(
-                          fontSize: FONT_SIZE, color: const Color(0xFF9E9E9E))),
+                    user.email,
+                    style: TextStyle(
+                      fontSize: FONT_SIZE,
+                      color: const Color(0xFF9E9E9E),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -135,18 +140,21 @@ class ProfileState extends State<Profile> {
               padding: EdgeInsets.only(top: 35.0),
               child: InkWell(
                   child: Text(getString(context, "change_password"),
-                      key: Key("Password"),
+                      key: Key(KEY_PASSWORD),
                       style: TextStyle(
                         color: Colors.blue,
                         decoration: TextDecoration.underline,
                       )),
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ChangePassword()));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ChangePassword(),
+                      ),
+                    );
                   }),
             ),
             RaisedButton(
-              key: Key("debug_delete_account_button"),
+              key: Key(KEY_DELETE_ACCOUNT),
               color: Colors.red,
               onPressed: () => deleteAccount(user, context),
               child: Text(

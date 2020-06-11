@@ -10,6 +10,11 @@ const int LISTS_PAGE = 1;
 const int SHARE_PAGE = 2;
 const int PROFILE_PAGE = 3;
 
+const KEY_CARD_PAGE = "Cards";
+const KEY_LISTS_PAGE = "Lists";
+const KEY_SHARE_PAGE = "Share";
+const KEY_PROFILE_PAGE = "Profile";
+
 const Color BLACK = Colors.black;
 const Color ORANGE = Colors.deepOrange;
 
@@ -65,7 +70,7 @@ class MainPageState extends State<MainPage> {
             children: <Widget>[
               Row(children: <Widget>[
                 MaterialButton(
-                    key: Key("Cards"),
+                    key: Key(KEY_CARD_PAGE),
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
@@ -91,7 +96,7 @@ class MainPageState extends State<MainPage> {
                               style: TextStyle(color: _cardsColor))
                         ])),
                 MaterialButton(
-                    key: Key("Lists"),
+                    key: Key(KEY_LISTS_PAGE),
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
@@ -136,7 +141,7 @@ class MainPageState extends State<MainPage> {
               Row(
                 children: <Widget>[
                   MaterialButton(
-                      key: Key("Share"),
+                      key: Key(KEY_SHARE_PAGE),
                       minWidth: 40,
                       onPressed: () {
                         setState(() {
@@ -162,7 +167,7 @@ class MainPageState extends State<MainPage> {
                                 style: TextStyle(color: _shareColor))
                           ])),
                   MaterialButton(
-                    key: Key("Profile"),
+                    key: Key(KEY_PROFILE_PAGE),
                     minWidth: 40,
                     onPressed: () {
                       setState(() {

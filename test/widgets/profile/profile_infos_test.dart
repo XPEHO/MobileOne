@@ -43,7 +43,13 @@ class MockGoogleSignIn extends Mock implements GoogleSignIn {}
 
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
-  testWidgets('Tests Profile Page', (WidgetTester tester) async {
+
+  testWidgets('Profile Page should display user informations',
+      (WidgetTester tester) async {
+    //GIVEN
+
+    Widget widget = buildTestableWidget(Profile());
+
     final auth = FirebaseAuthMock();
     final user = FirebaseUserMock();
     final _googleSignIn = MockGoogleSignIn();
@@ -54,21 +60,20 @@ void main() {
     GetIt.I.registerSingleton<AuthenticationService>(AuthenticationService());
 
     when(auth.currentUser()).thenAnswer((realInvocation) => Future.value(user));
+    final _displayName = "Dupond Jean";
+    when(user.displayName).thenReturn(_displayName);
 
-    when(user.displayName).thenReturn("Dupond Jean");
-    expect(user.displayName, "Dupond Jean");
-
-    when(user.email).thenReturn("Dupond.Jean@gmail.com");
-    expect(user.email, "Dupond.Jean@gmail.com");
+    final _email = "Dupond.Jean@gmail.com";
+    when(user.email).thenReturn(_email);
 
     when(user.photoUrl).thenReturn("");
 
-    Profile widget = Profile();
-    var testableWidget = buildTestableWidget(widget);
-    await tester.pumpWidget(testableWidget);
+    //WHEN
+    await tester.pumpWidget(widget);
     await tester.pumpAndSettle(Duration(seconds: 3));
-    await tester.tap(find.byKey(Key("Password")));
 
-    expect(find.text('Changer mon mot de passe'), findsOneWidget);
+    //THEN
+    expect(find.text(_displayName), findsOneWidget);
+    expect(find.text(_email), findsOneWidget);
   });
 }

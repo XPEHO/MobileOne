@@ -1,5 +1,8 @@
+import 'package:MobileOne/pages/Mainpage.dart';
+import 'package:MobileOne/pages/authentication-page.dart';
 import "package:test/test.dart";
 import 'package:flutter_driver/flutter_driver.dart';
+import 'package:MobileOne/pages/profile.dart';
 
 void main() {
   group("Auth tests", () {
@@ -29,7 +32,6 @@ void main() {
       String value =
           await driver.getText(find.byValueKey("authentication_page_text"));
 
-      await Future<Null>.delayed(Duration(seconds: 2));
       expect(value, "Login to your account");
     });
 
@@ -39,19 +41,20 @@ void main() {
       await driver.tap(find.byValueKey("auth_password_label"));
       await driver.enterText("test123");
       await driver.tap(find.byValueKey("sign_in_button"));
-      //String value = await driver.getText(find.byValueKey("Lists"));
+    });
 
-      //await Future<Null>.delayed(Duration(seconds: 2));
-      //expect(value, "My Lists");
+    test('bottom bar navigation', () async {
+      await driver.tap(find.byValueKey(KEY_CARD_PAGE));
+      await driver.tap(find.byValueKey(KEY_LISTS_PAGE));
+      await driver.tap(find.byValueKey(KEY_SHARE_PAGE));
+      await driver.tap(find.byValueKey(KEY_PROFILE_PAGE));
     });
 
     test('Delete this account', () async {
-      await driver.tap(find.byValueKey("Profile"));
-      await driver.tap(find.byValueKey("debug_delete_account_button"));
-      String value =
-          await driver.getText(find.byValueKey("authentication_page_text"));
+      await driver.tap(find.byValueKey(KEY_PROFILE_PAGE));
+      await driver.tap(find.byValueKey(KEY_DELETE_ACCOUNT));
+      String value = await driver.getText(find.byValueKey(KEY_AUTH_PAGE_TEXT));
 
-      await Future<Null>.delayed(Duration(seconds: 2));
       expect(value, "Login to your account");
     });
   });

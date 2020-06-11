@@ -8,6 +8,7 @@ import 'package:MobileOne/pages/forgotten_password.dart';
 import 'package:MobileOne/pages/register-page.dart';
 import 'package:MobileOne/services/analytics_service.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ void instantiateServices() {
   getIt.registerSingleton<GoogleSignIn>(GoogleSignIn());
   getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
   getIt.registerSingleton<AuthenticationService>(AuthenticationService());
+  getIt.registerSingleton<PreferencesService>(PreferencesService());
 }
 
 void main() {
@@ -44,9 +46,12 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  final _preferencesService = GetIt.I.get<PreferencesService>();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    _preferencesService.initSharedPreferences();
     return MaterialApp(
       supportedLocales: getSupportedLocales(),
       localizationsDelegates: [

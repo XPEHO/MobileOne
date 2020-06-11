@@ -45,6 +45,8 @@ lib/generated_plugin_registrant.dart
 
 # Android settings
 android/app/.settings/
+android/app/.classpath
+android/app/.project
 android/.settings/org.eclipse.buildship.core.prefs
 
 # IOS settings

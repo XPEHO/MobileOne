@@ -1,4 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:MobileOne/services/authentication_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../localization/localization.dart';
+
+const KEY_AUTH_PAGE_TEXT = "authentication_page_text";
 
 class AuthenticationPage extends StatefulWidget {
   AuthenticationPage({Key key}) : super(key: key);
@@ -24,6 +27,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   var _userService = GetIt.I.get<UserService>();
   var _authenticationService = GetIt.I.get<AuthenticationService>();
+  var _preferencesService = GetIt.I.get<PreferencesService>();
 
   @override
   void dispose() {
@@ -41,12 +45,11 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   }
 
   Future<bool> loginSkip() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.getString("mode") == "emailpassword") {
+    if (_preferencesService.isEmailPasswordMode()) {
       _userService.user = await _authenticationService.signIn(
-          prefs.getString("email"), prefs.getString("password"));
+          _preferencesService.getEmail(), _preferencesService.getPassword());
       return true;
-    } else if (prefs.getString("mode") == "google") {
+    } else if (_preferencesService.isGoogleMode()) {
       _userService.user = await _authenticationService.googleSignInSilently();
       return true;
     }
@@ -82,7 +85,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                   flex: 5,
                   child: Text(
                     getString(context, 'authentication_page_text'),
-                    key: Key("authentication_page_text"),
+                    key: Key(KEY_AUTH_PAGE_TEXT),
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
