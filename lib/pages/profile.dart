@@ -74,7 +74,7 @@ class ProfileState extends State<Profile> {
                   left: MediaQuery.of(context).size.width / 2 - 24,
                   top: 180,
                   child: Material(
-                    key: Key("gallery_test"),
+                    // key: Key("Gallery"),
                     borderRadius: BorderRadius.circular(24),
                     elevation: 8.0,
                     child: _buildProfilePicture(user),
