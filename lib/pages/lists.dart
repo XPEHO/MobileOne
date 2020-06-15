@@ -61,4 +61,10 @@ class ListsState extends State<Lists> {
       },
     );
   }
+
+  void openOpenedListPage(context) {
+    Navigator.of(context).pushNamed(
+      '/openedListPage',
+    );
+  }
 }

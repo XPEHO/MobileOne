@@ -62,5 +62,13 @@
     "submit_button": "Valider",
     "shared_with_me": "Partagé avec moi : ",
     "hint_name_new_list" : "Alimentations, sports ...",
-    "articles": "articles"
+    "articles": "articles",
+    "item_type": "Type",
+    "item_unit": "Unités",
+    "item_liters": "Litres",
+    "item_grams": "Grammes",
+    "item_kilos": "Kilos",
+    "add_item": "Ajouter un objet",
+    "item_count": "Quantité",
+    "item_name": "Nom"
 }

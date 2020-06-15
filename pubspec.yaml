@@ -20,18 +20,23 @@ dependencies:
   flutter:
     sdk: flutter
   # Add the dependency for the Firebase Core Flutter SDK
-  firebase_core: ^0.4.0+9
+  firebase_core: ^0.4.5
   # Add the dependency for the FlutterFire plugin for Google Analytics
-  firebase_analytics: ^5.0.11
+  firebase_analytics: ^5.0.15
   # Add the dependencies for any other Firebase products you want to use in your app
-  # For example, to use Firebase Authentication and Cloud Firestore
-  firebase_auth: ^0.16.0
+  firebase_auth: ^0.16.1
   google_sign_in: ^4.5.1
+<<<<<<< HEAD
   uuid: ^2.1.0
   cloud_firestore: ^0.13.6
   
 
 
+=======
+  firebase: 7.3.0
+  cloud_firestore: ^0.13.6
+  uuid: ^2.1.0
+>>>>>>> 9615fde... feat(Add_item_to_list) : added listItems page + add item to bdd and read items on bdd
 
   flutter_localizations:
     sdk: flutter

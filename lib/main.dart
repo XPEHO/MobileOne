@@ -9,6 +9,7 @@ import 'package:MobileOne/pages/Mainpage.dart';
 import 'package:MobileOne/pages/create_list.dart';
 import 'package:MobileOne/pages/forgotten_password.dart';
 import 'package:MobileOne/pages/lists.dart';
+import 'package:MobileOne/pages/openedListPage.dart';
 import 'package:MobileOne/pages/register-page.dart';
 import 'package:MobileOne/services/analytics_service.dart';
 import 'package:MobileOne/services/authentication_service.dart';
@@ -84,6 +85,7 @@ class MyApp extends StatelessWidget {
         '/forgottenPasswordPage': (context) => ForgottenPasswordPage(),
         '/lists': (context) => Lists(),
         '/createList': (context) => CreateList(),
+        '/openedListPage': (context) => OpenedListPage(),
       },
     );
   }
