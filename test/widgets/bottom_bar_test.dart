@@ -40,10 +40,10 @@ void main() {
     await tester.pump(new Duration(milliseconds: 1000));
 
     await tester.tap(find.byKey(Key("Cards")));
-    expect(find.text('Cartes'), findsOneWidget);
+    expect(find.text('Cartes'), findsNWidgets(2));
 
     await tester.tap(find.byKey(Key("Lists")));
-    expect(find.text('Listes'), findsNWidgets(2));
+    expect(find.text('Listes'), findsOneWidget);
 
     await tester.tap(find.byKey(Key("Share")));
     expect(find.text('Partager'), findsOneWidget);

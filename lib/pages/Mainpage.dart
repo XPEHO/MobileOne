@@ -27,7 +27,7 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
   int _currentTab = CARD_PAGE;
-
+  Widget _currentScreen = LoyaltyCards();
   final List _centerIcons = [
     Icons.scanner,
     Icons.add,
@@ -47,18 +47,25 @@ class MainPageState extends State<MainPage> {
       _iconListColor,
       _iconShareColor,
       _iconProfileColor = BLACK;
-  Widget _currentScreen = Lists();
+
   final PageStorageBucket _bucket = PageStorageBucket();
+
+  goToCreateListPage() {
+    Navigator.of(context).pushNamed('/createList');
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: Key("Mainn"),
       body: PageStorage(bucket: _bucket, child: _currentScreen),
       floatingActionButton: FloatingActionButton(
         child: Icon(_centerIcons[_currentTab]),
         backgroundColor: Colors.deepOrange,
-        onPressed: () {},
+        onPressed: () {
+          if (_currentTab == LISTS_PAGE) {
+            goToCreateListPage();
+          }
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
@@ -68,13 +75,14 @@ class MainPageState extends State<MainPage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Row(children: <Widget>[
-                MaterialButton(
+              Row(
+                children: <Widget>[
+                  MaterialButton(
                     key: Key(KEY_CARD_PAGE),
                     minWidth: 40,
                     onPressed: () {
+                      _currentScreen = LoyaltyCards();
                       setState(() {
-                        _currentScreen = LoyaltyCards();
                         _currentTab = CARD_PAGE;
 
                         _cardsColor = ORANGE;
@@ -89,18 +97,23 @@ class MainPageState extends State<MainPage> {
                       });
                     },
                     child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.loyalty, color: _iconCardsColor),
-                          Text(getString(context, 'loyalty_cards'),
-                              style: TextStyle(color: _cardsColor))
-                        ])),
-                MaterialButton(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.loyalty, color: _iconCardsColor),
+                        Text(
+                          getString(context, 'loyalty_cards'),
+                          style: TextStyle(color: _cardsColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                  MaterialButton(
                     key: Key(KEY_LISTS_PAGE),
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
                         _currentScreen = Lists();
+
                         _currentTab = LISTS_PAGE;
 
                         _cardsColor = BLACK;
@@ -115,57 +128,67 @@ class MainPageState extends State<MainPage> {
                       });
                     },
                     child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.list, color: _iconListColor),
-                          Text(getString(context, 'my_lists'),
-                              style: TextStyle(color: _listColor)),
-                        ])),
-              ]),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.list, color: _iconListColor),
+                        Text(
+                          getString(context, 'my_lists'),
+                          style: TextStyle(color: _listColor),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 25.0),
                   child: Center(
-                      child: Text(
-                    getString(
-                      context,
-                      _centerText[_currentTab],
+                    child: Text(
+                      getString(
+                        context,
+                        _centerText[_currentTab],
+                      ),
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 12.0,
+                      ),
                     ),
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 12.0,
-                    ),
-                  )),
+                  ),
                 ),
               ),
               Row(
                 children: <Widget>[
                   MaterialButton(
-                      key: Key(KEY_SHARE_PAGE),
-                      minWidth: 40,
-                      onPressed: () {
-                        setState(() {
-                          _currentScreen = Share();
-                          _currentTab = SHARE_PAGE;
+                    key: Key(KEY_SHARE_PAGE),
+                    minWidth: 40,
+                    onPressed: () {
+                      setState(() {
+                        _currentScreen = Share();
+                        _currentTab = SHARE_PAGE;
 
-                          _cardsColor = BLACK;
-                          _listColor = BLACK;
-                          _shareColor = ORANGE;
-                          _profileColor = BLACK;
+                        _cardsColor = BLACK;
+                        _listColor = BLACK;
+                        _shareColor = ORANGE;
+                        _profileColor = BLACK;
 
-                          _iconCardsColor = BLACK;
-                          _iconListColor = BLACK;
-                          _iconShareColor = ORANGE;
-                          _iconProfileColor = BLACK;
-                        });
-                      },
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(Icons.share, color: _iconShareColor),
-                            Text(getString(context, 'shared'),
-                                style: TextStyle(color: _shareColor))
-                          ])),
+                        _iconCardsColor = BLACK;
+                        _iconListColor = BLACK;
+                        _iconShareColor = ORANGE;
+                        _iconProfileColor = BLACK;
+                      });
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Icon(Icons.share, color: _iconShareColor),
+                        Text(
+                          getString(context, 'shared'),
+                          style: TextStyle(color: _shareColor),
+                        ),
+                      ],
+                    ),
+                  ),
                   MaterialButton(
                     key: Key(KEY_PROFILE_PAGE),
                     minWidth: 40,
@@ -189,8 +212,10 @@ class MainPageState extends State<MainPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Icon(Icons.person, color: _iconProfileColor),
-                        Text(getString(context, 'profile'),
-                            style: TextStyle(color: _profileColor))
+                        Text(
+                          getString(context, 'profile'),
+                          style: TextStyle(color: _profileColor),
+                        ),
                       ],
                     ),
                   ),

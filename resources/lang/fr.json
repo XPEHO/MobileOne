@@ -58,5 +58,8 @@
     "email_already_verified": "Cet email est déjà vérifié",
     "reset_password": "Réinitialiser mon mot de passe",
     "forgotten_password_page_text": "Réinitialiser votre mot de passe",
-    "reset_password_email_sent": "Un email vous a été envoyé"
+    "reset_password_email_sent": "Un email vous a été envoyé",
+    "submit_button": "Valider",
+    "shared_with_me": "Partagé avec moi : ",
+    "hint_name_new_list" : "Alimentations, sports ..."
 }

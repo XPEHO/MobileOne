@@ -1,17 +1,19 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/Mainpage.dart';
+import 'package:MobileOne/pages/create_list.dart';
 import 'package:MobileOne/pages/forgotten_password.dart';
+import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/register-page.dart';
 import 'package:MobileOne/services/analytics_service.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -33,16 +35,28 @@ void instantiateServices() {
   getIt.registerSingleton<PreferencesService>(PreferencesService());
 }
 
-void main() {
+void main() async {
   instantiateServices();
-
   Crashlytics.instance.enableInDevMode = true;
-
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-
   runZoned(() {
     runApp(MyApp());
   }, onError: Crashlytics.instance.recordError);
+  WidgetsFlutterBinding.ensureInitialized();
+  /*final FirebaseApp app = await FirebaseApp.configure(
+    name: "mobileOne_db",
+    options: Platform.isIOS
+        ? const FirebaseOptions(
+            googleAppID: "1:247649689994:ios:c93c27507d2cd4bacca873",
+            gcmSenderID: "247649689994",
+            databaseURL: "https://flutterfire-cd2f7.firebaseio.com",
+          )
+        : const FirebaseOptions(
+            googleAppID: "1:247649689994:android:96ebee75c26f1a72cca873",
+            apiKey: "AIzaSyBZWHTuyxArjQBCKEagaxm9XKdd4oEau6g",
+            databaseURL: "https://flutterfire-cd2f7.firebaseio.com",
+          ),
+  );*/
 }
 
 class MyApp extends StatelessWidget {
@@ -79,6 +93,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => AuthenticationPage(),
         '/registerPage': (context) => RegisterPage(),
         '/forgottenPasswordPage': (context) => ForgottenPasswordPage(),
+        '/lists': (context) => Lists(),
+        '/createList': (context) => CreateList(),
       },
     );
   }
