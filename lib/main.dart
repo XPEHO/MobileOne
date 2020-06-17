@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'dart:io' show Platform;
+import 'package:MobileOne/services/lists_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
 import 'package:MobileOne/localization/delegate.dart';
@@ -33,36 +36,41 @@ void instantiateServices() {
   getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
   getIt.registerSingleton<AuthenticationService>(AuthenticationService());
   getIt.registerSingleton<PreferencesService>(PreferencesService());
+  getIt.registerSingleton<ListsService>(ListsService());
 }
 
 void main() async {
+ 
   instantiateServices();
-  Crashlytics.instance.enableInDevMode = true;
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  runZoned(() {
-    runApp(MyApp());
-  }, onError: Crashlytics.instance.recordError);
-  WidgetsFlutterBinding.ensureInitialized();
-  /*final FirebaseApp app = await FirebaseApp.configure(
+    WidgetsFlutterBinding.ensureInitialized();
+   final FirebaseApp app = await FirebaseApp.configure(
     name: "mobileOne_db",
-    options: Platform.isIOS
+   options: Platform.isIOS
         ? const FirebaseOptions(
             googleAppID: "1:247649689994:ios:c93c27507d2cd4bacca873",
             gcmSenderID: "247649689994",
-            databaseURL: "https://flutterfire-cd2f7.firebaseio.com",
+            databaseURL: "https://mobileone-3d42c.firebaseio.com",
           )
         : const FirebaseOptions(
             googleAppID: "1:247649689994:android:96ebee75c26f1a72cca873",
             apiKey: "AIzaSyBZWHTuyxArjQBCKEagaxm9XKdd4oEau6g",
-            databaseURL: "https://flutterfire-cd2f7.firebaseio.com",
+            databaseURL: "https://mobileone-3d42c.firebaseio.com",
           ),
-  );*/
+  );
+  Crashlytics.instance.enableInDevMode = true;
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  runZoned(() {
+    runApp(MyApp(app: app));
+  }, onError: Crashlytics.instance.recordError);
+
+ 
 }
 
 class MyApp extends StatelessWidget {
-  final _preferencesService = GetIt.I.get<PreferencesService>();
+  MyApp({this.app});
+  final FirebaseApp app;
 
-  // This widget is the root of your application.
+  final _preferencesService = GetIt.I.get<PreferencesService>();
   @override
   Widget build(BuildContext context) {
     _preferencesService.initSharedPreferences();
@@ -93,8 +101,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => AuthenticationPage(),
         '/registerPage': (context) => RegisterPage(),
         '/forgottenPasswordPage': (context) => ForgottenPasswordPage(),
-        '/lists': (context) => Lists(),
-        '/createList': (context) => CreateList(),
+        '/lists': (context) => Lists(app: app),
+        '/createList': (context) => CreateList(app: app),
       },
     );
   }

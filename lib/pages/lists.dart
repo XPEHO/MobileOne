@@ -1,11 +1,17 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/services/lists_service.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:MobileOne/pages/pattern_list.dart';
+import 'package:get_it/get_it.dart';
 
 const Color ORANGE = Colors.deepOrange;
-final List<Widget> widgetList = [];
+ var _listsService = GetIt.I.get<ListsService>();
 
 class Lists extends StatefulWidget {
+  Lists({this.app});
+  final FirebaseApp app;
   State<StatefulWidget> createState() {
     return ListsState();
   }
@@ -26,13 +32,15 @@ class ListsState extends State<Lists> {
           Container(
             width: MediaQuery.of(context).size.width,
             height: 100,
-            child: ListView(
-              children: <Widget>[
-                Row(
-                  children: widgetList,
-                ),
-              ],
+            child: ListView.builder(
               scrollDirection: Axis.horizontal,
+              itemCount: _listsService.listOfNames.length,
+              itemBuilder: (BuildContext ctxt, int index) {
+               
+    return patternLists(context, _listsService.listOfNames[index]);
+  
+              },
+
             ),
           ),
           Padding(
