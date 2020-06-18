@@ -1,19 +1,13 @@
 import 'package:MobileOne/localization/localization.dart';
-
-import 'package:MobileOne/services/lists_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get_it/get_it.dart';
+
 import 'package:uuid/uuid.dart';
 
 const Color ORANGE = Colors.deepOrange;
-const Color BLACK = Colors.black;
-const Color WHITE = Colors.white;
-const Color GREY = Colors.grey;
 const Color TRANSPARENT = Colors.transparent;
 
-var _listsService = GetIt.I.get<ListsService>();
 int itemCounts = 0;
 
 class CreateList extends StatefulWidget {
@@ -43,19 +37,18 @@ class CreateListPage extends State<CreateList> {
   }
 
   goToListsPage() {
-    Navigator.of(context).pop();
+    Navigator.pop(context);
   }
 
-  void addItemToList() {
-    setState(() {
-      _listsService.listOfNames.add(_myController.text);
-      addListToDataBase();
-    });
+  void addItemToList() async {
+    await addListToDataBase();
+    goToListsPage();
   }
 
   @override
   Widget build(BuildContext context) {
     print("IM HERE CREATE LISTS");
+
     return Scaffold(
       body: Center(
           child: Column(
@@ -97,7 +90,6 @@ class CreateListPage extends State<CreateList> {
             color: ORANGE,
             onPressed: () {
               addItemToList();
-              goToListsPage();
             },
             child: Text(getString(context, 'submit_button')),
           ),

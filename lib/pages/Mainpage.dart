@@ -1,4 +1,5 @@
-import 'package:MobileOne/pages/bottom_bare.dart';
+import 'package:MobileOne/pages/bottom_bar.dart';
+import 'package:MobileOne/pages/create_list.dart';
 import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/pages/profile.dart';
@@ -94,6 +95,10 @@ class MainPageState extends State<MainPage> {
   }
 
   goToCreateListPage() {
-    Navigator.of(context).pushNamed('/createList');
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => CreateList(),
+      ),
+    );
   }
 }
