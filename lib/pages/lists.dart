@@ -1,4 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/pages/bottom_bare.dart';
 import 'package:MobileOne/services/lists_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,7 +40,7 @@ class ListsState extends State<Lists> {
 
   initState() {
     super.initState();
-  // listsService.listOfNames.clear();
+   listsService.listOfNames.clear();
     getData();
   }
 
@@ -73,7 +74,7 @@ class ListsState extends State<Lists> {
               getString(context, 'shared_with_me'),
             ),
           ),
-          buildMainPage(context),
+   
         ],
       ),
     );

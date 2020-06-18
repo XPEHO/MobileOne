@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:MobileOne/services/lists_service.dart';
+import 'package:MobileOne/services/navigation_bar_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
@@ -37,6 +38,7 @@ void instantiateServices() {
   getIt.registerSingleton<AuthenticationService>(AuthenticationService());
   getIt.registerSingleton<PreferencesService>(PreferencesService());
   getIt.registerSingleton<ListsService>(ListsService());
+   getIt.registerSingleton<NavigationBarService>(NavigationBarService());
 }
 
 void main() async {
@@ -94,7 +96,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        '/mainpage': (context) =>  buildMainPage(context),
+        '/mainpage': (context) =>  MainPage(),
         '/': (context) => AuthenticationPage(),
         '/registerPage': (context) => RegisterPage(),
         '/forgottenPasswordPage': (context) => ForgottenPasswordPage(),

@@ -42,24 +42,8 @@ class CreateListPage extends State<CreateList> {
     });
   }
 
-   getData() {
-    final databaseReference = Firestore.instance;
-    databaseReference
-        .collection("wishlists")
-        .getDocuments()
-        .then((QuerySnapshot snapshot) {
-      snapshot.documents.forEach((f) => l.add(f.data["label"].toString()));
-      setState(() {
-        for (int i = 0; i < l.length; i++) {
-          listsService.listOfNames.add(l[i].toString());
-        }
-      });
-    });
-  }
-
   goToListsPage() {
-   // Navigator.of(context).pop('/mainpage');
- Navigator.pushReplacementNamed(context, '/lists');
+    Navigator.of(context).pop();
   }
 
   void addItemToList() {
@@ -67,20 +51,11 @@ class CreateListPage extends State<CreateList> {
       _listsService.listOfNames.add(_myController.text);
       addListToDataBase();
     });
-    
   }
-
-  /*  initState() {
-    super.initState();
-   listsService.listOfNames.clear();
-  //  getData();
-  }*/
-
 
   @override
   Widget build(BuildContext context) {
     print("IM HERE CREATE LISTS");
-    Lists();
     return Scaffold(
       body: Center(
           child: Column(
@@ -122,13 +97,7 @@ class CreateListPage extends State<CreateList> {
             color: ORANGE,
             onPressed: () {
               addItemToList();
-              
-                
-              
               goToListsPage();
-             // listsService.listOfNames.clear();
-               // getData();
-              
             },
             child: Text(getString(context, 'submit_button')),
           ),
