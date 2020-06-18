@@ -1,9 +1,11 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/lists_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:MobileOne/pages/pattern_list.dart';
+import 'package:MobileOne/pages/create_list.dart';
 import 'package:get_it/get_it.dart';
 
 const Color ORANGE = Colors.deepOrange;
@@ -17,9 +19,42 @@ class Lists extends StatefulWidget {
   }
 }
 
+
 class ListsState extends State<Lists> {
+
+  List<String> l =[];
+
+
+test(){
+ 
+ final databaseReference = Firestore.instance;
+    databaseReference
+        .collection("wishlists")
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+       snapshot.documents.forEach((f) => l.add(f.data["label"].toString()));
+       //snapshot.documents.forEach((f) => print(f.data["label"].toString()));
+    });
+
+    
+     
+}
+  @override
+  void initState() {
+    super.initState();
+    // TODO: implement initState
+ 
+    test();
+  }
+
   @override
   Widget build(BuildContext context) {
+
+         for(int i=0;i<l.length;i++){
+ _listsService.listOfNames.add(l[i].toString());
+
+    }
+  
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -36,7 +71,7 @@ class ListsState extends State<Lists> {
               scrollDirection: Axis.horizontal,
               itemCount: _listsService.listOfNames.length,
               itemBuilder: (BuildContext ctxt, int index) {
-               
+              
     return patternLists(context, _listsService.listOfNames[index]);
   
               },

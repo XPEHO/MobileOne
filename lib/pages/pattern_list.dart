@@ -3,19 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/create_list.dart';
 
 Widget patternLists(BuildContext context,String objectName) {
-  final databaseReference = Firestore.instance;
 
-  List l = [];
-
-   getData() {
-    databaseReference
-        .collection("wishlists")
-        .getDocuments()
-        .then((QuerySnapshot snapshot) {
-      snapshot.documents.forEach((f) => l.add(f.data));
-    });
-  }
-  getData();
+  
 /*
 String test(){
 String name;
@@ -25,7 +14,7 @@ String name;
     }
     return name;
 }*/
-    print(l.length);
+   // print(l.length);
 
   return Container(
     width: MediaQuery.of(context).size.width * 0.23,
@@ -39,7 +28,6 @@ String name;
               padding: EdgeInsets.only(top: 5, bottom: 5),
               child: Text(
                 objectName,
-                //test(),
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(color: BLACK, fontSize: 12.0),
               ),

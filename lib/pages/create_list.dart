@@ -1,6 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/lists.dart';
-import 'package:MobileOne/pages/pattern_list.dart';
 import 'package:MobileOne/services/lists_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ const Color GREY = Colors.grey;
 const Color TRANSPARENT = Colors.transparent;
 
  var _listsService = GetIt.I.get<ListsService>();
-
+ int itemCounts = 0;
 class CreateList extends StatefulWidget {
   CreateList({this.app});
   final FirebaseApp app;
@@ -28,7 +27,7 @@ class CreateList extends StatefulWidget {
 class CreateListPage extends State<CreateList> {
   final databaseReference = Firestore.instance;
   final _myController = TextEditingController();
-  int _itemCounts = 0;
+ 
 var _timeStamp = new DateTime.now();
   var uuid = Uuid();
   addListToDataBase() async {
@@ -36,7 +35,7 @@ var _timeStamp = new DateTime.now();
         .collection("wishlists")
         .document(uuid.v4())
         .setData({
-      'itemCounts': _itemCounts.toString(),
+      'itemCounts': itemCounts.toString(),
       'label': _myController.text,
       'timestamp': _timeStamp,
     });
@@ -56,7 +55,6 @@ var _timeStamp = new DateTime.now();
 _listsService.listOfNames.add(_myController.text);
       
       addListToDataBase();
-  
   }
 
   @override
