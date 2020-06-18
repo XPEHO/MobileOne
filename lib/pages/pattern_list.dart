@@ -1,20 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/create_list.dart';
 
-Widget patternLists(BuildContext context,String objectName) {
-
-  
-/*
-String test(){
-String name;
-    itemCounts++;
-    for (int i = 0; i < l.length; i++) {
-      name = getData()[i].toString();
-    }
-    return name;
-}*/
-   // print(l.length);
+Widget patternLists(BuildContext context, String objectName) {
 
   return Container(
     width: MediaQuery.of(context).size.width * 0.23,

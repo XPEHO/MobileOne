@@ -5,11 +5,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:MobileOne/pages/pattern_list.dart';
-import 'package:MobileOne/pages/create_list.dart';
+import 'package:MobileOne/pages/Mainpage.dart';
 import 'package:get_it/get_it.dart';
 
 const Color ORANGE = Colors.deepOrange;
- var _listsService = GetIt.I.get<ListsService>();
+var listsService = GetIt.I.get<ListsService>();
+List<String> l = [];
 
 class Lists extends StatefulWidget {
   Lists({this.app});
@@ -19,42 +20,33 @@ class Lists extends StatefulWidget {
   }
 }
 
-
 class ListsState extends State<Lists> {
 
-  List<String> l =[];
-
-
-test(){
- 
- final databaseReference = Firestore.instance;
+ getData() {
+    final databaseReference = Firestore.instance;
     databaseReference
         .collection("wishlists")
         .getDocuments()
         .then((QuerySnapshot snapshot) {
-       snapshot.documents.forEach((f) => l.add(f.data["label"].toString()));
-       //snapshot.documents.forEach((f) => print(f.data["label"].toString()));
+      snapshot.documents.forEach((f) => l.add(f.data["label"].toString()));
+      setState(() {
+        for (int i = 0; i < l.length; i++) {
+          listsService.listOfNames.add(l[i].toString());
+        }
+      });
     });
+  }
 
-    
-     
-}
-  @override
-  void initState() {
+  initState() {
     super.initState();
-    // TODO: implement initState
- 
-    test();
+  // listsService.listOfNames.clear();
+    getData();
   }
 
   @override
   Widget build(BuildContext context) {
-
-         for(int i=0;i<l.length;i++){
- _listsService.listOfNames.add(l[i].toString());
-
-    }
-  
+     
+    print("IM HERE lists");
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -69,13 +61,10 @@ test(){
             height: 100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: _listsService.listOfNames.length,
+              itemCount: listsService.listOfNames.length,
               itemBuilder: (BuildContext ctxt, int index) {
-              
-    return patternLists(context, _listsService.listOfNames[index]);
-  
+                return patternLists(context, listsService.listOfNames[index]);
               },
-
             ),
           ),
           Padding(
@@ -84,6 +73,7 @@ test(){
               getString(context, 'shared_with_me'),
             ),
           ),
+          buildMainPage(context),
         ],
       ),
     );

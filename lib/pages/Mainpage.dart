@@ -3,6 +3,7 @@ import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 const int CARD_PAGE = 0;
@@ -17,7 +18,7 @@ const KEY_PROFILE_PAGE = "Profile";
 
 const Color BLACK = Colors.black;
 const Color ORANGE = Colors.deepOrange;
-
+/*
 class MainPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -26,8 +27,13 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-  int _currentTab = CARD_PAGE;
-  Widget _currentScreen = LoyaltyCards();
+ 
+*/
+  @override
+  Widget buildMainPage(BuildContext context) {
+
+     int _currentTab = CARD_PAGE;
+  Widget _currentScreen = Lists();
   final List _centerIcons = [
     Icons.scanner,
     Icons.add,
@@ -53,9 +59,8 @@ class MainPageState extends State<MainPage> {
   goToCreateListPage() {
     Navigator.of(context).pushNamed('/createList');
   }
-
-  @override
-  Widget build(BuildContext context) {
+    print("IM HERE MAINPAGE");
+   
     return Scaffold(
       body: PageStorage(bucket: _bucket, child: _currentScreen),
       floatingActionButton: FloatingActionButton(
@@ -82,7 +87,8 @@ class MainPageState extends State<MainPage> {
                     minWidth: 40,
                     onPressed: () {
                       _currentScreen = LoyaltyCards();
-                      setState(() {
+                     // setState(() {
+                       
                         _currentTab = CARD_PAGE;
 
                         _cardsColor = ORANGE;
@@ -94,7 +100,7 @@ class MainPageState extends State<MainPage> {
                         _iconListColor = BLACK;
                         _iconShareColor = BLACK;
                         _iconProfileColor = BLACK;
-                      });
+                  //    });
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -111,7 +117,7 @@ class MainPageState extends State<MainPage> {
                     key: Key(KEY_LISTS_PAGE),
                     minWidth: 40,
                     onPressed: () {
-                      setState(() {
+                    //  setState(() {
                         _currentScreen = Lists();
 
                         _currentTab = LISTS_PAGE;
@@ -125,7 +131,7 @@ class MainPageState extends State<MainPage> {
                         _iconListColor = ORANGE;
                         _iconShareColor = BLACK;
                         _iconProfileColor = BLACK;
-                      });
+                   //   });
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -163,7 +169,7 @@ class MainPageState extends State<MainPage> {
                     key: Key(KEY_SHARE_PAGE),
                     minWidth: 40,
                     onPressed: () {
-                      setState(() {
+                    //  setState(() {
                         _currentScreen = Share();
                         _currentTab = SHARE_PAGE;
 
@@ -176,7 +182,7 @@ class MainPageState extends State<MainPage> {
                         _iconListColor = BLACK;
                         _iconShareColor = ORANGE;
                         _iconProfileColor = BLACK;
-                      });
+                   //   });
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -193,7 +199,7 @@ class MainPageState extends State<MainPage> {
                     key: Key(KEY_PROFILE_PAGE),
                     minWidth: 40,
                     onPressed: () {
-                      setState(() {
+                   //   setState(() {
                         _currentScreen = Profile();
                         _currentTab = PROFILE_PAGE;
 
@@ -206,7 +212,7 @@ class MainPageState extends State<MainPage> {
                         _iconListColor = BLACK;
                         _iconShareColor = BLACK;
                         _iconProfileColor = ORANGE;
-                      });
+                  //    });
                     },
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -227,4 +233,4 @@ class MainPageState extends State<MainPage> {
       ),
     );
   }
-}
+

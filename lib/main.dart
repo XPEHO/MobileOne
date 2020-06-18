@@ -40,12 +40,11 @@ void instantiateServices() {
 }
 
 void main() async {
- 
   instantiateServices();
-    WidgetsFlutterBinding.ensureInitialized();
-   final FirebaseApp app = await FirebaseApp.configure(
+  WidgetsFlutterBinding.ensureInitialized();
+  final FirebaseApp app = await FirebaseApp.configure(
     name: "mobileOne_db",
-   options: Platform.isIOS
+    options: Platform.isIOS
         ? const FirebaseOptions(
             googleAppID: "1:247649689994:ios:c93c27507d2cd4bacca873",
             gcmSenderID: "247649689994",
@@ -62,8 +61,6 @@ void main() async {
   runZoned(() {
     runApp(MyApp(app: app));
   }, onError: Crashlytics.instance.recordError);
-
- 
 }
 
 class MyApp extends StatelessWidget {
@@ -97,7 +94,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: "/",
       routes: {
-        '/mainpage': (context) => MainPage(),
+        '/mainpage': (context) =>  buildMainPage(context),
         '/': (context) => AuthenticationPage(),
         '/registerPage': (context) => RegisterPage(),
         '/forgottenPasswordPage': (context) => ForgottenPasswordPage(),

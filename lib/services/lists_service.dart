@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ListsService with ChangeNotifier {
- List<String> _names = [];
+  List<String> _names = [];
 
   List<String> get listOfNames {
     return _names;

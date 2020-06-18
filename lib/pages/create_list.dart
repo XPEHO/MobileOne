@@ -13,8 +13,9 @@ const Color WHITE = Colors.white;
 const Color GREY = Colors.grey;
 const Color TRANSPARENT = Colors.transparent;
 
- var _listsService = GetIt.I.get<ListsService>();
- int itemCounts = 0;
+var _listsService = GetIt.I.get<ListsService>();
+int itemCounts = 0;
+
 class CreateList extends StatefulWidget {
   CreateList({this.app});
   final FirebaseApp app;
@@ -27,8 +28,8 @@ class CreateList extends StatefulWidget {
 class CreateListPage extends State<CreateList> {
   final databaseReference = Firestore.instance;
   final _myController = TextEditingController();
- 
-var _timeStamp = new DateTime.now();
+
+  var _timeStamp = new DateTime.now();
   var uuid = Uuid();
   addListToDataBase() async {
     await databaseReference
@@ -41,24 +42,44 @@ var _timeStamp = new DateTime.now();
     });
   }
 
-
-
-  initState() {
-    super.initState();
+   getData() {
+    final databaseReference = Firestore.instance;
+    databaseReference
+        .collection("wishlists")
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      snapshot.documents.forEach((f) => l.add(f.data["label"].toString()));
+      setState(() {
+        for (int i = 0; i < l.length; i++) {
+          listsService.listOfNames.add(l[i].toString());
+        }
+      });
+    });
   }
 
   goToListsPage() {
-    Navigator.pop(context);
+   // Navigator.of(context).pop('/mainpage');
+ Navigator.pushReplacementNamed(context, '/lists');
   }
 
   void addItemToList() {
-_listsService.listOfNames.add(_myController.text);
-      
+    setState(() {
+      _listsService.listOfNames.add(_myController.text);
       addListToDataBase();
+    });
+    
   }
+
+  /*  initState() {
+    super.initState();
+   listsService.listOfNames.clear();
+  //  getData();
+  }*/
+
 
   @override
   Widget build(BuildContext context) {
+    print("IM HERE CREATE LISTS");
     Lists();
     return Scaffold(
       body: Center(
@@ -101,7 +122,13 @@ _listsService.listOfNames.add(_myController.text);
             color: ORANGE,
             onPressed: () {
               addItemToList();
+              
+                
+              
               goToListsPage();
+             // listsService.listOfNames.clear();
+               // getData();
+              
             },
             child: Text(getString(context, 'submit_button')),
           ),
