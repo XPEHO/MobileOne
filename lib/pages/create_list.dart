@@ -1,5 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:MobileOne/pages/lists.dart';
+
 import 'package:MobileOne/services/lists_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

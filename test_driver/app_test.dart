@@ -1,5 +1,5 @@
-import 'package:MobileOne/pages/Mainpage.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
+import 'package:MobileOne/pages/bottom_bare.dart';
 import "package:test/test.dart";
 import 'package:flutter_driver/flutter_driver.dart';
 import 'package:MobileOne/pages/profile.dart';

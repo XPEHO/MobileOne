@@ -1,11 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:MobileOne/pages/lists.dart';
-import 'package:MobileOne/pages/loyalty_card.dart';
-import 'package:MobileOne/pages/profile.dart';
-import 'package:MobileOne/pages/share.dart';
-import 'package:MobileOne/services/navigation_bar_service.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 
 const int CARD_PAGE = 0;
 const int LISTS_PAGE = 1;
@@ -20,11 +14,13 @@ const KEY_PROFILE_PAGE = "Profile";
 const Color BLACK = Colors.black;
 const Color ORANGE = Colors.deepOrange;
 
-
-
-var navigationBarService = GetIt.I.get<NavigationBarService>();
+typedef IndexChangeListener = void Function(int);
 
 class BottomBar extends StatefulWidget {
+  final IndexChangeListener onItemSelected;
+
+  BottomBar(this.onItemSelected);
+
   @override
   State<StatefulWidget> createState() {
     return BottomBarState();
@@ -39,178 +35,111 @@ class BottomBarState extends State<BottomBar> {
     'center_icon_profile'
   ];
 
-  Color _cardsColor, _listColor, _shareColor, _profileColor;
-  Color _iconCardsColor,
-      _iconListColor,
-      _iconShareColor,
-      _iconProfileColor = BLACK;
+  int _currentItem;
+
+  Color computeColor(int index) => index == _currentItem ? ORANGE : BLACK;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentItem = LISTS_PAGE;
+  }
 
   Widget build(BuildContext context) {
     return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                children: <Widget>[
-                  MaterialButton(
-                    key: Key(KEY_CARD_PAGE),
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        loyaltyCardPageSelected();
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.loyalty, color: _iconCardsColor),
-                        Text(
-                          getString(context, 'loyalty_cards'),
-                          style: TextStyle(color: _cardsColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                  MaterialButton(
-                    key: Key(KEY_LISTS_PAGE),
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        listPageSelected();
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.list, color: _iconListColor),
-                        Text(
-                          getString(context, 'my_lists'),
-                          style: TextStyle(color: _listColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 25.0),
-                  child: Center(
-                    child: Text(
-                      getString(
-                        context,
-                        _centerText[navigationBarService.currentTab],
-                      ),
-                      style: TextStyle(
-                        color: Colors.green,
-                        fontSize: 12.0,
-                      ),
-                    ),
-                  ),
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            BottomBarItem(
+              KEY_CARD_PAGE,
+              computeColor(CARD_PAGE),
+              () => onSelectItem(CARD_PAGE),
+              getString(context, 'loyalty_cards'),
+              Icons.card_giftcard,
+            ),
+            BottomBarItem(
+              KEY_LISTS_PAGE,
+              computeColor(LISTS_PAGE),
+              () => onSelectItem(LISTS_PAGE),
+              getString(context, 'my_lists'),
+              Icons.list,
+            ),
+          ],
+        ),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.only(top: 25.0),
+            child: Center(
+              child: Text(
+                getString(
+                  context,
+                  _centerText[_currentItem],
+                ),
+                style: TextStyle(
+                  color: Colors.green,
+                  fontSize: 12.0,
                 ),
               ),
-              Row(
-                children: <Widget>[
-                  MaterialButton(
-                    key: Key(KEY_SHARE_PAGE),
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        sharePageSelected();
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.share, color: _iconShareColor),
-                        Text(
-                          getString(context, 'shared'),
-                          style: TextStyle(color: _shareColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                  MaterialButton(
-                    key: Key(KEY_PROFILE_PAGE),
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        profilePageSelected();
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.person, color: _iconProfileColor),
-                        Text(
-                          getString(context, 'profile'),
-                          style: TextStyle(color: _profileColor),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
+            ),
+          ),
+        ),
+        Row(
+          children: <Widget>[
+            BottomBarItem(
+              KEY_SHARE_PAGE,
+              computeColor(SHARE_PAGE),
+              () => onSelectItem(SHARE_PAGE),
+              getString(context, 'shared'),
+              Icons.share,
+            ),
+            BottomBarItem(
+              KEY_PROFILE_PAGE,
+              computeColor(PROFILE_PAGE),
+              () => onSelectItem(PROFILE_PAGE),
+              getString(context, 'profile'),
+              Icons.person,
+            ),
+          ],
+        ),
+      ],
+    );
   }
 
-  void profilePageSelected() {
-    navigationBarService.currentScreen = Profile();
-    navigationBarService.currentTab = PROFILE_PAGE;
-
-    _cardsColor = BLACK;
-    _listColor = BLACK;
-    _shareColor = BLACK;
-    _profileColor = ORANGE;
-
-    _iconCardsColor = BLACK;
-    _iconListColor = BLACK;
-    _iconShareColor = BLACK;
-    _iconProfileColor = ORANGE;
+  void onSelectItem(int index) {
+    setState(() {
+      _currentItem = index;
+    });
+    widget.onItemSelected(index);
   }
+}
 
-  void sharePageSelected() {
-    navigationBarService.currentScreen = Share();
-    navigationBarService.currentTab = SHARE_PAGE;
+class BottomBarItem extends StatelessWidget {
+  final String _key;
+  final Function _onItemTap;
+  final Color _itemColor;
+  final String _text;
+  final IconData _icon;
 
-    _cardsColor = BLACK;
-    _listColor = BLACK;
-    _shareColor = ORANGE;
-    _profileColor = BLACK;
+  BottomBarItem(
+      this._key, this._itemColor, this._onItemTap, this._text, this._icon);
 
-    _iconCardsColor = BLACK;
-    _iconListColor = BLACK;
-    _iconShareColor = ORANGE;
-    _iconProfileColor = BLACK;
-  }
-
-  listPageSelected() {
-    navigationBarService.currentScreen = Lists();
-    navigationBarService.currentTab = LISTS_PAGE;
-
-    _cardsColor = BLACK;
-    _listColor = ORANGE;
-    _shareColor = BLACK;
-    _profileColor = BLACK;
-
-    _iconCardsColor = BLACK;
-    _iconListColor = ORANGE;
-    _iconShareColor = BLACK;
-    _iconProfileColor = BLACK;
-  }
-
-  loyaltyCardPageSelected() {
-    navigationBarService.currentScreen = LoyaltyCards();
-    navigationBarService.currentTab = CARD_PAGE;
-
-    _cardsColor = ORANGE;
-    _listColor = BLACK;
-    _shareColor = BLACK;
-    _profileColor = BLACK;
-
-    _iconCardsColor = ORANGE;
-    _iconListColor = BLACK;
-    _iconShareColor = BLACK;
-    _iconProfileColor = BLACK;
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      key: Key(_key),
+      minWidth: 40,
+      onPressed: () => _onItemTap(),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(_icon, color: _itemColor),
+          Text(
+            _text,
+            style: TextStyle(color: _itemColor),
+          ),
+        ],
+      ),
+    );
   }
 }

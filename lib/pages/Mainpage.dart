@@ -1,18 +1,10 @@
-
 import 'package:MobileOne/pages/bottom_bare.dart';
 import 'package:MobileOne/pages/lists.dart';
+import 'package:MobileOne/pages/loyalty_card.dart';
+import 'package:MobileOne/pages/profile.dart';
+import 'package:MobileOne/pages/share.dart';
 
 import 'package:flutter/material.dart';
-
-const int CARD_PAGE = 0;
-const int LISTS_PAGE = 1;
-const int SHARE_PAGE = 2;
-const int PROFILE_PAGE = 3;
-
-const KEY_CARD_PAGE = "Cards";
-const KEY_LISTS_PAGE = "Lists";
-const KEY_SHARE_PAGE = "Share";
-const KEY_PROFILE_PAGE = "Profile";
 
 const Color BLACK = Colors.black;
 const Color ORANGE = Colors.deepOrange;
@@ -25,7 +17,6 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-  int _currentTab = CARD_PAGE;
   Widget _currentScreen = Lists();
   final List _centerIcons = [
     Icons.scanner,
@@ -34,11 +25,26 @@ class MainPageState extends State<MainPage> {
     Icons.camera,
   ];
 
+  List _actions = [];
 
+  IconData _floatingButtonIcon;
+  Function _floatingButtonAction;
 
   final PageStorageBucket _bucket = PageStorageBucket();
 
+  @override
+  void initState() {
+    super.initState();
+    _actions = [
+      unasignedAction,
+      goToCreateListPage,
+      unasignedAction,
+      unasignedAction,
+    ];
 
+    _floatingButtonIcon = _centerIcons[LISTS_PAGE];
+    _floatingButtonAction = _actions[LISTS_PAGE];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,30 +53,47 @@ class MainPageState extends State<MainPage> {
     return Scaffold(
       body: PageStorage(bucket: _bucket, child: _currentScreen),
       floatingActionButton: FloatingActionButton(
-        child: Icon(_centerIcons[_currentTab]),
+        child: Icon(_floatingButtonIcon),
         backgroundColor: Colors.deepOrange,
-        onPressed: () {
-          if (_currentTab == LISTS_PAGE) {
-            goToCreateListPage();
-          }
-        },
+        onPressed: () => _floatingButtonAction(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         child: Container(
           height: 60,
-          child: BottomBar(),
+          child: BottomBar(onBottomBarIndexSelected),
         ),
       ),
     );
   }
 
- 
-  
+  onBottomBarIndexSelected(index) {
+    setState(() {
+      _floatingButtonIcon = _centerIcons[index];
+      _floatingButtonAction = _actions[index];
+      switch (index) {
+        case CARD_PAGE:
+          _currentScreen = LoyaltyCards();
+          break;
+        case LISTS_PAGE:
+          _currentScreen = Lists();
+          break;
+        case SHARE_PAGE:
+          _currentScreen = Share();
+          break;
+        case PROFILE_PAGE:
+          _currentScreen = Profile();
+          break;
+      }
+    });
+  }
+
+  unasignedAction() {
+    debugPrint("no action assigned");
+  }
+
   goToCreateListPage() {
     Navigator.of(context).pushNamed('/createList');
   }
-
-  
 }

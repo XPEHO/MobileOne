@@ -1,12 +1,12 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:MobileOne/pages/bottom_bare.dart';
+
 import 'package:MobileOne/services/lists_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:MobileOne/pages/pattern_list.dart';
-import 'package:MobileOne/pages/Mainpage.dart';
+
 import 'package:get_it/get_it.dart';
 
 const Color ORANGE = Colors.deepOrange;
@@ -22,8 +22,7 @@ class Lists extends StatefulWidget {
 }
 
 class ListsState extends State<Lists> {
-
- getData() {
+  getData() {
     final databaseReference = Firestore.instance;
     databaseReference
         .collection("wishlists")
@@ -40,13 +39,12 @@ class ListsState extends State<Lists> {
 
   initState() {
     super.initState();
-   listsService.listOfNames.clear();
+    listsService.listOfNames.clear();
     getData();
   }
 
   @override
   Widget build(BuildContext context) {
-     
     print("IM HERE lists");
     return Scaffold(
       body: Column(
@@ -74,7 +72,6 @@ class ListsState extends State<Lists> {
               getString(context, 'shared_with_me'),
             ),
           ),
-   
         ],
       ),
     );
