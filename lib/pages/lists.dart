@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:MobileOne/pages/pattern_list.dart';
+import 'package:MobileOne/pages/widget_list.dart';
 
 const Color ORANGE = Colors.deepOrange;
 
