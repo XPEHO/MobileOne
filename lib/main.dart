@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io' show Platform;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
@@ -40,24 +39,11 @@ void instantiateServices() {
 void main() async {
   instantiateServices();
   WidgetsFlutterBinding.ensureInitialized();
-  final FirebaseApp app = await FirebaseApp.configure(
-    name: "mobileOne_db",
-    options: Platform.isIOS
-        ? const FirebaseOptions(
-            googleAppID: "1:247649689994:ios:c93c27507d2cd4bacca873",
-            gcmSenderID: "247649689994",
-            databaseURL: "https://mobileone-3d42c.firebaseio.com",
-          )
-        : const FirebaseOptions(
-            googleAppID: "1:247649689994:android:96ebee75c26f1a72cca873",
-            apiKey: "AIzaSyBZWHTuyxArjQBCKEagaxm9XKdd4oEau6g",
-            databaseURL: "https://mobileone-3d42c.firebaseio.com",
-          ),
-  );
+  
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runZoned(() {
-    runApp(MyApp(app: app));
+    runApp(MyApp());
   }, onError: Crashlytics.instance.recordError);
 }
 
@@ -96,8 +82,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => AuthenticationPage(),
         '/registerPage': (context) => RegisterPage(),
         '/forgottenPasswordPage': (context) => ForgottenPasswordPage(),
-        '/lists': (context) => Lists(app: app),
-        '/createList': (context) => CreateList(app: app),
+        '/lists': (context) => Lists(),
+        '/createList': (context) => CreateList(),
       },
     );
   }

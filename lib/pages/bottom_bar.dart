@@ -44,7 +44,8 @@ class BottomBarState extends State<BottomBar> {
     super.initState();
     _currentItem = LISTS_PAGE;
   }
-
+  bool isSelected=false;
+var isOn=false;
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,13 +58,16 @@ class BottomBarState extends State<BottomBar> {
               () => onSelectItem(CARD_PAGE),
               getString(context, 'loyalty_cards'),
               Icons.card_giftcard,
+               () => test(),
             ),
             BottomBarItem(
+              
               KEY_LISTS_PAGE,
               computeColor(LISTS_PAGE),
               () => onSelectItem(LISTS_PAGE),
               getString(context, 'my_lists'),
               Icons.list,
+               () => test(),
             ),
           ],
         ),
@@ -92,6 +96,7 @@ class BottomBarState extends State<BottomBar> {
               () => onSelectItem(SHARE_PAGE),
               getString(context, 'shared'),
               Icons.share,
+               () => test(),
             ),
             BottomBarItem(
               KEY_PROFILE_PAGE,
@@ -99,6 +104,7 @@ class BottomBarState extends State<BottomBar> {
               () => onSelectItem(PROFILE_PAGE),
               getString(context, 'profile'),
               Icons.person,
+             () => test(),
             ),
           ],
         ),
@@ -109,9 +115,15 @@ class BottomBarState extends State<BottomBar> {
   void onSelectItem(int index) {
     setState(() {
       _currentItem = index;
+      
     });
     widget.onItemSelected(index);
   }
+  bool test(){
+    isSelected=true;
+    return isSelected;
+  }
+
 }
 
 class BottomBarItem extends StatelessWidget {
@@ -120,9 +132,10 @@ class BottomBarItem extends StatelessWidget {
   final Color _itemColor;
   final String _text;
   final IconData _icon;
+  final Function isSelected;
 
   BottomBarItem(
-      this._key, this._itemColor, this._onItemTap, this._text, this._icon);
+      this._key, this._itemColor, this._onItemTap, this._text, this._icon,this.isSelected);
 
   @override
   Widget build(BuildContext context) {
@@ -133,6 +146,7 @@ class BottomBarItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          
           Icon(_icon, color: _itemColor),
           Text(
             _text,

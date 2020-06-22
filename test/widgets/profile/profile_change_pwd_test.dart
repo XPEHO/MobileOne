@@ -10,6 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mockito/mockito.dart';
 
+
 Widget buildTestableWidget(Widget widget) {
   return MaterialApp(
       supportedLocales: getSupportedLocales(),

@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:MobileOne/services/user_service.dart';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -11,9 +12,6 @@ const Color TRANSPARENT = Colors.transparent;
 int itemCounts = 0;
 
 class CreateList extends StatefulWidget {
-  CreateList({this.app});
-  final FirebaseApp app;
-
   State<StatefulWidget> createState() {
     return CreateListPage();
   }
@@ -27,7 +25,7 @@ class CreateListPage extends State<CreateList> {
   var uuid = Uuid();
   addListToDataBase() async {
     await databaseReference
-        .collection("wishlists")
+        .collection("/wishlists")
         .document(uuid.v4())
         .setData({
       'itemCounts': itemCounts.toString(),
@@ -36,19 +34,38 @@ class CreateListPage extends State<CreateList> {
     });
   }
 
+  var isExist=false;
+  addUsersListsToDataBase() async {
+    if (isExist == true) {
+      await databaseReference
+          .collection("/owners")
+          .document(UserService().user.uid)
+          .updateData({
+        UserService().user.uid.toString(): ["/wishlists/" + uuid.v4()],
+      }).then((value) => isExist = false);
+    } else {
+      await databaseReference
+          .collection("/owners")
+          .document(UserService().user.uid)
+          .setData({
+        UserService().user.uid.toString(): ["/wishlists/" + uuid.v4()],
+      }).then((value) => isExist = true);
+    }
+  }
+
   goToListsPage() {
     Navigator.pop(context);
   }
 
   void addItemToList() async {
+    itemCounts++;
     await addListToDataBase();
+    addUsersListsToDataBase();
     goToListsPage();
   }
 
   @override
   Widget build(BuildContext context) {
-    print("IM HERE CREATE LISTS");
-
     return Scaffold(
       body: Center(
           child: Column(
