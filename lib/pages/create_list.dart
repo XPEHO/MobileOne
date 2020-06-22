@@ -1,5 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -11,9 +11,6 @@ const Color TRANSPARENT = Colors.transparent;
 int itemCounts = 0;
 
 class CreateList extends StatefulWidget {
-  CreateList({this.app});
-  final FirebaseApp app;
-
   State<StatefulWidget> createState() {
     return CreateListPage();
   }
@@ -25,15 +22,35 @@ class CreateListPage extends State<CreateList> {
 
   var _timeStamp = new DateTime.now();
   var uuid = Uuid();
+
   addListToDataBase() async {
+    var newUuid = uuid.v4();
+    List newWishlistsList = [];
+    bool doesListExist = false;
+
+    //Create a wishlist
     await databaseReference
         .collection("wishlists")
-        .document(uuid.v4())
+        .document(newUuid)
         .setData({
       'itemCounts': itemCounts.toString(),
       'label': _myController.text,
       'timestamp': _timeStamp,
     });
+
+    //Check if the user already have a wishlist
+    await Firestore.instance.collection("owners").document(UserService().user.uid).get().then((value) {
+      doesListExist = value.exists;
+    });
+
+    //Create the document and set document's data to the new wishlist if the user does not have an existing wishlist
+    //Or get the already existing wishlists, add the new one to the list and update the list in the database
+    if (doesListExist) {
+      await databaseReference.collection("owners").document(UserService().user.uid).updateData({"lists" : FieldValue.arrayUnion(["/wishlists/$newUuid"])});
+    } else {
+      //newWishlistsList.add(["/wishlists/$newUuid"]);
+      await databaseReference.collection("owners").document(UserService().user.uid).setData({"lists" : ["/wishlists/$newUuid"]});
+    }
   }
 
   goToListsPage() {
