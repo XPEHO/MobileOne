@@ -22,43 +22,33 @@ class CreateListPage extends State<CreateList> {
 
   var _timeStamp = new DateTime.now();
   var uuid = Uuid();
-  var isExist = false;
-
-  addUsersListsToDataBase() async {
-    await databaseReference
-        .collection("/owners")
-        .document(UserService().user.uid)
-        .get()
-        .then((value) {
-      isExist = value.exists;
-    });
-
-    if (isExist) {
-      await databaseReference
-          .collection("/owners")
-          .document(UserService().user.uid)
-          .updateData({
-        "Lists": FieldValue.arrayUnion([uuid.v4()]),
-      });
-    } else {
-      await databaseReference
-          .collection("/owners")
-          .document(UserService().user.uid)
-          .setData({
-        "Lists": [uuid.v4()]
-      });
-    }
-  }
 
   addListToDataBase() async {
+    var newUuid = uuid.v4();
+    bool doesListExist = false;
+
+    //Create a wishlist
     await databaseReference
-        .collection("/wishlists")
-        .document(uuid.v4())
+        .collection("wishlists")
+        .document(newUuid)
         .setData({
       'itemCounts': itemCounts.toString(),
       'label': _myController.text,
       'timestamp': _timeStamp,
     });
+
+    //Check if the user already have a wishlist
+    await Firestore.instance.collection("owners").document(UserService().user.uid).get().then((value) {
+      doesListExist = value.exists;
+    });
+
+    //Create the document and set document's data to the new wishlist if the user does not have an existing wishlist
+    //Or get the already existing wishlists, add the new one to the list and update the list in the database
+    if (doesListExist) {
+      await databaseReference.collection("owners").document(UserService().user.uid).updateData({"lists" : FieldValue.arrayUnion(["$newUuid"])});
+    } else {
+      await databaseReference.collection("owners").document(UserService().user.uid).setData({"lists" : ["$newUuid"]});
+    }
   }
 
   goToListsPage() {
@@ -66,14 +56,14 @@ class CreateListPage extends State<CreateList> {
   }
 
   void addItemToList() async {
-    itemCounts++;
     await addListToDataBase();
-    addUsersListsToDataBase();
     goToListsPage();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("IM HERE CREATE LISTS");
+
     return Scaffold(
       body: Center(
           child: Column(

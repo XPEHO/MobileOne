@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:MobileOne/pages/lists.dart';
-import 'package:uuid/uuid.dart';
 
 const Color WHITE = Colors.white;
 const Color BLACK = Colors.black;

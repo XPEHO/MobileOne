@@ -17,24 +17,16 @@ class Lists extends StatefulWidget {
 String defaultImage = "assets/images/basket_my_lists.png";
 String numberOfItemShared = "3 partages";
 
-        var wishlist; 
-         var identifiant ;
 class ListsState extends State<Lists> {
-
-  
-
   @override
   Widget build(BuildContext context) {
-   
     return StreamBuilder<DocumentSnapshot>(
-      stream: Firestore.instance.collection('/owners').document(UserService().user.uid).get().asStream(),
+      stream: Firestore.instance.collection("owners").document(UserService().user.uid).get().asStream(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
-          
         }
-
-       wishlist= snapshot.data.data["Lists"];
+        var wishlist = snapshot.data.data["lists"];
         return Scaffold(
           body: Column(
             children: <Widget>[
