@@ -25,7 +25,6 @@ class CreateListPage extends State<CreateList> {
 
   addListToDataBase() async {
     var newUuid = uuid.v4();
-    List newWishlistsList = [];
     bool doesListExist = false;
 
     //Create a wishlist
@@ -46,10 +45,9 @@ class CreateListPage extends State<CreateList> {
     //Create the document and set document's data to the new wishlist if the user does not have an existing wishlist
     //Or get the already existing wishlists, add the new one to the list and update the list in the database
     if (doesListExist) {
-      await databaseReference.collection("owners").document(UserService().user.uid).updateData({"lists" : FieldValue.arrayUnion(["/wishlists/$newUuid"])});
+      await databaseReference.collection("owners").document(UserService().user.uid).updateData({"lists" : FieldValue.arrayUnion(["$newUuid"])});
     } else {
-      //newWishlistsList.add(["/wishlists/$newUuid"]);
-      await databaseReference.collection("owners").document(UserService().user.uid).setData({"lists" : ["/wishlists/$newUuid"]});
+      await databaseReference.collection("owners").document(UserService().user.uid).setData({"lists" : ["$newUuid"]});
     }
   }
 
