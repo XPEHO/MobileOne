@@ -61,5 +61,6 @@
     "reset_password_email_sent": "Un email vous a été envoyé",
     "submit_button": "Valider",
     "shared_with_me": "Partagé avec moi : ",
-    "hint_name_new_list" : "Alimentations, sports ..."
+    "hint_name_new_list" : "Alimentations, sports ...",
+    "articles": "articles"
 }

@@ -1,3 +1,4 @@
+import 'package:MobileOne/localization/localization.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -26,38 +27,28 @@ class WidgetListsState extends State<WidgetLists> {
   String label = "";
   String count = "";
 
-  Future<void> getListLabel() async {
+  Future<void> getListDetails() async {
     String labelValue;
-
-    await Firestore.instance
-        .collection("wishlists")
-        .document(_listUuid)
-        .get()
-        .then((value) => labelValue = value["label"]);
-
-    setState(() {
-      label = labelValue;
-    });
-  }
-
-  Future<void> getListItemCount() async {
     String countValue;
 
     await Firestore.instance
         .collection("wishlists")
         .document(_listUuid)
         .get()
-        .then((value) => countValue = value["itemCounts"]);
+        .then((value) {
+      labelValue = value["label"];
+      countValue = value["itemCounts"] + " " + getString(context, 'articles');
+    });
 
     setState(() {
+      label = labelValue;
       count = countValue;
     });
   }
 
   @override
   void initState() {
-    getListLabel();
-    getListItemCount();
+    getListDetails();
     super.initState();
   }
 

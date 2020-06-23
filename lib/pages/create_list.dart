@@ -8,8 +8,6 @@ import 'package:uuid/uuid.dart';
 const Color ORANGE = Colors.deepOrange;
 const Color TRANSPARENT = Colors.transparent;
 
-int itemCounts = 0;
-
 class CreateList extends StatefulWidget {
   State<StatefulWidget> createState() {
     return CreateListPage();
@@ -29,7 +27,7 @@ class CreateListPage extends State<CreateList> {
 
     //Create a wishlist
     await databaseReference.collection("wishlists").document(newUuid).setData({
-      'itemCounts': itemCounts.toString(),
+      'itemCounts': "0",
       'label': _myController.text,
       'timestamp': _timeStamp,
     });
@@ -73,8 +71,6 @@ class CreateListPage extends State<CreateList> {
 
   @override
   Widget build(BuildContext context) {
-    print("IM HERE CREATE LISTS");
-
     return Scaffold(
       body: Center(
           child: Column(

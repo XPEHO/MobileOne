@@ -57,6 +57,6 @@
     "reset_password_email_sent": "An email as been sent",
     "submit_button": "Submit",
     "shared_with_me": "Shared with me : ",
-    "hint_name_new_list" : "Foods, Hobbies ..."
-
+    "hint_name_new_list" : "Foods, Hobbies ...",
+    "articles": "articles"
 }

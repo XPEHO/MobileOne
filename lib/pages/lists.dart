@@ -13,9 +13,6 @@ class Lists extends StatefulWidget {
   }
 }
 
-String defaultImage = "assets/images/basket_my_lists.png";
-String numberOfItemShared = "3 partages";
-
 class ListsState extends State<Lists> {
   @override
   Widget build(BuildContext context) {
@@ -29,10 +26,8 @@ class ListsState extends State<Lists> {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
         }
-        var wishlist = [];
-        if (snapshot.data.data["lists"] != null) {
-          wishlist = snapshot.data.data["lists"];
-        }
+        var userWishlists = snapshot?.data?.data ?? {};
+        var wishlist = userWishlists["lists"] ?? [];
         return Scaffold(
           body: Column(
             children: <Widget>[
@@ -49,8 +44,8 @@ class ListsState extends State<Lists> {
                   scrollDirection: Axis.horizontal,
                   itemCount: wishlist.length,
                   itemBuilder: (BuildContext ctxt, int index) {
-                    return WidgetLists(
-                        wishlist[index], defaultImage, numberOfItemShared);
+                    return WidgetLists(wishlist[index],
+                        "assets/images/basket_my_lists.png", "0");
                   },
                 ),
               ),

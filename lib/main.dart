@@ -36,7 +36,7 @@ void instantiateServices() {
   getIt.registerSingleton<PreferencesService>(PreferencesService());
 }
 
-void main() async {
+void main() {
   instantiateServices();
   WidgetsFlutterBinding.ensureInitialized();
 

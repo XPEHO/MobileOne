@@ -1,5 +1,4 @@
 import 'package:MobileOne/pages/bottom_bar.dart';
-import 'package:MobileOne/pages/create_list.dart';
 import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/pages/profile.dart';
@@ -49,8 +48,6 @@ class MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    print("IM HERE MAINPAGE");
-
     return Scaffold(
       body: PageStorage(bucket: _bucket, child: _currentScreen),
       floatingActionButton: FloatingActionButton(
@@ -95,10 +92,6 @@ class MainPageState extends State<MainPage> {
   }
 
   goToCreateListPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => CreateList(),
-      ),
-    );
+    Navigator.of(context).pushNamed("/createList");
   }
 }
