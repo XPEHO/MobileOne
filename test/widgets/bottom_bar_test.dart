@@ -1,12 +1,9 @@
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
-import 'package:MobileOne/pages/lists.dart';
-import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
 
 Widget buildTestableWidget(Widget widget) {
   return MaterialApp(
@@ -37,70 +34,79 @@ void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
 
   testWidgets('Go the the specifical page', (WidgetTester tester) async {
-    var _currentItem;
-    BottomBarItem currentScreen;
-    var key_used;
-    var _current;
-    var isSelected=false;
-    goToPage(int index) {
-      if (index == 0) {
-        _current = LoyaltyCards();
-      }
-      if (index == 1) {
-        _current = Lists();
-        isSelected=true;
-      }
-      if (index == 2) {
-        _current = LoyaltyCards();
-      }
-      if (index == 3) {
-        _current = Lists();
-      }
-    }
-    isSelect(index){
-       if (index == 0) {
-        _current = LoyaltyCards();
-      }
-      if (index == 1) {
-      
-        
-      }
-      if (index == 2) {
-        _current = LoyaltyCards();
-      }
-      if (index == 3) {
-        _current = Lists();
-      }
-    }
- Color color=Colors.black;
-var test;
-    onItemSelected(int index) {
-      if (index == 0) {
-       
-        test= "Cards";
-      }
-      if (index == 1) {
-      currentScreen = BottomBarItem("key_used",color,goToPage,'Listes',Icons.list,isSelect(1));
-        test = "Lists";
-        isSelected=true;
-      }
-      if (index == 2) {
-      
-        test = "Share";
-      }
-      if (index == 3) {
-      
-        test="Profile";
-      }
-      
-    }
-   
+    Widget widget;
+    BottomBarItem _item;
+    void goToPage(int index) {}
+    Color color = Colors.black;
+    String key = "";
+    String nom = "";
+    var icon;
 
-    Widget widgetlist = buildTestableWidget(BottomBar(onItemSelected(1)));
-    await tester.pumpWidget(widgetlist);
+    var t = BottomBarItem(KEY_LISTS_PAGE, Colors.white, goToPage, 'Listes', Icons.list);
+
+    onListSelected(int index) {
+      key = KEY_LISTS_PAGE;
+      color = Colors.white;
+      nom = 'Listes';
+      icon = Icons.list;
+      _item = BottomBarItem(key, color, goToPage, nom, icon);
+    }
+
+    onCardSelected(int index) {
+      key = KEY_CARD_PAGE;
+      color = Colors.white;
+      nom = 'Cartes';
+      icon = Icons.card_giftcard;
+      _item = BottomBarItem(key, color, goToPage, nom, icon);
+    }
+
+    onShareSelected(int index) {
+      key = KEY_SHARE_PAGE;
+      color = Colors.white;
+      nom = 'Partager';
+      icon = Icons.share;
+      _item = BottomBarItem(key, color, goToPage, nom, icon);
+    }
+
+    onProfileSelected(int index) {
+      key = KEY_PROFILE_PAGE;
+      color = Colors.orange;
+      nom = 'Profile';
+      icon = Icons.person;
+      _item = BottomBarItem(key, color, goToPage, nom, icon);
+    }
+
+    widget = buildTestableWidget(BottomBar(onListSelected));
+    await tester.pumpWidget(widget);
     await tester.pump(new Duration(milliseconds: 1000));
+   //expect(color, Colors.black);
     await tester.tap(find.text('Listes'));
-    expect(find.byType(Function),findsOneWidget);
-    
+    expect(_item.createElement(), Key(KEY_LISTS_PAGE));
+
+
+    /*color = Colors.black;
+    widget = buildTestableWidget(BottomBar(onCardSelected));
+    await tester.pumpWidget(widget);
+    await tester.pump(new Duration(milliseconds: 1000));
+    expect(color, Colors.black);
+    await tester.tap(find.text('Cartes'));
+    expect(color, Colors.white);
+
+    color = Colors.black;
+    widget = buildTestableWidget(BottomBar(onShareSelected));
+    await tester.pumpWidget(widget);
+    await tester.pump(new Duration(milliseconds: 1000));
+    expect(color, Colors.black);
+    await tester.tap(find.text('Partager'));
+    expect(color, Colors.white);*/
+
+    /* color = Colors.black;
+    widget = buildTestableWidget(BottomBar(onProfileSelected));
+    await tester.pumpWidget(widget);
+    await tester.pump(new Duration(milliseconds: 1000));
+    expect(color, Colors.black);
+    await tester.tap(find.text('Profile'));
+   expect(color, Colors.orange);
+*/
   });
 }

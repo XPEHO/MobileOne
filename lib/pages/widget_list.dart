@@ -1,17 +1,65 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:MobileOne/pages/lists.dart';
+import 'package:uuid/uuid.dart';
 
 const Color WHITE = Colors.white;
 const Color BLACK = Colors.black;
 const Color GREY = Colors.grey;
 
-class WidgetLists extends StatelessWidget {
-  final String _itemName;
+class WidgetLists extends StatefulWidget {
+  final String _listUuid;
   final String _itemPicture;
-  final String _numberOfItem;
   final String _numberOfItemShared;
+  final String _numberOfItem;
 
-  WidgetLists(this._itemName, this._itemPicture, this._numberOfItem,
+  WidgetLists(this._listUuid, this._itemPicture, this._numberOfItem,this._numberOfItemShared);
+
+  State<StatefulWidget> createState() {
+    return WidgetListsState(
+        _listUuid, _itemPicture, _numberOfItem, _numberOfItemShared);
+  }
+}
+
+class WidgetListsState extends State<WidgetLists> {
+  final String _listUuid;
+  final String _itemPicture;
+  final String _numberOfItemShared;
+  final String _numberOfItem;
+
+  WidgetListsState(this._listUuid, this._itemPicture, this._numberOfItem,
       this._numberOfItemShared);
+    String label = "";
+  String count = "";
+  Future<void> getListLabel() async {
+    String labelValue;
+
+    await Firestore.instance
+        .collection("/wishlists")
+        .document(_listUuid)
+        .get()
+        .then((value) => labelValue = value["label"]);
+
+    setState(() {
+      label = labelValue;
+    });
+  }
+
+   Future<void> getListItemCount() async {
+    String countValue;
+
+    await Firestore.instance.collection("wishlists").document(_listUuid).get().then((value) => countValue = value["itemCounts"]);
+    
+    setState(() {
+      count = countValue;
+    });
+  }
+
+   void initState() {
+    getListLabel();
+   getListItemCount();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +74,7 @@ class WidgetLists extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(top: 5, bottom: 5),
                 child: Text(
-                  _itemName,
+                  label,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(color: BLACK, fontSize: 12.0),
                 ),

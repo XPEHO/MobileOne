@@ -44,8 +44,6 @@ class BottomBarState extends State<BottomBar> {
     super.initState();
     _currentItem = LISTS_PAGE;
   }
-  bool isSelected=false;
-var isOn=false;
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,7 +56,6 @@ var isOn=false;
               () => onSelectItem(CARD_PAGE),
               getString(context, 'loyalty_cards'),
               Icons.card_giftcard,
-               () => test(),
             ),
             BottomBarItem(
               
@@ -67,7 +64,6 @@ var isOn=false;
               () => onSelectItem(LISTS_PAGE),
               getString(context, 'my_lists'),
               Icons.list,
-               () => test(),
             ),
           ],
         ),
@@ -96,7 +92,6 @@ var isOn=false;
               () => onSelectItem(SHARE_PAGE),
               getString(context, 'shared'),
               Icons.share,
-               () => test(),
             ),
             BottomBarItem(
               KEY_PROFILE_PAGE,
@@ -104,7 +99,6 @@ var isOn=false;
               () => onSelectItem(PROFILE_PAGE),
               getString(context, 'profile'),
               Icons.person,
-             () => test(),
             ),
           ],
         ),
@@ -119,10 +113,7 @@ var isOn=false;
     });
     widget.onItemSelected(index);
   }
-  bool test(){
-    isSelected=true;
-    return isSelected;
-  }
+
 
 }
 
@@ -132,10 +123,9 @@ class BottomBarItem extends StatelessWidget {
   final Color _itemColor;
   final String _text;
   final IconData _icon;
-  final Function isSelected;
 
   BottomBarItem(
-      this._key, this._itemColor, this._onItemTap, this._text, this._icon,this.isSelected);
+      this._key, this._itemColor, this._onItemTap, this._text, this._icon);
 
   @override
   Widget build(BuildContext context) {
