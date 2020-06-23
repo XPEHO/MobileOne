@@ -1,13 +1,12 @@
-import 'package:MobileOne/pages/Mainpage.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
-import "package:test/test.dart";
-import 'package:flutter_driver/flutter_driver.dart';
+import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:MobileOne/pages/profile.dart';
+import 'package:test/test.dart';
+import 'package:flutter_driver/flutter_driver.dart';
 
 void main() {
   group("Auth tests", () {
     FlutterDriver driver;
-
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
       driver = await FlutterDriver.connect();
@@ -42,7 +41,6 @@ void main() {
       await driver.enterText("test123");
       await driver.tap(find.byValueKey("sign_in_button"));
     });
-
     test('bottom bar navigation', () async {
       await driver.tap(find.byValueKey(KEY_CARD_PAGE));
       await driver.tap(find.byValueKey(KEY_LISTS_PAGE));

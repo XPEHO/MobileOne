@@ -54,5 +54,9 @@
     "email_already_verified": "This email is already verified",
     "reset_password": "Reset password",
     "forgotten_password_page_text": "Reset your password",
-    "reset_password_email_sent": "An email as been sent"
+    "reset_password_email_sent": "An email as been sent",
+    "submit_button": "Submit",
+    "shared_with_me": "Shared with me : ",
+    "hint_name_new_list" : "Foods, Hobbies ...",
+    "articles": "articles"
 }

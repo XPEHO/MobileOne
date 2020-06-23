@@ -1,17 +1,20 @@
 import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/Mainpage.dart';
+import 'package:MobileOne/pages/create_list.dart';
 import 'package:MobileOne/pages/forgotten_password.dart';
+import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/register-page.dart';
 import 'package:MobileOne/services/analytics_service.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -35,20 +38,20 @@ void instantiateServices() {
 
 void main() {
   instantiateServices();
+  WidgetsFlutterBinding.ensureInitialized();
 
   Crashlytics.instance.enableInDevMode = true;
-
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-
   runZoned(() {
     runApp(MyApp());
   }, onError: Crashlytics.instance.recordError);
 }
 
 class MyApp extends StatelessWidget {
-  final _preferencesService = GetIt.I.get<PreferencesService>();
+  MyApp({this.app});
+  final FirebaseApp app;
 
-  // This widget is the root of your application.
+  final _preferencesService = GetIt.I.get<PreferencesService>();
   @override
   Widget build(BuildContext context) {
     _preferencesService.initSharedPreferences();
@@ -79,6 +82,8 @@ class MyApp extends StatelessWidget {
         '/': (context) => AuthenticationPage(),
         '/registerPage': (context) => RegisterPage(),
         '/forgottenPasswordPage': (context) => ForgottenPasswordPage(),
+        '/lists': (context) => Lists(),
+        '/createList': (context) => CreateList(),
       },
     );
   }

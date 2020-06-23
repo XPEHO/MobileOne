@@ -1,19 +1,10 @@
-import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
+
 import 'package:flutter/material.dart';
-
-const int CARD_PAGE = 0;
-const int LISTS_PAGE = 1;
-const int SHARE_PAGE = 2;
-const int PROFILE_PAGE = 3;
-
-const KEY_CARD_PAGE = "Cards";
-const KEY_LISTS_PAGE = "Lists";
-const KEY_SHARE_PAGE = "Share";
-const KEY_PROFILE_PAGE = "Profile";
 
 const Color BLACK = Colors.black;
 const Color ORANGE = Colors.deepOrange;
@@ -26,8 +17,7 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-  int _currentTab = CARD_PAGE;
-
+  Widget _currentScreen = Lists();
   final List _centerIcons = [
     Icons.scanner,
     Icons.add,
@@ -35,171 +25,73 @@ class MainPageState extends State<MainPage> {
     Icons.camera,
   ];
 
-  final List _centerText = [
-    'center_icon_loyaltycards',
-    'center_icon_newlist',
-    'center_icon_share',
-    'center_icon_profile'
-  ];
+  List _actions = [];
 
-  Color _cardsColor, _listColor, _shareColor, _profileColor;
-  Color _iconCardsColor,
-      _iconListColor,
-      _iconShareColor,
-      _iconProfileColor = BLACK;
-  Widget _currentScreen = Lists();
+  IconData _floatingButtonIcon;
+  Function _floatingButtonAction;
+
   final PageStorageBucket _bucket = PageStorageBucket();
+
+  @override
+  void initState() {
+    super.initState();
+    _actions = [
+      unasignedAction,
+      goToCreateListPage,
+      unasignedAction,
+      unasignedAction,
+    ];
+
+    _floatingButtonIcon = _centerIcons[LISTS_PAGE];
+    _floatingButtonAction = _actions[LISTS_PAGE];
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: Key("Mainn"),
       body: PageStorage(bucket: _bucket, child: _currentScreen),
       floatingActionButton: FloatingActionButton(
-        child: Icon(_centerIcons[_currentTab]),
+        child: Icon(_floatingButtonIcon),
         backgroundColor: Colors.deepOrange,
-        onPressed: () {},
+        onPressed: () => _floatingButtonAction(),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
         child: Container(
           height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(children: <Widget>[
-                MaterialButton(
-                    key: Key(KEY_CARD_PAGE),
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        _currentScreen = LoyaltyCards();
-                        _currentTab = CARD_PAGE;
-
-                        _cardsColor = ORANGE;
-                        _listColor = BLACK;
-                        _shareColor = BLACK;
-                        _profileColor = BLACK;
-
-                        _iconCardsColor = ORANGE;
-                        _iconListColor = BLACK;
-                        _iconShareColor = BLACK;
-                        _iconProfileColor = BLACK;
-                      });
-                    },
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.loyalty, color: _iconCardsColor),
-                          Text(getString(context, 'loyalty_cards'),
-                              style: TextStyle(color: _cardsColor))
-                        ])),
-                MaterialButton(
-                    key: Key(KEY_LISTS_PAGE),
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        _currentScreen = Lists();
-                        _currentTab = LISTS_PAGE;
-
-                        _cardsColor = BLACK;
-                        _listColor = ORANGE;
-                        _shareColor = BLACK;
-                        _profileColor = BLACK;
-
-                        _iconCardsColor = BLACK;
-                        _iconListColor = ORANGE;
-                        _iconShareColor = BLACK;
-                        _iconProfileColor = BLACK;
-                      });
-                    },
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(Icons.list, color: _iconListColor),
-                          Text(getString(context, 'my_lists'),
-                              style: TextStyle(color: _listColor)),
-                        ])),
-              ]),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 25.0),
-                  child: Center(
-                      child: Text(
-                    getString(
-                      context,
-                      _centerText[_currentTab],
-                    ),
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 12.0,
-                    ),
-                  )),
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  MaterialButton(
-                      key: Key(KEY_SHARE_PAGE),
-                      minWidth: 40,
-                      onPressed: () {
-                        setState(() {
-                          _currentScreen = Share();
-                          _currentTab = SHARE_PAGE;
-
-                          _cardsColor = BLACK;
-                          _listColor = BLACK;
-                          _shareColor = ORANGE;
-                          _profileColor = BLACK;
-
-                          _iconCardsColor = BLACK;
-                          _iconListColor = BLACK;
-                          _iconShareColor = ORANGE;
-                          _iconProfileColor = BLACK;
-                        });
-                      },
-                      child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(Icons.share, color: _iconShareColor),
-                            Text(getString(context, 'shared'),
-                                style: TextStyle(color: _shareColor))
-                          ])),
-                  MaterialButton(
-                    key: Key(KEY_PROFILE_PAGE),
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        _currentScreen = Profile();
-                        _currentTab = PROFILE_PAGE;
-
-                        _cardsColor = BLACK;
-                        _listColor = BLACK;
-                        _shareColor = BLACK;
-                        _profileColor = ORANGE;
-
-                        _iconCardsColor = BLACK;
-                        _iconListColor = BLACK;
-                        _iconShareColor = BLACK;
-                        _iconProfileColor = ORANGE;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(Icons.person, color: _iconProfileColor),
-                        Text(getString(context, 'profile'),
-                            style: TextStyle(color: _profileColor))
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+          child: BottomBar(onBottomBarIndexSelected),
         ),
       ),
     );
+  }
+
+  onBottomBarIndexSelected(index) {
+    setState(() {
+      _floatingButtonIcon = _centerIcons[index];
+      _floatingButtonAction = _actions[index];
+      switch (index) {
+        case CARD_PAGE:
+          _currentScreen = LoyaltyCards();
+          break;
+        case LISTS_PAGE:
+          _currentScreen = Lists();
+          break;
+        case SHARE_PAGE:
+          _currentScreen = Share();
+          break;
+        case PROFILE_PAGE:
+          _currentScreen = Profile();
+          break;
+      }
+    });
+  }
+
+  unasignedAction() {
+    debugPrint("no action assigned");
+  }
+
+  goToCreateListPage() {
+    Navigator.of(context).pushNamed("/createList");
   }
 }
