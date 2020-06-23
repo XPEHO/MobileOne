@@ -11,13 +11,12 @@ class WidgetLists extends StatefulWidget {
   final String _listUuid;
   final String _itemPicture;
   final String _numberOfItemShared;
-  final String _numberOfItem;
 
-  WidgetLists(this._listUuid, this._itemPicture, this._numberOfItem,this._numberOfItemShared);
+  WidgetLists(this._listUuid, this._itemPicture,
+      this._numberOfItemShared);
 
   State<StatefulWidget> createState() {
-    return WidgetListsState(
-        _listUuid, _itemPicture, _numberOfItem, _numberOfItemShared);
+    return WidgetListsState(_listUuid, _itemPicture, _numberOfItemShared);
   }
 }
 
@@ -25,27 +24,22 @@ class WidgetListsState extends State<WidgetLists> {
   final String _listUuid;
   final String _itemPicture;
   final String _numberOfItemShared;
-  final String _numberOfItem;
+  WidgetListsState(this._listUuid, this._itemPicture, this._numberOfItemShared);
 
-  WidgetListsState(this._listUuid, this._itemPicture, this._numberOfItem,
-      this._numberOfItemShared);
-    String label = "";
+  String label = "";
   String count = "";
+
   Future<void> getListLabel() async {
     String labelValue;
 
-    await Firestore.instance
-        .collection("/wishlists")
-        .document(_listUuid)
-        .get()
-        .then((value) => labelValue = value["label"]);
+    await Firestore.instance.collection("wishlists").document(_listUuid).get().then((value) => labelValue = value["label"]);
 
     setState(() {
       label = labelValue;
     });
   }
 
-   Future<void> getListItemCount() async {
+  Future<void> getListItemCount() async {
     String countValue;
 
     await Firestore.instance.collection("wishlists").document(_listUuid).get().then((value) => countValue = value["itemCounts"]);
@@ -55,9 +49,10 @@ class WidgetListsState extends State<WidgetLists> {
     });
   }
 
-   void initState() {
+  @override
+  void initState() {
     getListLabel();
-   getListItemCount();
+    getListItemCount();
     super.initState();
   }
 
@@ -86,7 +81,7 @@ class WidgetListsState extends State<WidgetLists> {
               Padding(
                 padding: EdgeInsets.only(right: 20),
                 child: Text(
-                  _numberOfItem,
+                  count,
                   style: TextStyle(color: GREY, fontSize: 10.0),
                 ),
               ),

@@ -2,7 +2,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:MobileOne/pages/widget_list.dart';
@@ -16,7 +15,6 @@ class Lists extends StatefulWidget {
 }
 
 String defaultImage = "assets/images/basket_my_lists.png";
-String numberOfItem = "16 articles";
 String numberOfItemShared = "3 partages";
 
         var wishlist; 
@@ -53,15 +51,8 @@ class ListsState extends State<Lists> {
                   scrollDirection: Axis.horizontal,
                   itemCount: wishlist.length,
                   itemBuilder: (BuildContext ctxt, int index) {
-                    identifiant = wishlist[index];
-                    
-                    var a = Firestore.instance.collection('/wishlists').getDocuments().asStream();
-                    var t = snapshot.data[a.toString()];
-
-              //  if( identifiant == a.documentID.toString())
-                   { return WidgetLists(wishlist[index],
-                        defaultImage, numberOfItem, numberOfItemShared);
-                        }
+                    return WidgetLists(wishlist[index],
+                        defaultImage, numberOfItemShared);
                   },
                 ),
               ),
