@@ -39,7 +39,7 @@ void instantiateServices() {
 void main() async {
   instantiateServices();
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runZoned(() {

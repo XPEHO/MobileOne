@@ -44,6 +44,7 @@ class BottomBarState extends State<BottomBar> {
     super.initState();
     _currentItem = LISTS_PAGE;
   }
+
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,7 +59,6 @@ class BottomBarState extends State<BottomBar> {
               Icons.card_giftcard,
             ),
             BottomBarItem(
-              
               KEY_LISTS_PAGE,
               computeColor(LISTS_PAGE),
               () => onSelectItem(LISTS_PAGE),
@@ -109,12 +109,9 @@ class BottomBarState extends State<BottomBar> {
   void onSelectItem(int index) {
     setState(() {
       _currentItem = index;
-      
     });
     widget.onItemSelected(index);
   }
-
-
 }
 
 class BottomBarItem extends StatelessWidget {
@@ -136,7 +133,6 @@ class BottomBarItem extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          
           Icon(_icon, color: _itemColor),
           Text(
             _text,

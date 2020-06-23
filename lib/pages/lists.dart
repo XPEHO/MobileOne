@@ -1,4 +1,3 @@
-
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,12 +20,19 @@ class ListsState extends State<Lists> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<DocumentSnapshot>(
-      stream: Firestore.instance.collection("owners").document(UserService().user.uid).get().asStream(),
+      stream: Firestore.instance
+          .collection("owners")
+          .document(UserService().user.uid)
+          .get()
+          .asStream(),
       builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return CircularProgressIndicator();
         }
-        var wishlist = snapshot.data.data["lists"];
+        var wishlist = [];
+        if (snapshot.data.data["lists"] != null) {
+          wishlist = snapshot.data.data["lists"];
+        }
         return Scaffold(
           body: Column(
             children: <Widget>[
@@ -43,8 +49,8 @@ class ListsState extends State<Lists> {
                   scrollDirection: Axis.horizontal,
                   itemCount: wishlist.length,
                   itemBuilder: (BuildContext ctxt, int index) {
-                    return WidgetLists(wishlist[index],
-                        defaultImage, numberOfItemShared);
+                    return WidgetLists(
+                        wishlist[index], defaultImage, numberOfItemShared);
                   },
                 ),
               ),

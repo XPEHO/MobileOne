@@ -28,26 +28,37 @@ class CreateListPage extends State<CreateList> {
     bool doesListExist = false;
 
     //Create a wishlist
-    await databaseReference
-        .collection("wishlists")
-        .document(newUuid)
-        .setData({
+    await databaseReference.collection("wishlists").document(newUuid).setData({
       'itemCounts': itemCounts.toString(),
       'label': _myController.text,
       'timestamp': _timeStamp,
     });
 
     //Check if the user already have a wishlist
-    await Firestore.instance.collection("owners").document(UserService().user.uid).get().then((value) {
+    await Firestore.instance
+        .collection("owners")
+        .document(UserService().user.uid)
+        .get()
+        .then((value) {
       doesListExist = value.exists;
     });
 
     //Create the document and set document's data to the new wishlist if the user does not have an existing wishlist
     //Or get the already existing wishlists, add the new one to the list and update the list in the database
     if (doesListExist) {
-      await databaseReference.collection("owners").document(UserService().user.uid).updateData({"lists" : FieldValue.arrayUnion(["$newUuid"])});
+      await databaseReference
+          .collection("owners")
+          .document(UserService().user.uid)
+          .updateData({
+        "lists": FieldValue.arrayUnion(["$newUuid"])
+      });
     } else {
-      await databaseReference.collection("owners").document(UserService().user.uid).setData({"lists" : ["$newUuid"]});
+      await databaseReference
+          .collection("owners")
+          .document(UserService().user.uid)
+          .setData({
+        "lists": ["$newUuid"]
+      });
     }
   }
 

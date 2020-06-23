@@ -10,8 +10,7 @@ class WidgetLists extends StatefulWidget {
   final String _itemPicture;
   final String _numberOfItemShared;
 
-  WidgetLists(this._listUuid, this._itemPicture,
-      this._numberOfItemShared);
+  WidgetLists(this._listUuid, this._itemPicture, this._numberOfItemShared);
 
   State<StatefulWidget> createState() {
     return WidgetListsState(_listUuid, _itemPicture, _numberOfItemShared);
@@ -30,7 +29,11 @@ class WidgetListsState extends State<WidgetLists> {
   Future<void> getListLabel() async {
     String labelValue;
 
-    await Firestore.instance.collection("wishlists").document(_listUuid).get().then((value) => labelValue = value["label"]);
+    await Firestore.instance
+        .collection("wishlists")
+        .document(_listUuid)
+        .get()
+        .then((value) => labelValue = value["label"]);
 
     setState(() {
       label = labelValue;
@@ -40,8 +43,12 @@ class WidgetListsState extends State<WidgetLists> {
   Future<void> getListItemCount() async {
     String countValue;
 
-    await Firestore.instance.collection("wishlists").document(_listUuid).get().then((value) => countValue = value["itemCounts"]);
-    
+    await Firestore.instance
+        .collection("wishlists")
+        .document(_listUuid)
+        .get()
+        .then((value) => countValue = value["itemCounts"]);
+
     setState(() {
       count = countValue;
     });

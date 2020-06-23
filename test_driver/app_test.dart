@@ -4,11 +4,9 @@ import 'package:MobileOne/pages/profile.dart';
 import 'package:test/test.dart';
 import 'package:flutter_driver/flutter_driver.dart';
 
-
 void main() {
   group("Auth tests", () {
     FlutterDriver driver;
-SerializableFinder myDummyWidget = find.byValueKey('MyDummyWidget');
     // Connect to the Flutter driver before running any tests.
     setUpAll(() async {
       driver = await FlutterDriver.connect();
@@ -21,15 +19,7 @@ SerializableFinder myDummyWidget = find.byValueKey('MyDummyWidget');
       }
     });
 
-    test('check if MyDummyWidget is being displayed', () async {
-      await driver.waitFor(myDummyWidget);
-    });
-
-
-/*
-
     test('Create an account', () async {
-      
       await driver.tap(find.byValueKey("register_page_button"));
       await driver.tap(find.byValueKey("email_label"));
       await driver.enterText("test@test.test");
@@ -45,7 +35,6 @@ SerializableFinder myDummyWidget = find.byValueKey('MyDummyWidget');
     });
 
     test('Sign in this account', () async {
-
       await driver.tap(find.byValueKey("auth_email_label"));
       await driver.enterText("test@test.test");
       await driver.tap(find.byValueKey("auth_password_label"));
@@ -60,12 +49,11 @@ SerializableFinder myDummyWidget = find.byValueKey('MyDummyWidget');
     });
 
     test('Delete this account', () async {
-
       await driver.tap(find.byValueKey(KEY_PROFILE_PAGE));
       await driver.tap(find.byValueKey(KEY_DELETE_ACCOUNT));
       String value = await driver.getText(find.byValueKey(KEY_AUTH_PAGE_TEXT));
 
       expect(value, "Login to your account");
-    });*/
+    });
   });
 }
