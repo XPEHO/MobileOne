@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "247649689994",
+    "firebase_url": "https://mobileone-3d42c.firebaseio.com",
+    "project_id": "mobileone-3d42c",
+    "storage_bucket": "mobileone-3d42c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:247649689994:android:96ebee75c26f1a72cca873",
+        "android_client_info": {
+          "package_name": "fr.xpeho.MobileOne"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "247649689994-mq1ervjq1b0q7tqbdsah6cqfin97kl6k.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "fr.xpeho.MobileOne",
+            "certificate_hash": "33a80af87a627ec328b73729749d51d4b80b75de"
+          }
+        },
+        {
+          "client_id": "247649689994-cb1l1r6s6l7pjn803ebf24bfio7junr4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBN60H0yirEZ1CmoyfnOVYiQ-NoaDVuzbs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "247649689994-cb1l1r6s6l7pjn803ebf24bfio7junr4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "247649689994-6kt55e7l5r0t68qlpkeghr81tc3vdm0k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "fr.xpeho.MobileOne"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

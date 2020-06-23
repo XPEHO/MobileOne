@@ -1,7 +1,9 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:MobileOne/providers/wishlistsList_provider.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:uuid/uuid.dart';
 
 const Color ORANGE = Colors.deepOrange;
 const Color TRANSPARENT = Colors.transparent;
@@ -13,19 +15,63 @@ class CreateList extends StatefulWidget {
 }
 
 class CreateListPage extends State<CreateList> {
+  final databaseReference = Firestore.instance;
   final _myController = TextEditingController();
+
+  var _timeStamp = new DateTime.now();
+  var uuid = Uuid();
+  var newUuid;
 
   @override
   void initState() {
+    newUuid = uuid.v4();
     super.initState();
+  }
+
+  addListToDataBase() async {
+    bool doesListExist = false;
+
+    //Create a wishlist
+    await databaseReference.collection("wishlists").document(newUuid).setData({
+      'itemCounts': "0",
+      'label': _myController.text,
+      'timestamp': _timeStamp,
+    });
+
+    //Check if the user already have a wishlist
+    await Firestore.instance
+        .collection("owners")
+        .document(UserService().user.uid)
+        .get()
+        .then((value) {
+      doesListExist = value.exists;
+    });
+
+    //Create the document and set document's data to the new wishlist if the user does not have an existing wishlist
+    //Or get the already existing wishlists, add the new one to the list and update the list in the database
+    if (doesListExist) {
+      await databaseReference
+          .collection("owners")
+          .document(UserService().user.uid)
+          .updateData({
+        "lists": FieldValue.arrayUnion(["$newUuid"])
+      });
+    } else {
+      await databaseReference
+          .collection("owners")
+          .document(UserService().user.uid)
+          .setData({
+        "lists": ["$newUuid"]
+      });
+    }
   }
 
   goToListsPage() {
     Navigator.pop(context);
   }
 
-  void addItemToList() {
-    GetIt.I.get<WishlistsListProvider>().addWishlist(_myController.text);
+  void addItemToList() async {
+    await addListToDataBase();
     goToListsPage();
   }
 
