@@ -67,7 +67,6 @@ class WidgetPopupState extends State<WidgetPopup> {
 
   @override
   void initState() {
-    
     super.initState();
     if (buttonName == "Update") {
       getItems();
