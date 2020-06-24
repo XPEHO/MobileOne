@@ -27,7 +27,6 @@ class OpenedListPage extends StatefulWidget {
 
 class OpenedListPageState extends State<OpenedListPage> {
   String label = "";
-  var stream;
 
   /*Future<void> getListDetails(String uuid) async {
     String labelValue;
@@ -38,7 +37,6 @@ class OpenedListPageState extends State<OpenedListPage> {
         .then((value) {
       labelValue = value["label"];
     });
-<<<<<<< HEAD
 
     setState(() {
       debugPrint("passed");
@@ -47,32 +45,14 @@ class OpenedListPageState extends State<OpenedListPage> {
   }*/
 
   @override
-  void initState() {
-    newStream();
-    super.initState();
-    //getListDetails(listUuid);
-  }
-
-  void newStream () {
-    stream = Firestore.instance
-            .collection('items')
-            .document(listUuid)
-            .get()
-            .asStream();
-=======
-   
-       label = labelValue;
-        test=label;
-    
->>>>>>> 46ac9c8d36234a386d935abb404f336dcdfd941a
-  }
-
-
-  @override
   Widget build(BuildContext context) {
     listUuid = ModalRoute.of(context).settings.arguments;
     return StreamBuilder<DocumentSnapshot>(
-        stream: stream,
+        stream: Firestore.instance
+            .collection('items')
+            .document(listUuid)
+            .get()
+            .asStream(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return LinearProgressIndicator();
           var wishlist = snapshot?.data?.data ?? {};
@@ -88,7 +68,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                         itemCount: wishlist.length,
                         itemBuilder: (BuildContext ctxt, int index) {
                           return WidgetItem(
-                            wishlist.values.toList()[index], listUuid
+                            wishlist.values.toList()[index], listUuid, wishlist.keys.toList()[index]
                           );
                         }),
                     Stack(
@@ -122,11 +102,9 @@ class OpenedListPageState extends State<OpenedListPage> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) =>
-                              WidgetPopup(getString(context, 'popup_add'), listUuid)
+                              WidgetPopup(getString(context, 'popup_add'), listUuid, null)
                           ).then((value) {
-                            setState(() {
-                              newStream();
-                            });
+                            setState(() {});
                           });
                         },
                         child: Icon(Icons.add),

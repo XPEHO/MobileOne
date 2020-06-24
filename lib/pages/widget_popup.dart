@@ -16,19 +16,21 @@ const Color TRANSPARENT = Colors.transparent;
 class WidgetPopup extends StatefulWidget {
   final String buttonName;
   final String listUuid;
-  WidgetPopup(this.buttonName, this.listUuid);
+  final String itemUuid;
+  WidgetPopup(this.buttonName, this.listUuid, this.itemUuid);
 
   @override
   State<StatefulWidget> createState() {
-    return WidgetPopupState(buttonName, listUuid);
+    return WidgetPopupState(buttonName, listUuid, itemUuid);
   }
 }
 
 class WidgetPopupState extends State<WidgetPopup> {
   final String listUuid;
+  final String itemUuid;
   final String buttonName;
 
-  WidgetPopupState(this.buttonName, this.listUuid);
+  WidgetPopupState(this.buttonName, this.listUuid, this.itemUuid);
 
   String _name;
   int _count;
@@ -47,7 +49,7 @@ class WidgetPopupState extends State<WidgetPopup> {
 
     await Firestore.instance
         .collection("items")
-        .document("")
+        .document(itemUuid)
         .get()
         .then((value) {
       labelValue = value["label"];
@@ -64,8 +66,10 @@ class WidgetPopupState extends State<WidgetPopup> {
 
   @override
   void initState() {
-    getItems();
     super.initState();
+    //if (buttonName == getString(context, "popup_update")) {
+      //getItems();
+    //}
   }
 
   @override
@@ -221,9 +225,6 @@ class WidgetPopupState extends State<WidgetPopup> {
   }
 
   void uddapteItemInList() async {
-    var uuid = Uuid();
-    var itemUuid = uuid.v4();
-
     await databaseReference.collection("items").document(listUuid).updateData({
       itemUuid: {
         'label': _name,
@@ -231,7 +232,7 @@ class WidgetPopupState extends State<WidgetPopup> {
         'unit': _type,
       }
     });
-     Navigator.of(context).pop();
+    Navigator.of(context).pop();
     clearPopupFields();
   }
 
