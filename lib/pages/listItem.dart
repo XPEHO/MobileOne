@@ -1,3 +1,5 @@
+import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/pages/wisget_popup.dart';
 import 'package:flutter/material.dart';
 
 const Color GREEN = Colors.green;
@@ -6,6 +8,7 @@ const Color GREY600 = Colors.grey;
 const Color RED = Colors.red;
 const Color WHITE = Colors.white;
 const Color TRANSPARENT = Colors.transparent;
+
 
 Widget itemWidget(BuildContext context, String _itemName, String _itemCount,
     String _itemType) {
@@ -62,7 +65,13 @@ Widget itemWidget(BuildContext context, String _itemName, String _itemCount,
                 top: 40,
                 right: 10,
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                     showDialog(
+                            context: context,
+                            builder: (BuildContext context) =>
+                             WidgetPopup(getString(context, 'popup_update'))
+                          );
+                  },
                   icon: Icon(Icons.edit),
                 ),
               )

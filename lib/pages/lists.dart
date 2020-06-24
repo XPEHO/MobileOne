@@ -55,16 +55,22 @@ class ListsState extends State<Lists> {
                   getString(context, 'shared_with_me'),
                 ),
               ),
+              
+RaisedButton(
+  onPressed: (){
+    openOpenedListPage(context);
+  }
+)
             ],
           ),
+          
+      
         );
       },
     );
   }
 
   void openOpenedListPage(context) {
-    Navigator.of(context).pushNamed(
-      '/openedListPage',
-    );
+   Navigator.of(context).pushNamed('/openedListPage');
   }
 }

@@ -66,5 +66,8 @@
     "item_kilos": "Kilos",
     "add_item": "Add item",
     "item_count": "Count",
-    "item_name": "Name"
+    "item_name": "Name",
+    "popup_add": "Add",
+    "popup_update": "Update",
+    "popup_alert": "Please check if label name or \n quantity or type are not empty."
 }
