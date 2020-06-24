@@ -46,7 +46,7 @@ class ListsState extends State<Lists> {
                   itemBuilder: (BuildContext ctxt, int index) {
                     return GestureDetector(
                         onTap: () {
-                          openOpenedListPage(context);
+                          openOpenedListPage(context, wishlist[index]);
                         },
                         child: WidgetLists(wishlist[index],
                             "assets/images/basket_my_lists.png", "0 partage"));
@@ -66,7 +66,7 @@ class ListsState extends State<Lists> {
     );
   }
 
-  void openOpenedListPage(context) {
-    Navigator.of(context).pushNamed('/openedListPage');
+  void openOpenedListPage(context, uuid) {
+    Navigator.of(context).pushNamed('/openedListPage', arguments: uuid);
   }
 }

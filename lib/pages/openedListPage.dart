@@ -20,15 +20,17 @@ String type;
   final databaseReference = Firestore.instance;
 
 class OpenedListPage extends StatefulWidget {
-  OpenedListPage({Key key}) : super(key: key);
+  final String listUuid;
+
+  OpenedListPage({Key key, this.listUuid}) : super(key: key);
 
   @override
-  OpenedListPageState createState() => OpenedListPageState();
+  OpenedListPageState createState() => OpenedListPageState(this.listUuid);
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
-
-
+  final String listUuid;
+  OpenedListPageState(this.listUuid);
 
   @override
   void dispose() {
@@ -36,8 +38,6 @@ class OpenedListPageState extends State<OpenedListPage> {
     itemCountController.dispose();
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                           quantity = _itemList[index].data["quantity"].toString();
                           type = _itemList[index].data["unit"];
                           return WidgetItem(
-                             label, quantity, type
+                             label, quantity, type,listUuid
                               );
                         }),
                     IconButton(
@@ -78,7 +78,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) =>
-                              WidgetPopup(getString(context, 'popup_add'))
+                              WidgetPopup(getString(context, 'popup_add'), listUuid)
                           );
                         },
                         child: Icon(Icons.add),
@@ -93,16 +93,8 @@ class OpenedListPageState extends State<OpenedListPage> {
         });
   }
 
-  
-
-
-
-
-
-
   void openListsPage() {
     Navigator.pop(context);
   }
-
   
 }
