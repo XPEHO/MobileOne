@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/widget_item.dart';
+import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/wisget_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -21,16 +22,18 @@ String type;
 
 class OpenedListPage extends StatefulWidget {
   final String listUuid;
+  final String itemUuid;
 
-  OpenedListPage({Key key, this.listUuid}) : super(key: key);
+  OpenedListPage({Key key, this.listUuid,this.itemUuid}) : super(key: key);
 
   @override
-  OpenedListPageState createState() => OpenedListPageState(this.listUuid);
+  OpenedListPageState createState() => OpenedListPageState(this.listUuid,this.itemUuid);
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
-  final String listUuid;
-  OpenedListPageState(this.listUuid);
+   String listUuid;
+   String itemUuid;
+  OpenedListPageState(this.listUuid,this.itemUuid);
 
   @override
   void dispose() {
@@ -53,6 +56,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                 height: MediaQuery.of(context).size.height,
                 child: Stack(
                   children: <Widget>[
+                    
                     new ListView.builder(
                         padding: EdgeInsets.only(top: 30),
                         itemCount: _itemList.length,
@@ -61,7 +65,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                           quantity = _itemList[index].data["quantity"].toString();
                           type = _itemList[index].data["unit"];
                           return WidgetItem(
-                             label, quantity, type,listUuid
+                             label, quantity, type,listUuid,itemUuid
                               );
                         }),
                     IconButton(
@@ -78,7 +82,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) =>
-                              WidgetPopup(getString(context, 'popup_add'), listUuid)
+                              WidgetPopup(getString(context, 'popup_add'), listUuid,itemUuid)
                           );
                         },
                         child: Icon(Icons.add),

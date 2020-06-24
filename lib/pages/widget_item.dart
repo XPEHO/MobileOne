@@ -14,11 +14,12 @@ class WidgetItem extends StatefulWidget {
   final String _itemName;
   final String _itemCount;
   final String _itemType;
-   String _listUuid;
-  WidgetItem(this._itemName, this._itemCount, this._itemType,this._listUuid);
+   final String _listUuid;
+      final String _itemUuid;
+  WidgetItem(this._itemName, this._itemCount, this._itemType,this._listUuid,this._itemUuid);
 
   State<StatefulWidget> createState() {
-    return WidgetItemState(_itemName, _itemCount, _itemType,_listUuid);
+    return WidgetItemState(_itemName, _itemCount, _itemType,_listUuid,_itemUuid);
   }
 }
 
@@ -27,7 +28,8 @@ class WidgetItemState extends State<WidgetItem> {
   String _itemName;
   String _itemCount;
   String _itemType;
-  WidgetItemState(this._itemName, this._itemCount, this._itemType,this._listUuid);
+     final String _itemUuid;
+  WidgetItemState(this._itemName, this._itemCount, this._itemType,this._listUuid,this._itemUuid);
 
 
   Widget build(BuildContext context) {
@@ -90,7 +92,7 @@ class WidgetItemState extends State<WidgetItem> {
                           context: context,
                           builder: (BuildContext context) =>
                          
-                              WidgetPopup(getString(context, 'popup_update'),  _listUuid));
+                              WidgetPopup(getString(context, 'popup_update'),  _listUuid,_itemUuid));
                     },
                     icon: Icon(Icons.edit),
                   ),

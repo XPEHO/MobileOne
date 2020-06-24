@@ -1,4 +1,3 @@
-
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/widget_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,60 +17,61 @@ const Color TRANSPARENT = Colors.transparent;
 class WidgetPopup extends StatefulWidget {
   final String buttonName;
   final String listUuid;
-  WidgetPopup(this.buttonName, this.listUuid);
+  final String itemUuid;
+  WidgetPopup(this.buttonName, this.listUuid,this.itemUuid);
 
   @override
   State<StatefulWidget> createState() {
-    return WidgetPopupState(buttonName, listUuid);
+    return WidgetPopupState(buttonName, listUuid,itemUuid);
   }
 }
 
 class WidgetPopupState extends State<WidgetPopup> {
   final String listUuid;
   final String buttonName;
-  WidgetPopupState(this.buttonName, this.listUuid);
-  
+  final String itemUuid;
+  WidgetPopupState(this.buttonName, this.listUuid,this.itemUuid);
+
   String _name;
   int _count;
   String _type;
-  
-  String alert="";
+
+  String alert = "";
   TextEditingController labelPopup;
 
-String label = "";
- String quantity="";
- String unit = "";
-   Future<void> getListDetails() async {
+  String label = "";
+  String quantity = "";
+  String unit = "";
+  Future<void> getItems() async {
     String labelValue;
     String quantityValue;
-    String unitValue; 
-      await Firestore.instance
-        .collection("item")
-        .document()
+    String unitValue;
+    await Firestore.instance
+        .collection("items")
+        .document(itemUuid)
         .get()
         .then((value) {
       labelValue = value["label"];
       quantityValue = value["quantity"];
 
       unitValue = value["unit"];
-    });    setState(() {
+    });
+    setState(() {
       label = labelValue;
       quantity = quantityValue;
       unit = unitValue;
     });
-  }  @override
+  }
+
+  @override
   void initState() {
-    if(isUpdate == true)
-    {
-      getListDetails();}
+      getItems();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
-
-
-        return new AlertDialog(
+    return new AlertDialog(
       insetPadding: EdgeInsets.fromLTRB(
           15,
           170 - MediaQuery.of(context).viewInsets.top,
@@ -88,7 +88,7 @@ String label = "";
                 key: Key("item_name_label"),
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                  hintText: getString(context, 'item_name') ,
+                  hintText: getString(context, 'item_name'),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: TRANSPARENT),
                   ),
@@ -183,10 +183,9 @@ String label = "";
                   if (itemNameController == null ||
                       itemCountController == null ||
                       _type == null) {
-                        setState(() {
-                          alert = getString(context, "popup_alert");
-                        });
-                    
+                    setState(() {
+                      alert = getString(context, "popup_alert");
+                    });
                   } else {
                     addItemToList();
                   }
@@ -198,8 +197,11 @@ String label = "";
                 ),
                 color: WHITE,
               ),
-              Text(alert, style: TextStyle(
-                      color: Colors.red, fontWeight: FontWeight.bold),),
+              Text(
+                alert,
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+              ),
             ],
           ),
         ),
