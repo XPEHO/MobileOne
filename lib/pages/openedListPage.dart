@@ -31,11 +31,11 @@ class OpenedListPageState extends State<OpenedListPage> {
   @override
   Widget build(BuildContext context) {
     final String listUuid = ModalRoute.of(context).settings.arguments;
-    return StreamBuilder<QuerySnapshot>(
-        stream: Firestore.instance.collection('items').snapshots(),
+    return StreamBuilder<DocumentSnapshot>(
+        stream: Firestore.instance.collection('items').document(listUuid).get().asStream(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return LinearProgressIndicator();
-          var _itemList = snapshot.data.documents;
+          var wishlist = snapshot?.data?.data ?? {};
           return Scaffold(
             body: SafeArea(
               child: Container(
@@ -46,13 +46,10 @@ class OpenedListPageState extends State<OpenedListPage> {
                     
                     new ListView.builder(
                         padding: EdgeInsets.only(top: 30),
-                        itemCount: _itemList.length,
+                        itemCount: wishlist.length,
                         itemBuilder: (BuildContext ctxt, int index) {
-                          label = _itemList[index].data["label"];
-                          quantity = _itemList[index].data["quantity"].toString();
-                          type = _itemList[index].data["unit"];
                           return WidgetItem(
-                             label, quantity, type, listUuid
+                             wishlist[index], listUuid
                             );
                         }),
                     IconButton(

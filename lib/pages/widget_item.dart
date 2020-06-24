@@ -11,23 +11,19 @@ const Color TRANSPARENT = Colors.transparent;
 bool isUpdate=false;
 
 class WidgetItem extends StatefulWidget {
-  final String _itemName;
-  final String _itemCount;
-  final String _itemType;
+  final Map<String, dynamic> _itemslist;
   final String _listUuid;
-  WidgetItem(this._itemName, this._itemCount, this._itemType,this._listUuid);
+  WidgetItem(this._itemslist ,this._listUuid);
 
   State<StatefulWidget> createState() {
-    return WidgetItemState(_itemName, _itemCount, _itemType,_listUuid);
+    return WidgetItemState(_itemslist, _listUuid);
   }
 }
 
 class WidgetItemState extends State<WidgetItem> {
   String _listUuid;
-  String _itemName;
-  String _itemCount;
-  String _itemType;
-  WidgetItemState(this._itemName, this._itemCount, this._itemType,this._listUuid);
+  final Map<String, dynamic> _itemslist;
+  WidgetItemState(this._itemslist ,this._listUuid);
 
   Widget build(BuildContext context) {
     return Row(
@@ -53,7 +49,7 @@ class WidgetItemState extends State<WidgetItem> {
                   top: 30,
                   left: 100,
                   child: Text(
-                    _itemName,
+                    _itemslist["label"],
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                     ),
@@ -63,7 +59,7 @@ class WidgetItemState extends State<WidgetItem> {
                   top: 60,
                   left: 100,
                   child: Text(
-                    _itemCount,
+                    _itemslist["quantity"],
                     style: TextStyle(
                       color: GREY,
                     ),
@@ -73,7 +69,7 @@ class WidgetItemState extends State<WidgetItem> {
                   left: 150,
                   top: 60,
                   child: Text(
-                    _itemType,
+                    _itemslist["unit"],
                     style: TextStyle(
                       color: GREY,
                     ),
