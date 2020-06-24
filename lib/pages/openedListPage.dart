@@ -27,8 +27,9 @@ class OpenedListPage extends StatefulWidget {
 
 class OpenedListPageState extends State<OpenedListPage> {
   String label = "";
+  var stream;
 
-  Future<void> getListDetails(String uuid) async {
+  /*Future<void> getListDetails(String uuid) async {
     String labelValue;
 
     await Firestore.instance
@@ -40,20 +41,31 @@ class OpenedListPageState extends State<OpenedListPage> {
     });
 
     setState(() {
+      debugPrint("passed");
       label = labelValue;
     });
+  }*/
+
+  @override
+  void initState() {
+    newStream();
+    super.initState();
+    //getListDetails(listUuid);
+  }
+
+  void newStream () {
+    stream = Firestore.instance
+            .collection('items')
+            .document(listUuid)
+            .get()
+            .asStream();
   }
 
   @override
   Widget build(BuildContext context) {
     listUuid = ModalRoute.of(context).settings.arguments;
-    getListDetails(listUuid);
     return StreamBuilder<DocumentSnapshot>(
-        stream: Firestore.instance
-            .collection('items')
-            .document(listUuid)
-            .get()
-            .asStream(),
+        stream: stream,
         builder: (context, snapshot) {
           if (!snapshot.hasData) return LinearProgressIndicator();
           var wishlist = snapshot?.data?.data ?? {};
@@ -104,7 +116,11 @@ class OpenedListPageState extends State<OpenedListPage> {
                             context: context,
                             builder: (BuildContext context) =>
                               WidgetPopup(getString(context, 'popup_add'), listUuid)
-                          );
+                          ).then((value) {
+                            setState(() {
+                              newStream();
+                            });
+                          });
                         },
                         child: Icon(Icons.add),
                         backgroundColor: GREEN,
