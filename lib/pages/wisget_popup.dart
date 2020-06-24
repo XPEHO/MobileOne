@@ -1,4 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/openedListPage.dart';
 import 'package:flutter/services.dart';
@@ -21,8 +22,8 @@ class WidgetPopup extends StatefulWidget {
 }
 
 class WidgetPopupState extends State<WidgetPopup> {
-  final String listUuid;
-  final String buttonName;
+  String listUuid;
+  String buttonName;
   WidgetPopupState(this.buttonName, this.listUuid);
   
   String _name;
@@ -178,11 +179,24 @@ class WidgetPopupState extends State<WidgetPopup> {
 
   void addItemToList() async {
     var uuid = Uuid();
-    await databaseReference.collection("items").document(uuid.v4()).setData({
+    var newUuid = uuid.v4();
+
+    //Create the item
+    await databaseReference.collection("items").document(newUuid).setData({
       'label': _name,
       'quantity': _count,
       'unit': _type,
     });
+
+    //Add the item to the wishlist
+    debugPrint("uuid : " + listUuid.toString());
+    await databaseReference
+        .collection("wishlists")
+        .document(listUuid)
+        .updateData({
+          "items": FieldValue.arrayUnion(["$newUuid"])
+        });
+    
     Navigator.of(context).pop();
     clearPopupFields();
   }

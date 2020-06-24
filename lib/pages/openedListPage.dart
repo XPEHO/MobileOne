@@ -26,15 +26,8 @@ class OpenedListPage extends StatefulWidget {
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
-  final String listUuid;
+  String listUuid;
   OpenedListPageState(this.listUuid);
-
-  @override
-  void dispose() {
-    itemNameController.dispose();
-    itemCountController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

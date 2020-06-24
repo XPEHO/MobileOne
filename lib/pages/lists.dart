@@ -67,6 +67,6 @@ class ListsState extends State<Lists> {
   }
 
   void openOpenedListPage(context, uuid) {
-    Navigator.of(context).pushNamed('/openedListPage', arguments: uuid);
+    Navigator.of(context).pushNamed('/openedListPage', arguments: uuid.toString());
   }
 }
