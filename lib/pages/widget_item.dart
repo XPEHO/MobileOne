@@ -1,5 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:MobileOne/pages/wisget_popup.dart';
+import 'package:MobileOne/pages/widget_popup.dart';
 import 'package:flutter/material.dart';
 
 const Color GREEN = Colors.green;
@@ -14,17 +14,11 @@ class WidgetItem extends StatefulWidget {
   final String _itemName;
   final String _itemCount;
   final String _itemType;
-<<<<<<< HEAD
-   final String _listUuid;
-      final String _itemUuid;
-  WidgetItem(this._itemName, this._itemCount, this._itemType,this._listUuid,this._itemUuid);
-=======
   final String _listUuid;
   WidgetItem(this._itemName, this._itemCount, this._itemType,this._listUuid);
->>>>>>> 66d1c8cfd21521bdf0d004631d11cfa50a2c0f8e
 
   State<StatefulWidget> createState() {
-    return WidgetItemState(_itemName, _itemCount, _itemType,_listUuid,_itemUuid);
+    return WidgetItemState(_itemName, _itemCount, _itemType,_listUuid);
   }
 }
 
@@ -33,9 +27,7 @@ class WidgetItemState extends State<WidgetItem> {
   String _itemName;
   String _itemCount;
   String _itemType;
-     final String _itemUuid;
-  WidgetItemState(this._itemName, this._itemCount, this._itemType,this._listUuid,this._itemUuid);
-
+  WidgetItemState(this._itemName, this._itemCount, this._itemType,this._listUuid);
 
   Widget build(BuildContext context) {
     return Row(
@@ -96,8 +88,7 @@ class WidgetItemState extends State<WidgetItem> {
                       showDialog(
                           context: context,
                           builder: (BuildContext context) =>
-                         
-                              WidgetPopup(getString(context, 'popup_update'),  _listUuid,_itemUuid));
+                              WidgetPopup(getString(context, 'popup_update'), _listUuid));
                     },
                     icon: Icon(Icons.edit),
                   ),

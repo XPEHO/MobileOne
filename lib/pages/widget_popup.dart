@@ -16,28 +16,19 @@ const Color TRANSPARENT = Colors.transparent;
 class WidgetPopup extends StatefulWidget {
   final String buttonName;
   final String listUuid;
-  final String itemUuid;
-  WidgetPopup(this.buttonName, this.listUuid,this.itemUuid);
+  WidgetPopup(this.buttonName, this.listUuid);
 
   @override
   State<StatefulWidget> createState() {
-    return WidgetPopupState(buttonName, listUuid,itemUuid);
+    return WidgetPopupState(buttonName, listUuid);
   }
 }
 
 class WidgetPopupState extends State<WidgetPopup> {
-<<<<<<< HEAD
   final String listUuid;
   final String buttonName;
-  final String itemUuid;
-  WidgetPopupState(this.buttonName, this.listUuid,this.itemUuid);
-
-=======
-  String listUuid;
-  String buttonName;
   WidgetPopupState(this.buttonName, this.listUuid);
-  
->>>>>>> 66d1c8cfd21521bdf0d004631d11cfa50a2c0f8e
+
   String _name;
   int _count;
   String _type;
@@ -54,7 +45,7 @@ class WidgetPopupState extends State<WidgetPopup> {
     String unitValue;
     await Firestore.instance
         .collection("items")
-        .document(itemUuid)
+        .document("")
         .get()
         .then((value) {
       labelValue = value["label"];
