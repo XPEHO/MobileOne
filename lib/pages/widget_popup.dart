@@ -1,4 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/pages/widget_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/openedListPage.dart';
@@ -26,6 +27,7 @@ class WidgetPopup extends StatefulWidget {
 class WidgetPopupState extends State<WidgetPopup> {
   final String listUuid;
   final String buttonName;
+
   WidgetPopupState(this.buttonName, this.listUuid);
 
   String _name;
@@ -33,16 +35,17 @@ class WidgetPopupState extends State<WidgetPopup> {
   String _type;
 
   String alert = "";
-  TextEditingController labelPopup;
 
   String label = "";
   String quantity = "";
   String unit = "";
+
   Future<void> getItems() async {
     String labelValue;
     String quantityValue;
     String unitValue;
-    /*await Firestore.instance
+
+    await Firestore.instance
         .collection("items")
         .document("")
         .get()
@@ -56,12 +59,12 @@ class WidgetPopupState extends State<WidgetPopup> {
       label = labelValue;
       quantity = quantityValue;
       unit = unitValue;
-    });*/
+    });
   }
 
   @override
   void initState() {
-      getItems();
+    getItems();
     super.initState();
   }
 
@@ -91,7 +94,7 @@ class WidgetPopupState extends State<WidgetPopup> {
                   filled: true,
                   fillColor: TRANSPARENT,
                 ),
-                controller: labelPopup,
+                controller: itemNameController,
                 onChanged: (text) => handleSubmittedItemName(text),
               ),
               SizedBox(
@@ -183,7 +186,11 @@ class WidgetPopupState extends State<WidgetPopup> {
                       alert = getString(context, "popup_alert");
                     });
                   } else {
-                    addItemToList();
+                    if (buttonName == getString(context, "popup_update")) {
+                      uddapteItemInList();
+                    } else {
+                      addItemToList();
+                    }
                   }
                 },
                 child: Text(
@@ -213,6 +220,21 @@ class WidgetPopupState extends State<WidgetPopup> {
     _type = null;
   }
 
+  void uddapteItemInList() async {
+    var uuid = Uuid();
+    var itemUuid = uuid.v4();
+
+    await databaseReference.collection("items").document(listUuid).updateData({
+      itemUuid: {
+        'label': _name,
+        'quantity': _count,
+        'unit': _type,
+      }
+    });
+     Navigator.of(context).pop();
+    clearPopupFields();
+  }
+
   void addItemToList() async {
     var uuid = Uuid();
     var newUuid = uuid.v4();
@@ -228,8 +250,11 @@ class WidgetPopupState extends State<WidgetPopup> {
 
     //Create the item
     if (doesDocumentExist == true) {
-      await databaseReference.collection("items").document(listUuid).updateData({
-        newUuid : {
+      await databaseReference
+          .collection("items")
+          .document(listUuid)
+          .updateData({
+        newUuid: {
           'label': _name,
           'quantity': _count,
           'unit': _type,
@@ -237,14 +262,14 @@ class WidgetPopupState extends State<WidgetPopup> {
       });
     } else {
       await databaseReference.collection("items").document(listUuid).setData({
-        newUuid : {
+        newUuid: {
           'label': _name,
           'quantity': _count,
           'unit': _type,
         }
       });
     }
-   
+
     Navigator.of(context).pop();
     clearPopupFields();
   }

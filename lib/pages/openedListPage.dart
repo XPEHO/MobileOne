@@ -31,7 +31,6 @@ class OpenedListPageState extends State<OpenedListPage> {
 
   /*Future<void> getListDetails(String uuid) async {
     String labelValue;
-
     await Firestore.instance
         .collection("wishlists")
         .document(uuid)
@@ -39,6 +38,7 @@ class OpenedListPageState extends State<OpenedListPage> {
         .then((value) {
       labelValue = value["label"];
     });
+<<<<<<< HEAD
 
     setState(() {
       debugPrint("passed");
@@ -59,7 +59,14 @@ class OpenedListPageState extends State<OpenedListPage> {
             .document(listUuid)
             .get()
             .asStream();
+=======
+   
+       label = labelValue;
+        test=label;
+    
+>>>>>>> 46ac9c8d36234a386d935abb404f336dcdfd941a
   }
+
 
   @override
   Widget build(BuildContext context) {
