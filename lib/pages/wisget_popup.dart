@@ -10,21 +10,25 @@ const Color GREY = Colors.grey;
 const Color TRANSPARENT = Colors.transparent;
 
 class WidgetPopup extends StatefulWidget {
-  String buttonName;
-  WidgetPopup(this.buttonName);
+  final String buttonName;
+  final String listUuid;
+  WidgetPopup(this.buttonName, this.listUuid);
 
   @override
   State<StatefulWidget> createState() {
-    return WidgetPopupState(buttonName);
+    return WidgetPopupState(buttonName, listUuid);
   }
 }
 
 class WidgetPopupState extends State<WidgetPopup> {
+  final String listUuid;
+  final String buttonName;
+  WidgetPopupState(this.buttonName, this.listUuid);
+  
   String _name;
   int _count;
   String _type;
-  final String buttonName;
-  WidgetPopupState(this.buttonName);
+  
   String alert="";
   @override
   Widget build(BuildContext context) {

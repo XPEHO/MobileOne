@@ -3,8 +3,6 @@ import 'package:MobileOne/pages/listItem.dart';
 import 'package:MobileOne/pages/wisget_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:uuid/uuid.dart';
 import '../localization/localization.dart';
 
 const Color GREEN = Colors.green;
@@ -19,15 +17,17 @@ const Color TRANSPARENT = Colors.transparent;
   final databaseReference = Firestore.instance;
 
 class OpenedListPage extends StatefulWidget {
-  OpenedListPage({Key key}) : super(key: key);
+  final String listUuid;
+
+  OpenedListPage({Key key, this.listUuid}) : super(key: key);
 
   @override
-  OpenedListPageState createState() => OpenedListPageState();
+  OpenedListPageState createState() => OpenedListPageState(this.listUuid);
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
-
-
+  final String listUuid;
+  OpenedListPageState(this.listUuid);
 
   @override
   void dispose() {
@@ -35,8 +35,6 @@ class OpenedListPageState extends State<OpenedListPage> {
     itemCountController.dispose();
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +55,10 @@ class OpenedListPageState extends State<OpenedListPage> {
                         itemCount: _itemList.length,
                         itemBuilder: (BuildContext ctxt, int index) {
                           return WidgetItem(
-                             
                               _itemList[index].data["label"],
                               _itemList[index].data["quantity"].toString(),
-                              _itemList[index].data["unit"]);
+                              _itemList[index].data["unit"],
+                              listUuid);
                         }),
                     IconButton(
                       icon: Icon(Icons.arrow_back),
@@ -76,7 +74,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) =>
-                              WidgetPopup(getString(context, 'popup_add'))
+                              WidgetPopup(getString(context, 'popup_add'), listUuid)
                           );
                         },
                         child: Icon(Icons.add),
@@ -91,16 +89,8 @@ class OpenedListPageState extends State<OpenedListPage> {
         });
   }
 
-  
-
-
-
-
-
-
   void openListsPage() {
     Navigator.pop(context);
   }
-
   
 }
