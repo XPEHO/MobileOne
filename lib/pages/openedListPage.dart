@@ -80,8 +80,8 @@ class OpenedListPageState extends State<OpenedListPage> {
                         itemCount: wishlist.length,
                         itemBuilder: (BuildContext ctxt, int index) {
                           return WidgetItem(
-                             wishlist.values.toList()[index], listUuid
-                            );
+                            wishlist.values.toList()[index], listUuid
+                          );
                         }),
                     Stack(
                       children: <Widget>[
@@ -112,9 +112,10 @@ class OpenedListPageState extends State<OpenedListPage> {
                       child: FloatingActionButton(
                         onPressed: () {
                           showDialog(
-                              context: context,
-                              builder: (BuildContext context) => WidgetPopup(
-                                  getString(context, 'popup_add'), listUuid));
+                            context: context,
+                            builder: (BuildContext context) =>
+                              WidgetPopup(getString(context, 'popup_add'), listUuid)
+                          ).then((value) => setState(() {}));
                         },
                         child: Icon(Icons.add),
                         backgroundColor: GREEN,
