@@ -37,8 +37,7 @@ class WidgetPopupState extends State<WidgetPopup> {
   String _type;
 
   String alert = "";
-
-  String labelPopup = "";
+  String label = "";
   String quantity = "";
   String unit = "";
 
@@ -49,18 +48,18 @@ class WidgetPopupState extends State<WidgetPopup> {
 
     await Firestore.instance
         .collection("items")
-        .document(itemUuid)
+        .document(listUuid)
         .get()
         .then((value) {
-      labelValue = value["label"];
-      quantityValue = value["quantity"];
-
-      unitValue = value["unit"];
+      labelValue = value[itemUuid]["label"];
+      quantityValue = value[itemUuid]["quantity"].toString();
+      unitValue = value[itemUuid]["unit"];
     });
+
     setState(() {
-      labelPopup = labelValue;
-      quantity = quantityValue;
-      unit = unitValue;
+      itemNameController.text = labelValue;
+      itemCountController.text = quantityValue;
+      _type = unitValue;
     });
   }
 
@@ -68,10 +67,9 @@ class WidgetPopupState extends State<WidgetPopup> {
   void initState() {
     
     super.initState();
-    getItems();
-    //if (buttonName == getString(context, "popup_update")) {
-      //getItems();
-    //}
+    if (buttonName == "Update") {
+      getItems();
+    }
   }
 
   @override
@@ -94,7 +92,7 @@ class WidgetPopupState extends State<WidgetPopup> {
                 key: Key("item_name_label"),
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                  hintText: labelPopup,
+                  hintText: getString(context, 'item_name'),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: TRANSPARENT),
                   ),

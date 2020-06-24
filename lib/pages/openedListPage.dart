@@ -38,10 +38,12 @@ class OpenedListPageState extends State<OpenedListPage> {
       labelValue = value["label"];
     });
 
-    setState(() {
-      debugPrint("passed");
-      label = labelValue;
-    });
+   
+  if(mounted) {
+     setState(() {
+       label = labelValue;
+     });}
+      
   }
 
   @override
