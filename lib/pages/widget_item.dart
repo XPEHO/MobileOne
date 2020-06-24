@@ -59,7 +59,7 @@ class WidgetItemState extends State<WidgetItem> {
                   top: 60,
                   left: 100,
                   child: Text(
-                    _itemslist["quantity"],
+                    _itemslist["quantity"].toString(),
                     style: TextStyle(
                       color: GREY,
                     ),

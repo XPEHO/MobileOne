@@ -79,7 +79,9 @@ class OpenedListPageState extends State<OpenedListPage> {
                         padding: EdgeInsets.only(top: 30),
                         itemCount: wishlist.length,
                         itemBuilder: (BuildContext ctxt, int index) {
-                          return WidgetItem(wishlist[index], listUuid);
+                          return WidgetItem(
+                             wishlist.values.toList()[index], listUuid
+                            );
                         }),
                     Stack(
                       children: <Widget>[
