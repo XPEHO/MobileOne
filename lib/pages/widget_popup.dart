@@ -187,7 +187,8 @@ class WidgetPopupState extends State<WidgetPopup> {
                 onPressed: () {
                   if (itemNameController == null ||
                       itemCountController == null ||
-                      _type == null) {
+                      _type == null || itemNameController.text == "" || 
+                      itemCountController.text == "") {
                     setState(() {
                       alert = getString(context, "popup_alert");
                     });
