@@ -37,7 +37,7 @@ class OpenedListPageState extends State<OpenedListPage> {
 
     await Firestore.instance
         .collection("wishlists")
-        .document(listUuid)
+        .document()
         .get()
         .then((value) {
       labelValue = value["label"];
