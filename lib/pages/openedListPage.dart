@@ -1,6 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/widget_item.dart';
-import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/widget_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -42,14 +41,13 @@ class OpenedListPageState extends State<OpenedListPage> {
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 child: Stack(
-                  children: <Widget>[
-                    
+                  children: <Widget>[                    
                     new ListView.builder(
                         padding: EdgeInsets.only(top: 30),
                         itemCount: wishlist.length,
                         itemBuilder: (BuildContext ctxt, int index) {
                           return WidgetItem(
-                             wishlist[index], listUuid
+                             wishlist.values.toList()[index], listUuid
                             );
                         }),
                     IconButton(
