@@ -40,14 +40,14 @@ class WidgetPopupState extends State<WidgetPopup> {
   String quantity = "";
   String unit = "";
 
-  Future<void> getItems() async {
+  Future<void> getItems(String uuid) async {
     String labelValue;
     String quantityValue;
     String unitValue;
 
     await Firestore.instance
         .collection("items")
-        .document("")
+        .document(uuid)
         .get()
         .then((value) {
       labelValue = value["label"];
@@ -64,12 +64,13 @@ class WidgetPopupState extends State<WidgetPopup> {
 
   @override
   void initState() {
-    getItems();
+   // getItems();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+
     return new AlertDialog(
       insetPadding: EdgeInsets.fromLTRB(
           15,
@@ -87,7 +88,7 @@ class WidgetPopupState extends State<WidgetPopup> {
                 key: Key("item_name_label"),
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                  hintText: getString(context, 'item_name'),
+                  hintText: label,
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: TRANSPARENT),
                   ),
@@ -283,12 +284,12 @@ class WidgetPopupState extends State<WidgetPopup> {
   }
 
   void incrementCounter() {
-    itemCountController.text = (_count + 1).toString();
+    itemCountController.text = (_count++).toString();
   }
 
   void decrementCounter() {
     if (_count > 0) {
-      itemCountController.text = (_count - 1).toString();
+      itemCountController.text = (_count--).toString();
     }
   }
 }

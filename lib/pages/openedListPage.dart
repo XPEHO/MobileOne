@@ -72,7 +72,10 @@ class OpenedListPageState extends State<OpenedListPage> {
                             wishlist.values.toList()[index], listUuid
                           );
                         }),
-                    Stack(
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                height: 50,
+                    child:Stack(
                       children: <Widget>[
                         Align(
                           alignment: Alignment.topLeft,
@@ -94,7 +97,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                           ),
                         ),),
                       ],
-                    ),
+                    ),),
                     Positioned(
                       bottom: 20,
                       right: 20,
