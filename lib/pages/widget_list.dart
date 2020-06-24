@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 const Color WHITE = Colors.white;
 const Color BLACK = Colors.black;
 const Color GREY = Colors.grey;
+  String test="";
 
 class WidgetLists extends StatefulWidget {
   final String _listUuid;
@@ -27,6 +28,7 @@ class WidgetListsState extends State<WidgetLists> {
   String label = "";
   String count = "";
 
+
   Future<void> getListDetails() async {
     String labelValue;
     String countValue;
@@ -43,6 +45,7 @@ class WidgetListsState extends State<WidgetLists> {
     setState(() {
       label = labelValue;
       count = countValue;
+      test=label;
     });
   }
 

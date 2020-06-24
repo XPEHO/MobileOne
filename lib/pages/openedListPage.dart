@@ -1,6 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/widget_item.dart';
-import 'package:MobileOne/pages/lists.dart';
+import 'package:MobileOne/pages/widget_list.dart';
 import 'package:MobileOne/pages/widget_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -12,27 +12,59 @@ const Color GREY600 = Colors.grey;
 const Color RED = Colors.red;
 const Color WHITE = Colors.white;
 const Color TRANSPARENT = Colors.transparent;
-String label;
-String quantity;
-String type; 
-  final itemNameController = new TextEditingController();
-  final itemCountController = new TextEditingController();
 
-  final databaseReference = Firestore.instance;
+final itemNameController = new TextEditingController();
+final itemCountController = new TextEditingController();
 
+final databaseReference = Firestore.instance;
+ String listUuid;
 class OpenedListPage extends StatefulWidget {
-  OpenedListPage({Key key}) : super(key: key);
+  OpenedListPage({Key key,}) : super(key: key);
 
   @override
   OpenedListPageState createState() => OpenedListPageState();
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
+
+
+  String label = "";
+  String count = "";
+
+  Future<void> getListDetails() async {
+    String labelValue;
+    String countValue;
+
+    await Firestore.instance
+        .collection("wishlists")
+        .document(listUuid)
+        .get()
+        .then((value) {
+      labelValue = value["label"];
+    });
+
+    setState(() {
+      label = labelValue;
+      test=label;
+    });
+  }
+
+  @override
+  void initState() {
+    getListDetails();
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final String listUuid = ModalRoute.of(context).settings.arguments;
+    listUuid = ModalRoute.of(context).settings.arguments;
     return StreamBuilder<DocumentSnapshot>(
-        stream: Firestore.instance.collection('items').document(listUuid).get().asStream(),
+        stream: Firestore.instance
+            .collection('items')
+            .document(listUuid)
+            .get()
+            .asStream(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return LinearProgressIndicator();
           var wishlist = snapshot?.data?.data ?? {};
@@ -43,20 +75,34 @@ class OpenedListPageState extends State<OpenedListPage> {
                 height: MediaQuery.of(context).size.height,
                 child: Stack(
                   children: <Widget>[
-                    
                     new ListView.builder(
                         padding: EdgeInsets.only(top: 30),
                         itemCount: wishlist.length,
                         itemBuilder: (BuildContext ctxt, int index) {
-                          return WidgetItem(
-                             wishlist[index], listUuid
-                            );
+                          return WidgetItem(wishlist[index], listUuid);
                         }),
-                    IconButton(
-                      icon: Icon(Icons.arrow_back),
-                      onPressed: () {
-                        openListsPage();
-                      },
+                    Stack(
+                      children: <Widget>[
+                        Align(
+                          alignment: Alignment.topLeft,
+                        child:IconButton(
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            openListsPage();
+                          },
+                        ),),
+                        Padding(
+                          padding: EdgeInsets.only(top:7),
+                          child:Align(
+                          alignment: Alignment.topCenter,
+                          child: Text(
+                            test,
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),),
+                      ],
                     ),
                     Positioned(
                       bottom: 20,
@@ -64,10 +110,9 @@ class OpenedListPageState extends State<OpenedListPage> {
                       child: FloatingActionButton(
                         onPressed: () {
                           showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                              WidgetPopup(getString(context, 'popup_add'), listUuid)
-                          );
+                              context: context,
+                              builder: (BuildContext context) => WidgetPopup(
+                                  getString(context, 'popup_add'), listUuid));
                         },
                         child: Icon(Icons.add),
                         backgroundColor: GREEN,
@@ -84,5 +129,4 @@ class OpenedListPageState extends State<OpenedListPage> {
   void openListsPage() {
     Navigator.pop(context);
   }
-  
 }
