@@ -8,6 +8,7 @@ const Color GREY600 = Colors.grey;
 const Color RED = Colors.red;
 const Color WHITE = Colors.white;
 const Color TRANSPARENT = Colors.transparent;
+bool isUpdate=false;
 
 class WidgetItem extends StatefulWidget {
   final String _itemName;
@@ -25,6 +26,7 @@ class WidgetItemState extends State<WidgetItem> {
   String _itemCount;
   String _itemType;
   WidgetItemState(this._itemName, this._itemCount, this._itemType);
+
 
   Widget build(BuildContext context) {
     return Row(
@@ -81,9 +83,11 @@ class WidgetItemState extends State<WidgetItem> {
                   right: 10,
                   child: IconButton(
                     onPressed: () {
+                       isUpdate=true;
                       showDialog(
                           context: context,
                           builder: (BuildContext context) =>
+                         
                               WidgetPopup(getString(context, 'popup_update')));
                     },
                     icon: Icon(Icons.edit),

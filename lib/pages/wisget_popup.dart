@@ -1,12 +1,18 @@
+
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/pages/widget_item.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/openedListPage.dart';
+
 import 'package:flutter/services.dart';
 import 'package:uuid/uuid.dart';
 
 const Color WHITE = Colors.white;
 const Color BLACK = Colors.black;
 const Color GREY = Colors.grey;
+const Color RED = Colors.red;
 const Color TRANSPARENT = Colors.transparent;
 
 class WidgetPopup extends StatefulWidget {
@@ -26,9 +32,42 @@ class WidgetPopupState extends State<WidgetPopup> {
   final String buttonName;
   WidgetPopupState(this.buttonName);
   String alert="";
+  TextEditingController labelPopup;
+
+String label = "";
+ String quantity="";
+ String unit = "";
+   Future<void> getListDetails() async {
+    String labelValue;
+    String quantityValue;
+    String unitValue; 
+      await Firestore.instance
+        .collection("item")
+        .document()
+        .get()
+        .then((value) {
+      labelValue = value["label"];
+      quantityValue = value["quantity"];
+
+      unitValue = value["unit"];
+    });    setState(() {
+      label = labelValue;
+      quantity = quantityValue;
+      unit = unitValue;
+    });
+  }  @override
+  void initState() {
+    if(isUpdate == true)
+    {
+      getListDetails();}
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
-    return new AlertDialog(
+
+
+
+        return new AlertDialog(
       insetPadding: EdgeInsets.fromLTRB(
           15,
           170 - MediaQuery.of(context).viewInsets.top,
@@ -45,14 +84,14 @@ class WidgetPopupState extends State<WidgetPopup> {
                 key: Key("item_name_label"),
                 textAlign: TextAlign.center,
                 decoration: InputDecoration(
-                  hintText: getString(context, 'item_name'),
+                  hintText: getString(context, 'item_name') ,
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: TRANSPARENT),
                   ),
                   filled: true,
                   fillColor: TRANSPARENT,
                 ),
-                controller: itemNameController,
+                controller: labelPopup,
                 onChanged: (text) => handleSubmittedItemName(text),
               ),
               SizedBox(
