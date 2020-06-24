@@ -28,7 +28,7 @@ class OpenedListPage extends StatefulWidget {
 class OpenedListPageState extends State<OpenedListPage> {
   String label = "";
 
-  /*Future<void> getListDetails(String uuid) async {
+  Future<void> getListTitle(String uuid) async {
     String labelValue;
     await Firestore.instance
         .collection("wishlists")
@@ -42,7 +42,13 @@ class OpenedListPageState extends State<OpenedListPage> {
       debugPrint("passed");
       label = labelValue;
     });
-  }*/
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    //getListTitle(listUuid);
+  }
 
   @override
   Widget build(BuildContext context) {

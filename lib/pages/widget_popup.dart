@@ -60,6 +60,8 @@ class WidgetPopupState extends State<WidgetPopup> {
       itemNameController.text = labelValue;
       itemCountController.text = quantityValue;
       _type = unitValue;
+      _name = labelValue;
+      _count = int.parse(quantityValue);
     });
   }
 
