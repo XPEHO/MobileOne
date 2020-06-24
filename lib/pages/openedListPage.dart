@@ -31,34 +31,27 @@ class OpenedListPageState extends State<OpenedListPage> {
   String label = "";
   String count = "";
 
-  Future<void> getListDetails() async {
+  Future<void> getListDetails(String uuid) async {
     String labelValue;
-    String countValue;
-
     await Firestore.instance
         .collection("wishlists")
-        .document()
+        .document(uuid)
         .get()
         .then((value) {
       labelValue = value["label"];
     });
-
-    setState(() {
-      label = labelValue;
-      test=label;
-    });
-  }
-
-  @override
-  void initState() {
-    getListDetails();
-    super.initState();
+   
+       label = labelValue;
+        test=label;
+    
   }
 
 
   @override
   Widget build(BuildContext context) {
     listUuid = ModalRoute.of(context).settings.arguments;
+
+    getListDetails(listUuid);
     return StreamBuilder<DocumentSnapshot>(
         stream: Firestore.instance
             .collection('items')
