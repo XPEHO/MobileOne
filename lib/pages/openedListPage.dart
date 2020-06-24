@@ -37,12 +37,12 @@ class OpenedListPageState extends State<OpenedListPage> {
         .then((value) {
       labelValue = value["label"];
     });
-   
-       label = labelValue;
-        test=label;
-    
-  }
 
+    setState(() {
+      debugPrint("passed");
+      label = labelValue;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                         itemCount: wishlist.length,
                         itemBuilder: (BuildContext ctxt, int index) {
                           return WidgetItem(
-                            wishlist.values.toList()[index], listUuid
+                            wishlist.values.toList()[index], listUuid, wishlist.keys.toList()[index]
                           );
                         }),
                         Container(
@@ -106,8 +106,10 @@ class OpenedListPageState extends State<OpenedListPage> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) =>
-                              WidgetPopup(getString(context, 'popup_add'), listUuid)
-                          );
+                              WidgetPopup(getString(context, 'popup_add'), listUuid, null)
+                          ).then((value) {
+                            setState(() {});
+                          });
                         },
                         child: Icon(Icons.add),
                         backgroundColor: GREEN,
