@@ -47,8 +47,8 @@ class OpenedListPageState extends State<OpenedListPage> {
                         itemCount: wishlist.length,
                         itemBuilder: (BuildContext ctxt, int index) {
                           return WidgetItem(
-                             wishlist.values.toList()[index], listUuid
-                            );
+                            wishlist.values.toList()[index], listUuid
+                          );
                         }),
                     IconButton(
                       icon: Icon(Icons.arrow_back),
@@ -65,7 +65,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                             context: context,
                             builder: (BuildContext context) =>
                               WidgetPopup(getString(context, 'popup_add'), listUuid)
-                          );
+                          ).then((value) => setState(() {}));
                         },
                         child: Icon(Icons.add),
                         backgroundColor: GREEN,
