@@ -26,10 +26,7 @@ class OpenedListPage extends StatefulWidget {
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
-
-
   String label = "";
-  String count = "";
 
   Future<void> getListDetails(String uuid) async {
     String labelValue;
@@ -50,7 +47,6 @@ class OpenedListPageState extends State<OpenedListPage> {
   @override
   Widget build(BuildContext context) {
     listUuid = ModalRoute.of(context).settings.arguments;
-
     getListDetails(listUuid);
     return StreamBuilder<DocumentSnapshot>(
         stream: Firestore.instance
@@ -91,7 +87,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                           child:Align(
                           alignment: Alignment.topCenter,
                           child: Text(
-                            test,
+                            label,
                             style: TextStyle(
                               fontSize: 20,
                             ),
@@ -108,7 +104,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                             context: context,
                             builder: (BuildContext context) =>
                               WidgetPopup(getString(context, 'popup_add'), listUuid)
-                          ).then((value) => setState(() {}));
+                          );
                         },
                         child: Icon(Icons.add),
                         backgroundColor: GREEN,
