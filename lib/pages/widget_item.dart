@@ -8,7 +8,6 @@ const Color GREY600 = Colors.grey;
 const Color RED = Colors.red;
 const Color WHITE = Colors.white;
 const Color TRANSPARENT = Colors.transparent;
-bool isUpdate=false;
 
 class WidgetItem extends StatefulWidget {
   final Map<String, dynamic> _itemslist;
@@ -82,7 +81,6 @@ class WidgetItemState extends State<WidgetItem> {
                   right: 10,
                   child: IconButton(
                     onPressed: () {
-                       isUpdate=true;
                       showDialog(
                           context: context,
                           builder: (BuildContext context) =>

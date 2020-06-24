@@ -38,21 +38,17 @@ class OpenedListPageState extends State<OpenedListPage> {
       labelValue = value["label"];
     });
 
-    setState(() {
-      debugPrint("passed");
-      label = labelValue;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    //getListTitle(listUuid);
+    if(mounted) {
+      setState(() {
+        label = labelValue;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     listUuid = ModalRoute.of(context).settings.arguments;
+    getListTitle(listUuid);
     return StreamBuilder<DocumentSnapshot>(
         stream: Firestore.instance
             .collection('items')
@@ -77,7 +73,10 @@ class OpenedListPageState extends State<OpenedListPage> {
                             wishlist.values.toList()[index], listUuid, wishlist.keys.toList()[index]
                           );
                         }),
-                    Stack(
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                height: 50,
+                    child:Stack(
                       children: <Widget>[
                         Align(
                           alignment: Alignment.topLeft,
@@ -99,7 +98,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                           ),
                         ),),
                       ],
-                    ),
+                    ),),
                     Positioned(
                       bottom: 20,
                       right: 20,

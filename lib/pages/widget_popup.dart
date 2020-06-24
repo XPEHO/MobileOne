@@ -67,6 +67,7 @@ class WidgetPopupState extends State<WidgetPopup> {
 
   @override
   void initState() {
+    
     super.initState();
     if (buttonName == "Update") {
       getItems();
@@ -75,6 +76,7 @@ class WidgetPopupState extends State<WidgetPopup> {
 
   @override
   Widget build(BuildContext context) {
+
     return new AlertDialog(
       insetPadding: EdgeInsets.fromLTRB(
           15,
@@ -285,12 +287,12 @@ class WidgetPopupState extends State<WidgetPopup> {
   }
 
   void incrementCounter() {
-    itemCountController.text = (_count + 1).toString();
+    itemCountController.text = (_count++).toString();
   }
 
   void decrementCounter() {
     if (_count > 0) {
-      itemCountController.text = (_count - 1).toString();
+      itemCountController.text = (_count--).toString();
     }
   }
 }
