@@ -56,8 +56,8 @@ class OpenedListPageState extends State<OpenedListPage> {
                         padding: EdgeInsets.only(top: 30),
                         itemCount: _itemList.length,
                         itemBuilder: (BuildContext ctxt, int index) {
-                          return itemWidget(
-                              ctxt,
+                          return WidgetItem(
+                             
                               _itemList[index].data["label"],
                               _itemList[index].data["quantity"].toString(),
                               _itemList[index].data["unit"]);

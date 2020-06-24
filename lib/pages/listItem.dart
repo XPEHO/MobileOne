@@ -9,76 +9,91 @@ const Color RED = Colors.red;
 const Color WHITE = Colors.white;
 const Color TRANSPARENT = Colors.transparent;
 
+class WidgetItem extends StatefulWidget {
+  final String _itemName;
+  final String _itemCount;
+  final String _itemType;
+  WidgetItem(this._itemName, this._itemCount, this._itemType);
 
-Widget itemWidget(BuildContext context, String _itemName, String _itemCount,
-    String _itemType) {
-  return Row(
-    children: [
-      new Container(
-        height: 100,
-        width: MediaQuery.of(context).size.width,
-        child: new Center(
-          child: Stack(
-            children: [
-              Positioned(
-                top: 25,
-                left: 10,
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  child: Image(
-                    image: AssetImage("assets/images/bottle_of_water.png"),
+  State<StatefulWidget> createState() {
+    return WidgetItemState(_itemName, _itemCount, _itemType);
+  }
+}
+
+class WidgetItemState extends State<WidgetItem> {
+  String _itemName;
+  String _itemCount;
+  String _itemType;
+  WidgetItemState(this._itemName, this._itemCount, this._itemType);
+
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        new Container(
+          height: 100,
+          width: MediaQuery.of(context).size.width,
+          child: new Center(
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 25,
+                  left: 10,
+                  child: Container(
+                    height: 50,
+                    width: 50,
+                    child: Image(
+                      image: AssetImage("assets/images/bottle_of_water.png"),
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 30,
-                left: 100,
-                child: Text(
-                  _itemName,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                Positioned(
+                  top: 30,
+                  left: 100,
+                  child: Text(
+                    _itemName,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 60,
-                left: 100,
-                child: Text(
-                  _itemCount,
-                  style: TextStyle(
-                    color: GREY,
+                Positioned(
+                  top: 60,
+                  left: 100,
+                  child: Text(
+                    _itemCount,
+                    style: TextStyle(
+                      color: GREY,
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                left: 150,
-                top: 60,
-                child: Text(
-                  _itemType,
-                  style: TextStyle(
-                    color: GREY,
+                Positioned(
+                  left: 150,
+                  top: 60,
+                  child: Text(
+                    _itemType,
+                    style: TextStyle(
+                      color: GREY,
+                    ),
                   ),
                 ),
-              ),
-              Positioned(
-                top: 40,
-                right: 10,
-                child: IconButton(
-                  onPressed: () {
-                     showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                             WidgetPopup(getString(context, 'popup_update'))
-                          );
-                  },
-                  icon: Icon(Icons.edit),
-                ),
-              )
-            ],
+                Positioned(
+                  top: 40,
+                  right: 10,
+                  child: IconButton(
+                    onPressed: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) =>
+                              WidgetPopup(getString(context, 'popup_update')));
+                    },
+                    icon: Icon(Icons.edit),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
-      ),
-    ],
-  );
+      ],
+    );
+  }
 }

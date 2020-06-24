@@ -23,7 +23,7 @@ class WidgetPopupState extends State<WidgetPopup> {
   String _name;
   int _count;
   String _type;
-  String buttonName;
+  final String buttonName;
   WidgetPopupState(this.buttonName);
   String alert="";
   @override
