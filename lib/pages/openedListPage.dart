@@ -21,20 +21,16 @@ String type;
   final databaseReference = Firestore.instance;
 
 class OpenedListPage extends StatefulWidget {
-  final String listUuid;
-
-  OpenedListPage({Key key, this.listUuid}) : super(key: key);
+  OpenedListPage({Key key}) : super(key: key);
 
   @override
-  OpenedListPageState createState() => OpenedListPageState(this.listUuid);
+  OpenedListPageState createState() => OpenedListPageState();
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
-  String listUuid;
-  OpenedListPageState(this.listUuid);
-
   @override
   Widget build(BuildContext context) {
+    final String listUuid = ModalRoute.of(context).settings.arguments;
     return StreamBuilder<QuerySnapshot>(
         stream: Firestore.instance.collection('items').snapshots(),
         builder: (context, snapshot) {

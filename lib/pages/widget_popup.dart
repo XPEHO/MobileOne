@@ -42,7 +42,7 @@ class WidgetPopupState extends State<WidgetPopup> {
     String labelValue;
     String quantityValue;
     String unitValue;
-    await Firestore.instance
+    /*await Firestore.instance
         .collection("items")
         .document("")
         .get()
@@ -56,7 +56,7 @@ class WidgetPopupState extends State<WidgetPopup> {
       label = labelValue;
       quantity = quantityValue;
       unit = unitValue;
-    });
+    });*/
   }
 
   @override
@@ -216,23 +216,35 @@ class WidgetPopupState extends State<WidgetPopup> {
   void addItemToList() async {
     var uuid = Uuid();
     var newUuid = uuid.v4();
+    bool doesDocumentExist = false;
 
-    //Create the item
-    await databaseReference.collection("items").document(newUuid).setData({
-      'label': _name,
-      'quantity': _count,
-      'unit': _type,
+    await Firestore.instance
+        .collection("items")
+        .document(listUuid)
+        .get()
+        .then((value) {
+      doesDocumentExist = value.exists;
     });
 
-    //Add the item to the wishlist
-    debugPrint("uuid : " + listUuid.toString());
-    await databaseReference
-        .collection("wishlists")
-        .document(listUuid)
-        .updateData({
-          "items": FieldValue.arrayUnion(["$newUuid"])
-        });
-    
+    //Create the item
+    if (doesDocumentExist == true) {
+      await databaseReference.collection("items").document(listUuid).updateData({
+        newUuid : {
+          'label': _name,
+          'quantity': _count,
+          'unit': _type,
+        }
+      });
+    } else {
+      await databaseReference.collection("items").document(listUuid).setData({
+        newUuid : {
+          'label': _name,
+          'quantity': _count,
+          'unit': _type,
+        }
+      });
+    }
+   
     Navigator.of(context).pop();
     clearPopupFields();
   }
