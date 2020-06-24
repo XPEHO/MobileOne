@@ -1,5 +1,4 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:MobileOne/pages/widget_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/openedListPage.dart';
@@ -67,21 +66,24 @@ class WidgetPopupState extends State<WidgetPopup> {
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) => getData());
     super.initState();
-    if (buttonName == "Update") {
+  }
+
+  void getData() {
+    if (buttonName == getString(context, "popup_update")) {
       getItems();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-
     return new AlertDialog(
       insetPadding: EdgeInsets.fromLTRB(
           15,
-          170 - MediaQuery.of(context).viewInsets.top,
+          120 - MediaQuery.of(context).viewInsets.top,
           15,
-          170 - MediaQuery.of(context).viewInsets.bottom),
+          120 - MediaQuery.of(context).viewInsets.bottom),
       content: new Center(
         child: SingleChildScrollView(
           child: Column(
@@ -187,7 +189,8 @@ class WidgetPopupState extends State<WidgetPopup> {
                 onPressed: () {
                   if (itemNameController == null ||
                       itemCountController == null ||
-                      _type == null || itemNameController.text == "" || 
+                      _type == null ||
+                      itemNameController.text == "" ||
                       itemCountController.text == "") {
                     setState(() {
                       alert = getString(context, "popup_alert");

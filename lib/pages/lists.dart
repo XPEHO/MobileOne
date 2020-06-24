@@ -6,6 +6,7 @@ import 'package:flutter/rendering.dart';
 import 'package:MobileOne/pages/widget_list.dart';
 
 const Color ORANGE = Colors.deepOrange;
+
 class Lists extends StatefulWidget {
   State<StatefulWidget> createState() {
     return ListsState();
@@ -43,13 +44,12 @@ class ListsState extends State<Lists> {
                   scrollDirection: Axis.horizontal,
                   itemCount: wishlist.length,
                   itemBuilder: (BuildContext ctxt, int index) {
-                    
                     return GestureDetector(
                         onTap: () {
                           openOpenedListPage(context, wishlist[index]);
                         },
                         child: WidgetLists(wishlist[index],
-                            "assets/images/basket_my_lists.png", "0 partage"));
+                            getString(context, "shared_count")));
                   },
                 ),
               ),
@@ -67,6 +67,7 @@ class ListsState extends State<Lists> {
   }
 
   void openOpenedListPage(context, uuid) {
-    Navigator.of(context).pushNamed('/openedListPage', arguments: uuid.toString());
+    Navigator.of(context)
+        .pushNamed('/openedListPage', arguments: uuid.toString());
   }
 }

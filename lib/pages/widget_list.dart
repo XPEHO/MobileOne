@@ -5,29 +5,25 @@ import 'package:flutter/material.dart';
 const Color WHITE = Colors.white;
 const Color BLACK = Colors.black;
 const Color GREY = Colors.grey;
-  String test="";
 
 class WidgetLists extends StatefulWidget {
   final String _listUuid;
-  final String _itemPicture;
   final String _numberOfItemShared;
 
-  WidgetLists(this._listUuid, this._itemPicture, this._numberOfItemShared);
+  WidgetLists(this._listUuid, this._numberOfItemShared);
 
   State<StatefulWidget> createState() {
-    return WidgetListsState(_listUuid, _itemPicture, _numberOfItemShared);
+    return WidgetListsState(_listUuid, _numberOfItemShared);
   }
 }
 
 class WidgetListsState extends State<WidgetLists> {
   final String _listUuid;
-  final String _itemPicture;
   final String _numberOfItemShared;
-  WidgetListsState(this._listUuid, this._itemPicture, this._numberOfItemShared);
+  WidgetListsState(this._listUuid, this._numberOfItemShared);
 
   String label = "";
   String count = "";
-
 
   Future<void> getListDetails() async {
     String labelValue;
@@ -45,7 +41,6 @@ class WidgetListsState extends State<WidgetLists> {
     setState(() {
       label = labelValue;
       count = countValue;
-      test=label;
     });
   }
 
@@ -75,7 +70,7 @@ class WidgetListsState extends State<WidgetLists> {
               ),
               Container(
                 width: MediaQuery.of(context).size.width * 0.23 / 2,
-                child: Image.asset(_itemPicture),
+                child: Image.asset("assets/images/basket_my_lists.png"),
               ),
               Padding(
                 padding: EdgeInsets.only(right: 20),

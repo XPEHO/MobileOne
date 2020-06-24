@@ -73,5 +73,6 @@
     "item_name": "Nom",
     "popup_add": "Ajouter",
     "popup_update": "Modifier",
-    "popup_alert": "Verifiez que le label, la quantité ou le type ne soit pas vide."
+    "popup_alert": "Verifiez que le label, la quantité ou le type ne soit pas vide.",
+    "shared_count" : "0 partages"
 }

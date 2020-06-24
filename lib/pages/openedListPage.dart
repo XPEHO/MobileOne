@@ -1,6 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/widget_item.dart';
-import 'package:MobileOne/pages/widget_list.dart';
 import 'package:MobileOne/pages/widget_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,9 +16,12 @@ final itemNameController = new TextEditingController();
 final itemCountController = new TextEditingController();
 
 final databaseReference = Firestore.instance;
- String listUuid;
+String listUuid;
+
 class OpenedListPage extends StatefulWidget {
-  OpenedListPage({Key key,}) : super(key: key);
+  OpenedListPage({
+    Key key,
+  }) : super(key: key);
 
   @override
   OpenedListPageState createState() => OpenedListPageState();
@@ -38,7 +40,7 @@ class OpenedListPageState extends State<OpenedListPage> {
       labelValue = value["label"];
     });
 
-    if(mounted) {
+    if (mounted) {
       setState(() {
         label = labelValue;
       });
@@ -69,46 +71,49 @@ class OpenedListPageState extends State<OpenedListPage> {
                         padding: EdgeInsets.only(top: 30),
                         itemCount: wishlist.length,
                         itemBuilder: (BuildContext ctxt, int index) {
-                          return WidgetItem(
-                            wishlist.values.toList()[index], listUuid, wishlist.keys.toList()[index]
-                          );
+                          return WidgetItem(wishlist.values.toList()[index],
+                              listUuid, wishlist.keys.toList()[index]);
                         }),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                height: 50,
-                    child:Stack(
-                      children: <Widget>[
-                        Align(
-                          alignment: Alignment.topLeft,
-                        child:IconButton(
-                          icon: Icon(Icons.arrow_back),
-                          onPressed: () {
-                            openListsPage();
-                          },
-                        ),),
-                        Padding(
-                          padding: EdgeInsets.only(top:7),
-                          child:Align(
-                          alignment: Alignment.topCenter,
-                          child: Text(
-                            label,
-                            style: TextStyle(
-                              fontSize: 20,
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50,
+                      child: Stack(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: IconButton(
+                              icon: Icon(Icons.arrow_back),
+                              onPressed: () {
+                                openListsPage();
+                              },
                             ),
                           ),
-                        ),),
-                      ],
-                    ),),
+                          Padding(
+                            padding: EdgeInsets.only(top: 7),
+                            child: Align(
+                              alignment: Alignment.topCenter,
+                              child: Text(
+                                label,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                     Positioned(
                       bottom: 20,
                       right: 20,
                       child: FloatingActionButton(
                         onPressed: () {
                           showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                              WidgetPopup(getString(context, 'popup_add'), listUuid, null)
-                          ).then((value) {
+                              context: context,
+                              builder: (BuildContext context) => WidgetPopup(
+                                  getString(context, 'popup_add'),
+                                  listUuid,
+                                  null)).then((value) {
                             setState(() {});
                           });
                         },

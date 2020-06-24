@@ -63,7 +63,6 @@ class MainPageState extends State<MainPage> {
           child: BottomBar(onBottomBarIndexSelected),
         ),
       ),
-      
     );
   }
 

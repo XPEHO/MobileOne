@@ -13,7 +13,7 @@ class WidgetItem extends StatefulWidget {
   final Map<String, dynamic> _itemslist;
   final String _listUuid;
   final String _itemUuid;
-  WidgetItem(this._itemslist ,this._listUuid, this._itemUuid);
+  WidgetItem(this._itemslist, this._listUuid, this._itemUuid);
 
   State<StatefulWidget> createState() {
     return WidgetItemState(_itemslist, _listUuid, _itemUuid);
@@ -24,7 +24,7 @@ class WidgetItemState extends State<WidgetItem> {
   String _listUuid;
   String _itemUuid;
   final Map<String, dynamic> _itemslist;
-  WidgetItemState(this._itemslist ,this._listUuid, this._itemUuid);
+  WidgetItemState(this._itemslist, this._listUuid, this._itemUuid);
 
   Widget build(BuildContext context) {
     return Row(
@@ -83,8 +83,10 @@ class WidgetItemState extends State<WidgetItem> {
                     onPressed: () {
                       showDialog(
                           context: context,
-                          builder: (BuildContext context) =>
-                              WidgetPopup(getString(context, 'popup_update'), _listUuid, _itemUuid));
+                          builder: (BuildContext context) => WidgetPopup(
+                              getString(context, 'popup_update'),
+                              _listUuid,
+                              _itemUuid));
                     },
                     icon: Icon(Icons.edit),
                   ),
