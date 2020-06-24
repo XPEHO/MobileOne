@@ -8,25 +8,27 @@ const Color GREY600 = Colors.grey;
 const Color RED = Colors.red;
 const Color WHITE = Colors.white;
 const Color TRANSPARENT = Colors.transparent;
+bool isUpdate=false;
 
 class WidgetItem extends StatefulWidget {
   final String _itemName;
   final String _itemCount;
   final String _itemType;
   final String _listUuid;
-  WidgetItem(this._itemName, this._itemCount, this._itemType, this._listUuid);
+  WidgetItem(this._itemName, this._itemCount, this._itemType,this._listUuid);
 
   State<StatefulWidget> createState() {
-    return WidgetItemState(_itemName, _itemCount, _itemType, _listUuid);
+    return WidgetItemState(_itemName, _itemCount, _itemType,_listUuid);
   }
 }
 
 class WidgetItemState extends State<WidgetItem> {
+  String _listUuid;
   String _itemName;
   String _itemCount;
   String _itemType;
-  String _listUuid;
-  WidgetItemState(this._itemName, this._itemCount, this._itemType, this._listUuid);
+  WidgetItemState(this._itemName, this._itemCount, this._itemType,this._listUuid);
+
 
   Widget build(BuildContext context) {
     return Row(
@@ -83,10 +85,12 @@ class WidgetItemState extends State<WidgetItem> {
                   right: 10,
                   child: IconButton(
                     onPressed: () {
+                       isUpdate=true;
                       showDialog(
                           context: context,
                           builder: (BuildContext context) =>
-                              WidgetPopup(getString(context, 'popup_update'), _listUuid));
+                         
+                              WidgetPopup(getString(context, 'popup_update'),  _listUuid));
                     },
                     icon: Icon(Icons.edit),
                   ),
