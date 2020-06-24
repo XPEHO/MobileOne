@@ -31,16 +31,14 @@ class OpenedListPage extends StatefulWidget {
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
+<<<<<<< HEAD
    String listUuid;
    String itemUuid;
   OpenedListPageState(this.listUuid,this.itemUuid);
-
-  @override
-  void dispose() {
-    itemNameController.dispose();
-    itemCountController.dispose();
-    super.dispose();
-  }
+=======
+  String listUuid;
+  OpenedListPageState(this.listUuid);
+>>>>>>> 66d1c8cfd21521bdf0d004631d11cfa50a2c0f8e
 
   @override
   Widget build(BuildContext context) {

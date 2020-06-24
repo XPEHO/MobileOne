@@ -14,9 +14,14 @@ class WidgetItem extends StatefulWidget {
   final String _itemName;
   final String _itemCount;
   final String _itemType;
+<<<<<<< HEAD
    final String _listUuid;
       final String _itemUuid;
   WidgetItem(this._itemName, this._itemCount, this._itemType,this._listUuid,this._itemUuid);
+=======
+  final String _listUuid;
+  WidgetItem(this._itemName, this._itemCount, this._itemType,this._listUuid);
+>>>>>>> 66d1c8cfd21521bdf0d004631d11cfa50a2c0f8e
 
   State<StatefulWidget> createState() {
     return WidgetItemState(_itemName, _itemCount, _itemType,_listUuid,_itemUuid);
@@ -24,7 +29,7 @@ class WidgetItem extends StatefulWidget {
 }
 
 class WidgetItemState extends State<WidgetItem> {
-   String _listUuid;
+  String _listUuid;
   String _itemName;
   String _itemCount;
   String _itemType;
