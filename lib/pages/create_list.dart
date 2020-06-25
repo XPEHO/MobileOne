@@ -68,8 +68,6 @@ class CreateListPage extends State<CreateList> {
 
   goToListsPage() {
     Navigator.pop(context);
-    Navigator.of(context)
-        .pushNamed('/openedListPage', arguments: newUuid.toString());
   }
 
   void addItemToList() async {
