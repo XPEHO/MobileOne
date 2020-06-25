@@ -110,7 +110,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                         onPressed: () {
                           showDialog(
                               context: context,
-                              builder: (BuildContext context) => WidgetPopup(
+                              builder: (BuildContext context) => EditItemPopup(
                                   getString(context, 'popup_add'),
                                   listUuid,
                                   null)).then((value) {

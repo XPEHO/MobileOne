@@ -12,32 +12,34 @@ const Color GREY = Colors.grey;
 const Color RED = Colors.red;
 const Color TRANSPARENT = Colors.transparent;
 
-class WidgetPopup extends StatefulWidget {
+class EditItemPopup extends StatefulWidget {
   final String buttonName;
   final String listUuid;
   final String itemUuid;
-  WidgetPopup(this.buttonName, this.listUuid, this.itemUuid);
+  EditItemPopup(this.buttonName, this.listUuid, this.itemUuid);
 
   @override
   State<StatefulWidget> createState() {
-    return WidgetPopupState(buttonName, listUuid, itemUuid);
+    return EditItemPopupState(buttonName, listUuid, itemUuid);
   }
 }
 
-class WidgetPopupState extends State<WidgetPopup> {
+class EditItemPopupState extends State<EditItemPopup> {
   final String listUuid;
   final String itemUuid;
   final String buttonName;
 
-  WidgetPopupState(this.buttonName, this.listUuid, this.itemUuid);
-
+  EditItemPopupState(this.buttonName, this.listUuid, this.itemUuid);
+  final itemNameController = new TextEditingController();
+  final itemCountController = new TextEditingController();
   String _name;
   int _count;
   String _type;
+  int _itemCount = 0;
 
   String alert = "";
   String label = "";
-  String quantity = "";
+  String quantity = "1";
   String unit = "";
 
   Future<void> getItems() async {
@@ -233,6 +235,7 @@ class WidgetPopupState extends State<WidgetPopup> {
   void uddapteItemInList() async {
     await databaseReference.collection("items").document(listUuid).updateData({
       itemUuid: {
+        'itemCount': _itemCount++,
         'label': _name,
         'quantity': _count,
         'unit': _type,

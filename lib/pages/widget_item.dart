@@ -83,7 +83,7 @@ class WidgetItemState extends State<WidgetItem> {
                     onPressed: () {
                       showDialog(
                           context: context,
-                          builder: (BuildContext context) => WidgetPopup(
+                          builder: (BuildContext context) => EditItemPopup(
                               getString(context, 'popup_update'),
                               _listUuid,
                               _itemUuid));
