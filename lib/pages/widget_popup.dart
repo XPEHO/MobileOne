@@ -33,13 +33,13 @@ class EditItemPopupState extends State<EditItemPopup> {
   final itemNameController = new TextEditingController();
   final itemCountController = new TextEditingController();
   String _name;
-  int _count;
+  int _count = 1;
   String _type;
   int _itemCount = 0;
 
   String alert = "";
   String label = "";
-  String quantity = "1";
+  String quantity = "";
   String unit = "";
 
   Future<void> getItems() async {
@@ -68,6 +68,7 @@ class EditItemPopupState extends State<EditItemPopup> {
 
   @override
   void initState() {
+    itemCountController.text = "1";
     WidgetsBinding.instance.addPostFrameCallback((_) => getData());
     super.initState();
   }
@@ -228,7 +229,7 @@ class EditItemPopupState extends State<EditItemPopup> {
     itemCountController.clear();
     itemNameController.clear();
     _name = null;
-    _count = 0;
+    _count = 1;
     _type = null;
   }
 
@@ -248,7 +249,22 @@ class EditItemPopupState extends State<EditItemPopup> {
   void addItemToList() async {
     var uuid = Uuid();
     var newUuid = uuid.v4();
+    var listItemsCount;
     bool doesDocumentExist = false;
+
+    await Firestore.instance
+        .collection("wishlists")
+        .document(listUuid)
+        .get()
+        .then((value) {
+      listItemsCount = value["itemCounts"];
+      debugPrint("count : " + listItemsCount);
+    });
+
+    await databaseReference
+        .collection("wishlists")
+        .document(listUuid)
+        .updateData({"itemCounts": (int.parse(listItemsCount) + 1).toString()});
 
     await Firestore.instance
         .collection("items")
