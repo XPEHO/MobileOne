@@ -12,9 +12,6 @@ const Color RED = Colors.red;
 const Color WHITE = Colors.white;
 const Color TRANSPARENT = Colors.transparent;
 
-final itemNameController = new TextEditingController();
-final itemCountController = new TextEditingController();
-
 final databaseReference = Firestore.instance;
 String listUuid;
 
