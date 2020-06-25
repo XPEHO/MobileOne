@@ -309,12 +309,14 @@ class EditItemPopupState extends State<EditItemPopup> {
   }
 
   void incrementCounter() {
-    itemCountController.text = (_count++).toString();
+    _count = _count + 1;
+    itemCountController.text = (_count).toString();
   }
 
   void decrementCounter() {
     if (_count > 0) {
-      itemCountController.text = (_count--).toString();
+      _count = _count - 1;
+      itemCountController.text = (_count).toString();
     }
   }
 }
