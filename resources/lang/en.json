@@ -58,5 +58,17 @@
     "submit_button": "Submit",
     "shared_with_me": "Shared with me : ",
     "hint_name_new_list" : "Foods, Hobbies ...",
-    "articles": "articles"
+    "articles": "articles",
+    "item_type": "Type",
+    "item_unit": "Units",
+    "item_liters": "Liters",
+    "item_grams": "Grams",
+    "item_kilos": "Kilos",
+    "add_item": "Add item",
+    "item_count": "Count",
+    "item_name": "Name",
+    "popup_add": "Add",
+    "popup_update": "Update",
+    "popup_alert": "Please check if label name or \n quantity or type are not empty.",
+    "shared_count" : "0 shares"
 }

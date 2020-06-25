@@ -62,5 +62,17 @@
     "submit_button": "Valider",
     "shared_with_me": "Partagé avec moi : ",
     "hint_name_new_list" : "Alimentations, sports ...",
-    "articles": "articles"
+    "articles": "articles",
+    "item_type": "Type",
+    "item_unit": "Unités",
+    "item_liters": "Litres",
+    "item_grams": "Grammes",
+    "item_kilos": "Kilos",
+    "add_item": "Ajouter un objet",
+    "item_count": "Quantité",
+    "item_name": "Nom",
+    "popup_add": "Ajouter",
+    "popup_update": "Modifier",
+    "popup_alert": "Verifiez que le label, la quantité ou le type ne soit pas vide.",
+    "shared_count" : "0 partages"
 }

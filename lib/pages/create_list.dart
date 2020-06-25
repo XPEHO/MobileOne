@@ -20,9 +20,15 @@ class CreateListPage extends State<CreateList> {
 
   var _timeStamp = new DateTime.now();
   var uuid = Uuid();
+  var newUuid;
+
+  @override
+  void initState() {
+    newUuid = uuid.v4();
+    super.initState();
+  }
 
   addListToDataBase() async {
-    var newUuid = uuid.v4();
     bool doesListExist = false;
 
     //Create a wishlist

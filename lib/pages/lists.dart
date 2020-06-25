@@ -44,8 +44,12 @@ class ListsState extends State<Lists> {
                   scrollDirection: Axis.horizontal,
                   itemCount: wishlist.length,
                   itemBuilder: (BuildContext ctxt, int index) {
-                    return WidgetLists(wishlist[index],
-                        "assets/images/basket_my_lists.png", "0");
+                    return GestureDetector(
+                        onTap: () {
+                          openOpenedListPage(context, wishlist[index]);
+                        },
+                        child: WidgetLists(wishlist[index],
+                            getString(context, "shared_count")));
                   },
                 ),
               ),
@@ -60,5 +64,10 @@ class ListsState extends State<Lists> {
         );
       },
     );
+  }
+
+  void openOpenedListPage(context, uuid) {
+    Navigator.of(context)
+        .pushNamed('/openedListPage', arguments: uuid.toString());
   }
 }
