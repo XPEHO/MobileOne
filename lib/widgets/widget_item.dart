@@ -1,5 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:MobileOne/pages/widget_popup.dart';
+import 'package:MobileOne/widgets/widget_popup.dart';
 import 'package:flutter/material.dart';
 
 const Color GREEN = Colors.green;

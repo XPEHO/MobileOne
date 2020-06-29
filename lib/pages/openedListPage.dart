@@ -1,9 +1,9 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:MobileOne/pages/widget_item.dart';
-import 'package:MobileOne/pages/widget_popup.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/widgets/widget_item.dart';
+import 'package:MobileOne/widgets/widget_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -18,6 +18,8 @@ const Color WHITE = Colors.white;
 const Color TRANSPARENT = Colors.transparent;
 
 final databaseReference = Firestore.instance;
+String listUuid;
+String label = "";
 
 class OpenedListPage extends StatefulWidget {
   OpenedListPage({

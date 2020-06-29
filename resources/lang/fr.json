@@ -74,11 +74,22 @@
     "popup_add": "Ajouter",
     "popup_update": "Modifier",
     "popup_alert": "Verifiez que le label, la quantité ou le type ne soit pas vide.",
-    "shared_count" : "0 partages",
+    "shared_count" : "partages",
     "confirm_item_deletion" : "Etes-vous sûr de vouloir supprimer cet article ?",
     "confirm_wishlist_deletion" : "Etes-vous sûr de vouloir supprimer cette liste ?",
     "delete_item" : "SUPPRIMER",
     "cancel_deletion" : "ANNULER",
     "delete" : "supprimer",
-    "share" : "partager"
+    "share" : "partager",
+    "shared_with":"Partagé avec",
+    "share_email" :"Saisissez un email ...",
+    "share_list" : "Saisissez le nom d'une liste ...",
+    "search" : "Recherche",
+    "lists_shared_with" : "Listes partagés avec ",
+    "with_who" :"Avec qui ?",
+    "step_one" : "1",
+    "step_two":"2",
+    "which_list":"Quelle liste ?",
+    "my_shares":"Mes partages"
+
 }

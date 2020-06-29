@@ -1,10 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-const Color WHITE = Colors.white;
-const Color BLACK = Colors.black;
-const Color GREY = Colors.grey;
+import 'package:MobileOne/utility/colors.dart';
 
 class WidgetLists extends StatefulWidget {
   final String _listUuid;
@@ -21,7 +18,6 @@ class WidgetListsState extends State<WidgetLists> {
   final String _listUuid;
   final String _numberOfItemShared;
   WidgetListsState(this._listUuid, this._numberOfItemShared);
-
   String label = "";
   String count = "";
 
