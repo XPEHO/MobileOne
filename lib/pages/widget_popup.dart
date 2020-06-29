@@ -258,7 +258,6 @@ class EditItemPopupState extends State<EditItemPopup> {
         .get()
         .then((value) {
       listItemsCount = value["itemCounts"];
-      debugPrint("count : " + listItemsCount);
     });
 
     await databaseReference
