@@ -37,7 +37,7 @@ class OpenedListPageState extends State<OpenedListPage> {
       labelValue = value["label"];
     });
 
-    if (mounted) {
+    if (label == "") {
       setState(() {
         label = labelValue;
       });
@@ -54,75 +54,90 @@ class OpenedListPageState extends State<OpenedListPage> {
             .document(listUuid)
             .get()
             .asStream(),
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (!snapshot.hasData) return LinearProgressIndicator();
           var wishlist = snapshot?.data?.data ?? {};
-          return Scaffold(
-            body: SafeArea(
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                child: Stack(
-                  children: <Widget>[
-                    new ListView.builder(
-                        padding: EdgeInsets.only(top: 30),
-                        itemCount: wishlist.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
-                          return WidgetItem(wishlist.values.toList()[index],
-                              listUuid, wishlist.keys.toList()[index]);
-                        }),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 50,
-                      child: Stack(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.topLeft,
-                            child: IconButton(
-                              icon: Icon(Icons.arrow_back),
-                              onPressed: () {
-                                openListsPage();
-                              },
+          if (snapshot.connectionState == ConnectionState.waiting)
+            return Scaffold(
+              body: Center(
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 1,
+                  ),
+                ),
+              ),
+            );
+          else {
+            return Scaffold(
+              body: SafeArea(
+                child: Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: Stack(
+                    children: <Widget>[
+                      new ListView.builder(
+                          padding: EdgeInsets.only(top: 30),
+                          itemCount: wishlist.length,
+                          itemBuilder: (BuildContext ctxt, int index) {
+                            return WidgetItem(wishlist.values.toList()[index],
+                                listUuid, wishlist.keys.toList()[index]);
+                          }),
+                      Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 50,
+                        child: Stack(
+                          children: <Widget>[
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: IconButton(
+                                icon: Icon(Icons.arrow_back),
+                                onPressed: () {
+                                  openListsPage();
+                                },
+                              ),
                             ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(top: 7),
-                            child: Align(
-                              alignment: Alignment.topCenter,
-                              child: Text(
-                                label,
-                                style: TextStyle(
-                                  fontSize: 20,
+                            Padding(
+                              padding: EdgeInsets.only(top: 7),
+                              child: Align(
+                                alignment: Alignment.topCenter,
+                                child: Text(
+                                  label,
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                    Positioned(
-                      bottom: 20,
-                      right: 20,
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (BuildContext context) => EditItemPopup(
-                                  getString(context, 'popup_add'),
-                                  listUuid,
-                                  null)).then((value) {
-                            setState(() {});
-                          });
-                        },
-                        child: Icon(Icons.add),
-                        backgroundColor: GREEN,
+                      Positioned(
+                        bottom: 20,
+                        right: 20,
+                        child: FloatingActionButton(
+                          onPressed: () {
+                            showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                    EditItemPopup(
+                                        getString(context, 'popup_add'),
+                                        listUuid,
+                                        null)).then((value) {
+                              setState(() {});
+                            });
+                          },
+                          child: Icon(Icons.add),
+                          backgroundColor: GREEN,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          );
+            );
+          }
         });
   }
 
