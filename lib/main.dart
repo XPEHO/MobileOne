@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
@@ -29,12 +30,13 @@ import 'localization/localization.dart';
 GetIt getIt = GetIt.instance;
 
 void instantiateServices() {
-  getIt.registerSingleton<UserService>(UserService());
-  getIt.registerSingleton<AnalyticsService>(AnalyticsService());
-  getIt.registerSingleton<GoogleSignIn>(GoogleSignIn());
-  getIt.registerSingleton<FirebaseAuth>(FirebaseAuth.instance);
-  getIt.registerSingleton<AuthenticationService>(AuthenticationService());
-  getIt.registerSingleton<PreferencesService>(PreferencesService());
+  getIt.registerSingleton(UserService());
+  getIt.registerSingleton(AnalyticsService());
+  getIt.registerSingleton(GoogleSignIn());
+  getIt.registerSingleton(FirebaseAuth.instance);
+  getIt.registerSingleton(AuthenticationService());
+  getIt.registerSingleton(PreferencesService());
+  getIt.registerSingleton(WishlistsListProvider());
 }
 
 void main() {
