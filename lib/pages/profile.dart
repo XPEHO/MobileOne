@@ -57,6 +57,7 @@ class ProfileState extends State<Profile> {
             child: Stack(
               children: <Widget>[
                 Material(
+                  key:Key("take_picture_from_gallery"),
                   elevation: 8.0,
                   child: Container(
                     height: 200.0,
