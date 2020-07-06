@@ -70,5 +70,8 @@
     "popup_add": "Add",
     "popup_update": "Update",
     "popup_alert": "Please check if label name or \n quantity or type are not empty.",
-    "shared_count" : "0 shares"
+    "shared_count" : "0 shares",
+    "confirm_item_deletion" : "Are you sure you wish to delete this item ?",
+    "delete_item" : "DELETE",
+    "cancel_deletion" : "CANCEL"
 }

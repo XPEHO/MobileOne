@@ -1,8 +1,11 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/widget_item.dart';
 import 'package:MobileOne/pages/widget_popup.dart';
+import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import '../localization/localization.dart';
 
 const Color GREEN = Colors.green;
@@ -13,7 +16,6 @@ const Color WHITE = Colors.white;
 const Color TRANSPARENT = Colors.transparent;
 
 final databaseReference = Firestore.instance;
-String listUuid;
 
 class OpenedListPage extends StatefulWidget {
   OpenedListPage({
@@ -26,6 +28,7 @@ class OpenedListPage extends StatefulWidget {
 
 class OpenedListPageState extends State<OpenedListPage> {
   String label = "";
+  String listUuid = GetIt.I.get<ItemsListProvider>().listUuid;
 
   Future<void> getListTitle(String uuid) async {
     String labelValue;
@@ -46,99 +49,120 @@ class OpenedListPageState extends State<OpenedListPage> {
 
   @override
   Widget build(BuildContext context) {
-    listUuid = ModalRoute.of(context).settings.arguments;
     getListTitle(listUuid);
-    return StreamBuilder<DocumentSnapshot>(
-        stream: Firestore.instance
-            .collection('items')
-            .document(listUuid)
-            .get()
-            .asStream(),
-        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (!snapshot.hasData) return LinearProgressIndicator();
-          var wishlist = snapshot?.data?.data ?? {};
-          if (snapshot.connectionState == ConnectionState.waiting)
-            return Scaffold(
-              body: Center(
-                child: Container(
-                  width: 40,
-                  height: 40,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 1,
-                  ),
-                ),
-              ),
-            );
-          else {
-            return Scaffold(
-              body: SafeArea(
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  child: Stack(
-                    children: <Widget>[
-                      new ListView.builder(
-                          padding: EdgeInsets.only(top: 30),
-                          itemCount: wishlist.length,
-                          itemBuilder: (BuildContext ctxt, int index) {
-                            return WidgetItem(wishlist.values.toList()[index],
-                                listUuid, wishlist.keys.toList()[index]);
-                          }),
-                      Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        child: Stack(
-                          children: <Widget>[
-                            Align(
-                              alignment: Alignment.topLeft,
-                              child: IconButton(
-                                icon: Icon(Icons.arrow_back),
-                                onPressed: () {
-                                  openListsPage();
-                                },
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.only(top: 7),
-                              child: Align(
-                                alignment: Alignment.topCenter,
-                                child: Text(
-                                  label,
-                                  style: TextStyle(
-                                    fontSize: 20,
+    return ChangeNotifierProvider.value(
+      value: GetIt.I.get<ItemsListProvider>(),
+      child: Consumer<ItemsListProvider>(
+        builder: (context, itemsListProvider, child) {
+          return FutureBuilder<DocumentSnapshot>(
+            future: itemsListProvider.itemsList,
+            builder: (context, snapshot) {
+              return content(snapshot.data);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget content(DocumentSnapshot snapshot) {
+    final wishlist = snapshot?.data ?? {};
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+          child: Stack(
+            children: <Widget>[
+              new ListView.builder(
+                  padding: EdgeInsets.only(top: 30),
+                  itemCount: wishlist.length,
+                  itemBuilder: (BuildContext ctxt, int index) {
+                    return Dismissible(
+                        confirmDismiss: (DismissDirection direction) async {
+                          return await showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                content: Text(getString(
+                                    context, 'confirm_item_deletion')),
+                                actions: <Widget>[
+                                  FlatButton(
+                                      onPressed: () =>
+                                          Navigator.of(context).pop(true),
+                                      child: Text(
+                                          getString(context, 'delete_item'))),
+                                  FlatButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(false),
+                                    child: Text(
+                                        getString(context, 'cancel_deletion')),
                                   ),
-                                ),
-                              ),
-                            ),
-                          ],
+                                ],
+                              );
+                            },
+                          );
+                        },
+                        background: Container(color: Colors.red),
+                        key: UniqueKey(),
+                        child: WidgetItem(wishlist.values.toList()[index],
+                            listUuid, wishlist.keys.toList()[index]),
+                        onDismissed: (direction) {
+                          deleteItemFromList(wishlist.keys.toList()[index]);
+                        });
+                  }),
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Stack(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: IconButton(
+                        icon: Icon(Icons.arrow_back),
+                        onPressed: () {
+                          openListsPage();
+                        },
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 7),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          label,
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
                       ),
-                      Positioned(
-                        bottom: 20,
-                        right: 20,
-                        child: FloatingActionButton(
-                          onPressed: () {
-                            showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                    EditItemPopup(
-                                        getString(context, 'popup_add'),
-                                        listUuid,
-                                        null)).then((value) {
-                              setState(() {});
-                            });
-                          },
-                          child: Icon(Icons.add),
-                          backgroundColor: GREEN,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            );
-          }
-        });
+              Positioned(
+                bottom: 20,
+                right: 20,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    showDialog(
+                        context: context,
+                        builder: (BuildContext context) => EditItemPopup(
+                            getString(context, 'popup_add'), listUuid, null));
+                  },
+                  child: Icon(Icons.add),
+                  backgroundColor: GREEN,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void deleteItemFromList(String uuid) {
+    GetIt.I.get<ItemsListProvider>().deleteItemInList(uuid);
   }
 
   void openListsPage() {

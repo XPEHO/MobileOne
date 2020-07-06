@@ -1,10 +1,10 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:MobileOne/pages/openedListPage.dart';
 
 import 'package:flutter/services.dart';
-import 'package:uuid/uuid.dart';
+import 'package:get_it/get_it.dart';
 
 const Color WHITE = Colors.white;
 const Color BLACK = Colors.black;
@@ -35,7 +35,6 @@ class EditItemPopupState extends State<EditItemPopup> {
   String _name;
   int _count = 1;
   String _type;
-  int _itemCount = 0;
 
   String alert = "";
   String label = "";
@@ -234,67 +233,15 @@ class EditItemPopupState extends State<EditItemPopup> {
   }
 
   void uddapteItemInList() async {
-    await databaseReference.collection("items").document(listUuid).updateData({
-      itemUuid: {
-        'itemCount': _itemCount++,
-        'label': _name,
-        'quantity': _count,
-        'unit': _type,
-      }
-    });
+    GetIt.I
+        .get<ItemsListProvider>()
+        .updateItemInList(itemUuid, _name, _count, _type);
     Navigator.of(context).pop();
     clearPopupFields();
   }
 
   void addItemToList() async {
-    var uuid = Uuid();
-    var newUuid = uuid.v4();
-    var listItemsCount;
-    bool doesDocumentExist = false;
-
-    await Firestore.instance
-        .collection("wishlists")
-        .document(listUuid)
-        .get()
-        .then((value) {
-      listItemsCount = value["itemCounts"];
-    });
-
-    await databaseReference
-        .collection("wishlists")
-        .document(listUuid)
-        .updateData({"itemCounts": (int.parse(listItemsCount) + 1).toString()});
-
-    await Firestore.instance
-        .collection("items")
-        .document(listUuid)
-        .get()
-        .then((value) {
-      doesDocumentExist = value.exists;
-    });
-
-    //Create the item
-    if (doesDocumentExist == true) {
-      await databaseReference
-          .collection("items")
-          .document(listUuid)
-          .updateData({
-        newUuid: {
-          'label': _name,
-          'quantity': _count,
-          'unit': _type,
-        }
-      });
-    } else {
-      await databaseReference.collection("items").document(listUuid).setData({
-        newUuid: {
-          'label': _name,
-          'quantity': _count,
-          'unit': _type,
-        }
-      });
-    }
-
+    GetIt.I.get<ItemsListProvider>().addItemTolist(_name, _count, _type);
     Navigator.of(context).pop();
     clearPopupFields();
   }
