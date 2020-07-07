@@ -53,4 +53,58 @@ class WishlistsListProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  deleteWishlist(String listUuid, String userUid) async {
+    List tmpList = [];
+    DocumentSnapshot tmpDoc;
+
+    await Firestore.instance
+        .collection("owners")
+        .document(userUid)
+        .get()
+        .then((value) => tmpList = value.data["lists"]);
+
+    tmpList.remove(listUuid);
+
+    await Firestore.instance
+        .collection("owners")
+        .document(userUid)
+        .updateData({"lists": tmpList});
+
+    await Firestore.instance.collection("items").document(listUuid).delete();
+
+    await Firestore.instance
+        .collection("wishlists")
+        .document(listUuid)
+        .delete();
+
+    await Firestore.instance
+        .collection("shared")
+        .document(userUid)
+        .get()
+        .then((value) => tmpDoc = value);
+
+    if (tmpDoc.data != null) {
+      if (tmpDoc.data[listUuid] != null) {
+        tmpDoc.data[listUuid].forEach((element) async {
+          await Firestore.instance
+              .collection("guests")
+              .document(element)
+              .updateData({
+            "lists": FieldValue.arrayRemove([listUuid])
+          });
+        });
+      }
+    }
+
+    Map<String, dynamic> newMap = tmpDoc.data;
+    newMap.remove(listUuid);
+
+    await Firestore.instance
+        .collection("shared")
+        .document(userUid)
+        .setData(newMap);
+
+    notifyListeners();
+  }
 }

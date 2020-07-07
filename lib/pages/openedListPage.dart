@@ -2,6 +2,8 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/widget_item.dart';
 import 'package:MobileOne/pages/widget_popup.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/providers/wishlistsList_provider.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -137,6 +139,43 @@ class OpenedListPageState extends State<OpenedListPage> {
                         ),
                       ),
                     ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: PopupMenuButton(
+                        key: Key("wishlistMenu"),
+                        itemBuilder: (context) => [
+                          PopupMenuItem(
+                            key: Key("deleteItem"),
+                            value: 1,
+                            child: Text(getString(context, 'delete')),
+                          ),
+                          PopupMenuItem(
+                            value: 2,
+                            child: Text(getString(context, 'share')),
+                          ),
+                        ],
+                        icon: Icon(Icons.more_horiz),
+                        onSelected: (value) {
+                          switch (value) {
+                            case 1:
+                              confirmWishlistDeletion().then((value) async {
+                                if (value == true) {
+                                  openListsPage();
+                                  GetIt.I
+                                      .get<WishlistsListProvider>()
+                                      .deleteWishlist(listUuid,
+                                          GetIt.I.get<UserService>().user.uid);
+                                }
+                              });
+                              break;
+                            case 2:
+                              openListsPage();
+                              //openSharePage();
+                              break;
+                          }
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -163,6 +202,36 @@ class OpenedListPageState extends State<OpenedListPage> {
 
   void deleteItemFromList(String uuid) {
     GetIt.I.get<ItemsListProvider>().deleteItemInList(uuid);
+  }
+
+  Future<bool> confirmWishlistDeletion() async {
+    bool result = false;
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(getString(context, 'confirm_wishlist_deletion')),
+          actions: <Widget>[
+            FlatButton(
+                key: Key("confirmWishlistDeletion"),
+                onPressed: () {
+                  result = true;
+                  Navigator.of(context).pop();
+                },
+                child: Text(getString(context, 'delete_item'))),
+            FlatButton(
+              key: Key("cancelWishlistDeletion"),
+              onPressed: () {
+                result = false;
+                Navigator.of(context).pop();
+              },
+              child: Text(getString(context, 'cancel_deletion')),
+            ),
+          ],
+        );
+      },
+    );
+    return result;
   }
 
   void openListsPage() {
