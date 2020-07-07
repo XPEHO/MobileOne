@@ -18,6 +18,8 @@ class MainPage extends StatefulWidget {
 class MainPageState extends State<MainPage> {
   Widget _currentScreen = Lists();
   File imageFinale;
+  final _imageService = GetIt.I.get<ImageService>();
+  final _prefService = GetIt.I.get<PreferencesService>();
 
   final List _centerIcons = [
     Icons.scanner,
@@ -34,13 +36,12 @@ class MainPageState extends State<MainPage> {
   final PageStorageBucket _bucket = PageStorageBucket();
 
   _savePicturePreferences(String _picture, FirebaseUser user) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('picture' + user.uid, _picture);
+    _prefService.setString('picture' + user.uid, _picture);
   }
 
   Future _getImage(provider) async {
     // Pick picture
-    final pickedFile = await ImagePicker().getImage(source: ImageSource.camera);
+    final pickedFile = await _imageService.pickCamera();
 
     if (pickedFile != null) {
       // Save picture path into Provider

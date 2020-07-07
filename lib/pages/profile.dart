@@ -2,6 +2,7 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/change_password.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,30 +27,30 @@ class Profile extends StatefulWidget {
 class ProfileState extends State<Profile> {
   bool isInGallery = false;
   File imageGallery;
-  var _authenticationService = GetIt.I.get<AuthenticationService>();
+
+  final _userService = GetIt.I.get<UserService>();
+  final _imageService = GetIt.I.get<ImageService>();
 
   final _auth = GetIt.I.get<FirebaseAuth>();
-  final _picker = ImagePicker();
 
-  _savePicturePreferencesGallery(String _picture, FirebaseUser user) async {
+  _savePicturePreferencesGallery(String _picture) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('picture' + user.uid, _picture);
+    prefs.setString('picture' + _userService.user.uid, _picture);
   }
 
   Future _selectPicture(provider) async {
-    final pickedFile = await _picker.getImage(source: ImageSource.gallery);
+    final pickedFile = await _imageService.pickGallery();
 
     if (pickedFile != null) {
       isInGallery = true;
       provider.selectedPicturePath = pickedFile.path;
     }
-    _savePicturePreferencesGallery(pickedFile.path, UserService().user);
+    _savePicturePreferencesGallery(pickedFile.path);
   }
 
   Widget buildContent(BuildContext context, FirebaseUser user) {
     return Center(
       child: Column(
-        
         children: <Widget>[
           Container(
             width: MediaQuery.of(context).size.width,
@@ -57,7 +58,7 @@ class ProfileState extends State<Profile> {
             child: Stack(
               children: <Widget>[
                 Material(
-                  key:Key("take_picture_from_gallery"),
+                  key: Key("take_picture_from_gallery"),
                   elevation: 8.0,
                   child: Container(
                     height: 200.0,
@@ -179,74 +180,60 @@ class ProfileState extends State<Profile> {
               }
             },
           ),
-         /* Builder(
-            builder: (context) {
-              if (_isPasswordUser()) {
-                return RaisedButton(
-                  color: Colors.grey,
-                  onPressed: () async {
-                    await _authenticationService.signOut(user);
-                    Navigator.of(context).push((MaterialPageRoute(
-                        builder: (context) => AuthenticationPage())));
-                  },
-                  child: Text(getString(context, 'signout_user')),
-                );
-              } else {
-                return Container();
-              }
-            },
-          ),*/
         ],
       ),
     );
   }
 
   bool _isPasswordUser() {
-    final user = UserService().user;
+    final user = _userService.user;
     final passwordProvider =
         user.providerData.any((provider) => provider.providerId == "password");
     return passwordProvider != null;
   }
 
   Widget _buildProfilePicture(FirebaseUser user) {
-    return Consumer<UserPictureProvider>(
-      builder: (context, provider, _) {
-        CircleAvatar userPicture;
+    return ChangeNotifierProvider.value(
+      value: UserPictureProvider(),
+      child: Consumer<UserPictureProvider>(
+        builder: (context, provider, _) {
+          CircleAvatar userPicture;
 
-        String selectedPicturePath = provider.selectedPicturePath;
-        if (selectedPicturePath != null) {
-          userPicture = CircleAvatar(
-            backgroundColor: Colors.white,
-            backgroundImage: FileImage(File(selectedPicturePath)),
-            radius: 24.0,
-          );
-        } else {
-          if (user.photoUrl != null && user.photoUrl.isNotEmpty) {
+          String selectedPicturePath = provider.selectedPicturePath;
+          if (selectedPicturePath != null) {
             userPicture = CircleAvatar(
               backgroundColor: Colors.white,
-              backgroundImage: NetworkImage(
-                user.photoUrl,
-              ),
+              backgroundImage: FileImage(File(selectedPicturePath)),
               radius: 24.0,
             );
           } else {
-            userPicture = CircleAvatar(
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.person,
-                color: Colors.grey,
-              ),
-              radius: 24.0,
-            );
+            if (user.photoUrl != null && user.photoUrl.isNotEmpty) {
+              userPicture = CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: NetworkImage(
+                  user.photoUrl,
+                ),
+                radius: 24.0,
+              );
+            } else {
+              userPicture = CircleAvatar(
+                backgroundColor: Colors.white,
+                child: Icon(
+                  Icons.person,
+                  color: Colors.grey,
+                ),
+                radius: 24.0,
+              );
+            }
           }
-        }
 
-        return GestureDetector(
-          key: Key(getString(context, "app_name")),
-          onTap: () => _selectPicture(provider),
-          child: userPicture,
-        );
-      },
+          return GestureDetector(
+            key: Key(getString(context, "app_name")),
+            onTap: () => _selectPicture(provider),
+            child: userPicture,
+          );
+        },
+      ),
     );
   }
 

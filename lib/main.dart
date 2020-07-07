@@ -19,6 +19,7 @@ import 'package:MobileOne/pages/openedListPage.dart';
 import 'package:MobileOne/pages/register-page.dart';
 import 'package:MobileOne/services/analytics_service.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -44,6 +45,7 @@ void instantiateServices() {
   getIt.registerSingleton(WishlistsListProvider());
   getIt.registerSingleton(ItemsListProvider());
   getIt.registerSingleton(ShareProvider());
+  getIt.registerSingleton(ImageService());
 }
 
 void main() {

@@ -7,6 +7,10 @@ class PreferencesService {
     _sharedPreferences = await SharedPreferences.getInstance();
   }
 
+  setString(key, value) {
+    _sharedPreferences.setString(key, value);
+  }
+
   getString(key) => _sharedPreferences.getString(key);
 
   getMode() => getString("mode");
