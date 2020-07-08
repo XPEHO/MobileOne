@@ -3,7 +3,6 @@ import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/image_service.dart';
-import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,9 +42,10 @@ class FirebaseUserMock extends Mock implements FirebaseUser {}
 class FirebaseAuthMock extends Mock implements FirebaseAuth {}
 
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
+
 class ImageServiceMock extends Mock implements ImageService {}
+
 class UserServiceMock extends Mock implements UserService {}
-class PreferencesMock extends Mock implements PreferencesService {}
 
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
@@ -58,14 +58,15 @@ void main() {
     final auth = FirebaseAuthMock();
     final user = FirebaseUserMock();
     final _googleSignIn = MockGoogleSignIn();
-        final _userService = UserServiceMock();
-        final _imageService = ImageServiceMock();
+            final _imageService = ImageServiceMock();
+    final _userService = UserServiceMock();
+
+    GetIt.I.registerSingleton<UserService>(_userService);
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
     GetIt.instance.registerSingleton<FirebaseAuth>(auth);
     GetIt.instance.registerSingleton<FirebaseUser>(user);
     GetIt.I.registerSingleton<AuthenticationService>(AuthenticationService());
-        GetIt.I.registerSingleton<UserService>(_userService);
-         GetIt.I.registerSingleton<ImageService>(_imageService);
+       GetIt.I.registerSingleton<ImageService>(_imageService);
 
     when(auth.currentUser()).thenAnswer((realInvocation) => Future.value(user));
     final _displayName = "Dupond Jean";
@@ -77,7 +78,8 @@ void main() {
     when(user.photoUrl).thenReturn("");
 
         when(user.providerData).thenReturn(List.of([]));
-            when(_userService.user).thenReturn(user);
+
+    when(_userService.user).thenReturn(user);
 
     //WHEN
     await tester.pumpWidget(widget);

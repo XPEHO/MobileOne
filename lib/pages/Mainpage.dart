@@ -20,7 +20,6 @@ class MainPageState extends State<MainPage> {
   File imageFinale;
   final _imageService = GetIt.I.get<ImageService>();
   final _prefService = GetIt.I.get<PreferencesService>();
-  final _userService = GetIt.I.get<UserService>();
 
   final List _centerIcons = [
     Icons.scanner,
@@ -49,13 +48,11 @@ class MainPageState extends State<MainPage> {
       provider.selectedPicturePath = pickedFile.path;
 
       // Save image into phone gallery
-      GallerySaver.saveImage(
-        pickedFile.path,
-        albumName: getString(context, "app_name"),
-      );
+      GallerySaver.saveImage(pickedFile.path,
+          albumName: getString(context, "app_name"));
 
       // Save select picture path to shared preferences
-      _savePicturePreferences(pickedFile.path, _userService.user);
+      _savePicturePreferences(pickedFile.path, UserService().user);
     }
   }
 
