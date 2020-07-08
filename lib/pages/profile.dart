@@ -1,18 +1,14 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/change_password.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
-import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
-
 import 'dart:io';
 import 'dart:async';
-
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,11 +23,10 @@ class Profile extends StatefulWidget {
 class ProfileState extends State<Profile> {
   bool isInGallery = false;
   File imageGallery;
-
   final _userService = GetIt.I.get<UserService>();
-  final _imageService = GetIt.I.get<ImageService>();
+final _imageService = GetIt.I.get<ImageService>();
 
-  final _auth = GetIt.I.get<FirebaseAuth>();
+final auth = GetIt.I.get<FirebaseAuth>();
 
   _savePicturePreferencesGallery(String _picture) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -58,7 +53,6 @@ class ProfileState extends State<Profile> {
             child: Stack(
               children: <Widget>[
                 Material(
-                  key: Key("take_picture_from_gallery"),
                   elevation: 8.0,
                   child: Container(
                     height: 200.0,
@@ -76,7 +70,7 @@ class ProfileState extends State<Profile> {
                   left: MediaQuery.of(context).size.width / 2 - 24,
                   top: 180,
                   child: Material(
-                    // key: Key("Gallery"),
+                    key: Key("take_picture_from_gallery"),
                     borderRadius: BorderRadius.circular(24),
                     elevation: 8.0,
                     child: _buildProfilePicture(user),
@@ -86,14 +80,22 @@ class ProfileState extends State<Profile> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 5.0, top: 40.0, right: 5.0),
+            padding: EdgeInsets.only(
+              left: 5.0,
+              top: 40.0,
+              right: 5.0,
+            ),
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: 50.0,
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(3)),
-                  side: BorderSide(color: const Color(0xFFBDBDBD)),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(3),
+                  ),
+                  side: BorderSide(
+                    color: const Color(0xFFBDBDBD),
+                  ),
                 ),
                 shadows: [
                   const BoxShadow(
@@ -103,7 +105,10 @@ class ProfileState extends State<Profile> {
                 ],
               ),
               child: Padding(
-                padding: EdgeInsets.only(left: 20.0, top: 15.0),
+                padding: EdgeInsets.only(
+                  left: 20.0,
+                  top: 15.0,
+                ),
                 child: Text(
                   user.displayName != null ? user.displayName : user.email,
                   style: TextStyle(
@@ -115,14 +120,22 @@ class ProfileState extends State<Profile> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 5.0, top: 10.0, right: 5.0),
+            padding: EdgeInsets.only(
+              left: 5.0,
+              top: 10.0,
+              right: 5.0,
+            ),
             child: Container(
               width: MediaQuery.of(context).size.width,
               height: 50.0,
               decoration: ShapeDecoration(
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(3)),
-                  side: BorderSide(color: const Color(0xFFBDBDBD)),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(3),
+                  ),
+                  side: BorderSide(
+                    color: const Color(0xFFBDBDBD),
+                  ),
                 ),
                 shadows: [
                   const BoxShadow(
@@ -133,9 +146,13 @@ class ProfileState extends State<Profile> {
               ),
               child: Padding(
                 padding: EdgeInsets.only(left: 20.0, top: 15.0),
-                child: Text(user.email,
-                    style: TextStyle(
-                        fontSize: FONT_SIZE, color: const Color(0xFF9E9E9E))),
+                child: Text(
+                  user.email,
+                  style: TextStyle(
+                    fontSize: FONT_SIZE,
+                    color: const Color(0xFF9E9E9E),
+                  ),
+                ),
               ),
             ),
           ),
@@ -154,8 +171,11 @@ class ProfileState extends State<Profile> {
                       ),
                     ),
                     onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => ChangePassword()));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => ChangePassword(),
+                        ),
+                      );
                     },
                   ),
                 );
@@ -203,7 +223,9 @@ class ProfileState extends State<Profile> {
           if (selectedPicturePath != null) {
             userPicture = CircleAvatar(
               backgroundColor: Colors.white,
-              backgroundImage: FileImage(File(selectedPicturePath)),
+              backgroundImage: FileImage(
+                File(selectedPicturePath),
+              ),
               radius: 24.0,
             );
           } else {
@@ -238,7 +260,10 @@ class ProfileState extends State<Profile> {
   }
 
   void openAuthenticationPage(context) {
-    Navigator.popUntil(context, ModalRoute.withName('/'));
+    Navigator.popUntil(
+      context,
+      ModalRoute.withName('/'),
+    );
   }
 
   void deleteAccount(FirebaseUser user, BuildContext context) {
@@ -246,14 +271,17 @@ class ProfileState extends State<Profile> {
       try {
         user.delete();
         Fluttertoast.showToast(
-            msg: getString(context, 'debug_account_deleted'));
+          msg: getString(context, 'debug_account_deleted'),
+        );
         openAuthenticationPage(context);
-        UserService().user = null;
+        _userService.user = null;
       } catch (e) {
         debugPrint(e);
       }
     } else {
-      Fluttertoast.showToast(msg: getString(context, 'no_user'));
+      Fluttertoast.showToast(
+        msg: getString(context, 'no_user'),
+      );
     }
   }
 
@@ -261,12 +289,14 @@ class ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: _auth.currentUser(),
+        future: auth.currentUser(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return buildContent(context, snapshot.data);
           } else {
-            return Center(child: CircularProgressIndicator());
+            return Center(
+              child: CircularProgressIndicator(),
+            );
           }
         },
       ),

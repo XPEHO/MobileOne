@@ -4,8 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserPictureProvider with ChangeNotifier {
-  final _userService = GetIt.I.get<UserService>();
   String _selectedPicturePath;
+    final _userService = GetIt.I.get<UserService>();
 
   UserPictureProvider() {
     _fetchSelectedPictureFromPreferences();
