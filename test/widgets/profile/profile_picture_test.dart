@@ -5,6 +5,8 @@ import 'package:MobileOne/pages/Mainpage.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -41,63 +43,55 @@ Widget buildTestableWidget(Widget widget) {
       ),
       home: widget);
 }
-
 class FirebaseUserMock extends Mock implements FirebaseUser {}
-
 class FirebaseAuthMock extends Mock implements FirebaseAuth {}
-
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
-
 class ImageServiceMock extends Mock implements ImageService {}
-
+class UserServiceMock extends Mock implements UserService {}
+class PreferencesMock extends Mock implements PreferencesService {}
 void main() {
-  setSupportedLocales([Locale('fr', 'FR')]);
-
-  testWidgets('Open camera and see profile picture changed',
+  setSupportedLocales([Locale("fr", "FR")]);
+  testWidgets("Open camera and see profile picture changed",
       (WidgetTester tester) async {
     // GIVEN
-
+    final auth = FirebaseAuthMock();
+    GetIt.instance.registerSingleton<FirebaseAuth>(auth);
+    final user = UserServiceMock();
+    GetIt.I.registerSingleton<UserService>(user);
     final _imageService = ImageServiceMock();
-    GetIt.I.registerSingleton(_imageService);
-    final _prefService = PreferencesServiceMock();
-    GetIt.I.registerSingleton(_prefService);
-
+    GetIt.I.registerSingleton<ImageService>(_imageService);
+    final _prefService = PreferencesMock();
+    GetIt.I.registerSingleton<PreferencesService>(_prefService);
     when(_imageService.pickCamera()).thenAnswer((realInvocation) =>
         Future.value(PickedFile("assets/images/facebook_f.png")));
-
     // WHEN
     await tester.pumpWidget(buildTestableWidget(MainPage()));
     await tester.pump(new Duration(milliseconds: 1000));
-
     await tester.tap(find.byKey(Key(KEY_PROFILE_PAGE)));
     await tester.pump(new Duration(milliseconds: 1000));
-
     await tester.tap(find.byKey(Key("floating_button")));
-
     // THEN
     verify(_prefService.setString(any, "assets/images/facebook_f.png"));
   });
-
-  testWidgets('Open gallery and see profile picture changed',
+  testWidgets("Open gallery and see profile picture changed",
       (WidgetTester tester) async {
-    // AssetImage image = AssetImage("assets/images/profile_header.png");
+    // AssetImage image = AssetImage(“assets/images/profile_header.png”);
     Profile _widget = new Profile();
-
     final auth = FirebaseAuthMock();
+    final userService = UserServiceMock();
     final user = FirebaseUserMock();
     final _googleSignIn = MockGoogleSignIn();
-
+    final image = ImageServiceMock();
+    GetIt.I.registerSingleton<UserService>(userService);
+    GetIt.I.registerSingleton<ImageService>(image);
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
     GetIt.instance.registerSingleton<FirebaseAuth>(auth);
     GetIt.instance.registerSingleton<FirebaseUser>(user);
     GetIt.I.registerSingleton<AuthenticationService>(AuthenticationService());
-
     await tester.pumpWidget(buildTestableWidget(_widget));
     await tester.pump(new Duration(seconds: 10));
-
     await tester.tap(find.byKey(Key("take_picture_from_gallery")));
-
-    ///.then((value) => image = AssetImage("assets/images/facebook_f.png"));
-    // expect(image, AssetImage("assets/images/facebook_f.png"));
+    ///.then((value) => image = AssetImage(“assets/images/facebook_f.png”));
+    // expect(image, AssetImage(“assets/images/facebook_f.png”));
   });
 }

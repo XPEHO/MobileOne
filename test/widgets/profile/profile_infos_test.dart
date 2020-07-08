@@ -2,6 +2,7 @@ import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,7 @@ class FirebaseUserMock extends Mock implements FirebaseUser {}
 class FirebaseAuthMock extends Mock implements FirebaseAuth {}
 
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
+class ImageServiceMock extends Mock implements ImageService {}
 
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
@@ -57,12 +59,14 @@ void main() {
     final user = FirebaseUserMock();
     final _googleSignIn = MockGoogleSignIn();
     final _userService = UserServiceMock();
+        final _imageService = ImageServiceMock();
 
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
     GetIt.instance.registerSingleton<FirebaseAuth>(auth);
     GetIt.instance.registerSingleton<FirebaseUser>(user);
     GetIt.I.registerSingleton<AuthenticationService>(AuthenticationService());
     GetIt.I.registerSingleton<UserService>(_userService);
+    GetIt.I.registerSingleton<ImageService>(_imageService);
 
     when(auth.currentUser()).thenAnswer((realInvocation) => Future.value(user));
     final _displayName = "Dupond Jean";
