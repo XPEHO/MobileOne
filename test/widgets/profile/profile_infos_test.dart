@@ -3,6 +3,7 @@ import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +12,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mockito/mockito.dart';
-
-import '../../authentication_test.dart';
 
 Widget buildTestableWidget(Widget widget) {
   return MaterialApp(
@@ -41,9 +40,14 @@ Widget buildTestableWidget(Widget widget) {
 
 class FirebaseUserMock extends Mock implements FirebaseUser {}
 
-class FirebaseAuthMock extends Mock implements FirebaseAuth {}
+class UserServiceMock extends Mock implements UserService {}
 
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
+
+class FirebaseAuthMock extends Mock implements FirebaseAuth {}
+
+class PreferencesMock extends Mock implements PreferencesService {}
+
 class ImageServiceMock extends Mock implements ImageService {}
 
 void main() {
@@ -59,7 +63,7 @@ void main() {
     final user = FirebaseUserMock();
     final _googleSignIn = MockGoogleSignIn();
     final _userService = UserServiceMock();
-        final _imageService = ImageServiceMock();
+    final _imageService = ImageServiceMock();
 
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
     GetIt.instance.registerSingleton<FirebaseAuth>(auth);
