@@ -166,6 +166,9 @@ class WidgetShareListWithSomeoneState
                           itemBuilder: (BuildContext ctxt, int index) {
                             numberOfItemShared =
                                 _emails[_listUuid].length.toString();
+
+                            var emailSelected = _emails[_listUuid][index];
+                            print(emailSelected);
                             return Row(
                               children: <Widget>[
                                 Container(
@@ -178,7 +181,8 @@ class WidgetShareListWithSomeoneState
                                 ),
                                 GestureDetector(
                                   onTap: () {
-                                    shareProvider.deleteShared(_listUuid);
+                                    shareProvider.deleteShared(
+                                        _listUuid, emailSelected);
                                   },
                                   child: Image.asset(
                                     'assets/images/delete.png',
