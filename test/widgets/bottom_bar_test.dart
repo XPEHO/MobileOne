@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
+import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,82 +32,94 @@ Widget buildTestableWidget(Widget widget) {
 
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
+  var onItemSelected;
 
-  testWidgets('Go the the specifical page', (WidgetTester tester) async {
-    /*Widget widget;
-    BottomBarItem _item;
-    void goToPage(int index) {}
-    Color color = Colors.black;
-    String key = "";
-    String nom = "";
-    var icon;
+  testWidgets('Bottom bar tests', (WidgetTester tester) async {
+    //Test function call on item selected
 
-    var t = BottomBarItem(KEY_LISTS_PAGE, Colors.white, goToPage, 'Listes', Icons.list);
+    //GIVEN
+    bool functionCalled = false;
+    int indexSelected = -1;
+    onItemSelected = (index) {
+      functionCalled = true;
+      indexSelected = index;
+    };
 
-    onListSelected(int index) {
-      key = KEY_LISTS_PAGE;
-      color = Colors.white;
-      nom = 'Listes';
-      icon = Icons.list;
-      _item = BottomBarItem(key, color, goToPage, nom, icon);
-    }
+    //WHEN
+    await tester.pumpWidget(buildTestableWidget(new BottomBar(onItemSelected)));
+    await tester.pumpAndSettle(Duration(seconds: 2));
+    await tester.tap(find.byKey(Key(KEY_CARD_PAGE)));
+    await tester.pumpAndSettle(Duration(seconds: 2));
 
-    onCardSelected(int index) {
-      key = KEY_CARD_PAGE;
-      color = Colors.white;
-      nom = 'Cartes';
-      icon = Icons.card_giftcard;
-      _item = BottomBarItem(key, color, goToPage, nom, icon);
-    }
+    //THEN
+    expect(functionCalled, true);
+    expect(indexSelected, CARD_PAGE);
 
-    onShareSelected(int index) {
-      key = KEY_SHARE_PAGE;
-      color = Colors.white;
-      nom = 'Partager';
-      icon = Icons.share;
-      _item = BottomBarItem(key, color, goToPage, nom, icon);
-    }
+    //Test lists button
 
-    onProfileSelected(int index) {
-      key = KEY_PROFILE_PAGE;
-      color = Colors.orange;
-      nom = 'Profile';
-      icon = Icons.person;
-      _item = BottomBarItem(key, color, goToPage, nom, icon);
-    }
+    //GIVEN
 
-    widget = buildTestableWidget(BottomBar(onListSelected));
-    await tester.pumpWidget(widget);
-    await tester.pump(new Duration(milliseconds: 1000));
-   //expect(color, Colors.black);
-    await tester.tap(find.text('Listes'));
-    expect(_item.createElement(), Key(KEY_LISTS_PAGE));
+    onItemSelected = (index) {};
 
+    //WHEN
+    await tester.pumpWidget(buildTestableWidget(new BottomBar(onItemSelected)));
+    await tester.pumpAndSettle(Duration(seconds: 2));
+    await tester.tap(find.byKey(Key(KEY_LISTS_PAGE)));
+    await tester.pumpAndSettle(Duration(seconds: 2));
 
-    /*color = Colors.black;
-    widget = buildTestableWidget(BottomBar(onCardSelected));
-    await tester.pumpWidget(widget);
-    await tester.pump(new Duration(milliseconds: 1000));
-    expect(color, Colors.black);
-    await tester.tap(find.text('Cartes'));
-    expect(color, Colors.white);
+    //THEN
+    expect(find.byKey(Key(KEY_LISTS_PAGE + "_selected")), findsOneWidget);
+    expect(find.byKey(Key(KEY_CENTER_TEXT)), findsOneWidget);
+    expect(find.text("Nouvelle liste"), findsOneWidget);
 
-    color = Colors.black;
-    widget = buildTestableWidget(BottomBar(onShareSelected));
-    await tester.pumpWidget(widget);
-    await tester.pump(new Duration(milliseconds: 1000));
-    expect(color, Colors.black);
-    await tester.tap(find.text('Partager'));
-    expect(color, Colors.white);*/
+    //Test Profile button
 
-    /* color = Colors.black;
-    widget = buildTestableWidget(BottomBar(onProfileSelected));
-    await tester.pumpWidget(widget);
-    await tester.pump(new Duration(milliseconds: 1000));
-    expect(color, Colors.black);
-    await tester.tap(find.text('Profile'));
-   expect(color, Colors.orange);
-*/
-  */
+    //GIVEN
+
+    onItemSelected = (index) {};
+
+    //WHEN
+    await tester.pumpWidget(buildTestableWidget(new BottomBar(onItemSelected)));
+    await tester.pumpAndSettle(Duration(seconds: 2));
+    await tester.tap(find.byKey(Key(KEY_PROFILE_PAGE)));
+    await tester.pumpAndSettle(Duration(seconds: 2));
+
+    //THEN
+    expect(find.byKey(Key(KEY_PROFILE_PAGE + "_selected")), findsOneWidget);
+    expect(find.byKey(Key(KEY_CENTER_TEXT)), findsOneWidget);
+    expect(find.text("Photo"), findsOneWidget);
+
+    //Test card button
+
+    //GIVEN
+
+    onItemSelected = (index) {};
+
+    //WHEN
+    await tester.pumpWidget(buildTestableWidget(new BottomBar(onItemSelected)));
+    await tester.pumpAndSettle(Duration(seconds: 2));
+    await tester.tap(find.byKey(Key(KEY_CARD_PAGE)));
+    await tester.pumpAndSettle(Duration(seconds: 2));
+
+    //THEN
+    expect(find.byKey(Key(KEY_CARD_PAGE + "_selected")), findsOneWidget);
+    expect(find.byKey(Key(KEY_CENTER_TEXT)), findsOneWidget);
+    expect(find.text("Nouvelle carte"), findsOneWidget);
+
+    //Test share button
+    //GIVEN
+
+    onItemSelected = (index) {};
+
+    //WHEN
+    await tester.pumpWidget(buildTestableWidget(new BottomBar(onItemSelected)));
+    await tester.pumpAndSettle(Duration(seconds: 2));
+    await tester.tap(find.byKey(Key(KEY_SHARE_PAGE)));
+    await tester.pumpAndSettle(Duration(seconds: 2));
+
+    //THEN
+    expect(find.byKey(Key(KEY_SHARE_PAGE + "_selected")), findsOneWidget);
+    expect(find.byKey(Key(KEY_CENTER_TEXT)), findsOneWidget);
+    expect(find.text("Partager"), findsNWidgets(2));
   });
 }
