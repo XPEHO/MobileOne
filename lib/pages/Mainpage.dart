@@ -5,9 +5,8 @@ import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
 
 import 'package:flutter/material.dart';
-
-const Color BLACK = Colors.black;
-const Color ORANGE = Colors.deepOrange;
+import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -38,12 +37,48 @@ class MainPageState extends State<MainPage> {
     _actions = [
       unasignedAction,
       goToCreateListPage,
-      unasignedAction,
+      goToSharedPage,
       unasignedAction,
     ];
 
     _floatingButtonIcon = _centerIcons[LISTS_PAGE];
     _floatingButtonAction = _actions[LISTS_PAGE];
+  }
+
+  Future<void> askPermissions() async {
+    PermissionStatus permissionStatus = await _getContactPermission();
+    if (permissionStatus != PermissionStatus.granted) {
+      _handleInvalidPermissions(permissionStatus);
+    }
+  }
+
+  Future<PermissionStatus> _getContactPermission() async {
+    PermissionStatus permission = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.contacts);
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.restricted) {
+      Map<PermissionGroup, PermissionStatus> permissionStatus =
+          await PermissionHandler()
+              .requestPermissions([PermissionGroup.contacts]);
+      return permissionStatus[PermissionGroup.contacts] ??
+          PermissionStatus.unknown;
+    } else {
+      return permission;
+    }
+  }
+
+  void _handleInvalidPermissions(PermissionStatus permissionStatus) {
+    if (permissionStatus == PermissionStatus.denied) {
+      throw PlatformException(
+          code: "PERMISSION_DENIED",
+          message: "Access to location data denied",
+          details: null);
+    } else if (permissionStatus == PermissionStatus.restricted) {
+      throw PlatformException(
+          code: "PERMISSION_DISABLED",
+          message: "Location data is not available on device",
+          details: null);
+    }
   }
 
   @override
@@ -93,5 +128,10 @@ class MainPageState extends State<MainPage> {
 
   goToCreateListPage() {
     Navigator.of(context).pushNamed("/createList");
+  }
+
+  goToSharedPage() async {
+    await askPermissions();
+    Navigator.of(context).pushNamed("/shareOne");
   }
 }

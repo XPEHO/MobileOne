@@ -70,11 +70,21 @@
     "popup_add": "Add",
     "popup_update": "Update",
     "popup_alert": "Please check if label name or \n quantity or type are not empty.",
-    "shared_count" : "0 shares",
+    "shared_count" : "shares",
     "confirm_item_deletion" : "Are you sure you wish to delete this item ?",
     "confirm_wishlist_deletion" : "Are you sure you wish to delete this wishlist ?",
     "delete_item" : "DELETE",
     "delete" : "delete",
     "share" : "share",
-    "cancel_deletion" : "CANCEL"
+    "cancel_deletion" : "CANCEL",
+    "shared_with" :"Shared with ",
+    "share_email" :"Enter an email ...",
+    "share_list" : "Enter a list ...",
+    "search" : "Search",
+    "lists_shared_with" : "Lists shared with ",
+    "with_who" : "With who ? ",
+    "step_one" : "1",
+    "step_two":"2",
+    "which_list":"Which list ?",
+    "my_shares":"My shares"
 }

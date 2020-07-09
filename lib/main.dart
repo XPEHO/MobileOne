@@ -1,6 +1,10 @@
 import 'dart:async';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
+import 'package:MobileOne/pages/share.dart';
+import 'package:MobileOne/pages/share_one.dart';
+import 'package:MobileOne/pages/share_two.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
@@ -39,6 +43,7 @@ void instantiateServices() {
   getIt.registerSingleton(PreferencesService());
   getIt.registerSingleton(WishlistsListProvider());
   getIt.registerSingleton(ItemsListProvider());
+  getIt.registerSingleton(ShareProvider());
 }
 
 void main() {
@@ -90,6 +95,9 @@ class MyApp extends StatelessWidget {
         '/lists': (context) => Lists(),
         '/createList': (context) => CreateList(),
         '/openedListPage': (context) => OpenedListPage(),
+        '/shareOne': (context) => ShareOne(),
+        '/shareTwo': (context) => ShareTwo(),
+        '/share': (context) => Share(),
       },
     );
   }
