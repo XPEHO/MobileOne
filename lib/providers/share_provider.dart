@@ -13,6 +13,13 @@ class ShareProvider with ChangeNotifier {
         .get();
   }
 
+  Future<DocumentSnapshot> get shareLists {
+    return Firestore.instance
+        .collection("shared")
+        .document(userService.user.uid)
+        .get();
+  }
+
   addSharedToDataBase(String sharedWith, String liste) async {
     bool doesDocumentExist = false;
     await databaseReference
@@ -76,6 +83,38 @@ class ShareProvider with ChangeNotifier {
         },
       );
     }
+    notifyListeners();
+  }
+
+  deleteShared(String listUuid) async {
+    DocumentSnapshot tmpDoc;
+    await Firestore.instance
+        .collection("shared")
+        .document(UserService().user.uid)
+        .get()
+        .then((value) => tmpDoc = value);
+
+    if (tmpDoc.data != null) {
+      if (tmpDoc.data[listUuid] != null) {
+        tmpDoc.data[listUuid].forEach((element) async {
+          await Firestore.instance
+              .collection("guests")
+              .document(element)
+              .updateData({
+            "lists": FieldValue.arrayRemove([listUuid])
+          });
+        });
+      }
+    }
+
+    Map<String, dynamic> newMap = tmpDoc.data;
+    newMap.remove(listUuid);
+
+    await Firestore.instance
+        .collection("shared")
+        .document(UserService().user.uid)
+        .setData(newMap);
+
     notifyListeners();
   }
 }

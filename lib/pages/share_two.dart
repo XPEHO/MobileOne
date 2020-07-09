@@ -154,11 +154,8 @@ class ShareStateTwoState extends State<ShareTwo> {
                           return GestureDetector(
                             onTap: () {
                               _listSelected = wishlists[index];
-                              if (searchTermEmail != null) {
-                                shareProvider.addSharedToDataBase(
-                                    searchTermEmail, _listSelected);
-                                openSharePage();
-                              } else {
+                              if (contactSelected.emails.elementAt(0).value !=
+                                  null) {
                                 shareProvider.addSharedToDataBase(
                                     contactSelected.emails.elementAt(0).value,
                                     _listSelected);
