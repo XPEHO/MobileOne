@@ -26,7 +26,21 @@ class ListsState extends State<Lists> {
           return FutureBuilder<DocumentSnapshot>(
             future: wishlistsListProvider.ownerLists,
             builder: (context, snapshot) {
-              return content(snapshot.data);
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Scaffold(
+                  body: Center(
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 1,
+                      ),
+                    ),
+                  ),
+                );
+              else {
+                return content(snapshot.data);
+              }
             },
           );
         },

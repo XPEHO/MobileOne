@@ -76,6 +76,9 @@
     "popup_alert": "Verifiez que le label, la quantité ou le type ne soit pas vide.",
     "shared_count" : "0 partages",
     "confirm_item_deletion" : "Etes-vous sûr de vouloir supprimer cet article ?",
+    "confirm_wishlist_deletion" : "Etes-vous sûr de vouloir supprimer cette liste ?",
     "delete_item" : "SUPPRIMER",
-    "cancel_deletion" : "ANNULER"
+    "cancel_deletion" : "ANNULER",
+    "delete" : "supprimer",
+    "share" : "partager"
 }
