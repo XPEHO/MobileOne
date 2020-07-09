@@ -6,6 +6,6 @@ class ChangePassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(child: Text(getString(context, "change_user_password"))));
+        body: Center(child: Text(getString(context, "change_password"))));
   }
 }

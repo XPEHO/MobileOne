@@ -1,11 +1,20 @@
+import 'dart:io';
+
+import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
+import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/user_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MainPage extends StatefulWidget {

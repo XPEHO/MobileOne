@@ -1,6 +1,6 @@
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
-import 'package:MobileOne/pages/Mainpage.dart';
+import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -34,8 +34,8 @@ void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
   var onItemSelected;
 
-  testWidgets('Go the the specifical page', (WidgetTester tester) async {
-    MainPage _widget = new MainPage();
+  testWidgets('Bottom bar tests', (WidgetTester tester) async {
+    //Test function call on item selected
 
     //GIVEN
     bool functionCalled = false;
