@@ -75,7 +75,7 @@ class ListsState extends State<Lists> {
         itemBuilder: (BuildContext ctxt, int index) {
           return GestureDetector(
               onTap: () {
-                openOpenedListPage(context, lists[index]);
+                openOpenedListPage(lists[index]);
               },
               child: WidgetLists(
                   lists[index], getString(context, "shared_count")));
@@ -111,7 +111,7 @@ class ListsState extends State<Lists> {
         itemBuilder: (BuildContext ctxt, int index) {
           return GestureDetector(
               onTap: () {
-                openOpenedListPage(context, guestList[index]);
+                openOpenedListPage(guestList[index]);
               },
               child: WidgetLists(
                   guestList[index], getString(context, "shared_count")));
@@ -120,8 +120,8 @@ class ListsState extends State<Lists> {
     );
   }
 
-  void openOpenedListPage(context, uuid) {
+  void openOpenedListPage(uuid) {
     GetIt.I.get<ItemsListProvider>().listUuid = uuid;
-    Navigator.of(context).pushNamed('/openedListPage');
+    Navigator.of(context).pushNamed('/openedListPage', arguments: uuid);
   }
 }

@@ -7,6 +7,7 @@ import 'package:MobileOne/widgets/widget_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../localization/localization.dart';
 
@@ -70,6 +71,7 @@ class OpenedListPageState extends State<OpenedListPage> {
   }
 
   Widget content(DocumentSnapshot snapshot) {
+    final uuid = ModalRoute.of(context).settings.arguments;
     final wishlist = snapshot?.data ?? {};
     return Scaffold(
       body: SafeArea(
@@ -171,8 +173,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                               });
                               break;
                             case 2:
-                              openListsPage();
-                              //openSharePage();
+                              askPermissions(uuid);
                               break;
                           }
                         },
@@ -236,7 +237,40 @@ class OpenedListPageState extends State<OpenedListPage> {
     return result;
   }
 
+  Future<void> askPermissions(Object uuid) async {
+    PermissionStatus permissionStatus = await _getContactPermission();
+
+    if (permissionStatus != PermissionStatus.granted) {
+      openedListsPage();
+    } else {
+      openSharePage(uuid);
+    }
+  }
+
+  Future<PermissionStatus> _getContactPermission() async {
+    PermissionStatus permission = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.contacts);
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.restricted) {
+      Map<PermissionGroup, PermissionStatus> permissionStatus =
+          await PermissionHandler()
+              .requestPermissions([PermissionGroup.contacts]);
+      return permissionStatus[PermissionGroup.contacts] ??
+          PermissionStatus.unknown;
+    } else {
+      return permission;
+    }
+  }
+
+  void openedListsPage() {
+    Navigator.popUntil(context, ModalRoute.withName('/openedListPage'));
+  }
+
   void openListsPage() {
     Navigator.pop(context);
+  }
+
+  void openSharePage(Object uuid) {
+    Navigator.of(context).pushNamed('/shareOne', arguments: uuid);
   }
 }

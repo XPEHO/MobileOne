@@ -64,6 +64,7 @@ class ShareStateOneState extends State<ShareOne> {
 
   Widget build(BuildContext context) {
     final previousList = ModalRoute.of(context).settings.arguments;
+    final uuid = ModalRoute.of(context).settings.arguments;
     bool isSearching = _myController.text.isNotEmpty;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -81,7 +82,7 @@ class ShareStateOneState extends State<ShareOne> {
                     child: IconButton(
                       icon: Icon(Icons.arrow_back),
                       onPressed: () {
-                        openSharePage();
+                        openSharePage(uuid);
                       },
                     ),
                   ),
@@ -221,7 +222,7 @@ class ShareStateOneState extends State<ShareOne> {
                       } else {
                         contactSelected = contacts[index];
                       }
-                      if (previousList == null) {
+                      if (previousList == null || uuid == null) {
                         openShareTwoPage();
                       } else {
                         shareProvider.addSharedToDataBase(
@@ -230,8 +231,7 @@ class ShareStateOneState extends State<ShareOne> {
                         shareProvider.addGuestToDataBase(
                             contactSelected.emails.elementAt(0).value,
                             previousList);
-
-                        openSharePage();
+                        openSharePage(uuid);
                       }
                     },
                     child:
@@ -246,8 +246,11 @@ class ShareStateOneState extends State<ShareOne> {
     );
   }
 
-  void openSharePage() {
+  void openSharePage(Object label) {
     Navigator.of(context).pop('/share');
+    if (label != null) {
+      Navigator.of(context).pushNamed('/mainpage');
+    }
   }
 
   void openShareTwoPage() {

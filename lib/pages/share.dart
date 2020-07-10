@@ -47,17 +47,6 @@ class ShareState extends State<Share> {
               height: 50,
               child: Stack(
                 children: <Widget>[
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                      ),
-                      onPressed: () {
-                        openMainPage();
-                      },
-                    ),
-                  ),
                   Padding(
                     padding: EdgeInsets.only(
                       top: 7,

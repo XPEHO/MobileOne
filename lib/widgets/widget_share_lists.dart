@@ -168,7 +168,6 @@ class WidgetShareListWithSomeoneState
                                 _emails[_listUuid].length.toString();
 
                             var emailSelected = _emails[_listUuid][index];
-                            print(emailSelected);
                             return Row(
                               children: <Widget>[
                                 Container(
