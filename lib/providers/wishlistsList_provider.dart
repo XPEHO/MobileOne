@@ -14,6 +14,10 @@ class WishlistsListProvider with ChangeNotifier {
         .get();
   }
 
+  Future<DocumentSnapshot> guestLists(String email) {
+    return Firestore.instance.collection("guests").document(email).get();
+  }
+
   addWishlist(String text) async {
     bool doesListExist = false;
     final newUuid = Uuid().v4();
