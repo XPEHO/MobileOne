@@ -39,10 +39,13 @@ class WidgetItemState extends State<WidgetItem> {
                   top: 25,
                   left: 10,
                   child: Container(
-                    height: 50,
-                    width: 50,
+                    height: 48,
+                    width: 48,
                     child: Image(
-                      image: AssetImage("assets/images/bottle_of_water.png"),
+                      image:
+                          _itemslist["image"] == "assets/images/canned-food.png"
+                              ? AssetImage(_itemslist["image"])
+                              : NetworkImage(_itemslist["image"]),
                     ),
                   ),
                 ),

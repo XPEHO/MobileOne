@@ -86,5 +86,7 @@
     "step_one" : "1",
     "step_two":"2",
     "which_list":"Which list ?",
-    "my_shares":"My shares"
+    "my_shares":"My shares",
+    "close_item_creation" : "Close",
+    "cant_find_article" : "Unfortunately we can't find this item"
 }

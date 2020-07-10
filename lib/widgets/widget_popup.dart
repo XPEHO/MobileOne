@@ -1,17 +1,16 @@
+import 'dart:convert';
+
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/widgets/bubble_button.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
-
-const Color WHITE = Colors.white;
-const Color BLACK = Colors.black;
-const Color GREY = Colors.grey;
-const Color RED = Colors.red;
-const Color TRANSPARENT = Colors.transparent;
+import 'package:http/http.dart' as http;
+import 'package:MobileOne/icons/qr_code_icons.dart' as QrCodeIcon;
+import 'package:MobileOne/utility/colors.dart' as CustomColors;
 
 class EditItemPopup extends StatefulWidget {
   final String buttonName;
@@ -38,11 +37,14 @@ class EditItemPopupState extends State<EditItemPopup> {
   String _name;
   int _count = 1;
   String _type;
+  String imageLink = "assets/images/canned-food.png";
 
   String alert = "";
   String label = "";
   String quantity = "";
   String unit = "";
+
+  var _itemsListProvider = GetIt.I.get<ItemsListProvider>();
 
   Future<void> getItems() async {
     String labelValue;
@@ -97,6 +99,13 @@ class EditItemPopupState extends State<EditItemPopup> {
           ),
           buildQuantity(context),
           buildUnit(context),
+          SizedBox(
+            height: 12,
+          ),
+          buildScanButton(context),
+          SizedBox(
+            height: 12,
+          ),
           buildValidationButton(context),
           buildErrorMessage(),
         ],
@@ -104,24 +113,63 @@ class EditItemPopupState extends State<EditItemPopup> {
     );
   }
 
+  BubbleButton buildScanButton(BuildContext context) {
+    return BubbleButton(
+      icon: QrCodeIcon.QrCode.qrcode,
+      color: Colors.lime[600],
+      onPressed: () => scanAnItem(),
+      iconColor: CustomColors.WHITE,
+      height: 48,
+      width: 48,
+    );
+  }
+
   Text buildErrorMessage() {
     return Text(
       alert,
       style: TextStyle(
-          color: Colors.red, fontWeight: FontWeight.bold, fontSize: 12),
+          color: CustomColors.RED, fontWeight: FontWeight.bold, fontSize: 12),
     );
   }
 
-  RaisedButton buildValidationButton(BuildContext context) {
-    return RaisedButton(
-      onPressed: () {
-        _onValidate();
-      },
-      child: Text(
-        buttonName,
-        style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),
-      ),
-      color: WHITE,
+  Row buildValidationButton(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: RaisedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                getString(context, "close_item_creation"),
+                style: TextStyle(
+                    color: CustomColors.WHITE, fontWeight: FontWeight.bold),
+              ),
+              color: Colors.grey[400],
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: RaisedButton(
+              onPressed: () {
+                _onValidate();
+              },
+              child: Text(
+                buttonName,
+                style: TextStyle(
+                    color: CustomColors.WHITE, fontWeight: FontWeight.bold),
+              ),
+              color: Colors.lime[600],
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -183,9 +231,9 @@ class EditItemPopupState extends State<EditItemPopup> {
           flex: 1,
           child: BubbleButton(
             icon: Icons.remove,
-            color: RED,
+            color: Colors.lime[600],
             onPressed: () => decrementCounter(),
-            iconColor: Colors.white,
+            iconColor: CustomColors.WHITE,
           ),
         ),
         Expanded(
@@ -204,7 +252,7 @@ class EditItemPopupState extends State<EditItemPopup> {
             decoration: InputDecoration(
               contentPadding: EdgeInsets.all(10),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: TRANSPARENT),
+                borderSide: BorderSide(color: CustomColors.TRANSPARENT),
               ),
               filled: true,
               fillColor: Colors.grey[300],
@@ -220,8 +268,8 @@ class EditItemPopupState extends State<EditItemPopup> {
           child: BubbleButton(
             onPressed: () => incrementCounter(),
             icon: Icons.add,
-            color: RED,
-            iconColor: Colors.white,
+            color: Colors.lime[600],
+            iconColor: CustomColors.WHITE,
           ),
         ),
       ],
@@ -238,10 +286,10 @@ class EditItemPopupState extends State<EditItemPopup> {
       decoration: InputDecoration(
         hintText: getString(context, 'item_name'),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: TRANSPARENT),
+          borderSide: BorderSide(color: CustomColors.TRANSPARENT),
         ),
         filled: true,
-        fillColor: TRANSPARENT,
+        fillColor: CustomColors.TRANSPARENT,
       ),
       controller: itemNameController,
       onChanged: (text) => handleSubmittedItemName(text),
@@ -257,15 +305,14 @@ class EditItemPopupState extends State<EditItemPopup> {
   }
 
   void uddapteItemInList() async {
-    GetIt.I
-        .get<ItemsListProvider>()
-        .updateItemInList(itemUuid, _name, _count, _type);
+    _itemsListProvider.updateItemInList(
+        itemUuid, _name, _count, _type, imageLink);
     Navigator.of(context).pop();
     clearPopupFields();
   }
 
   void addItemToList() async {
-    GetIt.I.get<ItemsListProvider>().addItemTolist(_name, _count, _type);
+    _itemsListProvider.addItemTolist(_name, _count, _type, imageLink);
     Navigator.of(context).pop();
     clearPopupFields();
   }
@@ -287,6 +334,29 @@ class EditItemPopupState extends State<EditItemPopup> {
     if (_count > 0) {
       _count = _count - 1;
       itemCountController.text = (_count).toString();
+    }
+  }
+
+  Future<void> scanAnItem() async {
+    var result = await BarcodeScanner.scan();
+
+    var response = await http.get(
+        "https://world.openfoodfacts.org/api/v0/product/" +
+            result.rawContent +
+            ".json");
+    Map<String, dynamic> article = jsonDecode(response.body);
+    if (article["product"] != null) {
+      itemNameController.text = article["product"]["product_name"].toString() +
+          " - " +
+          article["product"]["brands"].toString();
+      handleSubmittedItemName(article["product"]["product_name"].toString() +
+          " - " +
+          article["product"]["brands"].toString());
+      imageLink = article["product"]["image_small_url"];
+    } else {
+      setState(() {
+        alert = getString(context, "cant_find_article");
+      });
     }
   }
 }
