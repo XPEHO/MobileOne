@@ -71,205 +71,216 @@ class AuthenticationPageState extends State<AuthenticationPage> {
     return Scaffold(
       key: Key("authentication"),
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Flexible(flex: 1, child: Container()),
-                Flexible(
-                  flex: 5,
-                  child: Text(
-                    getString(context, 'authentication_page_text'),
-                    key: Key(KEY_AUTH_PAGE_TEXT),
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 9,
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: MediaQuery.of(context).size.width - 10,
-                          height: 90,
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return getString(context, 'fill_email');
-                              }
-                              return null;
-                            },
-                            key: Key("auth_email_label"),
-                            textAlign: TextAlign.start,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[300],
-                                labelText: getString(context, 'email_label'),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            controller: _emailController,
-                            onChanged: (text) => handleSubmittedEmail(text),
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 10,
-                          height: 90,
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return getString(context, 'fill_password');
-                              }
-                              return null;
-                            },
-                            key: Key("auth_password_label"),
-                            textAlign: TextAlign.start,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[300],
-                                labelText: getString(context, 'password_label'),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            controller: _passwordController,
-                            obscureText: true,
-                            onChanged: (text) => handleSubmittedPassword(text),
-                          ),
-                        ),
-                        RaisedButton(
-                          key: Key("sign_in_button"),
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              signInUser();
-                            }
-                          },
-                          child: Text(getString(context, 'sign_in')),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: Text(
-                    getString(context, 'or'),
-                    style: TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: RaisedButton.icon(
-                    onPressed: () async {
-                      _authenticationService
-                          .googleSignIn()
-                          .then((FirebaseUser user) async {
-                        SharedPreferences prefs =
-                            await SharedPreferences.getInstance();
-                        await prefs.setString('mode', "google");
-                        _userService.user = user;
-                        Fluttertoast.showToast(
-                            msg: getString(context, 'google_signin'));
-                        openMainPage(context);
-                      }).catchError((e) => Fluttertoast.showToast(msg: e));
-                    },
-                    label: Text(
-                      getString(context, 'google'),
-                      style: TextStyle(
-                          color: Colors.grey[600], fontWeight: FontWeight.bold),
-                    ),
-                    color: Colors.white,
-                    icon: new Image.asset(
-                      'assets/images/Google_g.png',
-                      width: 20,
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: RaisedButton.icon(
-                    onPressed: () async {},
-                    label: Text(
-                      getString(context, 'facebook'),
-                      style: TextStyle(
-                          color: Colors.grey[600], fontWeight: FontWeight.bold),
-                    ),
-                    color: Colors.white,
-                    icon: new Image.asset(
-                      'assets/images/facebook_f.png',
-                      width: 20,
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: RaisedButton.icon(
-                    onPressed: () async {},
-                    label: Text(
-                      getString(context, 'twitter'),
-                      style: TextStyle(
-                          color: Colors.grey[600], fontWeight: FontWeight.bold),
-                    ),
-                    color: Colors.white,
-                    icon: new Image.asset(
-                      'assets/images/twitter.png',
-                      width: 20,
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 2,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      FlatButton(
-                        key: Key("register_page_button"),
-                        color: Colors.transparent,
-                        onPressed: () => openRegisterPage(context),
-                        child: Text(
-                          getString(context, 'create_account'),
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-                      FlatButton(
-                        key: Key("forgotten_password_button"),
-                        color: Colors.transparent,
-                        onPressed: () => openForgottenPasswordPage(context),
-                        child: Text(
-                          getString(context, 'forgotten_password'),
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Spacer(),
+          Flexible(
+            flex: 1,
+            child: Text(
+              getString(context, 'authentication_page_text'),
+              key: Key(KEY_AUTH_PAGE_TEXT),
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          Flexible(
+            flex: 4,
+            child: buildForm(context),
+          ),
+          Flexible(
+            flex: 1,
+            child: Text(
+              getString(context, 'or'),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+          Flexible(
+            flex: 1,
+            child: buildGoogleButton(context),
+          ),
+          /*Flexible(
+            flex: 1,
+            child: buildFacebookButton(context),
+          ),
+          Flexible(
+            flex: 1,
+            child: buildTwitterButton(context),
+          ),*/
+          Flexible(
+            flex: 1,
+            child: buildBottomLinks(context),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Row buildBottomLinks(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        FlatButton(
+          key: Key("register_page_button"),
+          color: Colors.transparent,
+          onPressed: () => openRegisterPage(context),
+          child: Text(
+            getString(context, 'create_account'),
+            style: TextStyle(
+              color: Colors.blue,
             ),
           ),
         ),
+        FlatButton(
+          key: Key("forgotten_password_button"),
+          color: Colors.transparent,
+          onPressed: () => openForgottenPasswordPage(context),
+          child: Text(
+            getString(context, 'forgotten_password'),
+            style: TextStyle(
+              color: Colors.blue,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  RaisedButton buildGoogleButton(BuildContext context) {
+    return RaisedButton.icon(
+      onPressed: () => onGoogleButtonPressed(context),
+      label: Text(
+        getString(context, 'google'),
+        style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),
+      ),
+      color: Colors.white,
+      icon: new Image.asset(
+        'assets/images/Google_g.png',
+        width: 20,
+      ),
+    );
+  }
+
+  onGoogleButtonPressed(BuildContext context) async {
+    _authenticationService.googleSignIn().then((FirebaseUser user) async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('mode', "google");
+      _userService.user = user;
+      Fluttertoast.showToast(msg: getString(context, 'google_signin'));
+      openMainPage(context);
+    }).catchError((e) => Fluttertoast.showToast(msg: e));
+  }
+
+  RaisedButton buildTwitterButton(BuildContext context) {
+    return RaisedButton.icon(
+      onPressed: () async {},
+      label: Text(
+        getString(context, 'twitter'),
+        style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),
+      ),
+      color: Colors.white,
+      icon: new Image.asset(
+        'assets/images/twitter.png',
+        width: 20,
+      ),
+    );
+  }
+
+  RaisedButton buildFacebookButton(BuildContext context) {
+    return RaisedButton.icon(
+      onPressed: () async {},
+      label: Text(
+        getString(context, 'facebook'),
+        style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),
+      ),
+      color: Colors.white,
+      icon: new Image.asset(
+        'assets/images/facebook_f.png',
+        width: 20,
+      ),
+    );
+  }
+
+  Form buildForm(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+            child: TextFormField(
+              validator: (value) {
+                if (value.isEmpty) {
+                  return getString(context, 'fill_email');
+                }
+                return null;
+              },
+              key: Key("auth_email_label"),
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelText: getString(context, 'email_label'),
+                  labelStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )),
+              controller: _emailController,
+              onChanged: (text) => handleSubmittedEmail(text),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 8.0,
+              right: 8.0,
+              top: 8.0,
+              bottom: 4.0,
+            ),
+            child: TextFormField(
+              validator: (value) {
+                if (value.isEmpty) {
+                  return getString(context, 'fill_password');
+                }
+                return null;
+              },
+              key: Key("auth_password_label"),
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.transparent),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelText: getString(context, 'password_label'),
+                  labelStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )),
+              controller: _passwordController,
+              obscureText: true,
+              onChanged: (text) => handleSubmittedPassword(text),
+            ),
+          ),
+          RaisedButton(
+            key: Key("sign_in_button"),
+            color: Colors.blue,
+            textColor: Colors.white,
+            onPressed: () {
+              if (_formKey.currentState.validate()) {
+                signInUser();
+              }
+            },
+            child: Text(getString(context, 'sign_in')),
+          ),
+        ],
       ),
     );
   }
