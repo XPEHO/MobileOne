@@ -5,7 +5,6 @@ import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MainPage extends StatefulWidget {
@@ -47,8 +46,11 @@ class MainPageState extends State<MainPage> {
 
   Future<void> askPermissions() async {
     PermissionStatus permissionStatus = await _getContactPermission();
+
     if (permissionStatus != PermissionStatus.granted) {
-      _handleInvalidPermissions(permissionStatus);
+      goToSharePage();
+    } else {
+      goToShareOnePage();
     }
   }
 
@@ -64,20 +66,6 @@ class MainPageState extends State<MainPage> {
           PermissionStatus.unknown;
     } else {
       return permission;
-    }
-  }
-
-  void _handleInvalidPermissions(PermissionStatus permissionStatus) {
-    if (permissionStatus == PermissionStatus.denied) {
-      throw PlatformException(
-          code: "PERMISSION_DENIED",
-          message: "Access to location data denied",
-          details: null);
-    } else if (permissionStatus == PermissionStatus.restricted) {
-      throw PlatformException(
-          code: "PERMISSION_DISABLED",
-          message: "Location data is not available on device",
-          details: null);
     }
   }
 
@@ -132,6 +120,13 @@ class MainPageState extends State<MainPage> {
 
   goToSharedPage() async {
     await askPermissions();
+  }
+
+  goToShareOnePage() {
     Navigator.of(context).pushNamed("/shareOne");
+  }
+
+  goToSharePage() {
+    Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
   }
 }

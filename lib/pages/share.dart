@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get_it/get_it.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class Share extends StatefulWidget {
@@ -12,6 +13,7 @@ class Share extends StatefulWidget {
 }
 
 class ShareState extends State<Share> {
+  var previousList;
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
@@ -32,6 +34,7 @@ class ShareState extends State<Share> {
   Widget content(DocumentSnapshot snapshot) {
     var userWishlists = snapshot?.data ?? {};
     var wishlist = userWishlists["lists"] ?? [];
+
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -88,10 +91,8 @@ class ShareState extends State<Share> {
                     itemBuilder: (BuildContext ctxt, int index) {
                       return GestureDetector(
                         onTap: () {
-                          openOpenedListPage(
-                            context,
-                            wishlist[index],
-                          );
+                          previousList = wishlist[index];
+                          askPermissions();
                         },
                         child: WidgetShareListWithSomeone(
                           wishlist[index],
@@ -108,12 +109,36 @@ class ShareState extends State<Share> {
     );
   }
 
-  void openMainPage() {
-    Navigator.of(context).pushNamed('/mainpage');
+  Future<void> askPermissions() async {
+    PermissionStatus permissionStatus = await _getContactPermission();
+
+    if (permissionStatus != PermissionStatus.granted) {
+      openMainPage();
+    } else {
+      openShareOnePage();
+    }
   }
 
-  void openOpenedListPage(context, uuid) {
-    Navigator.of(context)
-        .pushNamed('/openedListPage', arguments: uuid.toString());
+  Future<PermissionStatus> _getContactPermission() async {
+    PermissionStatus permission = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.contacts);
+    if (permission != PermissionStatus.granted &&
+        permission != PermissionStatus.restricted) {
+      Map<PermissionGroup, PermissionStatus> permissionStatus =
+          await PermissionHandler()
+              .requestPermissions([PermissionGroup.contacts]);
+      return permissionStatus[PermissionGroup.contacts] ??
+          PermissionStatus.unknown;
+    } else {
+      return permission;
+    }
+  }
+
+  void openShareOnePage() {
+    Navigator.pushNamed(context, '/shareOne', arguments: previousList);
+  }
+
+  void openMainPage() {
+    Navigator.popUntil(context, ModalRoute.withName("/mainpage"));
   }
 }

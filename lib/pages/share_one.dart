@@ -1,7 +1,9 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/widgets/widget_share_contact.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:uuid/uuid.dart';
 import 'package:MobileOne/utility/colors.dart';
 
@@ -16,6 +18,7 @@ class ShareStateOneState extends State<ShareOne> {
   var uuid = Uuid();
   var newUuid;
   final _myController = TextEditingController();
+  var shareProvider = GetIt.I.get<ShareProvider>();
   String emailRegexp =
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
   Contact contact;
@@ -60,6 +63,7 @@ class ShareStateOneState extends State<ShareOne> {
   }
 
   Widget build(BuildContext context) {
+    final previousList = ModalRoute.of(context).settings.arguments;
     bool isSearching = _myController.text.isNotEmpty;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -217,7 +221,18 @@ class ShareStateOneState extends State<ShareOne> {
                       } else {
                         contactSelected = contacts[index];
                       }
-                      openShareTwoPage();
+                      if (previousList == null) {
+                        openShareTwoPage();
+                      } else {
+                        shareProvider.addSharedToDataBase(
+                            contactSelected.emails.elementAt(0).value,
+                            previousList);
+                        shareProvider.addGuestToDataBase(
+                            contactSelected.emails.elementAt(0).value,
+                            previousList);
+
+                        openSharePage();
+                      }
                     },
                     child:
                         WidgetShareContact(contact.displayName, contact.avatar),
@@ -232,7 +247,7 @@ class ShareStateOneState extends State<ShareOne> {
   }
 
   void openSharePage() {
-    Navigator.of(context).pushNamed('/mainpage');
+    Navigator.of(context).pop('/share');
   }
 
   void openShareTwoPage() {
