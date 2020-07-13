@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -23,10 +24,11 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-    final _imageService = GetIt.I.get<ImageService>();
+  final _imageService = GetIt.I.get<ImageService>();
   final _prefService = GetIt.I.get<PreferencesService>();
   final _userService = GetIt.I.get<UserService>();
   Widget _currentScreen = Lists();
+  var takePicture;
   final List _centerIcons = [
     Icons.scanner,
     Icons.add,
@@ -84,7 +86,6 @@ class MainPageState extends State<MainPage> {
     _prefService.setString('picture' + user.uid, _picture);
   }
 
-
   Future _getImage(provider) async {
     // Pick picture
     final pickedFile = await _imageService.pickCamera();
@@ -104,25 +105,31 @@ class MainPageState extends State<MainPage> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageStorage(bucket: _bucket, child: _currentScreen),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(_floatingButtonIcon),
-        backgroundColor: Colors.deepOrange,
-        onPressed: () => _floatingButtonAction(),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        child: Container(
-          height: 60,
-          child: BottomBar(onBottomBarIndexSelected),
-        ),
-      ),
-    );
+    return ChangeNotifierProvider.value(
+        value: UserPictureProvider(),
+        child: Consumer<UserPictureProvider>(
+          builder: (context, provider, _) => Scaffold(
+            body: PageStorage(bucket: _bucket, child: _currentScreen),
+            floatingActionButton: FloatingActionButton(
+                child: Icon(_floatingButtonIcon),
+                backgroundColor: Colors.deepOrange,
+                onPressed: () {
+                  takePicture = provider;
+                  _floatingButtonAction();
+                }),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            bottomNavigationBar: BottomAppBar(
+              shape: CircularNotchedRectangle(),
+              child: Container(
+                height: 60,
+                child: BottomBar(onBottomBarIndexSelected),
+              ),
+            ),
+          ),
+        ));
   }
 
   onBottomBarIndexSelected(index) {
@@ -165,8 +172,8 @@ class MainPageState extends State<MainPage> {
   goToSharePage() {
     Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
   }
-    goToProfilePage() {
-         
-    Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
+
+  goToProfilePage() {
+    _getImage(takePicture);
   }
 }

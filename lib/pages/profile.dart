@@ -3,7 +3,6 @@ import 'package:MobileOne/pages/change_password.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/user_service.dart';
-import 'package:MobileOne/utility/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -184,14 +183,13 @@ class ProfileState extends State<Profile> {
                       },
                     ),
                   );
-                  
                 } else {
                   return Container();
                 }
               },
             ),
           ),
-         Builder(
+          Builder(
             builder: (context) {
               if (_isPasswordUser()) {
                 return RaisedButton(
@@ -310,4 +308,3 @@ class ProfileState extends State<Profile> {
     );
   }
 }
-

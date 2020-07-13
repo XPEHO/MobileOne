@@ -1,4 +1,3 @@
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesService {
@@ -24,4 +23,3 @@ class PreferencesService {
 
   getPassword() => getString("password");
 }
-

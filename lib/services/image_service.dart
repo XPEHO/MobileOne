@@ -11,4 +11,3 @@ class ImageService {
     return _picker.getImage(source: ImageSource.camera);
   }
 }
-

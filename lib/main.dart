@@ -45,7 +45,7 @@ void instantiateServices() {
   getIt.registerSingleton(WishlistsListProvider());
   getIt.registerSingleton(ItemsListProvider());
   getIt.registerSingleton(ShareProvider());
-  getIt.registerSingleton(ImageService()); 
+  getIt.registerSingleton(ImageService());
 }
 
 void main() {

@@ -1,4 +1,3 @@
-
 import 'package:MobileOne/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -24,4 +23,3 @@ class UserPictureProvider with ChangeNotifier {
     selectedPicturePath = prefs.getString('picture' + _userService.user.uid);
   }
 }
-
