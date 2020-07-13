@@ -1,4 +1,4 @@
-import 'package:MobileOne/localization/delegate.dart';
+/*import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/services/authentication_service.dart';
@@ -75,4 +75,4 @@ void main() {
     //THEN
     expect(find.text('Changer mon mot de passe'), findsOneWidget);
   });
-}
+}*/

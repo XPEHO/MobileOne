@@ -1,3 +1,4 @@
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferencesService {
@@ -5,6 +6,10 @@ class PreferencesService {
 
   void initSharedPreferences() async {
     _sharedPreferences = await SharedPreferences.getInstance();
+  }
+
+  setString(key, value) {
+    _sharedPreferences.setString(key, value);
   }
 
   getString(key) => _sharedPreferences.getString(key);
@@ -19,3 +24,4 @@ class PreferencesService {
 
   getPassword() => getString("password");
 }
+

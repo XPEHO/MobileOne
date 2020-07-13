@@ -1,10 +1,18 @@
+import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
+import 'package:MobileOne/providers/user_picture_provider.dart';
+import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/user_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
+import 'package:gallery_saver/gallery_saver.dart';
+import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MainPage extends StatefulWidget {
@@ -15,6 +23,9 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
+    final _imageService = GetIt.I.get<ImageService>();
+  final _prefService = GetIt.I.get<PreferencesService>();
+  final _userService = GetIt.I.get<UserService>();
   Widget _currentScreen = Lists();
   final List _centerIcons = [
     Icons.scanner,
@@ -37,7 +48,7 @@ class MainPageState extends State<MainPage> {
       unasignedAction,
       goToCreateListPage,
       goToSharedPage,
-      unasignedAction,
+      goToProfilePage,
     ];
 
     _floatingButtonIcon = _centerIcons[LISTS_PAGE];
@@ -68,6 +79,31 @@ class MainPageState extends State<MainPage> {
       return permission;
     }
   }
+
+  _savePicturePreferences(String _picture, FirebaseUser user) async {
+    _prefService.setString('picture' + user.uid, _picture);
+  }
+
+
+  Future _getImage(provider) async {
+    // Pick picture
+    final pickedFile = await _imageService.pickCamera();
+
+    if (pickedFile != null) {
+      // Save picture path into Provider
+      provider.selectedPicturePath = pickedFile.path;
+
+      // Save image into phone gallery
+      GallerySaver.saveImage(
+        pickedFile.path,
+        albumName: getString(context, "app_name"),
+      );
+
+      // Save select picture path to shared preferences
+      _savePicturePreferences(pickedFile.path, _userService.user);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +163,10 @@ class MainPageState extends State<MainPage> {
   }
 
   goToSharePage() {
+    Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
+  }
+    goToProfilePage() {
+         
     Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
   }
 }

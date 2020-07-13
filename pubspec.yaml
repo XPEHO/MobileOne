@@ -40,6 +40,8 @@ dependencies:
   shared_preferences: ^0.5.7+3
   permission_handler: ^4.0.0
   contacts_service: ^0.4.6
+  image_picker: ^0.6.5
+  gallery_saver: ^2.0.1
   
   
   

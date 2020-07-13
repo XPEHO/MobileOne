@@ -90,6 +90,7 @@
     "step_one" : "1",
     "step_two":"2",
     "which_list":"Quelle liste ?",
-    "my_shares":"Mes partages"
+    "my_shares":"Mes partages",
+    "change_user_password": "Changer mon mot de passe"
 
 }

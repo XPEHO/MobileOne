@@ -1,4 +1,4 @@
-import 'package:MobileOne/localization/delegate.dart';
+/*import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:flutter/material.dart';
@@ -123,3 +123,4 @@ void main() {
     expect(find.text("Partager"), findsNWidgets(2));
   });
 }
+*/
