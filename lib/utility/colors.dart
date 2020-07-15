@@ -6,3 +6,5 @@ const Color WHITE = Colors.white;
 const Color GREEN = Colors.green;
 const Color BLACK = Colors.black;
 const Color ORANGE = Colors.deepOrange;
+const Color RED = Colors.red;
+const Color TRANSPARENT = Colors.transparent;

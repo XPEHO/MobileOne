@@ -5,19 +5,23 @@ class BubbleButton extends StatelessWidget {
   final IconData icon;
   final Color color;
   final Color iconColor;
+  final double height;
+  final double width;
 
   BubbleButton({
     @required this.icon,
     this.color = Colors.red,
     @required this.onPressed,
     this.iconColor = Colors.white,
+    this.height = 36,
+    this.width = 36,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 36,
-      width: 36,
+      height: height,
+      width: width,
       child: Material(
         borderRadius: BorderRadius.circular(36.0),
         color: color,

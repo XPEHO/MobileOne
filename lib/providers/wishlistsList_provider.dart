@@ -102,12 +102,14 @@ class WishlistsListProvider with ChangeNotifier {
     }
 
     Map<String, dynamic> newMap = tmpDoc.data;
-    newMap.remove(listUuid);
+    if (newMap != null) {
+      newMap.remove(listUuid);
 
-    await Firestore.instance
-        .collection("shared")
-        .document(userUid)
-        .setData(newMap);
+      await Firestore.instance
+          .collection("shared")
+          .document(userUid)
+          .setData(newMap);
+    }
 
     notifyListeners();
   }

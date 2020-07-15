@@ -18,7 +18,8 @@ class ItemsListProvider with ChangeNotifier {
     return Firestore.instance.collection('items').document(listUuid).get();
   }
 
-  addItemTolist(String _name, int _count, String _type) async {
+  addItemTolist(
+      String _name, int _count, String _type, String _imageLink) async {
     var uuid = Uuid();
     var newUuid = uuid.v4();
     var listItemsCount;
@@ -55,6 +56,7 @@ class ItemsListProvider with ChangeNotifier {
           'label': _name,
           'quantity': _count,
           'unit': _type,
+          'image': _imageLink,
         }
       });
     } else {
@@ -63,19 +65,21 @@ class ItemsListProvider with ChangeNotifier {
           'label': _name,
           'quantity': _count,
           'unit': _type,
+          'image': _imageLink,
         }
       });
     }
     notifyListeners();
   }
 
-  updateItemInList(
-      String itemUuid, String _name, int _count, String _type) async {
+  updateItemInList(String itemUuid, String _name, int _count, String _type,
+      String _imageLink) async {
     await Firestore.instance.collection("items").document(listUuid).updateData({
       itemUuid: {
         'label': _name,
         'quantity': _count,
         'unit': _type,
+        'image': _imageLink,
       }
     });
     notifyListeners();
