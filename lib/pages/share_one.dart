@@ -58,7 +58,6 @@ class ShareStateOneState extends State<ShareOne> {
   filterContact() {
     List<Contact> _contacts = [];
     _contacts.addAll(contacts);
-    print(_contacts);
     if (_myController.text.isNotEmpty) {
       _contacts.retainWhere((contact) {
         String searchTerm = _myController.text.toLowerCase();
