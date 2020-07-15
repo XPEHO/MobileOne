@@ -24,6 +24,8 @@ class ShareStateOneState extends State<ShareOne> {
   Contact contact;
   List<Contact> contacts = [];
   List<Contact> contactsFilter;
+  List<Contact> contactsWithoutEmails = [];
+  List<Contact> contactsWithEmails = [];
 
   bool isVisible = false;
 
@@ -39,17 +41,24 @@ class ShareStateOneState extends State<ShareOne> {
   }
 
   getContacts() async {
-    Iterable<Contact> _contacts =
-        (await ContactsService.getContacts()).toList();
+    Iterable<Contact> _contacts = (await ContactsService.getContacts());
+    for (int i = 0; i < _contacts.length; i++) {
+      if (_contacts.elementAt(i).emails.isNotEmpty) {
+        contactsWithEmails.add(_contacts.elementAt(i));
+      } else {
+        contactsWithoutEmails.add(_contacts.elementAt(i));
+      }
+    }
+
     setState(() {
-      contacts = _contacts;
+      contacts = contactsWithEmails.toList();
     });
   }
 
   filterContact() {
     List<Contact> _contacts = [];
     _contacts.addAll(contacts);
-
+    print(_contacts);
     if (_myController.text.isNotEmpty) {
       _contacts.retainWhere((contact) {
         String searchTerm = _myController.text.toLowerCase();
