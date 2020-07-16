@@ -81,7 +81,7 @@ class ShareStateOneState extends State<ShareOne> {
           header(context),
           headerSteps(context),
           searchContact(context),
-          searchNewContact(context),
+          searchNewContact(context, previousList),
           Padding(
             padding: EdgeInsets.only(top: 5),
             child: Container(
@@ -175,13 +175,18 @@ class ShareStateOneState extends State<ShareOne> {
     );
   }
 
-  GestureDetector searchNewContact(BuildContext context) {
+  GestureDetector searchNewContact(BuildContext context, previousList) {
     return GestureDetector(
       onTap: () {
         searchTermEmail = _myController.text;
         if (RegExp(emailRegexp).hasMatch(searchTermEmail)) {
-          openShareTwoPage();
-          return null;
+          if (previousList == null || uuid == null) {
+            openShareTwoPage();
+          } else {
+            shareProvider.addSharedToDataBase(searchTermEmail, previousList);
+            shareProvider.addGuestToDataBase(searchTermEmail, previousList);
+            openSharePage();
+          }
         }
       },
       child: Visibility(
@@ -213,6 +218,11 @@ class ShareStateOneState extends State<ShareOne> {
         onChanged: (string) {
           setState(
             () {
+              if (contactsFilter.isEmpty) {
+                isVisible = true;
+              } else {
+                isVisible = false;
+              }
               contactsFilter = contacts
                   .where((conta) => (conta.displayName
                           .toLowerCase()
@@ -223,17 +233,6 @@ class ShareStateOneState extends State<ShareOne> {
                           .toLowerCase()
                           .contains(string.toLowerCase())))
                   .toList();
-              if (contactsFilter.isEmpty) {
-                setState(() {
-                  isVisible = true;
-                });
-              } else {
-                setState(
-                  () {
-                    isVisible = false;
-                  },
-                );
-              }
             },
           );
         },
@@ -252,7 +251,7 @@ class ShareStateOneState extends State<ShareOne> {
           onTap: () {
             if (isSearching == true) {
               contactSelected = contactsFilter[index];
-            } else {
+            } else if (isSearching == false) {
               contactSelected = contacts[index];
             }
             if (previousList == null) {
@@ -274,7 +273,7 @@ class ShareStateOneState extends State<ShareOne> {
   }
 
   void openSharePage() {
-    Navigator.of(context).pop('/share');
+    Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
   }
 
   void openShareTwoPage() {

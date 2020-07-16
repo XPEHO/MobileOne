@@ -7,6 +7,7 @@ import 'package:flutter/rendering.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:MobileOne/utility/colors.dart';
 
 class Share extends StatefulWidget {
   ShareState createState() => ShareState();
@@ -21,11 +22,18 @@ class ShareState extends State<Share> {
       child: Consumer<ShareProvider>(
         builder: (context, shareProvider, child) {
           return FutureBuilder<DocumentSnapshot>(
-            future: shareProvider.ownerLists,
-            builder: (context, snapshot) {
-              return content(snapshot.data);
-            },
-          );
+              future: shareProvider.ownerLists,
+              builder: (context, snapshot) {
+                if (!snapshot.hasData)
+                  return Center(
+                    child: CircularProgressIndicator(
+                      backgroundColor: WHITE,
+                    ),
+                  );
+                else {
+                  return content(snapshot.data);
+                }
+              });
         },
       ),
     );
@@ -36,64 +44,63 @@ class ShareState extends State<Share> {
     var wishlist = userWishlists["lists"] ?? [];
 
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-              top: 30,
-            ),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Stack(
-                children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 7,
-                    ),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(
-                        getString(context, "my_shares"),
-                        style: TextStyle(
-                          fontSize: 20,
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(
+                top: 30,
+              ),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                child: Stack(
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: 7,
+                      ),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Text(
+                          getString(context, "my_shares"),
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
                         ),
                       ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SafeArea(
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 164,
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemCount: wishlist.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            previousList = wishlist[index];
+                            askPermissions();
+                          },
+                          child: WidgetShareListWithSomeone(
+                            wishlist[index],
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 20,
-            ),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 200,
-                  child: ListView.builder(
-                    scrollDirection: Axis.vertical,
-                    itemCount: wishlist.length,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          previousList = wishlist[index];
-                          askPermissions();
-                        },
-                        child: WidgetShareListWithSomeone(
-                          wishlist[index],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
