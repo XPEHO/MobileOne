@@ -92,6 +92,7 @@
     "which_list":"Quelle liste ?",
     "my_shares":"Mes partages",
     "close_item_creation" : "Fermer",
-    "cant_find_article" : "Malheureusement, nous ne parvenons pas à trouver cet article"
+    "cant_find_article" : "Malheureusement, nous ne parvenons pas à trouver cet article",
+    "card_name": "Nom de la carte"
 
 }

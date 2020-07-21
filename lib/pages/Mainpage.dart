@@ -1,10 +1,15 @@
+import 'dart:math';
+
 import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
+import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
-
+import 'package:MobileOne/services/user_service.dart';
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class MainPage extends StatefulWidget {
@@ -15,6 +20,7 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
+  var userService = GetIt.I.get<UserService>();
   Widget _currentScreen = Lists();
   final List _centerIcons = [
     Icons.scanner,
@@ -34,7 +40,7 @@ class MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
     _actions = [
-      unasignedAction,
+      scanLoyaltyCardsBareCode,
       goToCreateListPage,
       goToSharedPage,
       unasignedAction,
@@ -128,5 +134,24 @@ class MainPageState extends State<MainPage> {
 
   goToSharePage() {
     Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
+  }
+
+  scanLoyaltyCardsBareCode() async {
+    var resultCard = await BarcodeScanner.scan();
+    var labelCard = "";
+    var colorCard = generateRandomHexColor();
+    GetIt.I.get<LoyaltyCardsProvider>().addLoyaltyCardsToDataBase(
+          labelCard,
+          resultCard.rawContent,
+          colorCard,
+        );
+  }
+
+  String generateRandomHexColor() {
+    int length = 6;
+    String chars = '0123456789ABCDEF';
+    String hex = '#';
+    while (length-- > 0) hex += chars[(Random().nextInt(16)) | 0];
+    return hex;
   }
 }

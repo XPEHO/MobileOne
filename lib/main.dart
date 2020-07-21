@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'package:MobileOne/pages/card_page.dart';
+import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/pages/share.dart';
@@ -44,6 +47,7 @@ void instantiateServices() {
   getIt.registerSingleton(WishlistsListProvider());
   getIt.registerSingleton(ItemsListProvider());
   getIt.registerSingleton(ShareProvider());
+  getIt.registerSingleton(LoyaltyCardsProvider());
 }
 
 void main() {
@@ -98,6 +102,8 @@ class MyApp extends StatelessWidget {
         '/shareOne': (context) => ShareOne(),
         '/shareTwo': (context) => ShareTwo(),
         '/share': (context) => Share(),
+        "/cards": (contaxt) => Cards(),
+        "/loyaltycards": (contaxt) => LoyaltyCards(),
       },
     );
   }

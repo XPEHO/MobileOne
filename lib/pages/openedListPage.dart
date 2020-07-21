@@ -18,7 +18,6 @@ const Color RED = Colors.red;
 const Color WHITE = Colors.white;
 const Color TRANSPARENT = Colors.transparent;
 
-final databaseReference = Firestore.instance;
 String listUuid;
 String label = "";
 

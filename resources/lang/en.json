@@ -88,5 +88,6 @@
     "which_list":"Which list ?",
     "my_shares":"My shares",
     "close_item_creation" : "Close",
-    "cant_find_article" : "Unfortunately we can't find this item"
+    "cant_find_article" : "Unfortunately we can't find this item",
+    "card_name": "Card name"
 }
