@@ -79,7 +79,7 @@ class ShareState extends State<Share> {
                 children: <Widget>[
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 164,
+                    height: MediaQuery.of(context).size.height * 0.7,
                     child: ListView.builder(
                       scrollDirection: Axis.vertical,
                       itemCount: wishlist.length,

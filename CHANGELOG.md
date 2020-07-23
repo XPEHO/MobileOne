@@ -25,9 +25,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - Update share page
-- Update loyalty cards page
+- Update loyalty cards page to create new loyalty cards
 - Update profile page : change profile picture from Gallery
 - Update Mainpage : change profile picture by tacking picture from Camera
+- Update openedListPage : User can now scan item to get items informations
 
 ### Deprecated
 
@@ -40,6 +41,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Google authentication on iOS
+- openedListPage : Connect share menu to the share process
+- Share : Clic on list in share section should not open the list
+- Share one  and share two : Contact loader missing / Filter Contacts / Cannot specify an unknown email
+- lists : Guest cannot see shared wishlists
 
 ### Security
 

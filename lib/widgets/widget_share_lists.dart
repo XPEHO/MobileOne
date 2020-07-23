@@ -108,16 +108,11 @@ class WidgetShareListWithSomeoneState
                           child:
                               Image.asset("assets/images/basket_my_lists.png"),
                         ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            right: 20,
-                          ),
-                          child: Text(
-                            _count,
-                            style: TextStyle(
-                              color: GREY,
-                              fontSize: 10.0,
-                            ),
+                        Text(
+                          _count,
+                          style: TextStyle(
+                            color: GREY,
+                            fontSize: 10.0,
                           ),
                         ),
                         Text(

@@ -11,13 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../localization/localization.dart';
 
-const Color GREEN = Colors.green;
-const Color GREY = Colors.grey;
-const Color GREY600 = Colors.grey;
-const Color RED = Colors.red;
-const Color WHITE = Colors.white;
-const Color TRANSPARENT = Colors.transparent;
-
 String listUuid;
 String label = "";
 
@@ -108,7 +101,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                             },
                           );
                         },
-                        background: Container(color: Colors.red),
+                        background: Container(color: RED),
                         key: UniqueKey(),
                         child: WidgetItem(wishlist.values.toList()[index],
                             listUuid, wishlist.keys.toList()[index]),
