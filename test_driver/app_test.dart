@@ -12,7 +12,7 @@ void main() {
       driver = await FlutterDriver.connect();
     });
 
-    // Close the connection to the driver after the tests have completed.
+    // Close the connection to the drive r after the tests have completed.
     tearDownAll(() async {
       if (driver != null) {
         driver.close();

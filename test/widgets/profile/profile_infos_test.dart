@@ -1,7 +1,11 @@
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/profile.dart';
+import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -37,9 +41,17 @@ Widget buildTestableWidget(Widget widget) {
 
 class FirebaseUserMock extends Mock implements FirebaseUser {}
 
-class FirebaseAuthMock extends Mock implements FirebaseAuth {}
+class UserServiceMock extends Mock implements UserService {}
 
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
+
+class FirebaseAuthMock extends Mock implements FirebaseAuth {}
+
+class PreferencesMock extends Mock implements PreferencesService {}
+
+class ImageServiceMock extends Mock implements ImageService {}
+
+class UserPictureMock extends Mock implements UserPictureProvider {}
 
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
@@ -53,11 +65,19 @@ void main() {
     final auth = FirebaseAuthMock();
     final user = FirebaseUserMock();
     final _googleSignIn = MockGoogleSignIn();
+    final _userService = UserServiceMock();
+    final _imageService = ImageServiceMock();
+    final _prefs = PreferencesMock();
+    final _picture = UserPictureMock();
 
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
     GetIt.instance.registerSingleton<FirebaseAuth>(auth);
     GetIt.instance.registerSingleton<FirebaseUser>(user);
     GetIt.I.registerSingleton<AuthenticationService>(AuthenticationService());
+    GetIt.I.registerSingleton<UserService>(_userService);
+    GetIt.I.registerSingleton<ImageService>(_imageService);
+    GetIt.I.registerSingleton<PreferencesService>(_prefs);
+    GetIt.I.registerSingleton<UserPictureProvider>(_picture);
 
     when(auth.currentUser()).thenAnswer((realInvocation) => Future.value(user));
     final _displayName = "Dupond Jean";
@@ -67,6 +87,10 @@ void main() {
     when(user.email).thenReturn(_email);
 
     when(user.photoUrl).thenReturn("");
+
+    when(user.providerData).thenReturn(List.of([]));
+
+    when(_userService.user).thenReturn(user);
 
     //WHEN
     await tester.pumpWidget(widget);

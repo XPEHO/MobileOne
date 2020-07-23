@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
@@ -9,8 +10,15 @@ import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
+import 'package:MobileOne/providers/user_picture_provider.dart';
+import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -20,7 +28,9 @@ class MainPage extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPage> {
-  var userService = GetIt.I.get<UserService>();
+  final _imageService = GetIt.I.get<ImageService>();
+  final _prefService = GetIt.I.get<PreferencesService>();
+  final _userService = GetIt.I.get<UserService>();
   Widget _currentScreen = Lists();
   final List _centerIcons = [
     Icons.scanner,
@@ -38,12 +48,15 @@ class MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    GetIt.I.get<UserPictureProvider>().selectedPicturePath = GetIt.I
+        .get<PreferencesService>()
+        .getString('picture' + GetIt.I.get<UserService>().user.uid);
     super.initState();
     _actions = [
       scanLoyaltyCardsBareCode,
       goToCreateListPage,
       goToSharedPage,
-      unasignedAction,
+      _getImage,
     ];
 
     _floatingButtonIcon = _centerIcons[LISTS_PAGE];
@@ -75,24 +88,54 @@ class MainPageState extends State<MainPage> {
     }
   }
 
+  _savePicturePreferences(String _picture, FirebaseUser user) async {
+    _prefService.setString('picture' + user.uid, _picture);
+  }
+
+  Future _getImage() async {
+    // Pick picture
+    final pickedFile = await _imageService.pickCamera();
+
+    if (pickedFile != null) {
+      // Save picture path into Provider
+      GetIt.I.get<UserPictureProvider>().selectedPicturePath = pickedFile.path;
+
+      // Save image into phone gallery
+      GallerySaver.saveImage(
+        pickedFile.path,
+        albumName: getString(context, "app_name"),
+      );
+
+      // Save select picture path to shared preferences
+      _savePicturePreferences(pickedFile.path, _userService.user);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: PageStorage(bucket: _bucket, child: _currentScreen),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(_floatingButtonIcon),
-        backgroundColor: Colors.deepOrange,
-        onPressed: () => _floatingButtonAction(),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        child: Container(
-          height: 60,
-          child: BottomBar(onBottomBarIndexSelected),
-        ),
-      ),
-    );
+    return ChangeNotifierProvider.value(
+        value: GetIt.I.get<UserPictureProvider>(),
+        child: Consumer<UserPictureProvider>(
+          builder: (context, provider, _) => Scaffold(
+            body: PageStorage(bucket: _bucket, child: _currentScreen),
+            floatingActionButton: FloatingActionButton(
+                key: Key("floating_button"),
+                child: Icon(_floatingButtonIcon),
+                backgroundColor: Colors.deepOrange,
+                onPressed: () {
+                  _floatingButtonAction();
+                }),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            bottomNavigationBar: BottomAppBar(
+              shape: CircularNotchedRectangle(),
+              child: Container(
+                height: 60,
+                child: BottomBar(onBottomBarIndexSelected),
+              ),
+            ),
+          ),
+        ));
   }
 
   onBottomBarIndexSelected(index) {

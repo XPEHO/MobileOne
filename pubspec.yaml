@@ -44,6 +44,11 @@ dependencies:
   json_annotation: ^3.0.1
   barcode: ^1.13.0
   barcode_widget: ^1.4.0
+  image_picker: ^0.6.5
+  gallery_saver: ^2.0.1
+  
+  
+  
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

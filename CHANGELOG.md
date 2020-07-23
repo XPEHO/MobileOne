@@ -26,6 +26,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - Update share page
 - Update loyalty cards page
+- Update profile page : change profile picture from Gallery
+- Update Mainpage : change profile picture by tacking picture from Camera
 
 ### Deprecated
 

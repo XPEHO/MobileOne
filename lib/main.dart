@@ -4,10 +4,12 @@ import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/providers/share_provider.dart';
+import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/pages/share_one.dart';
 import 'package:MobileOne/pages/share_two.dart';
+import 'package:MobileOne/services/image_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
@@ -48,6 +50,8 @@ void instantiateServices() {
   getIt.registerSingleton(ItemsListProvider());
   getIt.registerSingleton(ShareProvider());
   getIt.registerSingleton(LoyaltyCardsProvider());
+  getIt.registerSingleton(ImageService());
+  getIt.registerSingleton(UserPictureProvider());
 }
 
 void main() {
