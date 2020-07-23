@@ -11,6 +11,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Configure signature
+        run: |
+          echo "${{secrets.KEY_PROPERTIES}}" > android/key.properties
+          echo "${{secrets.RELEASE_KEYSTORE}}" > upload-keystore.encoded
+          base64 -d -i upload-keystore.encoded > upload-keystore.jks
       - name: Setup Java 12
         uses: actions/setup-java@v1
         with:
