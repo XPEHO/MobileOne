@@ -68,16 +68,13 @@ class WidgetListsState extends State<WidgetLists> {
                 width: MediaQuery.of(context).size.width * 0.23 / 2,
                 child: Image.asset("assets/images/basket_my_lists.png"),
               ),
-              Padding(
-                padding: EdgeInsets.only(right: 20),
-                child: Text(
-                  count,
-                  style: TextStyle(color: GREY, fontSize: 10.0),
-                ),
+              Text(
+                count,
+                style: TextStyle(color: GREY, fontSize: 8.0),
               ),
               Text(
                 _numberOfItemShared,
-                style: TextStyle(color: GREY, fontSize: 10.0),
+                style: TextStyle(color: GREY, fontSize: 8.0),
               ),
             ],
           ),
