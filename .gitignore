@@ -49,6 +49,7 @@ android/app/.classpath
 android/app/.project
 android/.settings/org.eclipse.buildship.core.prefs
 android/app/bin/
+android/key.properties
 # IOS settings
 ios/Flutter/.last_build_id
 ios/Podfile.lock
