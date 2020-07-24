@@ -64,4 +64,12 @@ class LoyaltyCardsProvider with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  deleteCard(String cardUuid) async {
+    await Firestore.instance
+        .collection("loyaltycards")
+        .document(GetIt.I.get<UserService>().user.uid)
+        .updateData({cardUuid: FieldValue.delete()});
+    notifyListeners();
+  }
 }
