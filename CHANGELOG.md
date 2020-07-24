@@ -41,7 +41,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Google authentication on iOS
-- openedListPage : Connect share menu to the share process
+- openedListPage : 
+    - Connect share menu to the share process
+    - Open old wishlists
 - Share : Clic on list in share section should not open the list
 - Share one  and share two : Contact loader missing / Filter Contacts / Cannot specify an unknown email
 - lists : Guest cannot see shared wishlists

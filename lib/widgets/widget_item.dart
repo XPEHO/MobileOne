@@ -25,6 +25,19 @@ class WidgetItemState extends State<WidgetItem> {
   String _itemUuid;
   final Map<String, dynamic> _itemslist;
   WidgetItemState(this._itemslist, this._listUuid, this._itemUuid);
+  var _itemImage;
+
+  @override
+  void initState() {
+    if (_itemslist["image"] != null) {
+      _itemslist["image"] == "assets/images/canned-food.png"
+          ? _itemImage = AssetImage(_itemslist["image"])
+          : _itemImage = NetworkImage(_itemslist["image"]);
+    } else {
+      _itemImage = AssetImage("assets/images/canned-food.png");
+    }
+    super.initState();
+  }
 
   Widget build(BuildContext context) {
     return Row(
@@ -42,10 +55,7 @@ class WidgetItemState extends State<WidgetItem> {
                     height: 48,
                     width: 48,
                     child: Image(
-                      image:
-                          _itemslist["image"] == "assets/images/canned-food.png"
-                              ? AssetImage(_itemslist["image"])
-                              : NetworkImage(_itemslist["image"]),
+                      image: _itemImage,
                     ),
                   ),
                 ),
