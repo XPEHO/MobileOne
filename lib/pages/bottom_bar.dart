@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:flutter/material.dart';
+import 'package:MobileOne/utility/colors.dart';
 
 const int CARD_PAGE = 0;
 const int LISTS_PAGE = 1;
@@ -11,9 +12,6 @@ const KEY_CARD_PAGE = "Cards";
 const KEY_LISTS_PAGE = "Lists";
 const KEY_SHARE_PAGE = "Share";
 const KEY_PROFILE_PAGE = "Profile";
-
-const Color BLACK = Colors.black;
-const Color ORANGE = Colors.deepOrange;
 
 typedef IndexChangeListener = void Function(int);
 

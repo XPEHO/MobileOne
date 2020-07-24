@@ -2,9 +2,7 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-
-const Color ORANGE = Colors.deepOrange;
-const Color TRANSPARENT = Colors.transparent;
+import 'package:MobileOne/utility/colors.dart';
 
 class CreateList extends StatefulWidget {
   State<StatefulWidget> createState() {
