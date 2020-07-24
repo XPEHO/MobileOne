@@ -18,47 +18,42 @@ class CreateListPage extends State<CreateList> {
     super.initState();
   }
 
-  goToListsPage() {
-    Navigator.pop(context);
-  }
-
-  void addItemToList() {
+  void addListToDataBase() {
     GetIt.I.get<WishlistsListProvider>().addWishlist(_myController.text);
-    goToListsPage();
+    FocusScope.of(context).unfocus();
+    Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
+      body: SingleChildScrollView(
         child: Center(
-            child: Column(
-          children: <Widget>[
-            Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  openListsPage();
-                },
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.only(top: 32.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    icon: Icon(Icons.arrow_back),
+                    onPressed: () {
+                      openListsPage();
+                    },
+                  ),
+                ),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 100.0),
-              child: Container(
-                height: 100,
-                width: 100,
+              Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+                width: MediaQuery.of(context).size.width * 0.3,
                 child: Image.asset("assets/images/basket_create_list.png"),
               ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 20.0),
-              child: Card(
+              Card(
                 elevation: 5,
                 child: Container(
                   color: Colors.grey[200],
-                  width: 300,
-                  height: 70,
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.1,
                   child: Form(
                     child: TextFormField(
                       controller: _myController,
@@ -75,21 +70,22 @@ class CreateListPage extends State<CreateList> {
                   ),
                 ),
               ),
-            ),
-            RaisedButton(
-              color: ORANGE,
-              onPressed: () {
-                addItemToList();
-              },
-              child: Text(getString(context, 'submit_button')),
-            ),
-          ],
-        )),
+              RaisedButton(
+                color: ORANGE,
+                onPressed: () {
+                  addListToDataBase();
+                },
+                child: Text(getString(context, 'submit_button')),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
 
   void openListsPage() {
-    Navigator.pop(context);
+    FocusScope.of(context).unfocus();
+    Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
   }
 }
