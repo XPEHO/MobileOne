@@ -21,6 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add page step one for sharing a list
 - Add page step two for sharing a list
 - Add page for a big loyalty card
+- Add loyalty cards deletion
 
 ### Changed
 

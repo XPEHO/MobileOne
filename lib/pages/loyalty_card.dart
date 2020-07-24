@@ -1,4 +1,6 @@
+import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
+import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/widgets/widget_loyaltyCards.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -55,11 +57,43 @@ class LoyaltyCardsState extends State<LoyaltyCards> {
                 return TextEditingController();
               });
               uuidOfCard = cards.keys.toList()[index];
-              return Center(
-                  child: LoyaltyCardsWidget(cards.values.toList()[index],
-                      uuidOfCard, controllerList[index]));
+              return Dismissible(
+                  confirmDismiss: (DismissDirection direction) async {
+                    return await showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          content:
+                              Text(getString(context, 'confirm_card_deletion')),
+                          actions: <Widget>[
+                            FlatButton(
+                                onPressed: () =>
+                                    Navigator.of(context).pop(true),
+                                child: Text(getString(context, 'delete_item'))),
+                            FlatButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child:
+                                  Text(getString(context, 'cancel_deletion')),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  background: Container(color: RED),
+                  key: UniqueKey(),
+                  child: Center(
+                      child: LoyaltyCardsWidget(cards.values.toList()[index],
+                          uuidOfCard, controllerList[index])),
+                  onDismissed: (direction) {
+                    deleteCard(cards.keys.toList()[index]);
+                  });
             }),
       ),
     );
+  }
+
+  void deleteCard(String uuid) {
+    GetIt.I.get<LoyaltyCardsProvider>().deleteCard(uuid);
   }
 }
