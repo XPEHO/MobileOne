@@ -27,7 +27,7 @@ class ListsState extends State<Lists> {
             body: Column(
               children: <Widget>[
                 Padding(
-                  padding: EdgeInsets.only(top: 200.0, right: 300),
+                  padding: EdgeInsets.only(top: 100.0, right: 300),
                   child: Text(
                     getString(context, 'my_lists'),
                   ),
