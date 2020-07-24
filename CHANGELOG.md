@@ -41,12 +41,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - Google authentication on iOS
-- openedListPage : 
-    - Connect share menu to the share process
-    - Open old wishlists
+- openedListPage : Connect share menu to the share process
 - Share : Clic on list in share section should not open the list
 - Share one  and share two : Contact loader missing / Filter Contacts / Cannot specify an unknown email
 - lists : Guest cannot see shared wishlists
+- openedListPage : Open old wishlists
+- Item Popup : Modify an item created in a different language
 
 ### Security
 

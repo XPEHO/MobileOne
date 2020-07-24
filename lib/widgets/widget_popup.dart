@@ -58,7 +58,23 @@ class EditItemPopupState extends State<EditItemPopup> {
         .then((value) {
       labelValue = value[itemUuid]["label"];
       quantityValue = value[itemUuid]["quantity"].toString();
-      unitValue = value[itemUuid]["unit"];
+      switch (value[itemUuid]["unit"]) {
+        case 1:
+          unitValue = getString(context, 'item_unit');
+          break;
+        case 2:
+          unitValue = getString(context, 'item_liters');
+          break;
+        case 3:
+          unitValue = getString(context, 'item_grams');
+          break;
+        case 4:
+          unitValue = getString(context, 'item_kilos');
+          break;
+        default:
+          unitValue = getString(context, 'item_unit');
+          break;
+      }
     });
 
     setState(() {
@@ -173,6 +189,20 @@ class EditItemPopupState extends State<EditItemPopup> {
     );
   }
 
+  int getTypeIndex() {
+    if (_type == getString(context, 'item_unit')) {
+      return 1;
+    } else if (_type == getString(context, 'item_liters')) {
+      return 2;
+    } else if (_type == getString(context, 'item_grams')) {
+      return 3;
+    } else if (_type == getString(context, 'item_kilos')) {
+      return 4;
+    } else {
+      return 1;
+    }
+  }
+
   _onValidate() {
     if (itemNameController == null ||
         itemCountController == null ||
@@ -183,10 +213,11 @@ class EditItemPopupState extends State<EditItemPopup> {
         alert = getString(context, "popup_alert");
       });
     } else {
+      int _typeIndex = getTypeIndex();
       if (buttonName == getString(context, "popup_update")) {
-        uddapteItemInList();
+        uddapteItemInList(_typeIndex);
       } else {
-        addItemToList();
+        addItemToList(_typeIndex);
       }
     }
   }
@@ -304,15 +335,15 @@ class EditItemPopupState extends State<EditItemPopup> {
     _type = null;
   }
 
-  void uddapteItemInList() async {
+  void uddapteItemInList(int _typeIndex) async {
     _itemsListProvider.updateItemInList(
-        itemUuid, _name, _count, _type, imageLink);
+        itemUuid, _name, _count, _typeIndex, imageLink);
     Navigator.of(context).pop();
     clearPopupFields();
   }
 
-  void addItemToList() async {
-    _itemsListProvider.addItemTolist(_name, _count, _type, imageLink);
+  void addItemToList(int _typeIndex) async {
+    _itemsListProvider.addItemTolist(_name, _count, _typeIndex, imageLink);
     Navigator.of(context).pop();
     clearPopupFields();
   }

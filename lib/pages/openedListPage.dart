@@ -10,6 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../localization/localization.dart';
+import 'package:MobileOne/utility/colors.dart';
 
 String listUuid;
 String label = "";
