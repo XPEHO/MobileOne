@@ -1,13 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/widgets/widget_popup.dart';
 import 'package:flutter/material.dart';
-
-const Color GREEN = Colors.green;
-const Color GREY = Colors.grey;
-const Color GREY600 = Colors.grey;
-const Color RED = Colors.red;
-const Color WHITE = Colors.white;
-const Color TRANSPARENT = Colors.transparent;
+import 'package:MobileOne/utility/colors.dart';
 
 class WidgetItem extends StatefulWidget {
   final Map<String, dynamic> _itemslist;
@@ -83,7 +77,7 @@ class WidgetItemState extends State<WidgetItem> {
                   left: 150,
                   top: 60,
                   child: Text(
-                    _itemslist["unit"],
+                    getUnitText(),
                     style: TextStyle(
                       color: GREY,
                     ),
@@ -110,5 +104,25 @@ class WidgetItemState extends State<WidgetItem> {
         ),
       ],
     );
+  }
+
+  String getUnitText() {
+    switch (_itemslist["unit"]) {
+      case 1:
+        return getString(context, 'item_unit');
+        break;
+      case 2:
+        return getString(context, 'item_liters');
+        break;
+      case 3:
+        return getString(context, 'item_grams');
+        break;
+      case 4:
+        return getString(context, 'item_kilos');
+        break;
+      default:
+        return getString(context, 'item_unit');
+        break;
+    }
   }
 }

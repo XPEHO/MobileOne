@@ -19,7 +19,7 @@ class ItemsListProvider with ChangeNotifier {
   }
 
   addItemTolist(
-      String _name, int _count, String _type, String _imageLink) async {
+      String _name, int _count, int _typeIndex, String _imageLink) async {
     var uuid = Uuid();
     var newUuid = uuid.v4();
     var listItemsCount;
@@ -55,7 +55,7 @@ class ItemsListProvider with ChangeNotifier {
         newUuid: {
           'label': _name,
           'quantity': _count,
-          'unit': _type,
+          'unit': _typeIndex,
           'image': _imageLink,
         }
       });
@@ -64,7 +64,7 @@ class ItemsListProvider with ChangeNotifier {
         newUuid: {
           'label': _name,
           'quantity': _count,
-          'unit': _type,
+          'unit': _typeIndex,
           'image': _imageLink,
         }
       });
@@ -72,13 +72,13 @@ class ItemsListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  updateItemInList(String itemUuid, String _name, int _count, String _type,
+  updateItemInList(String itemUuid, String _name, int _count, int _typeIndex,
       String _imageLink) async {
     await Firestore.instance.collection("items").document(listUuid).updateData({
       itemUuid: {
         'label': _name,
         'quantity': _count,
-        'unit': _type,
+        'unit': _typeIndex,
         'image': _imageLink,
       }
     });
