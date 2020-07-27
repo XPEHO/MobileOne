@@ -70,85 +70,95 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: Key("authentication"),
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Spacer(),
-          Flexible(
-            flex: 1,
-            child: Text(
-              getString(context, 'authentication_page_text'),
-              key: Key(KEY_AUTH_PAGE_TEXT),
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w400,
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Container(
+                height: MediaQuery.of(context).size.height * 0.12,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Text(
+                    getString(context, 'authentication_page_text'),
+                    key: Key(KEY_AUTH_PAGE_TEXT),
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-          Flexible(
-            flex: 4,
-            child: buildForm(context),
-          ),
-          Flexible(
-            flex: 1,
-            child: Text(
-              getString(context, 'or'),
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w400,
+              Container(
+                height: MediaQuery.of(context).size.height * 0.5,
+                child: buildForm(context),
               ),
-            ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.15,
+                child: Center(
+                  child: Text(
+                    getString(context, 'or'),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+              buildGoogleButton(context),
+
+              /*Flexible(
+                flex: 1,
+                child: buildFacebookButton(context),
+              ),
+              Flexible(
+                flex: 1,
+                child: buildTwitterButton(context),
+              ),*/
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.17,
+                  child: buildBottomLinks(context),
+                ),
+              ),
+            ],
           ),
-          Flexible(
-            flex: 1,
-            child: buildGoogleButton(context),
-          ),
-          /*Flexible(
-            flex: 1,
-            child: buildFacebookButton(context),
-          ),
-          Flexible(
-            flex: 1,
-            child: buildTwitterButton(context),
-          ),*/
-          Flexible(
-            flex: 1,
-            child: buildBottomLinks(context),
-          ),
-        ],
+        ),
       ),
     );
   }
 
-  Row buildBottomLinks(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        FlatButton(
-          key: Key("register_page_button"),
-          color: Colors.transparent,
-          onPressed: () => openRegisterPage(context),
-          child: Text(
-            getString(context, 'create_account'),
-            style: TextStyle(
-              color: Colors.blue,
+  Align buildBottomLinks(BuildContext context) {
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          FlatButton(
+            key: Key("register_page_button"),
+            color: Colors.transparent,
+            onPressed: () => openRegisterPage(context),
+            child: Text(
+              getString(context, 'create_account'),
+              style: TextStyle(
+                color: Colors.blue,
+              ),
             ),
           ),
-        ),
-        FlatButton(
-          key: Key("forgotten_password_button"),
-          color: Colors.transparent,
-          onPressed: () => openForgottenPasswordPage(context),
-          child: Text(
-            getString(context, 'forgotten_password'),
-            style: TextStyle(
-              color: Colors.blue,
+          FlatButton(
+            key: Key("forgotten_password_button"),
+            color: Colors.transparent,
+            onPressed: () => openForgottenPasswordPage(context),
+            child: Text(
+              getString(context, 'forgotten_password'),
+              style: TextStyle(
+                color: Colors.blue,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -209,80 +219,80 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   Form buildForm(BuildContext context) {
     return Form(
-      key: _formKey,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: TextFormField(
-              validator: (value) {
-                if (value.isEmpty) {
-                  return getString(context, 'fill_email');
-                }
-                return null;
-              },
-              key: Key("auth_email_label"),
-              textAlign: TextAlign.start,
-              decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  labelText: getString(context, 'email_label'),
-                  labelStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  )),
-              controller: _emailController,
-              onChanged: (text) => handleSubmittedEmail(text),
-            ),
+        key: _formKey,
+        child: Container(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                child: TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return getString(context, 'fill_email');
+                    }
+                    return null;
+                  },
+                  key: Key("auth_email_label"),
+                  textAlign: TextAlign.start,
+                  decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      labelText: getString(context, 'email_label'),
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )),
+                  controller: _emailController,
+                  onChanged: (text) => handleSubmittedEmail(text),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 8.0,
+                  right: 8.0,
+                  bottom: 8.0,
+                ),
+                child: TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return getString(context, 'fill_password');
+                    }
+                    return null;
+                  },
+                  key: Key("auth_password_label"),
+                  textAlign: TextAlign.start,
+                  decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.transparent),
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[300],
+                      labelText: getString(context, 'password_label'),
+                      labelStyle: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      )),
+                  controller: _passwordController,
+                  obscureText: true,
+                  onChanged: (text) => handleSubmittedPassword(text),
+                ),
+              ),
+              RaisedButton(
+                key: Key("sign_in_button"),
+                color: Colors.blue,
+                textColor: Colors.white,
+                onPressed: () {
+                  if (_formKey.currentState.validate()) {
+                    signInUser();
+                  }
+                },
+                child: Text(getString(context, 'sign_in')),
+              ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 8.0,
-              right: 8.0,
-              top: 8.0,
-              bottom: 4.0,
-            ),
-            child: TextFormField(
-              validator: (value) {
-                if (value.isEmpty) {
-                  return getString(context, 'fill_password');
-                }
-                return null;
-              },
-              key: Key("auth_password_label"),
-              textAlign: TextAlign.start,
-              decoration: InputDecoration(
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.transparent),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  labelText: getString(context, 'password_label'),
-                  labelStyle: TextStyle(
-                    fontWeight: FontWeight.bold,
-                  )),
-              controller: _passwordController,
-              obscureText: true,
-              onChanged: (text) => handleSubmittedPassword(text),
-            ),
-          ),
-          RaisedButton(
-            key: Key("sign_in_button"),
-            color: Colors.blue,
-            textColor: Colors.white,
-            onPressed: () {
-              if (_formKey.currentState.validate()) {
-                signInUser();
-              }
-            },
-            child: Text(getString(context, 'sign_in')),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 
   Future<void> signInUser() async {
