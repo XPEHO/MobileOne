@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Update profile page : change profile picture from Gallery
 - Update Mainpage : change profile picture by tacking picture from Camera
 - Update openedListPage : User can now scan item to get items informations
+- Widget loyaltycards : Loyalty card name too short
 
 ### Deprecated
 
@@ -50,6 +51,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Item Popup : Modify an item created in a different language
 - Widget_share_contact : contact name overflow
 - Create_list : wishlist creation screen overflow
+- Authentication-page : Account creation page not scrollable
 
 ### Security
 

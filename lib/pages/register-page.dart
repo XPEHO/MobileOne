@@ -50,169 +50,174 @@ class RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Flexible(
-                  flex: 1,
-                  child: Container(),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: Text(
-                    getString(context, 'register_page_text'),
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                    ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.2,
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                  getString(context, 'register_page_text'),
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Flexible(
-                  flex: 8,
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Container(
-                          width: MediaQuery.of(context).size.width - 10,
-                          height: 90,
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return getString(context, 'fill_email');
-                              }
-                              if (RegExp(emailRegexp).hasMatch(value)) {
-                                return null;
-                              } else {
-                                return getString(context, 'wrong_email');
-                              }
-                            },
-                            key: Key("email_label"),
-                            textAlign: TextAlign.start,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[300],
-                                labelText: getString(context, 'email_label'),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            controller: _emailController,
-                            onChanged: (text) => handleSubmittedEmail(text),
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 10,
-                          height: 90,
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return getString(context, 'fill_password');
-                              }
-                              if (_password.length < PASSWORD_MINIMAL_LENGHT) {
-                                return getString(context, 'too_short_password');
-                              }
-                              return null;
-                            },
-                            key: Key("password_label"),
-                            textAlign: TextAlign.start,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[300],
-                                labelText: getString(context, 'password_label'),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            controller: _passwordController,
-                            obscureText: true,
-                            onChanged: (text) => handleSubmittedPassword(text),
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width - 10,
-                          height: 90,
-                          child: TextFormField(
-                            validator: (value) {
-                              if (value.isEmpty) {
-                                return getString(
-                                    context, 'fill_confirm_password');
-                              }
-                              if (_password != _confirmPassword) {
-                                return getString(
-                                    context, 'password_not_confirmed');
-                              }
-                              return null;
-                            },
-                            key: Key("confirm_password_label"),
-                            textAlign: TextAlign.start,
-                            decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide:
-                                      BorderSide(color: Colors.transparent),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[300],
-                                labelText: getString(
-                                    context, 'confirm_password_label'),
-                                labelStyle: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            controller: _confirmPasswordController,
-                            obscureText: true,
-                            onChanged: (text) =>
-                                handleSubmittedConfirmPassword(text),
-                          ),
-                        ),
-                        RaisedButton(
-                          key: Key("create_account_button"),
-                          onPressed: () {
-                            if (_formKey.currentState.validate()) {
-                              createAccount();
-                            }
-                          },
-                          child: Text(getString(context, 'create_account')),
-                        ),
-                      ],
-                    ),
-                  ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    buildEmail(context),
+                    buildPassword(context),
+                    buildConfirmPassword(context),
+                    buildRaisedButton(context),
+                  ],
                 ),
-                Flexible(
-                  flex: 1,
-                  child: Row(
-                    children: <Widget>[
-                      FlatButton(
-                        color: Colors.transparent,
-                        onPressed: () => openAuthenticationPage(context),
-                        child: Text(
-                          getString(context, 'authentication_page_button'),
-                          style: TextStyle(
-                            color: Colors.blue,
-                          ),
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height * 0.2,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  children: <Widget>[
+                    FlatButton(
+                      color: Colors.transparent,
+                      onPressed: () => openAuthenticationPage(context),
+                      child: Text(
+                        getString(context, 'authentication_page_button'),
+                        style: TextStyle(
+                          color: Colors.blue,
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
-          ),
+          ],
         ),
       ),
+    );
+  }
+
+  Container buildEmail(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width - 10,
+      height: 90,
+      child: TextFormField(
+        validator: (value) {
+          if (value.isEmpty) {
+            return getString(context, 'fill_email');
+          }
+          if (RegExp(emailRegexp).hasMatch(value)) {
+            return null;
+          } else {
+            return getString(context, 'wrong_email');
+          }
+        },
+        key: Key("email_label"),
+        textAlign: TextAlign.start,
+        decoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            filled: true,
+            fillColor: Colors.grey[300],
+            labelText: getString(context, 'email_label'),
+            labelStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+            )),
+        controller: _emailController,
+        onChanged: (text) => handleSubmittedEmail(text),
+      ),
+    );
+  }
+
+  Container buildPassword(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width - 10,
+      height: 90,
+      child: TextFormField(
+        validator: (value) {
+          if (value.isEmpty) {
+            return getString(context, 'fill_password');
+          }
+          if (_password.length < PASSWORD_MINIMAL_LENGHT) {
+            return getString(context, 'too_short_password');
+          }
+          return null;
+        },
+        key: Key("password_label"),
+        textAlign: TextAlign.start,
+        decoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            filled: true,
+            fillColor: Colors.grey[300],
+            labelText: getString(context, 'password_label'),
+            labelStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+            )),
+        controller: _passwordController,
+        obscureText: true,
+        onChanged: (text) => handleSubmittedPassword(text),
+      ),
+    );
+  }
+
+  Container buildConfirmPassword(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width - 10,
+      height: 90,
+      child: TextFormField(
+        validator: (value) {
+          if (value.isEmpty) {
+            return getString(context, 'fill_confirm_password');
+          }
+          if (_password != _confirmPassword) {
+            return getString(context, 'password_not_confirmed');
+          }
+          return null;
+        },
+        key: Key("confirm_password_label"),
+        textAlign: TextAlign.start,
+        decoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            filled: true,
+            fillColor: Colors.grey[300],
+            labelText: getString(context, 'confirm_password_label'),
+            labelStyle: TextStyle(
+              fontWeight: FontWeight.bold,
+            )),
+        controller: _confirmPasswordController,
+        obscureText: true,
+        onChanged: (text) => handleSubmittedConfirmPassword(text),
+      ),
+    );
+  }
+
+  RaisedButton buildRaisedButton(BuildContext context) {
+    return RaisedButton(
+      key: Key("create_account_button"),
+      onPressed: () {
+        if (_formKey.currentState.validate()) {
+          createAccount();
+        }
+      },
+      child: Text(getString(context, 'create_account')),
     );
   }
 
