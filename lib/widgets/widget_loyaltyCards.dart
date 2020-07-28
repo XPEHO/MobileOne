@@ -91,7 +91,7 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
                         width: 180,
                         child: TextField(
                           inputFormatters: [
-                            LengthLimitingTextInputFormatter(10),
+                            LengthLimitingTextInputFormatter(25),
                           ],
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18),

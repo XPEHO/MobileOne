@@ -54,6 +54,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Loyalty Cards Page : Changed floating button icon
 - Widget_item : Product designation overflow
 - Share_one and Mainpage : Wishlist share process indicator visible on short process
+- Card_page : Big loyalty card render problem
 
 ### Security
 

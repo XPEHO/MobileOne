@@ -40,8 +40,9 @@ class CardsState extends State<Cards> {
                         bottomLeft: Radius.circular(22),
                         bottomRight: Radius.circular(22))),
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 70.0, left: 32),
+              Positioned(
+                top: MediaQuery.of(context).size.width * 0.2,
+                left: MediaQuery.of(context).size.width * 0.1,
                 child: Container(
                   height: MediaQuery.of(context).size.height * 0.6,
                   width: MediaQuery.of(context).size.width * 0.5,
@@ -51,15 +52,13 @@ class CardsState extends State<Cards> {
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.width * 0.6,
+                top: MediaQuery.of(context).size.width * 0.55,
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.1,
+                  height: MediaQuery.of(context).size.height * 0.2,
                   width: MediaQuery.of(context).size.width * 0.8,
                   child: Transform(
                     child: BarcodeWidget(
                       style: TextStyle(fontSize: 20),
-                      height: 100,
-                      width: 350,
                       barcode: Barcode.ean13(),
                       data: args.cards["barecode"],
                     ),
@@ -70,11 +69,11 @@ class CardsState extends State<Cards> {
                 ),
               ),
               Positioned(
-                top: MediaQuery.of(context).size.width * 0.7,
-                right: MediaQuery.of(context).size.width * 0.3,
+                right: MediaQuery.of(context).size.width * 0.23,
                 child: Transform(
                   child: Container(
-                    width: MediaQuery.of(context).size.width * 0.4,
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.85,
                     alignment: Alignment.center,
                     child: Text(
                       args.cards["label"],
@@ -86,8 +85,9 @@ class CardsState extends State<Cards> {
                     ..rotateZ(91 * 3.1415927 / 180),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 240, top: 10),
+              Positioned(
+                top: MediaQuery.of(context).size.width * 0.05,
+                left: MediaQuery.of(context).size.width * 0.6,
                 child: Container(
                   height: 25,
                   width: 25,
