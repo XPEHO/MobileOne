@@ -8,12 +8,14 @@ import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/utility/colors.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get_it/get_it.dart';
@@ -32,16 +34,10 @@ class MainPageState extends State<MainPage> {
   final _prefService = GetIt.I.get<PreferencesService>();
   final _userService = GetIt.I.get<UserService>();
   Widget _currentScreen = Lists();
-  final List _centerIcons = [
-    Icons.scanner,
-    Icons.add,
-    Icons.share,
-    Icons.camera,
-  ];
 
   List _actions = [];
 
-  IconData _floatingButtonIcon;
+  Widget _floatingButtonIcon;
   Function _floatingButtonAction;
 
   final PageStorageBucket _bucket = PageStorageBucket();
@@ -59,7 +55,7 @@ class MainPageState extends State<MainPage> {
       _getImage,
     ];
 
-    _floatingButtonIcon = _centerIcons[LISTS_PAGE];
+    _floatingButtonIcon = Icon(Icons.add);
     _floatingButtonAction = _actions[LISTS_PAGE];
   }
 
@@ -120,7 +116,7 @@ class MainPageState extends State<MainPage> {
             body: PageStorage(bucket: _bucket, child: _currentScreen),
             floatingActionButton: FloatingActionButton(
                 key: Key("floating_button"),
-                child: Icon(_floatingButtonIcon),
+                child: _floatingButtonIcon,
                 backgroundColor: Colors.deepOrange,
                 onPressed: () {
                   _floatingButtonAction();
@@ -140,19 +136,23 @@ class MainPageState extends State<MainPage> {
 
   onBottomBarIndexSelected(index) {
     setState(() {
-      _floatingButtonIcon = _centerIcons[index];
       _floatingButtonAction = _actions[index];
       switch (index) {
         case CARD_PAGE:
+          _floatingButtonIcon = SvgPicture.asset("assets/images/qr-code.svg",
+              color: WHITE, width: 24, height: 24);
           _currentScreen = LoyaltyCards();
           break;
         case LISTS_PAGE:
+          _floatingButtonIcon = Icon(Icons.add);
           _currentScreen = Lists();
           break;
         case SHARE_PAGE:
+          _floatingButtonIcon = Icon(Icons.share);
           _currentScreen = Share();
           break;
         case PROFILE_PAGE:
+          _floatingButtonIcon = Icon(Icons.camera);
           _currentScreen = Profile();
           break;
       }

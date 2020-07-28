@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 
 class BubbleButton extends StatelessWidget {
   final Function onPressed;
-  final IconData icon;
+  final Widget icon;
   final Color color;
-  final Color iconColor;
   final double height;
   final double width;
 
@@ -12,7 +11,6 @@ class BubbleButton extends StatelessWidget {
     @required this.icon,
     this.color = Colors.red,
     @required this.onPressed,
-    this.iconColor = Colors.white,
     this.height = 36,
     this.width = 36,
   });
@@ -30,10 +28,7 @@ class BubbleButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(36.0),
           splashColor: Colors.orange,
           onTap: () => onPressed(),
-          child: Icon(
-            icon,
-            color: iconColor,
-          ),
+          child: Center(child: icon),
         ),
       ),
     );
