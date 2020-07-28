@@ -9,6 +9,7 @@ import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
+import 'package:MobileOne/utility/arguments.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
@@ -41,6 +42,7 @@ class MainPageState extends State<MainPage> {
   Function _floatingButtonAction;
 
   final PageStorageBucket _bucket = PageStorageBucket();
+  bool isOnlyOneStep = false;
 
   @override
   void initState() {
@@ -172,7 +174,11 @@ class MainPageState extends State<MainPage> {
   }
 
   goToShareOnePage() {
-    Navigator.of(context).pushNamed("/shareOne");
+    isOnlyOneStep = false;
+    Navigator.of(context).pushNamed("/shareOne",
+        arguments: ShareArguments(
+          isOnlyOneStep: isOnlyOneStep,
+        ));
   }
 
   goToSharePage() {

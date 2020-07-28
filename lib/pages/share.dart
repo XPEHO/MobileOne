@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
+import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_share_lists.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -131,7 +132,8 @@ class ShareState extends State<Share> {
   }
 
   void openShareOnePage() {
-    Navigator.pushNamed(context, '/shareOne', arguments: previousList);
+    Navigator.pushNamed(context, '/shareOne',
+        arguments: ShareArguments(previousList: previousList));
   }
 
   void openMainPage() {
