@@ -52,7 +52,7 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
       child: Stack(
         children: <Widget>[
           Container(
-            height: MediaQuery.of(context).size.height * 0.2,
+            height: MediaQuery.of(context).size.height * 0.21,
             width: MediaQuery.of(context).size.width * 0.75,
             decoration: BoxDecoration(
               color: randomColor,
@@ -68,7 +68,7 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
             left: MediaQuery.of(context).size.width * 0.1,
             top: MediaQuery.of(context).size.width * 0.04,
             child: Container(
-              height: MediaQuery.of(context).size.height * 0.16,
+              height: MediaQuery.of(context).size.height * 0.17,
               width: MediaQuery.of(context).size.width * 0.60,
               decoration: BoxDecoration(
                 color: WHITE,
@@ -96,19 +96,22 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+                      padding: const EdgeInsets.only(top: 8.0),
                       child: Container(
-                        height: MediaQuery.of(context).size.height * 0.03,
+                        height: MediaQuery.of(context).size.height * 0.04,
+                        width: MediaQuery.of(context).size.width * 0.4,
                         child: TextField(
                           focusNode: _focus,
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(24),
-                          ],
                           maxLines: 1,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(40),
+                          ],
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18),
                           controller: _controller,
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 2, vertical: 0),
                             isDense: true,
                             hintText: getString(context, "card_name"),
                           ),

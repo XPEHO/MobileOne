@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
+import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_share_contact.dart';
 import 'package:contacts_service/contacts_service.dart';
 import 'package:flutter/material.dart';
@@ -72,16 +73,18 @@ class ShareStateOneState extends State<ShareOne> {
   }
 
   Widget build(BuildContext context) {
-    final previousList = ModalRoute.of(context).settings.arguments;
+    ShareArguments _argsShare = ModalRoute.of(context).settings.arguments;
     bool isSearching = _myController.text.isNotEmpty;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       body: Column(
         children: <Widget>[
           header(context),
-          headerSteps(context),
+          (_argsShare.isOnlyOneStep == false)
+              ? headerSteps(context)
+              : Container(height: MediaQuery.of(context).size.height * 0.1),
           searchContact(context),
-          searchNewContact(context, previousList),
+          searchNewContact(context, _argsShare.previousList),
           Padding(
             padding: EdgeInsets.only(top: 5),
             child: Container(
@@ -91,7 +94,7 @@ class ShareStateOneState extends State<ShareOne> {
                   ? Center(
                       child: CircularProgressIndicator(),
                     )
-                  : buildListView(isSearching, previousList),
+                  : buildListView(isSearching, _argsShare.previousList),
             ),
           )
         ],

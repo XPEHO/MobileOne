@@ -2,6 +2,7 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_item.dart';
 import 'package:MobileOne/widgets/widget_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -264,6 +265,7 @@ class OpenedListPageState extends State<OpenedListPage> {
   }
 
   void openSharePage(Object uuid) {
-    Navigator.of(context).pushNamed('/shareOne', arguments: uuid);
+    Navigator.of(context)
+        .pushNamed('/shareOne', arguments: ShareArguments(previousList: uuid));
   }
 }

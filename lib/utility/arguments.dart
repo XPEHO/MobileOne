@@ -6,3 +6,9 @@ class CardArguments {
 
   CardArguments(this.cards, this.colorOfCard);
 }
+
+class ShareArguments {
+  var previousList;
+  bool isOnlyOneStep;
+  ShareArguments({this.previousList, this.isOnlyOneStep});
+}
