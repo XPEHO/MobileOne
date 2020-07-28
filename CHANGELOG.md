@@ -52,6 +52,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Create_list : wishlist creation screen overflow
 - Authentication-page : Account creation page not scrollable
 - Loyalty Cards Page : Changed floating button icon
+- Widget_item : Product designation overflow
 
 ### Security
 
