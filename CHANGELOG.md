@@ -57,6 +57,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Share_one and Mainpage : Wishlist share process indicator visible on short process
 - Card_page : Big loyalty card render problem
 - Loyalty Cards Page : User can now scan different barcode types
+- Loyalty Cards Page : Cancel a card creation don't create cards anymore
 
 ### Security
 
