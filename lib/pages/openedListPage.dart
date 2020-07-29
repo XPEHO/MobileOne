@@ -12,6 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import '../localization/localization.dart';
 import 'package:MobileOne/utility/colors.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 
 String listUuid;
 String label = "";
@@ -26,6 +27,8 @@ class OpenedListPage extends StatefulWidget {
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
+  int progressPercentBar = 0;
+  bool isProgressBarVisible = false;
   String label = "";
   String listUuid = GetIt.I.get<ItemsListProvider>().listUuid;
 
@@ -127,46 +130,57 @@ class OpenedListPageState extends State<OpenedListPage> {
             );
           }
           return SafeArea(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: new ListView.builder(
-                  padding: EdgeInsets.only(top: 30),
-                  itemCount: wishlist.length,
-                  itemBuilder: (BuildContext ctxt, int index) {
-                    return Dismissible(
-                        confirmDismiss: (DismissDirection direction) async {
-                          return await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                content: Text(getString(
-                                    context, 'confirm_item_deletion')),
-                                actions: <Widget>[
-                                  FlatButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(true),
-                                      child: Text(
-                                          getString(context, 'delete_item'))),
-                                  FlatButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(false),
-                                    child: Text(
-                                        getString(context, 'cancel_deletion')),
-                                  ),
-                                ],
+            child: Column(
+              children: <Widget>[
+                Visibility(
+                  visible: isProgressBarVisible,
+                  child: FAProgressBar(
+                    currentValue: progressPercentBar,
+                    displayText: '%',
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.85,
+                  child: new ListView.builder(
+                      padding: EdgeInsets.only(top: 30),
+                      itemCount: wishlist.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        return Dismissible(
+                            confirmDismiss: (DismissDirection direction) async {
+                              return await showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Text(getString(
+                                        context, 'confirm_item_deletion')),
+                                    actions: <Widget>[
+                                      FlatButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(true),
+                                          child: Text(getString(
+                                              context, 'delete_item'))),
+                                      FlatButton(
+                                        onPressed: () =>
+                                            Navigator.of(context).pop(false),
+                                        child: Text(getString(
+                                            context, 'cancel_deletion')),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                        background: Container(color: RED),
-                        key: UniqueKey(),
-                        child: WidgetItem(wishlist.values.toList()[index],
-                            listUuid, wishlist.keys.toList()[index]),
-                        onDismissed: (direction) {
-                          deleteItemFromList(wishlist.keys.toList()[index]);
-                        });
-                  }),
+                            background: Container(color: RED),
+                            key: UniqueKey(),
+                            child: WidgetItem(wishlist.values.toList()[index],
+                                listUuid, wishlist.keys.toList()[index]),
+                            onDismissed: (direction) {
+                              deleteItemFromList(wishlist.keys.toList()[index]);
+                            });
+                      }),
+                ),
+              ],
             ),
           );
         },
