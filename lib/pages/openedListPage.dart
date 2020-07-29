@@ -1,3 +1,4 @@
+import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
@@ -64,9 +65,29 @@ class OpenedListPageState extends State<OpenedListPage> {
     );
   }
 
+  List<WishlistItem> getSortedList(DocumentSnapshot snapshot) {
+    final wishlist = snapshot?.data ?? {};
+    final sortedList = wishlist.entries.map((element) {
+      return WishlistItem.fromMap(element.key, element.value);
+    }).toList();
+
+    sortedList.sort((WishlistItem a, WishlistItem b) {
+      final isAValidate = a.isValidated;
+      final isBValidate = b.isValidated;
+      if (isAValidate == isBValidate) {
+        return 0;
+      } else if (isAValidate) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+    return sortedList;
+  }
+
   Widget content(DocumentSnapshot snapshot) {
     final uuid = ModalRoute.of(context).settings.arguments;
-    final wishlist = snapshot?.data ?? {};
+    List<WishlistItem> wishlist = getSortedList(snapshot);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -135,10 +156,6 @@ class OpenedListPageState extends State<OpenedListPage> {
                   itemCount: wishlist.length,
                   itemBuilder: (BuildContext ctxt, int index) {
                     return Container(
-                      color:
-                          wishlist.values.toList()[index]["isValidated"] == true
-                              ? GREEN
-                              : TRANSPARENT,
                       child: Dismissible(
                           confirmDismiss: (DismissDirection direction) async {
                             if (direction == DismissDirection.endToStart) {
@@ -172,14 +189,14 @@ class OpenedListPageState extends State<OpenedListPage> {
                             ),
                           ),
                           key: UniqueKey(),
-                          child: WidgetItem(wishlist.values.toList()[index],
-                              listUuid, wishlist.keys.toList()[index]),
+                          child: WidgetItem(
+                              wishlist[index], listUuid, wishlist[index].uuid),
                           onDismissed: (direction) {
                             if (direction == DismissDirection.endToStart) {
-                              deleteItemFromList(wishlist.keys.toList()[index]);
+                              deleteItemFromList(wishlist[index].uuid);
                             } else {
-                              validateItem(wishlist.values.toList()[index],
-                                  wishlist.keys.toList()[index]);
+                              validateItem(
+                                  wishlist[index], wishlist[index].uuid);
                             }
                           }),
                     );
@@ -215,16 +232,8 @@ class OpenedListPageState extends State<OpenedListPage> {
     GetIt.I.get<ItemsListProvider>().deleteItemInList(uuid);
   }
 
-  void validateItem(Map<String, dynamic> values, String itemUuid) {
-    if (values["isValidated"] != null) {
-      if (values["isValidated"] == true) {
-        GetIt.I.get<ItemsListProvider>().validateItem(itemUuid, false);
-      } else {
-        GetIt.I.get<ItemsListProvider>().validateItem(itemUuid, true);
-      }
-    } else {
-      GetIt.I.get<ItemsListProvider>().validateItem(itemUuid, true);
-    }
+  void validateItem(WishlistItem item, String itemUuid) {
+    GetIt.I.get<ItemsListProvider>().validateItem(itemUuid, true);
   }
 
   Future<bool> confirmWishlistDeletion() async {
