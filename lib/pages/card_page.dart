@@ -65,20 +65,22 @@ class CardsState extends State<Cards> {
                 ),
               ),
               Positioned(
-                right: MediaQuery.of(context).size.width * 0.23,
+                right: MediaQuery.of(context).size.width * 0.04,
                 child: Transform(
-                  child: Container(
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    height: MediaQuery.of(context).size.height * 0.85,
-                    alignment: Alignment.center,
-                    child: Text(
-                      args.cards["label"],
-                      style: TextStyle(fontSize: 18),
+                  child: Center(
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 1,
+                      height: MediaQuery.of(context).size.height * 0.85,
+                      alignment: Alignment.center,
+                      child: Text(
+                        args.cards["label"],
+                        style: TextStyle(fontSize: 18),
+                      ),
                     ),
                   ),
                   alignment: FractionalOffset.center,
                   transform: new Matrix4.identity()
-                    ..rotateZ(91 * 3.1415927 / 180),
+                    ..rotateZ(90 * 3.1415927 / 180),
                 ),
               ),
               Positioned(
