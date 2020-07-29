@@ -2,14 +2,15 @@ import 'dart:convert';
 
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/widgets/bubble_button.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
-import 'package:MobileOne/icons/qr_code_icons.dart' as QrCodeIcon;
 import 'package:MobileOne/utility/colors.dart' as CustomColors;
 
 class EditItemPopup extends StatefulWidget {
@@ -131,10 +132,14 @@ class EditItemPopupState extends State<EditItemPopup> {
 
   BubbleButton buildScanButton(BuildContext context) {
     return BubbleButton(
-      icon: QrCodeIcon.QrCode.qrcode,
+      icon: SvgPicture.asset(
+        "assets/images/qr-code.svg",
+        color: WHITE,
+        width: 24,
+        height: 24,
+      ),
       color: Colors.lime[600],
       onPressed: () => scanAnItem(),
-      iconColor: CustomColors.WHITE,
       height: 48,
       width: 48,
     );
@@ -261,10 +266,9 @@ class EditItemPopupState extends State<EditItemPopup> {
         Flexible(
           flex: 1,
           child: BubbleButton(
-            icon: Icons.remove,
+            icon: Icon(Icons.remove, color: WHITE),
             color: Colors.lime[600],
             onPressed: () => decrementCounter(),
-            iconColor: CustomColors.WHITE,
           ),
         ),
         Expanded(
@@ -298,9 +302,8 @@ class EditItemPopupState extends State<EditItemPopup> {
           flex: 1,
           child: BubbleButton(
             onPressed: () => incrementCounter(),
-            icon: Icons.add,
+            icon: Icon(Icons.add, color: WHITE),
             color: Colors.lime[600],
-            iconColor: CustomColors.WHITE,
           ),
         ),
       ],

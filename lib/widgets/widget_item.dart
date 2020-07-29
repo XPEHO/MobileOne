@@ -1,7 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/widgets/widget_popup.dart';
 import 'package:flutter/material.dart';
-import 'package:MobileOne/utility/colors.dart';
 
 class WidgetItem extends StatefulWidget {
   final Map<String, dynamic> _itemslist;
@@ -34,76 +33,56 @@ class WidgetItemState extends State<WidgetItem> {
   }
 
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        new Container(
-          height: 100,
-          width: MediaQuery.of(context).size.width,
-          child: new Center(
-            child: Stack(
-              children: [
-                Positioned(
-                  top: 25,
-                  left: 10,
-                  child: Container(
-                    height: 48,
-                    width: 48,
-                    child: Image(
-                      image: _itemImage,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 30,
-                  left: 100,
-                  child: Text(
-                    _itemslist["label"],
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 60,
-                  left: 100,
-                  child: Text(
-                    _itemslist["quantity"].toString(),
-                    style: TextStyle(
-                      color: GREY,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  left: 150,
-                  top: 60,
-                  child: Text(
-                    getUnitText(),
-                    style: TextStyle(
-                      color: GREY,
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 40,
-                  right: 10,
-                  child: IconButton(
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) => EditItemPopup(
-                              getString(context, 'popup_update'),
-                              _listUuid,
-                              _itemUuid));
-                    },
-                    icon: Icon(Icons.edit),
-                  ),
-                )
+    final completeName = _itemslist["label"];
+    return Builder(
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
+          child: ListTile(
+            title: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(getProductName(completeName)),
+                Text(getProductBrand(completeName)),
               ],
             ),
+            subtitle: Row(
+              children: <Widget>[
+                Text("${_itemslist["quantity"].toString()} ${getUnitText()}"),
+              ],
+            ),
+            leading: Image(image: _itemImage),
+            trailing: IconButton(
+              onPressed: () {
+                showDialog(
+                    context: context,
+                    builder: (BuildContext context) => EditItemPopup(
+                        getString(context, 'popup_update'),
+                        _listUuid,
+                        _itemUuid));
+              },
+              icon: Icon(Icons.edit),
+            ),
           ),
-        ),
-      ],
+        );
+      },
     );
+  }
+
+  getProductBrand(String completeName) {
+    if (completeName.contains('-')) {
+      return completeName.substring(completeName.indexOf('-') + 1);
+    }
+
+    return "";
+  }
+
+  getProductName(String completeName) {
+    if (completeName.contains('-')) {
+      return completeName.substring(0, completeName.indexOf('-'));
+    }
+    return completeName;
   }
 
   String getUnitText() {

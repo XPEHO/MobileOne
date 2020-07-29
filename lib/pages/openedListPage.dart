@@ -2,6 +2,7 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_item.dart';
 import 'package:MobileOne/widgets/widget_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -66,14 +67,70 @@ class OpenedListPageState extends State<OpenedListPage> {
   Widget content(DocumentSnapshot snapshot) {
     final uuid = ModalRoute.of(context).settings.arguments;
     final wishlist = snapshot?.data ?? {};
+
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: Stack(
-            children: <Widget>[
-              new ListView.builder(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog(
+              context: context,
+              builder: (BuildContext context) => EditItemPopup(
+                  getString(context, 'popup_add'), listUuid, null));
+        },
+        child: Icon(Icons.add),
+        backgroundColor: GREEN,
+      ),
+      appBar: AppBar(
+        iconTheme: ThemeData.light().iconTheme,
+        actionsIconTheme: ThemeData.light().iconTheme,
+        textTheme: ThemeData.light().textTheme,
+        backgroundColor: Colors.white,
+        title: Center(child: Text(label)),
+        actions: <Widget>[
+          PopupMenuButton(
+            key: Key("wishlistMenu"),
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                key: Key("deleteItem"),
+                value: 1,
+                child: Text(getString(context, 'delete')),
+              ),
+              PopupMenuItem(
+                value: 2,
+                child: Text(getString(context, 'share')),
+              ),
+            ],
+            icon: Icon(Icons.more_horiz),
+            onSelected: (value) {
+              switch (value) {
+                case 1:
+                  confirmWishlistDeletion().then((value) async {
+                    if (value == true) {
+                      openListsPage();
+                      GetIt.I.get<WishlistsListProvider>().deleteWishlist(
+                          listUuid, GetIt.I.get<UserService>().user.uid);
+                    }
+                  });
+                  break;
+                case 2:
+                  askPermissions(uuid);
+                  break;
+              }
+            },
+          )
+        ],
+      ),
+      body: Builder(
+        builder: (context) {
+          if (wishlist.isEmpty) {
+            return Center(
+              child: Text(getString(context, "loading")),
+            );
+          }
+          return SafeArea(
+            child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: new ListView.builder(
                   padding: EdgeInsets.only(top: 30),
                   itemCount: wishlist.length,
                   itemBuilder: (BuildContext ctxt, int index) {
@@ -110,88 +167,9 @@ class OpenedListPageState extends State<OpenedListPage> {
                           deleteItemFromList(wishlist.keys.toList()[index]);
                         });
                   }),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: 50,
-                child: Stack(
-                  children: <Widget>[
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: IconButton(
-                        icon: Icon(Icons.arrow_back),
-                        onPressed: () {
-                          openListsPage();
-                        },
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 7),
-                      child: Align(
-                        alignment: Alignment.topCenter,
-                        child: Text(
-                          label,
-                          style: TextStyle(
-                            fontSize: 20,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.topRight,
-                      child: PopupMenuButton(
-                        key: Key("wishlistMenu"),
-                        itemBuilder: (context) => [
-                          PopupMenuItem(
-                            key: Key("deleteItem"),
-                            value: 1,
-                            child: Text(getString(context, 'delete')),
-                          ),
-                          PopupMenuItem(
-                            value: 2,
-                            child: Text(getString(context, 'share')),
-                          ),
-                        ],
-                        icon: Icon(Icons.more_horiz),
-                        onSelected: (value) {
-                          switch (value) {
-                            case 1:
-                              confirmWishlistDeletion().then((value) async {
-                                if (value == true) {
-                                  openListsPage();
-                                  GetIt.I
-                                      .get<WishlistsListProvider>()
-                                      .deleteWishlist(listUuid,
-                                          GetIt.I.get<UserService>().user.uid);
-                                }
-                              });
-                              break;
-                            case 2:
-                              askPermissions(uuid);
-                              break;
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Positioned(
-                bottom: 20,
-                right: 20,
-                child: FloatingActionButton(
-                  onPressed: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) => EditItemPopup(
-                            getString(context, 'popup_add'), listUuid, null));
-                  },
-                  child: Icon(Icons.add),
-                  backgroundColor: GREEN,
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -264,6 +242,7 @@ class OpenedListPageState extends State<OpenedListPage> {
   }
 
   void openSharePage(Object uuid) {
-    Navigator.of(context).pushNamed('/shareOne', arguments: uuid);
+    Navigator.of(context)
+        .pushNamed('/shareOne', arguments: ShareArguments(previousList: uuid));
   }
 }

@@ -1,5 +1,6 @@
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/database.dart';
+import 'package:barcode_scan/barcode_scan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -25,7 +26,8 @@ class LoyaltyCardsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  addLoyaltyCardsToDataBase(String _name, String _result, String _color) async {
+  addLoyaltyCardsToDataBase(String _name, String _result, BarcodeFormat _format,
+      String _color) async {
     Uuid uuid = Uuid();
     var uuidCard = uuid.v4();
     bool doesDocumentExist = false;
@@ -47,6 +49,7 @@ class LoyaltyCardsProvider with ChangeNotifier {
         uuidCard: {
           'label': _name,
           'barecode': _result,
+          'format': _format.toString(),
           'color': _color,
         },
       });
@@ -58,6 +61,7 @@ class LoyaltyCardsProvider with ChangeNotifier {
         uuidCard: {
           'label': _name,
           'barecode': _result,
+          'format': _format.toString(),
           'color': _color,
         }
       });

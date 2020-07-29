@@ -26,11 +26,23 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
   final String _uuidcard;
   final TextEditingController _controller;
   LoyaltyCardsWidgetState(this._card, this._uuidcard, this._controller);
+  bool isBarcodeSquare = false;
 
   @override
   void initState() {
     _controller.text = _card["label"];
+    isBarcodeSquare = getBarcodeForm();
     super.initState();
+  }
+
+  bool getBarcodeForm() {
+    if (_card["format"] == "qr" ||
+        _card["format"] == "dataMatrix" ||
+        _card["format"] == "aztec") {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   Color randomColor;
@@ -71,27 +83,24 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
                     Padding(
                       padding: const EdgeInsets.only(top: 7),
                       child: Container(
-                        height: 60,
+                        height: isBarcodeSquare == true ? 40 : 60,
                         width: 180,
                         child: GestureDetector(
                           onTap: () {
                             openCardsPage();
                           },
-                          child: BarcodeWidget(
-                            barcode: Barcode.ean13(),
-                            data: _card["barecode"],
-                          ),
+                          child: getBarcodeWidget(),
                         ),
                       ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 3.0),
                       child: Container(
-                        height: 20,
+                        height: isBarcodeSquare == true ? 40 : 20,
                         width: 180,
                         child: TextField(
                           inputFormatters: [
-                            LengthLimitingTextInputFormatter(10),
+                            LengthLimitingTextInputFormatter(25),
                           ],
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18),
@@ -125,6 +134,137 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
         ],
       ),
     );
+  }
+
+  BarcodeWidget getBarcodeWidget() {
+    switch (_card["format"]) {
+      case "ean13":
+        return BarcodeWidget(
+          barcode: Barcode.ean13(),
+          data: _card["barecode"],
+        );
+        break;
+      case "code128":
+        return BarcodeWidget(
+          barcode: Barcode.code128(),
+          data: _card["barecode"],
+        );
+        break;
+      case "code39":
+        return BarcodeWidget(
+          barcode: Barcode.code39(),
+          data: _card["barecode"],
+        );
+        break;
+      case "code93":
+        return BarcodeWidget(
+          barcode: Barcode.code93(),
+          data: _card["barecode"],
+        );
+        break;
+      case "dataMatrix":
+        return BarcodeWidget(
+          barcode: Barcode.dataMatrix(),
+          data: _card["barecode"],
+        );
+        break;
+      case "ean2":
+        return BarcodeWidget(
+          barcode: Barcode.ean2(),
+          data: _card["barecode"],
+        );
+        break;
+      case "ean5":
+        return BarcodeWidget(
+          barcode: Barcode.ean5(),
+          data: _card["barecode"],
+        );
+        break;
+      case "ean8":
+        return BarcodeWidget(
+          barcode: Barcode.ean8(),
+          data: _card["barecode"],
+        );
+        break;
+      case "gs128":
+        return BarcodeWidget(
+          barcode: Barcode.gs128(),
+          data: _card["barecode"],
+        );
+        break;
+      case "isbn":
+        return BarcodeWidget(
+          barcode: Barcode.isbn(),
+          data: _card["barecode"],
+        );
+        break;
+      case "itf":
+        return BarcodeWidget(
+          barcode: Barcode.itf(),
+          data: _card["barecode"],
+        );
+        break;
+      case "itf14":
+        return BarcodeWidget(
+          barcode: Barcode.itf14(),
+          data: _card["barecode"],
+        );
+        break;
+      case "pdf417":
+        return BarcodeWidget(
+          barcode: Barcode.pdf417(),
+          data: _card["barecode"],
+        );
+        break;
+      case "qr":
+        return BarcodeWidget(
+          barcode: Barcode.qrCode(),
+          data: _card["barecode"],
+        );
+        break;
+      case "rm4scc":
+        return BarcodeWidget(
+          barcode: Barcode.rm4scc(),
+          data: _card["barecode"],
+        );
+        break;
+      case "aztec":
+        return BarcodeWidget(
+          barcode: Barcode.aztec(),
+          data: _card["barecode"],
+        );
+        break;
+      case "upce":
+        return BarcodeWidget(
+          barcode: Barcode.upcE(),
+          data: _card["barecode"],
+        );
+        break;
+      case "upca":
+        return BarcodeWidget(
+          barcode: Barcode.upcA(),
+          data: _card["barecode"],
+        );
+        break;
+      case "codabar":
+        return BarcodeWidget(
+          barcode: Barcode.codabar(),
+          data: _card["barecode"],
+        );
+        break;
+      case "telepen":
+        return BarcodeWidget(
+          barcode: Barcode.telepen(),
+          data: _card["barecode"],
+        );
+        break;
+      default:
+        return BarcodeWidget(
+          barcode: Barcode.ean13(),
+          data: _card["barecode"],
+        );
+        break;
+    }
   }
 
   int getColorFromHex(String hexColor) {
