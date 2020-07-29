@@ -43,6 +43,7 @@ void main() {
     //Given
     final _itemsListProvider = MockItemsListProvider();
     GetIt.I.registerSingleton<ItemsListProvider>(_itemsListProvider);
+
     await tester.pumpWidget(buildTestableWidget(new OpenedListPage()));
     await tester.pumpAndSettle(Duration(seconds: 2));
 
