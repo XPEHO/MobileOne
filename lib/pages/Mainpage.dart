@@ -192,6 +192,7 @@ class MainPageState extends State<MainPage> {
     GetIt.I.get<LoyaltyCardsProvider>().addLoyaltyCardsToDataBase(
           labelCard,
           resultCard.rawContent,
+          resultCard.format,
           colorCard,
         );
   }

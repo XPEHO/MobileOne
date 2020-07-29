@@ -92,5 +92,6 @@
     "card_name": "Card name",
     "change_user_password": "Change my password",
     "sign out": "Sign out",
-    "confirm_card_deletion": "Are you sure you wish to delete this card ?"
+    "confirm_card_deletion": "Are you sure you wish to delete this card ?",
+    "loading": "Loading..."
 }
