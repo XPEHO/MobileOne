@@ -76,9 +76,12 @@ class WidgetItemState extends State<WidgetItem> {
                       Icons.check_circle,
                       color: GREEN,
                     ),
-                    onPressed: () => GetIt.I
-                        .get<ItemsListProvider>()
-                        .validateItem(_itemlist.uuid, false),
+                    onPressed: () =>
+                        GetIt.I.get<ItemsListProvider>().validateItem(
+                              listUuid: _listUuid,
+                              itemUuid: _itemlist.uuid,
+                              isValidated: false,
+                            ),
                   ),
                 ),
                 Flexible(flex: 1, child: Image(image: _itemImage))
