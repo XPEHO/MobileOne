@@ -26,23 +26,24 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
   final String _uuidcard;
   final TextEditingController _controller;
   LoyaltyCardsWidgetState(this._card, this._uuidcard, this._controller);
+
+  FocusNode _focus = new FocusNode();
   bool isBarcodeSquare = false;
 
   @override
   void initState() {
     _controller.text = _card["label"];
-    isBarcodeSquare = getBarcodeForm();
+    if (_card["label"].length > 20) {
+      _controller.text = _card["label"].substring(0, 20) + "...";
+    } else {
+      _controller.text = _card["label"];
+    }
+    _focus.addListener(_onFocusChange);
     super.initState();
   }
 
-  bool getBarcodeForm() {
-    if (_card["format"] == "qr" ||
-        _card["format"] == "dataMatrix" ||
-        _card["format"] == "aztec") {
-      return true;
-    } else {
-      return false;
-    }
+  void _onFocusChange() {
+    _controller.text = _card["label"];
   }
 
   Color randomColor;
@@ -54,8 +55,8 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
       child: Stack(
         children: <Widget>[
           Container(
-            height: 110,
-            width: 240,
+            height: MediaQuery.of(context).size.height * 0.21,
+            width: MediaQuery.of(context).size.width * 0.75,
             decoration: BoxDecoration(
               color: randomColor,
               borderRadius: BorderRadius.only(
@@ -66,11 +67,12 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30.0, top: 10.0, bottom: 8.0),
+          Positioned(
+            left: MediaQuery.of(context).size.width * 0.1,
+            top: MediaQuery.of(context).size.width * 0.04,
             child: Container(
-              height: 90,
-              width: 190,
+              height: MediaQuery.of(context).size.height * 0.17,
+              width: MediaQuery.of(context).size.width * 0.60,
               decoration: BoxDecoration(
                 color: WHITE,
                 borderRadius: BorderRadius.all(
@@ -81,9 +83,9 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.only(top: 7),
+                      padding: const EdgeInsets.only(top: 8.0),
                       child: Container(
-                        height: isBarcodeSquare == true ? 40 : 60,
+                        height: MediaQuery.of(context).size.height * 0.09,
                         width: 180,
                         child: GestureDetector(
                           onTap: () {
@@ -94,18 +96,23 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 3.0),
+                      padding: const EdgeInsets.only(top: 8.0),
                       child: Container(
-                        height: isBarcodeSquare == true ? 40 : 20,
-                        width: 180,
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.04,
                         child: TextField(
+                          focusNode: _focus,
+                          maxLines: 1,
                           inputFormatters: [
-                            LengthLimitingTextInputFormatter(25),
+                            LengthLimitingTextInputFormatter(40),
                           ],
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 18),
                           controller: _controller,
                           decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 2, vertical: 0),
+                            isDense: true,
                             hintText: getString(context, "card_name"),
                           ),
                           onSubmitted: (_) =>
@@ -118,8 +125,9 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          Positioned(
+            top: MediaQuery.of(context).size.width * 0.02,
+            left: MediaQuery.of(context).size.width * 0.02,
             child: Container(
               height: 10,
               width: 10,
