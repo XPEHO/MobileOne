@@ -93,5 +93,20 @@
     "change_user_password": "Changer mon mot de passe",
     "sign out": "Se déconnecter",
     "confirm_card_deletion": "Etes-vous sûr de vouloir supprimer cette carte ?",
-    "loading": "Chargement..."
+    "loading": "Chargement...",
+    "change_password_page_text": "Changer mon mot de passe",
+    "fill_new_password": "Veuillez remplir le champ nouveau mot de passe",
+    "fill_confirm_new_password": "Veuillez confirmer le nouveau mot de passe",
+    "new_password_label": "Nouveau mot de passe",
+    "confirm_new_password_label": "Confirmer le nouveau mot de passe",
+    "new_password_not_confirmed": "La confirmation doit être identique au nouveau mot de passe",
+    "too_short_new_password": "Le nouveau mot de passe doit contenir au moins 6 caractères",
+    "confirm_password_changing": "Changer mon mot de passe",
+    "change_password_error": "Une erreur s'est produite",
+    "password_changed": "Le mot de passe a été modifié",
+    "password_too_weak": "Le nouveau mot de passe est trop faible",
+    "user_disabled": "Erreur, cet utilisateur est désactivé",
+    "user_not_found": "Erreur, utilisateur introuvable",
+    "recent_login_needed": "Erreur, une récente connexion est néscéssaire, veuillez vous reconnecter",
+    "changing_not_allowed": "Erreur, veuillez utiliser le mode de connexion email/mot de passe"
 }

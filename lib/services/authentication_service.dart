@@ -95,4 +95,13 @@ class AuthenticationService {
     prefs.remove("password");
     prefs.remove("mode");
   }
+
+  Future<String> changePassword(FirebaseUser user, String password) async {
+    try {
+      await user.updatePassword(password);
+      return "success";
+    } catch (e) {
+      return e.code;
+    }
+  }
 }

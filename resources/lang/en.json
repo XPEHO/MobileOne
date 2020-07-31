@@ -93,5 +93,20 @@
     "change_user_password": "Change my password",
     "sign out": "Sign out",
     "confirm_card_deletion": "Are you sure you wish to delete this card ?",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "change_password_page_text": "Change your password",
+    "fill_new_password": "Please fill the new password field",
+    "fill_confirm_new_password": "Please fill the confirm new password field",
+    "new_password_label": "New password",
+    "confirm_new_password_label": "Confirm new password",
+    "new_password_not_confirmed": "The confirm new password should be the same than the new password",
+    "too_short_new_password": "New password should have at least 6 characters",
+    "confirm_password_changing": "Change my password",
+    "change_password_error": "An error occured on the password changing",
+    "password_changed": "The password has been changed",
+    "password_too_weak": "The new password is too weak",
+    "user_disabled": "Error, this user is disabled",
+    "user_not_found": "Error, no user found",
+    "recent_login_needed": "Error, recent login needed, please reconnect",
+    "changing_not_allowed": "Error, please use the email/password connection mode"
 }
