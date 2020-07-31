@@ -108,5 +108,6 @@
     "user_disabled": "Error, this user is disabled",
     "user_not_found": "Error, no user found",
     "recent_login_needed": "Error, recent login needed, please reconnect",
-    "changing_not_allowed": "Error, please use the email/password connection mode"
+    "changing_not_allowed": "Error, please use the email/password connection mode",
+    "zone": "Danger zone"
 }

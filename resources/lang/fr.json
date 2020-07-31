@@ -108,5 +108,6 @@
     "user_disabled": "Erreur, cet utilisateur est désactivé",
     "user_not_found": "Erreur, utilisateur introuvable",
     "recent_login_needed": "Erreur, une récente connexion est néscéssaire, veuillez vous reconnecter",
-    "changing_not_allowed": "Erreur, veuillez utiliser le mode de connexion email/mot de passe"
+    "changing_not_allowed": "Erreur, veuillez utiliser le mode de connexion email/mot de passe",
+    "zone": "Zone de danger"
 }

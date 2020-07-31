@@ -4,8 +4,8 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
+import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
-import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
@@ -155,7 +155,7 @@ class MainPageState extends State<MainPage> {
           break;
         case PROFILE_PAGE:
           _floatingButtonIcon = Icon(Icons.camera);
-          _currentScreen = Profile();
+          _currentScreen = NewProfile();
           break;
       }
     });
