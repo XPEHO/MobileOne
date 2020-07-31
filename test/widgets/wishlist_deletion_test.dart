@@ -1,7 +1,9 @@
+import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/openedListPage.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -35,6 +37,10 @@ Widget buildTestableWidget(Widget widget) {
 
 class MockItemsListProvider extends Mock implements ItemsListProvider {}
 
+class MockWishlistHeadProvider extends Mock implements WishlistHeadProvider {}
+
+class MockWishlist extends Mock implements Wishlist {}
+
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
 
@@ -42,7 +48,13 @@ void main() {
       (WidgetTester tester) async {
     //Given
     final _itemsListProvider = MockItemsListProvider();
+    final _wishlistHeadProvider = MockWishlistHeadProvider();
     GetIt.I.registerSingleton<ItemsListProvider>(_itemsListProvider);
+    GetIt.I.registerSingleton<WishlistHeadProvider>(_wishlistHeadProvider);
+
+    final wishlist = MockWishlist();
+    when(wishlist.label).thenReturn("test");
+    when(_wishlistHeadProvider.getWishlist(any)).thenReturn(wishlist);
 
     await tester.pumpWidget(buildTestableWidget(new OpenedListPage()));
     await tester.pumpAndSettle(Duration(seconds: 2));

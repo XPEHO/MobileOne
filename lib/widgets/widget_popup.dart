@@ -340,13 +340,25 @@ class EditItemPopupState extends State<EditItemPopup> {
 
   void uddapteItemInList(int _typeIndex) async {
     _itemsListProvider.updateItemInList(
-        itemUuid, _name, _count, _typeIndex, imageLink);
+      itemUuid: itemUuid,
+      name: _name,
+      count: _count,
+      typeIndex: _typeIndex,
+      imageLink: imageLink,
+      listUuid: listUuid,
+    );
     Navigator.of(context).pop();
     clearPopupFields();
   }
 
   void addItemToList(int _typeIndex) async {
-    _itemsListProvider.addItemTolist(_name, _count, _typeIndex, imageLink);
+    _itemsListProvider.addItemTolist(
+      name: _name,
+      count: _count,
+      typeIndex: _typeIndex,
+      imageLink: imageLink,
+      listUuid: listUuid,
+    );
     Navigator.of(context).pop();
     clearPopupFields();
   }

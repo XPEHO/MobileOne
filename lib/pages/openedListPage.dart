@@ -1,6 +1,8 @@
+import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
@@ -14,9 +16,6 @@ import 'package:provider/provider.dart';
 import '../localization/localization.dart';
 import 'package:MobileOne/utility/colors.dart';
 
-String listUuid;
-String label = "";
-
 class OpenedListPage extends StatefulWidget {
   OpenedListPage({
     Key key,
@@ -27,37 +26,22 @@ class OpenedListPage extends StatefulWidget {
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
-  String label = "";
-  String listUuid = GetIt.I.get<ItemsListProvider>().listUuid;
-
-  Future<void> getListTitle(String uuid) async {
-    String labelValue;
-    await Firestore.instance
-        .collection("wishlists")
-        .document(uuid)
-        .get()
-        .then((value) {
-      labelValue = value["label"];
-    });
-
-    if (label == "") {
-      setState(() {
-        label = labelValue;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    getListTitle(listUuid);
-    return ChangeNotifierProvider.value(
-      value: GetIt.I.get<ItemsListProvider>(),
-      child: Consumer<ItemsListProvider>(
-        builder: (context, itemsListProvider, child) {
+    String listUuid = ModalRoute.of(context).settings.arguments;
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(
+            value: GetIt.I.get<WishlistHeadProvider>()),
+        ChangeNotifierProvider.value(value: GetIt.I.get<ItemsListProvider>()),
+      ],
+      child: Consumer2<WishlistHeadProvider, ItemsListProvider>(
+        builder: (context, wishlistHeadProvider, itemsListProvider, child) {
           return FutureBuilder<DocumentSnapshot>(
-            future: itemsListProvider.itemsList,
+            future: itemsListProvider.fetchItemList(listUuid),
             builder: (context, snapshot) {
-              return content(snapshot.data);
+              return content(
+                  wishlistHeadProvider.getWishlist(listUuid), snapshot.data);
             },
           );
         },
@@ -85,8 +69,7 @@ class OpenedListPageState extends State<OpenedListPage> {
     return sortedList;
   }
 
-  Widget content(DocumentSnapshot snapshot) {
-    final uuid = ModalRoute.of(context).settings.arguments;
+  Widget content(Wishlist wishlistHead, DocumentSnapshot snapshot) {
     List<WishlistItem> wishlist = getSortedList(snapshot);
 
     return Scaffold(
@@ -95,7 +78,7 @@ class OpenedListPageState extends State<OpenedListPage> {
           showDialog(
               context: context,
               builder: (BuildContext context) => EditItemPopup(
-                  getString(context, 'popup_add'), listUuid, null));
+                  getString(context, 'popup_add'), wishlistHead.uuid, null));
         },
         child: Icon(Icons.add),
         backgroundColor: GREEN,
@@ -105,7 +88,7 @@ class OpenedListPageState extends State<OpenedListPage> {
         actionsIconTheme: ThemeData.light().iconTheme,
         textTheme: ThemeData.light().textTheme,
         backgroundColor: Colors.white,
-        title: Center(child: Text(label)),
+        title: Center(child: Text(wishlistHead.label)),
         actions: <Widget>[
           PopupMenuButton(
             key: Key("wishlistMenu"),
@@ -128,12 +111,13 @@ class OpenedListPageState extends State<OpenedListPage> {
                     if (value == true) {
                       openListsPage();
                       GetIt.I.get<WishlistsListProvider>().deleteWishlist(
-                          listUuid, GetIt.I.get<UserService>().user.uid);
+                          wishlistHead.uuid,
+                          GetIt.I.get<UserService>().user.uid);
                     }
                   });
                   break;
                 case 2:
-                  askPermissions(uuid);
+                  askPermissions(wishlistHead.uuid);
                   break;
               }
             },
@@ -189,14 +173,19 @@ class OpenedListPageState extends State<OpenedListPage> {
                             ),
                           ),
                           key: UniqueKey(),
-                          child: WidgetItem(
-                              wishlist[index], listUuid, wishlist[index].uuid),
+                          child: WidgetItem(wishlist[index], wishlistHead.uuid,
+                              wishlist[index].uuid),
                           onDismissed: (direction) {
                             if (direction == DismissDirection.endToStart) {
-                              deleteItemFromList(wishlist[index].uuid);
+                              deleteItemFromList(
+                                listUuid: wishlistHead.uuid,
+                                itemUuid: wishlist[index].uuid,
+                              );
                             } else {
                               validateItem(
-                                  wishlist[index], wishlist[index].uuid);
+                                listUuid: wishlistHead.uuid,
+                                item: wishlist[index],
+                              );
                             }
                           }),
                     );
@@ -228,12 +217,18 @@ class OpenedListPageState extends State<OpenedListPage> {
     );
   }
 
-  void deleteItemFromList(String uuid) {
-    GetIt.I.get<ItemsListProvider>().deleteItemInList(uuid);
+  void deleteItemFromList({String listUuid, String itemUuid}) {
+    GetIt.I
+        .get<ItemsListProvider>()
+        .deleteItemInList(listUuid: listUuid, itemUuid: itemUuid);
   }
 
-  void validateItem(WishlistItem item, String itemUuid) {
-    GetIt.I.get<ItemsListProvider>().validateItem(itemUuid, true);
+  void validateItem({String listUuid, WishlistItem item}) {
+    GetIt.I.get<ItemsListProvider>().validateItem(
+          listUuid: listUuid,
+          itemUuid: item.uuid,
+          isValidated: true,
+        );
   }
 
   Future<bool> confirmWishlistDeletion() async {
