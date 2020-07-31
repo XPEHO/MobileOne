@@ -187,14 +187,16 @@ class MainPageState extends State<MainPage> {
 
   scanLoyaltyCardsBareCode() async {
     var resultCard = await BarcodeScanner.scan();
-    var labelCard = "";
-    var colorCard = generateRandomHexColor();
-    GetIt.I.get<LoyaltyCardsProvider>().addLoyaltyCardsToDataBase(
-          labelCard,
-          resultCard.rawContent,
-          resultCard.format,
-          colorCard,
-        );
+    if (resultCard.type == ResultType.Barcode) {
+      var labelCard = "";
+      var colorCard = generateRandomHexColor();
+      GetIt.I.get<LoyaltyCardsProvider>().addLoyaltyCardsToDataBase(
+            labelCard,
+            resultCard.rawContent,
+            resultCard.format,
+            colorCard,
+          );
+    }
   }
 
   String generateRandomHexColor() {

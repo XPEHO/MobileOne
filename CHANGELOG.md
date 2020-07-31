@@ -30,6 +30,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Update profile page : change profile picture from Gallery
 - Update Mainpage : change profile picture by tacking picture from Camera
 - Update openedListPage : User can now scan item to get items informations
+- Update openedListPage : User can now validate an item
 
 ### Deprecated
 
@@ -56,6 +57,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Share_one and Mainpage : Wishlist share process indicator visible on short process
 - Card_page : Big loyalty card render problem
 - Loyalty Cards Page : User can now scan different barcode types
+- Loyalty Cards Page : Cancel a card creation don't create cards anymore
+- Widget loyaltycards : Loyalty card name too short
 
 ### Security
 

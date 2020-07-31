@@ -57,6 +57,7 @@ class ItemsListProvider with ChangeNotifier {
           'quantity': _count,
           'unit': _typeIndex,
           'image': _imageLink,
+          'isValidated': false,
         }
       });
     } else {
@@ -66,6 +67,7 @@ class ItemsListProvider with ChangeNotifier {
           'quantity': _count,
           'unit': _typeIndex,
           'image': _imageLink,
+          'isValidated': false,
         }
       });
     }
@@ -80,6 +82,7 @@ class ItemsListProvider with ChangeNotifier {
         'quantity': _count,
         'unit': _typeIndex,
         'image': _imageLink,
+        'isValidated': false,
       }
     });
     notifyListeners();
@@ -105,6 +108,15 @@ class ItemsListProvider with ChangeNotifier {
         .collection("items")
         .document(_listUuid)
         .updateData({itemUuid: FieldValue.delete()});
+    notifyListeners();
+  }
+
+  validateItem(String itemUuid, bool state) async {
+    await Firestore.instance.collection("items").document(listUuid).setData({
+      itemUuid: {
+        'isValidated': state,
+      }
+    }, merge: true);
     notifyListeners();
   }
 }

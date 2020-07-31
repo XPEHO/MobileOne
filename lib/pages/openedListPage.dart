@@ -1,3 +1,4 @@
+import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
@@ -64,9 +65,29 @@ class OpenedListPageState extends State<OpenedListPage> {
     );
   }
 
+  List<WishlistItem> getSortedList(DocumentSnapshot snapshot) {
+    final wishlist = snapshot?.data ?? {};
+    final sortedList = wishlist.entries.map((element) {
+      return WishlistItem.fromMap(element.key, element.value);
+    }).toList();
+
+    sortedList.sort((WishlistItem a, WishlistItem b) {
+      final isAValidate = a.isValidated;
+      final isBValidate = b.isValidated;
+      if (isAValidate == isBValidate) {
+        return 0;
+      } else if (isAValidate) {
+        return 1;
+      } else {
+        return -1;
+      }
+    });
+    return sortedList;
+  }
+
   Widget content(DocumentSnapshot snapshot) {
     final uuid = ModalRoute.of(context).settings.arguments;
-    final wishlist = snapshot?.data ?? {};
+    List<WishlistItem> wishlist = getSortedList(snapshot);
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -134,38 +155,51 @@ class OpenedListPageState extends State<OpenedListPage> {
                   padding: EdgeInsets.only(top: 30),
                   itemCount: wishlist.length,
                   itemBuilder: (BuildContext ctxt, int index) {
-                    return Dismissible(
-                        confirmDismiss: (DismissDirection direction) async {
-                          return await showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                content: Text(getString(
-                                    context, 'confirm_item_deletion')),
-                                actions: <Widget>[
-                                  FlatButton(
-                                      onPressed: () =>
-                                          Navigator.of(context).pop(true),
-                                      child: Text(
-                                          getString(context, 'delete_item'))),
-                                  FlatButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).pop(false),
-                                    child: Text(
-                                        getString(context, 'cancel_deletion')),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        background: Container(color: RED),
-                        key: UniqueKey(),
-                        child: WidgetItem(wishlist.values.toList()[index],
-                            listUuid, wishlist.keys.toList()[index]),
-                        onDismissed: (direction) {
-                          deleteItemFromList(wishlist.keys.toList()[index]);
-                        });
+                    return Container(
+                      child: Dismissible(
+                          confirmDismiss: (DismissDirection direction) async {
+                            if (direction == DismissDirection.endToStart) {
+                              return await buildDeleteShowDialog(context);
+                            } else {
+                              return true;
+                            }
+                          },
+                          background: Container(
+                            color: GREEN,
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Icon(
+                                    Icons.check,
+                                    color: WHITE,
+                                  )),
+                            ),
+                          ),
+                          secondaryBackground: Container(
+                            color: RED,
+                            child: Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: Icon(
+                                    Icons.delete,
+                                    color: WHITE,
+                                  )),
+                            ),
+                          ),
+                          key: UniqueKey(),
+                          child: WidgetItem(
+                              wishlist[index], listUuid, wishlist[index].uuid),
+                          onDismissed: (direction) {
+                            if (direction == DismissDirection.endToStart) {
+                              deleteItemFromList(wishlist[index].uuid);
+                            } else {
+                              validateItem(
+                                  wishlist[index], wishlist[index].uuid);
+                            }
+                          }),
+                    );
                   }),
             ),
           );
@@ -174,8 +208,32 @@ class OpenedListPageState extends State<OpenedListPage> {
     );
   }
 
+  Future<bool> buildDeleteShowDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(getString(context, 'confirm_item_deletion')),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(getString(context, 'delete_item'))),
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(getString(context, 'cancel_deletion')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void deleteItemFromList(String uuid) {
     GetIt.I.get<ItemsListProvider>().deleteItemInList(uuid);
+  }
+
+  void validateItem(WishlistItem item, String itemUuid) {
+    GetIt.I.get<ItemsListProvider>().validateItem(itemUuid, true);
   }
 
   Future<bool> confirmWishlistDeletion() async {
