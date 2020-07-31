@@ -1,5 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
-import 'package:MobileOne/providers/itemsList_provider.dart';
+
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -121,7 +121,6 @@ class ListsState extends State<Lists> {
   }
 
   void openOpenedListPage(uuid) {
-    GetIt.I.get<ItemsListProvider>().listUuid = uuid;
     Navigator.of(context).pushNamed('/openedListPage', arguments: uuid);
   }
 }

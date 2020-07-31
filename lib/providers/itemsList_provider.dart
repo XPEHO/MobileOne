@@ -3,23 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class ItemsListProvider with ChangeNotifier {
-  String _listUuid;
-
-  set listUuid(String uuid) {
-    _listUuid = uuid;
-    notifyListeners();
-  }
-
-  String get listUuid {
-    return _listUuid;
-  }
-
-  Future<DocumentSnapshot> get itemsList {
+  Future<DocumentSnapshot> fetchItemList(String listUuid) {
     return Firestore.instance.collection('items').document(listUuid).get();
   }
 
-  addItemTolist(
-      String _name, int _count, int _typeIndex, String _imageLink) async {
+  addItemTolist({
+    @required String name,
+    @required int count,
+    @required int typeIndex,
+    @required String imageLink,
+    @required String listUuid,
+  }) async {
     var uuid = Uuid();
     var newUuid = uuid.v4();
     var listItemsCount;
@@ -53,20 +47,20 @@ class ItemsListProvider with ChangeNotifier {
           .document(listUuid)
           .updateData({
         newUuid: {
-          'label': _name,
-          'quantity': _count,
-          'unit': _typeIndex,
-          'image': _imageLink,
+          'label': name,
+          'quantity': count,
+          'unit': typeIndex,
+          'image': imageLink,
           'isValidated': false,
         }
       });
     } else {
       await Firestore.instance.collection("items").document(listUuid).setData({
         newUuid: {
-          'label': _name,
-          'quantity': _count,
-          'unit': _typeIndex,
-          'image': _imageLink,
+          'label': name,
+          'quantity': count,
+          'unit': typeIndex,
+          'image': imageLink,
           'isValidated': false,
         }
       });
@@ -74,21 +68,30 @@ class ItemsListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  updateItemInList(String itemUuid, String _name, int _count, int _typeIndex,
-      String _imageLink) async {
+  updateItemInList({
+    @required String itemUuid,
+    @required String name,
+    @required int count,
+    @required int typeIndex,
+    @required String imageLink,
+    @required String listUuid,
+  }) async {
     await Firestore.instance.collection("items").document(listUuid).updateData({
       itemUuid: {
-        'label': _name,
-        'quantity': _count,
-        'unit': _typeIndex,
-        'image': _imageLink,
+        'label': name,
+        'quantity': count,
+        'unit': typeIndex,
+        'image': imageLink,
         'isValidated': false,
       }
     });
     notifyListeners();
   }
 
-  deleteItemInList(String itemUuid) async {
+  deleteItemInList({
+    @required String listUuid,
+    @required String itemUuid,
+  }) async {
     var listItemsCount;
 
     await Firestore.instance
@@ -106,17 +109,24 @@ class ItemsListProvider with ChangeNotifier {
 
     await Firestore.instance
         .collection("items")
-        .document(_listUuid)
+        .document(listUuid)
         .updateData({itemUuid: FieldValue.delete()});
     notifyListeners();
   }
 
-  validateItem(String itemUuid, bool state) async {
-    await Firestore.instance.collection("items").document(listUuid).setData({
-      itemUuid: {
-        'isValidated': state,
-      }
-    }, merge: true);
+  validateItem({
+    @required String listUuid,
+    @required String itemUuid,
+    @required bool isValidated,
+  }) async {
+    await Firestore.instance.collection("items").document(listUuid).setData(
+      {
+        itemUuid: {
+          'isValidated': isValidated,
+        }
+      },
+      merge: true,
+    );
     notifyListeners();
   }
 }
