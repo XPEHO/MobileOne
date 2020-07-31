@@ -31,8 +31,13 @@ jobs:
           flutter-version: '1.17.5'
       - name: Build
         run: |
+          echo "Running on ${{github.ref}}"
+          TAG_NAME="$(echo ${{github.ref}} | cut -d/ -f3)"
+          BUILD_NAME="$(echo $TAG_NAME | cut -d+ -f1)"
+          BUILD_NUMBER="$(echo $TAG_NAME | cut -d+ -f2)"
+          echo "Building $BUILD_NAME+$BUILD_NUMBER"
           flutter pub get
-          flutter build apk
+          flutter build apk --build-name $BUILD_NAME --build-number $BUILD_NUMBER
       - name: Create Github Release
         id: create_release
         uses: actions/create-release@v1
