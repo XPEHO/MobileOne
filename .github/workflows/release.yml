@@ -58,3 +58,10 @@ jobs:
           asset_path: ./build/app/outputs/apk/release/app-release.apk
           asset_name: app-release.apk
           asset_content_type: application/zip
+      - name: upload artifact to Firebase App Distribution
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          groups: testers
+          file: ./build/app/outputs/apk/release/app-release.apk
