@@ -11,6 +11,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+      - name: Get version from tag name
+        run: |
+          echo "Running on ${{github.ref}}"
+          BUILD_NAME="$(echo ${{github.ref}} | cut -d+ -f1)"
+          BUILD_NUMBER="$(echo ${{github.ref}} | cut -d+ -f2)"
       - name: Configure signature
         run: |
           echo "${{secrets.KEY_PROPERTIES}}" > android/key.properties
@@ -32,7 +37,8 @@ jobs:
       - name: Build
         run: |
           flutter pub get
-          flutter build apk
+          echo "Building $BUILD_NAME.$BUILD_NUMBER"
+          flutter build apk --build-name $BUILD_NAME --build-number $BUILD_NUMBER
       - name: Create Github Release
         id: create_release
         uses: actions/create-release@v1
