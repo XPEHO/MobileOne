@@ -25,6 +25,7 @@ class UserService with ChangeNotifier {
 
   Future<void> deleteUserData(String userUid) async {
     List tmpList = [];
+    List tmpShare = [];
 
     //Get all user wishlists
     await Firestore.instance
@@ -39,6 +40,28 @@ class UserService with ChangeNotifier {
 
     if (tmpList != null) {
       tmpList.forEach((element) async {
+        //Delete all list guests
+        await Firestore.instance
+            .collection("shared")
+            .document(userUid)
+            .get()
+            .then((value) {
+          if (value.data != null) {
+            tmpShare = value.data[element];
+          }
+        });
+
+        if (tmpShare != null) {
+          tmpShare.forEach((email) async {
+            await Firestore.instance
+                .collection("guests")
+                .document(email)
+                .updateData({
+              "lists": FieldValue.arrayRemove([element])
+            });
+          });
+        }
+
         //Delete all user wishlists items
         await Firestore.instance.collection("items").document(element).delete();
 
