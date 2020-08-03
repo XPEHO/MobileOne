@@ -3,6 +3,7 @@ import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
+import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -52,6 +53,8 @@ class ImageServiceMock extends Mock implements ImageService {}
 
 class PreferencesMock extends Mock implements PreferencesService {}
 
+class AuthServiceMock extends Mock implements AuthenticationService {}
+
 class PickerMock extends Mock implements ImagePicker {}
 
 class WishlistListProviderMock extends Mock implements WishlistsListProvider {}
@@ -82,6 +85,8 @@ void main() {
     GetIt.I.registerSingleton<WishlistsListProvider>(_wishlistProvider);
     final _userPicture = UserPictureProviderMock();
     GetIt.I.registerSingleton<UserPictureProvider>(_userPicture);
+    final _authService = AuthServiceMock();
+    GetIt.I.registerSingleton<AuthenticationService>(_authService);
 
     when(_imageService.pickGallery()).thenAnswer((realInvocation) =>
         Future.value(PickedFile("assets/images/facebook_f.png")));
