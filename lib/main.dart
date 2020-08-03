@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:MobileOne/pages/card_page.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
+import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/providers/share_provider.dart';
@@ -104,6 +105,7 @@ class MyApp extends StatelessWidget {
         '/share': (context) => Share(),
         "/cards": (contaxt) => Cards(),
         "/loyaltycards": (contaxt) => LoyaltyCards(),
+        "/profile": (context) => NewProfile(),
       },
     );
   }
