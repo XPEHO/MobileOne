@@ -45,13 +45,15 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   }
 
   Future<bool> loginSkip() async {
-    if (_preferencesService.isEmailPasswordMode()) {
-      _userService.user = await _authenticationService.signIn(
-          _preferencesService.getEmail(), _preferencesService.getPassword());
-      return true;
-    } else if (_preferencesService.isGoogleMode()) {
-      _userService.user = await _authenticationService.googleSignInSilently();
-      return true;
+    if (_preferencesService.getEmail() != null) {
+      if (_preferencesService.isEmailPasswordMode()) {
+        _userService.user = await _authenticationService.signIn(
+            _preferencesService.getEmail(), _preferencesService.getPassword());
+        return true;
+      } else if (_preferencesService.isGoogleMode()) {
+        _userService.user = await _authenticationService.googleSignInSilently();
+        return true;
+      }
     }
     return false;
   }
@@ -340,9 +342,13 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   }
 
   void openMainPage(context) {
-    Navigator.of(context).pushNamed(
-      '/mainpage',
-    );
+    (_userService.user.isEmailVerified == false)
+        ? Navigator.of(context).pushNamed(
+            '/profile',
+          )
+        : Navigator.of(context).pushNamed(
+            '/mainpage',
+          );
   }
 
   void openForgottenPasswordPage(context) {

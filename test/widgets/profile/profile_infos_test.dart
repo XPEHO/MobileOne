@@ -1,6 +1,6 @@
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
-import 'package:MobileOne/pages/profile.dart';
+import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/image_service.dart';
@@ -60,7 +60,7 @@ void main() {
       (WidgetTester tester) async {
     //GIVEN
 
-    Widget widget = buildTestableWidget(Profile());
+    Widget widget = buildTestableWidget(NewProfile());
 
     final auth = FirebaseAuthMock();
     final user = FirebaseUserMock();

@@ -1,6 +1,6 @@
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
-import 'package:MobileOne/pages/profile.dart';
+import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/image_service.dart';
@@ -96,7 +96,7 @@ void main() {
     when(user.providerData).thenReturn(List.of([]));
 
     //WHEN
-    await tester.pumpWidget(buildTestableWidget(Profile()));
+    await tester.pumpWidget(buildTestableWidget(NewProfile()));
 
     await tester.pumpAndSettle(Duration(seconds: 1));
     await tester.tap(find.byKey(Key(KEY_GALLERY)));

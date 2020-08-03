@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add page step two for sharing a list
 - Add page for a big loyalty card
 - Add loyalty cards deletion
+- Add password changing
 
 ### Changed
 
@@ -59,6 +60,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Loyalty Cards Page : User can now scan different barcode types
 - Loyalty Cards Page : Cancel a card creation don't create cards anymore
 - Widget loyaltycards : Loyalty card name too short
+- New_profile_page : change profile page ui
+- New_profile_page : Account validation status 
 
 ### Security
 
