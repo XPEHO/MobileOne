@@ -110,5 +110,7 @@
     "recent_login_needed": "Erreur, une récente connexion est néscéssaire, veuillez vous reconnecter",
     "changing_not_allowed": "Erreur, veuillez utiliser le mode de connexion email/mot de passe",
     "zone": "Zone de danger",
+    "email_not_valid": "Vous n'avez pas encore validé votre compte. \n S'il vous plaît, veuillez aller dans votre boite email, le valider et vous reconnecter.",
     "invalid_credential": "Erreur, token invalide"
+
 }

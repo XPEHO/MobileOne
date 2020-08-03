@@ -27,8 +27,6 @@ class NewProfileState extends State<NewProfile> {
   final _prefService = GetIt.I.get<PreferencesService>();
   final _auth = GetIt.I.get<FirebaseAuth>();
 
-  bool isConfirmEmail = false;
-
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
@@ -108,11 +106,18 @@ class NewProfileState extends State<NewProfile> {
               ],
             ),
           ),
-          (isConfirmEmail == false)
+          (_userService.user.isEmailVerified == false)
               ? Container(
                   color: RED,
                   height: MediaQuery.of(context).size.height * 0.1,
                   width: MediaQuery.of(context).size.width,
+                  child: Center(
+                    child: Text(
+                      getString(context, "email_not_valid"),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: WHITE),
+                    ),
+                  ),
                 )
               : Container(
                   height: MediaQuery.of(context).size.height * 0.1,
@@ -152,10 +157,12 @@ class NewProfileState extends State<NewProfile> {
           Container(
             height: MediaQuery.of(context).size.height * 0.1,
             width: MediaQuery.of(context).size.width,
-            child: Center(
+            child: Align(
+              alignment: Alignment.bottomCenter,
               child: Text(
                 getString(context, "zone"),
-                style: TextStyle(color: RED, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: RED, fontWeight: FontWeight.bold, fontSize: 18),
               ),
             ),
           ),
@@ -171,7 +178,7 @@ class NewProfileState extends State<NewProfile> {
                     child: RectangleTextIcon(
                       getString(context, 'debug_delete_account_button'),
                       Icons.delete_forever,
-                      GREY,
+                      RED,
                     ),
                   ),
                 )
