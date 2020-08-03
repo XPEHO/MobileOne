@@ -1,13 +1,19 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../localization/localization.dart';
+
+import 'package:connectivity/connectivity.dart';
 
 const KEY_AUTH_PAGE_TEXT = "authentication_page_text";
 
@@ -19,9 +25,11 @@ class AuthenticationPage extends StatefulWidget {
 }
 
 class AuthenticationPageState extends State<AuthenticationPage> {
+  var connectivityResult = new Connectivity().checkConnectivity();
   final _formKey = GlobalKey<FormState>();
   final _emailController = new TextEditingController();
   final _passwordController = new TextEditingController();
+
   String _email;
   String _password;
 
@@ -44,6 +52,26 @@ class AuthenticationPageState extends State<AuthenticationPage> {
     _email = input;
   }
 
+  Future<bool> check() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    }
+    return false;
+  }
+
+  verification() {
+    check().then((intenet) {
+      if (intenet != null && intenet) {
+        loginSkip();
+      } else {
+        Fluttertoast.showToast(msg: getString(context, "no_network"));
+      }
+    });
+  }
+
   Future<bool> loginSkip() async {
     if (_preferencesService.getEmail() != null) {
       if (_preferencesService.isEmailPasswordMode()) {
@@ -55,6 +83,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
         return true;
       }
     }
+
     return false;
   }
 
@@ -286,15 +315,37 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                 color: Colors.blue,
                 textColor: Colors.white,
                 onPressed: () {
-                  if (_formKey.currentState.validate()) {
-                    signInUser();
-                  }
+                  // User defined class
+                  //  signinWithoutNetwork(context);
+
+                  check().then((intenet) {
+                    if (intenet != null && intenet) {
+                      if (_formKey.currentState.validate()) {
+                        signInUser();
+                      }
+                    }
+                    Fluttertoast.showToast(
+                        msg: getString(context, "no_network"));
+                  });
                 },
                 child: Text(getString(context, 'sign_in')),
               ),
             ],
           ),
         ));
+  }
+
+  Future signinWithoutNetwork(BuildContext context) async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        if (_formKey.currentState.validate()) {
+          signInUser();
+        }
+      } else {
+        Fluttertoast.showToast(msg: getString(context, "no_network"));
+      }
+    } on SocketException catch (_) {}
   }
 
   Future<void> signInUser() async {

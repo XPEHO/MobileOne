@@ -110,5 +110,6 @@
     "recent_login_needed": "Error, recent login needed, please reconnect",
     "changing_not_allowed": "Error, please use the email/password connection mode",
     "zone": "Danger zone",
-    "invalid_credential": "Error, invalid token"
+    "invalid_credential": "Error, invalid token",
+    "no_network": "No network."
 }

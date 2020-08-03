@@ -1,4 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/services/authentication_service.dart';
@@ -17,6 +18,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class RegisterPageState extends State<RegisterPage> {
+  var connectivityResult = new Connectivity().checkConnectivity();
   final _formKey = GlobalKey<FormState>();
   final _emailController = new TextEditingController();
   final _passwordController = new TextEditingController();
@@ -209,13 +211,29 @@ class RegisterPageState extends State<RegisterPage> {
     );
   }
 
+  Future<bool> check() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      return true;
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      return true;
+    }
+    return false;
+  }
+
   RaisedButton buildRaisedButton(BuildContext context) {
     return RaisedButton(
       key: Key("create_account_button"),
       onPressed: () {
-        if (_formKey.currentState.validate()) {
-          createAccount();
-        }
+        check().then((intenet) {
+          if (intenet != null && intenet) {
+            if (_formKey.currentState.validate()) {
+              createAccount();
+            }
+          } else {
+            Fluttertoast.showToast(msg: getString(context, "no_network"));
+          }
+        });
       },
       child: Text(getString(context, 'create_account')),
     );
