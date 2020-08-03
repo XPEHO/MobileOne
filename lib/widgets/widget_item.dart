@@ -123,7 +123,15 @@ class WidgetItemState extends State<WidgetItem> {
                 Text("${_itemlist.quantity.toString()} ${getUnitText()}"),
               ],
             ),
-            leading: Image(image: _itemImage),
+            leading: GestureDetector(
+                onTap: () {
+                  (_itemImage == NetworkImage(_itemlist.imageUrl))
+                      ? showDialog(
+                          context: context,
+                          child: Center(child: Image(image: _itemImage)))
+                      : print("sd");
+                },
+                child: Image(image: _itemImage)),
             trailing: IconButton(
               onPressed: () {
                 showDialog(
