@@ -62,6 +62,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Widget loyaltycards : Loyalty card name too short
 - New_profile_page : change profile page ui
 - New_profile_page : Account validation status 
+- Changing password : User can now change his password without reconnecting
 
 ### Security
 

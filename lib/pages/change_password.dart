@@ -1,13 +1,12 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
 
-String emailRegexp =
-    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
 const int PASSWORD_MINIMAL_LENGHT = 6;
 
 class ChangePassword extends StatefulWidget {
@@ -24,6 +23,7 @@ class ChangePasswordState extends State<ChangePassword> {
   String _newPassword;
   String _confirmNewPassword;
   var _authService = GetIt.I.get<AuthenticationService>();
+  var _preferencesService = GetIt.I.get<PreferencesService>();
   var _userService = GetIt.I.get<UserService>();
 
   @override
@@ -53,7 +53,7 @@ class ChangePasswordState extends State<ChangePassword> {
                 child: IconButton(
                   icon: Icon(Icons.arrow_back),
                   onPressed: () {
-                    openProfilPage(context);
+                    openProfilPage();
                   },
                 ),
               ),
@@ -173,12 +173,41 @@ class ChangePasswordState extends State<ChangePassword> {
     );
   }
 
-  Future<void> changePassword() async {
+  Future<void> reconnectUser() async {
     FocusScope.of(context).unfocus();
+    String result = await _authService.reconnectUser(_userService.user,
+        _userService.user.email, _preferencesService.getPassword());
+    switch (result) {
+      case "success":
+        await changePassword();
+        break;
+      case "ERROR_USER_DISABLED":
+        Fluttertoast.showToast(msg: getString(context, 'user_disabled'));
+        break;
+      case "ERROR_USER_NOT_FOUND":
+        Fluttertoast.showToast(msg: getString(context, 'user_not_found'));
+        break;
+      case "ERROR_OPERATION_NOT_ALLOWED":
+        Fluttertoast.showToast(msg: getString(context, 'changing_not_allowed'));
+        break;
+      case "ERROR_INVALID_CREDENTIAL":
+        Fluttertoast.showToast(msg: getString(context, 'invalid_credential'));
+        break;
+      case "ERROR_WRONG_PASSWORD":
+        Fluttertoast.showToast(msg: getString(context, 'wrong_password'));
+        break;
+      default:
+        Fluttertoast.showToast(
+            msg: getString(context, 'change_password_error'));
+    }
+  }
+
+  Future<void> changePassword() async {
     String result =
         await _authService.changePassword(_userService.user, _newPassword);
     switch (result) {
       case "success":
+        await _preferencesService.setString('password', _newPassword);
         Fluttertoast.showToast(msg: getString(context, 'password_changed'));
         Navigator.pop(context);
         break;
@@ -203,7 +232,7 @@ class ChangePasswordState extends State<ChangePassword> {
     }
   }
 
-  void openProfilPage(context) {
+  void openProfilPage() {
     Navigator.pop(context);
   }
 }
