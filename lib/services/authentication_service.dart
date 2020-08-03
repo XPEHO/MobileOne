@@ -104,4 +104,18 @@ class AuthenticationService {
       return e.code;
     }
   }
+
+  Future<String> reconnectUser(
+      FirebaseUser user, String email, String password) async {
+    AuthCredential credentials = EmailAuthProvider.getCredential(
+      email: email,
+      password: password,
+    );
+    try {
+      await user.reauthenticateWithCredential(credentials);
+      return "success";
+    } catch (e) {
+      return e.code;
+    }
+  }
 }
