@@ -63,6 +63,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - New_profile_page : change profile page ui
 - New_profile_page : Account validation status 
 - Changing password : User can now change his password without reconnecting
+- Item popup : Item image isn't erased anymore on item changes
 - fr.json : Wrong password typo on the French connection page
 
 ### Security
