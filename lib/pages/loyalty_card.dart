@@ -43,11 +43,14 @@ class LoyaltyCardsState extends State<LoyaltyCards> {
   Widget content(DocumentSnapshot snapshot) {
     final cards = snapshot?.data ?? {};
 
-    return Center(
+    return SafeArea(
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height - 32,
         child: ListView.builder(
+            padding: const EdgeInsets.only(
+              bottom: kFloatingActionButtonMargin + 24,
+            ),
             shrinkWrap: true,
             scrollDirection: Axis.vertical,
             itemCount: cards.length,
