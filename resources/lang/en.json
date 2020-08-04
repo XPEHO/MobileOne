@@ -110,5 +110,7 @@
     "recent_login_needed": "Error, recent login needed, please reconnect",
     "changing_not_allowed": "Error, please use the email/password connection mode",
     "zone": "Danger zone",
+    "email_not_valid": "Your accound has not been validated yet. \n Please check your mailbox and validate your email. ",
     "invalid_credential": "Error, invalid token"
+
 }

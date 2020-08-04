@@ -59,6 +59,7 @@ class EditItemPopupState extends State<EditItemPopup> {
         .then((value) {
       labelValue = value[itemUuid]["label"];
       quantityValue = value[itemUuid]["quantity"].toString();
+      imageLink = value[itemUuid]["image"];
       switch (value[itemUuid]["unit"]) {
         case 1:
           unitValue = getString(context, 'item_unit');

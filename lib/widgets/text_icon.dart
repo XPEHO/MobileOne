@@ -7,24 +7,29 @@ class RectangleTextIcon extends StatelessWidget {
   RectangleTextIcon(this.label, this.icon, this.iconColor);
 
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Text(label),
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.grey[200],
+          width: 1,
         ),
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: InkWell(
-            //  onTap: () => onPressed(),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(label),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Icon(
               icon,
               color: iconColor,
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
