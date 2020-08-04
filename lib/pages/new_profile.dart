@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/change_password.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
+import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -25,6 +26,7 @@ class NewProfileState extends State<NewProfile> {
   final _userService = GetIt.I.get<UserService>();
   final _imageService = GetIt.I.get<ImageService>();
   final _prefService = GetIt.I.get<PreferencesService>();
+  var _authService = GetIt.I.get<AuthenticationService>();
   final _auth = GetIt.I.get<FirebaseAuth>();
 
   Widget build(BuildContext context) {
@@ -173,7 +175,11 @@ class NewProfileState extends State<NewProfile> {
                   width: MediaQuery.of(context).size.width,
                   child: InkWell(
                     onTap: () {
-                      deleteAccount(user);
+                      confirmAccountDeletion().then((value) async {
+                        if (value == true) {
+                          reconnectUser(user);
+                        }
+                      });
                     },
                     child: RectangleTextIcon(
                       getString(context, 'debug_delete_account_button'),
@@ -186,6 +192,36 @@ class NewProfileState extends State<NewProfile> {
         ],
       ),
     );
+  }
+
+  Future<bool> confirmAccountDeletion() async {
+    bool result = false;
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(getString(context, 'confirm_account_deletion')),
+          actions: <Widget>[
+            FlatButton(
+                key: Key("confirmAccountDeletion"),
+                onPressed: () {
+                  result = true;
+                  Navigator.of(context).pop();
+                },
+                child: Text(getString(context, 'delete_account'))),
+            FlatButton(
+              key: Key("cancelAccountDeletion"),
+              onPressed: () {
+                result = false;
+                Navigator.of(context).pop();
+              },
+              child: Text(getString(context, 'cancel_deletion')),
+            ),
+          ],
+        );
+      },
+    );
+    return result;
   }
 
   Widget _buildProfilePicture(FirebaseUser user) {
@@ -262,22 +298,64 @@ class NewProfileState extends State<NewProfile> {
     _userService.user = null;
   }
 
-  deleteAccount(FirebaseUser user) {
-    if (user != null) {
-      try {
-        user.delete();
+  reconnectUser(FirebaseUser user) async {
+    String result = await _authService.reconnectUser(
+        user, user.email, _prefService.getPassword());
+    switch (result) {
+      case "success":
+        deleteAccount(user);
+        break;
+      case "ERROR_USER_DISABLED":
+        Fluttertoast.showToast(msg: getString(context, 'user_disabled'));
+        break;
+      case "ERROR_USER_NOT_FOUND":
+        Fluttertoast.showToast(msg: getString(context, 'user_not_found'));
+        break;
+      case "ERROR_OPERATION_NOT_ALLOWED":
+        Fluttertoast.showToast(msg: getString(context, 'changing_not_allowed'));
+        break;
+      case "ERROR_INVALID_CREDENTIAL":
+        Fluttertoast.showToast(msg: getString(context, 'invalid_credential'));
+        break;
+      case "ERROR_WRONG_PASSWORD":
+        Fluttertoast.showToast(msg: getString(context, 'wrong_password'));
+        break;
+      default:
+        Fluttertoast.showToast(msg: getString(context, 'default_error'));
+    }
+  }
+
+  deleteAccount(FirebaseUser user) async {
+    String userUid = user.uid;
+    await _userService.deleteUserData(userUid);
+    String result = await _userService.deleteAccount(user);
+    switch (result) {
+      case "success":
+        _prefService.sharedPreferences.remove("email");
+        _prefService.sharedPreferences.remove("password");
+        _prefService.sharedPreferences.remove("mode");
         Fluttertoast.showToast(
           msg: getString(context, 'debug_account_deleted'),
         );
         openAuthenticationPage();
         _userService.user = null;
-      } catch (e) {
-        debugPrint(e);
-      }
-    } else {
-      Fluttertoast.showToast(
-        msg: getString(context, 'no_user'),
-      );
+        break;
+      case "ERROR_REQUIRES_RECENT_LOGIN":
+        Fluttertoast.showToast(msg: getString(context, 'recent_login_needed'));
+        break;
+      case "ERROR_INVALID_CREDENTIAL":
+        Fluttertoast.showToast(msg: getString(context, 'invalid_credential'));
+        break;
+      case "ERROR_USER_DISABLED":
+        Fluttertoast.showToast(msg: getString(context, 'user_disabled'));
+        break;
+      case "ERROR_USER_NOT_FOUND":
+        Fluttertoast.showToast(msg: getString(context, 'user_not_found'));
+        break;
+      default:
+        Fluttertoast.showToast(
+          msg: getString(context, 'default_error'),
+        );
     }
   }
 

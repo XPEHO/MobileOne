@@ -4,6 +4,7 @@ import 'package:MobileOne/pages/Mainpage.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
+import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -53,6 +54,8 @@ class ImageServiceMock extends Mock implements ImageService {}
 
 class PreferencesMock extends Mock implements PreferencesService {}
 
+class AuthServiceMock extends Mock implements AuthenticationService {}
+
 class PickerMock extends Mock implements ImagePicker {}
 
 class WishlistListProviderMock extends Mock implements WishlistsListProvider {}
@@ -83,6 +86,8 @@ void main() {
     GetIt.I.registerSingleton<WishlistsListProvider>(_wishlistProvider);
     final _userPicture = UserPictureProviderMock();
     GetIt.I.registerSingleton<UserPictureProvider>(_userPicture);
+    final _authService = AuthServiceMock();
+    GetIt.I.registerSingleton<AuthenticationService>(_authService);
     when(_userService.user).thenReturn(user);
 
     when(_picker.getImage(source: ImageSource.camera)).thenAnswer(
