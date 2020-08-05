@@ -7,7 +7,6 @@ import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_item.dart';
-import 'package:MobileOne/widgets/widget_popup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -75,10 +74,8 @@ class OpenedListPageState extends State<OpenedListPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) => EditItemPopup(
-                  getString(context, 'popup_add'), wishlistHead.uuid, null));
+          openItemPage(
+              getString(context, 'popup_add'), wishlistHead.uuid, null);
         },
         child: Icon(Icons.add),
         backgroundColor: GREEN,
@@ -297,5 +294,11 @@ class OpenedListPageState extends State<OpenedListPage> {
   void openSharePage(Object uuid) {
     Navigator.of(context)
         .pushNamed('/shareOne', arguments: ShareArguments(previousList: uuid));
+  }
+
+  void openItemPage(String buttonName, String listUuid, String itemUuid) {
+    Navigator.of(context).pushNamed('/createItem',
+        arguments: ItemArguments(
+            buttonName: buttonName, listUuid: listUuid, itemUuid: itemUuid));
   }
 }

@@ -12,3 +12,10 @@ class ShareArguments {
   bool isOnlyOneStep;
   ShareArguments({this.previousList, this.isOnlyOneStep});
 }
+
+class ItemArguments {
+  String buttonName;
+  String listUuid;
+  String itemUuid;
+  ItemArguments({this.buttonName, this.listUuid, this.itemUuid});
+}

@@ -1,8 +1,8 @@
 import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/utility/colors.dart';
-import 'package:MobileOne/widgets/widget_popup.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -89,12 +89,8 @@ class WidgetItemState extends State<WidgetItem> {
             ),
             trailing: IconButton(
               onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) => EditItemPopup(
-                        getString(context, 'popup_update'),
-                        _listUuid,
-                        _itemUuid));
+                openItemPage(
+                    getString(context, 'popup_update'), _listUuid, _itemUuid);
               },
               icon: Icon(Icons.edit),
             ),
@@ -126,12 +122,8 @@ class WidgetItemState extends State<WidgetItem> {
             leading: Image(image: _itemImage),
             trailing: IconButton(
               onPressed: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) => EditItemPopup(
-                        getString(context, 'popup_update'),
-                        _listUuid,
-                        _itemUuid));
+                openItemPage(
+                    getString(context, 'popup_update'), _listUuid, _itemUuid);
               },
               icon: Icon(Icons.edit),
             ),
@@ -174,5 +166,11 @@ class WidgetItemState extends State<WidgetItem> {
         return getString(context, 'item_unit');
         break;
     }
+  }
+
+  void openItemPage(String buttonName, String listUuid, String itemUuid) {
+    Navigator.of(context).pushNamed('/createItem',
+        arguments: ItemArguments(
+            buttonName: buttonName, listUuid: listUuid, itemUuid: itemUuid));
   }
 }

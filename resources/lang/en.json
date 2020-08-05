@@ -114,5 +114,6 @@
     "invalid_credential": "Error, invalid token",
     "default_error": "An error has arrived",
     "confirm_account_deletion": "Are you sure you wish to delete your account ?",
-    "delete_account": "DELETE"
+    "delete_account": "DELETE",
+    "quantity": "Quantity"
 }
