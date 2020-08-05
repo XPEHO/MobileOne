@@ -68,6 +68,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Loyatly_card : Loyalty cards page bottom padding
 - Item popup : Item image isn't erased anymore on item changes
 - fr.json : Wrong password typo on the French connection page
+- Rotation : User can no longer change the screen rotation
 
 ### Security
 

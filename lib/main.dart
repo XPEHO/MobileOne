@@ -29,6 +29,7 @@ import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -58,6 +59,7 @@ void main() {
 
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runZoned(() {
     runApp(MyApp());
   }, onError: Crashlytics.instance.recordError);
