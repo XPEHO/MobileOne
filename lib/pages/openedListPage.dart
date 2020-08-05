@@ -44,8 +44,8 @@ class OpenedListPageState extends State<OpenedListPage> {
             builder: (context, snapshot) {
               _myController.text =
                   wishlistHeadProvider.getWishlist(listUuid).label;
-              return content(
-                  wishlistHeadProvider.getWishlist(listUuid), snapshot.data);
+              return content(wishlistHeadProvider.getWishlist(listUuid),
+                  snapshot.data, snapshot.connectionState);
             },
           );
         },
@@ -73,7 +73,8 @@ class OpenedListPageState extends State<OpenedListPage> {
     return sortedList;
   }
 
-  Widget content(Wishlist wishlistHead, DocumentSnapshot snapshot) {
+  Widget content(
+      Wishlist wishlistHead, DocumentSnapshot snapshot, ConnectionState state) {
     List<WishlistItem> wishlist = getSortedList(snapshot);
 
     return Scaffold(
@@ -147,7 +148,7 @@ class OpenedListPageState extends State<OpenedListPage> {
       ),
       body: Builder(
         builder: (context) {
-          if (wishlist.isEmpty) {
+          if (state == ConnectionState.waiting) {
             return Center(
               child: Text(getString(context, "loading")),
             );
