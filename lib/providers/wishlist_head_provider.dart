@@ -18,5 +18,16 @@ class WishlistHeadProvider with ChangeNotifier {
     }
   }
 
+  changeWishlistLabel(String label, String listUuid) async {
+    label == null ? label = "" : label = label;
+    await Firestore.instance.collection("wishlists").document(listUuid).setData(
+      {
+        "label": label,
+      },
+      merge: true,
+    );
+    notifyListeners();
+  }
+
   Wishlist getWishlist(uuid) => _wishlists[uuid];
 }

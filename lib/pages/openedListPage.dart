@@ -25,6 +25,9 @@ class OpenedListPage extends StatefulWidget {
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
+  final _myController = TextEditingController();
+  final _wishlistProvider = GetIt.I.get<WishlistHeadProvider>();
+
   @override
   Widget build(BuildContext context) {
     String listUuid = ModalRoute.of(context).settings.arguments;
@@ -39,6 +42,8 @@ class OpenedListPageState extends State<OpenedListPage> {
           return FutureBuilder<DocumentSnapshot>(
             future: itemsListProvider.fetchItemList(listUuid),
             builder: (context, snapshot) {
+              _myController.text =
+                  wishlistHeadProvider.getWishlist(listUuid).label;
               return content(
                   wishlistHeadProvider.getWishlist(listUuid), snapshot.data);
             },
@@ -85,7 +90,26 @@ class OpenedListPageState extends State<OpenedListPage> {
         actionsIconTheme: ThemeData.light().iconTheme,
         textTheme: ThemeData.light().textTheme,
         backgroundColor: Colors.white,
-        title: Center(child: Text(wishlistHead.label)),
+        title: Center(
+          child: TextField(
+            controller: _myController,
+            textAlign: TextAlign.center,
+            decoration: InputDecoration(
+              hintText: getString(context, "wishlist_name"),
+              hintStyle: TextStyle(color: Colors.grey[600]),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: TRANSPARENT),
+              ),
+              filled: true,
+              fillColor: Colors.transparent,
+            ),
+            onSubmitted: (_) {
+              _wishlistProvider.changeWishlistLabel(
+                  _myController.text, wishlistHead.uuid);
+              _wishlistProvider.fetchWishlist(wishlistHead.uuid);
+            },
+          ),
+        ),
         actions: <Widget>[
           PopupMenuButton(
             key: Key("wishlistMenu"),

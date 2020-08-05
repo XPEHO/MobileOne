@@ -115,5 +115,6 @@
     "default_error": "An error has arrived",
     "confirm_account_deletion": "Are you sure you wish to delete your account ?",
     "delete_account": "DELETE",
+    "wishlist_name": "Wishlist name",
     "quantity": "Quantity"
 }
