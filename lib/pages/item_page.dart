@@ -1,5 +1,6 @@
 import 'dart:convert';
-
+import 'package:path/path.dart' as path;
+import 'dart:io';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/utility/arguments.dart';
@@ -7,12 +8,13 @@ import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/widgets/bubble_button.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
-import 'package:MobileOne/utility/colors.dart' as CustomColors;
+import 'package:image_picker/image_picker.dart';
 
 class EditItemPage extends StatefulWidget {
   EditItemPage({
@@ -42,6 +44,8 @@ class EditItemPageState extends State<EditItemPage> {
 
   ItemArguments _args;
   var _itemImage;
+  File pickedImage;
+  final _picker = ImagePicker();
 
   Future<void> getItems() async {
     String labelValue;
@@ -119,7 +123,17 @@ class EditItemPageState extends State<EditItemPage> {
               height: 24,
             ),
             onPressed: () => scanAnItem(),
-          )
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.camera,
+              color: Colors.lime[600],
+              size: 24,
+            ),
+            onPressed: () {
+              pickImage();
+            },
+          ),
         ],
       ),
       body: SafeArea(
@@ -155,11 +169,31 @@ class EditItemPageState extends State<EditItemPage> {
     );
   }
 
+  Future<void> pickImage() async {
+    await _picker.getImage(source: ImageSource.camera).then((image) {
+      pickedImage = File(image.path);
+    });
+    uploadFile(_args.listUuid);
+    setState(() {
+      _itemImage = FileImage(pickedImage);
+    });
+  }
+
+  Future<void> uploadFile(String listUuid) async {
+    StorageReference storageReference = FirebaseStorage.instance
+        .ref()
+        .child('mobileone/$listUuid/${path.basename(pickedImage.path)}');
+    StorageUploadTask uploadTask = storageReference.putFile(pickedImage);
+    await uploadTask.onComplete;
+    storageReference.getDownloadURL().then((fileURL) {
+      imageLink = fileURL;
+    });
+  }
+
   Text buildErrorMessage() {
     return Text(
       alert,
-      style: TextStyle(
-          color: CustomColors.RED, fontWeight: FontWeight.bold, fontSize: 12),
+      style: TextStyle(color: RED, fontWeight: FontWeight.bold, fontSize: 12),
     );
   }
 
@@ -176,8 +210,7 @@ class EditItemPageState extends State<EditItemPage> {
               },
               child: Text(
                 _args.buttonName,
-                style: TextStyle(
-                    color: CustomColors.WHITE, fontWeight: FontWeight.bold),
+                style: TextStyle(color: WHITE, fontWeight: FontWeight.bold),
               ),
               color: Colors.lime[600],
             ),
@@ -201,7 +234,7 @@ class EditItemPageState extends State<EditItemPage> {
     }
   }
 
-  _onValidate() {
+  _onValidate() async {
     if (itemNameController == null ||
         itemCountController == null ||
         _type == null ||
@@ -237,7 +270,7 @@ class EditItemPageState extends State<EditItemPage> {
       child: DropdownButtonFormField<String>(
         decoration: InputDecoration(
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: CustomColors.TRANSPARENT),
+            borderSide: BorderSide(color: TRANSPARENT),
           ),
           filled: true,
           fillColor: Colors.grey[300],
@@ -299,7 +332,7 @@ class EditItemPageState extends State<EditItemPage> {
                 decoration: InputDecoration(
                   contentPadding: EdgeInsets.all(10),
                   enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: CustomColors.TRANSPARENT),
+                    borderSide: BorderSide(color: TRANSPARENT),
                   ),
                   filled: true,
                   fillColor: Colors.grey[300],
@@ -336,7 +369,7 @@ class EditItemPageState extends State<EditItemPage> {
         decoration: InputDecoration(
           hintText: getString(context, 'item_name'),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: CustomColors.TRANSPARENT),
+            borderSide: BorderSide(color: TRANSPARENT),
           ),
           filled: true,
           fillColor: Colors.grey[300],
