@@ -1,3 +1,4 @@
+import 'package:MobileOne/arguments/arguments.dart';
 import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/localization/localization.dart';
@@ -27,10 +28,11 @@ class OpenedListPage extends StatefulWidget {
 class OpenedListPageState extends State<OpenedListPage> {
   final _myController = TextEditingController();
   final _wishlistProvider = GetIt.I.get<WishlistHeadProvider>();
+  OpenedListArguments _args;
 
   @override
   Widget build(BuildContext context) {
-    String listUuid = ModalRoute.of(context).settings.arguments;
+    _args = Arguments.value(context);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(
@@ -40,11 +42,11 @@ class OpenedListPageState extends State<OpenedListPage> {
       child: Consumer2<WishlistHeadProvider, ItemsListProvider>(
         builder: (context, wishlistHeadProvider, itemsListProvider, child) {
           return FutureBuilder<DocumentSnapshot>(
-            future: itemsListProvider.fetchItemList(listUuid),
+            future: itemsListProvider.fetchItemList(_args.listUuid),
             builder: (context, snapshot) {
               _myController.text =
-                  wishlistHeadProvider.getWishlist(listUuid).label;
-              return content(wishlistHeadProvider.getWishlist(listUuid),
+                  wishlistHeadProvider.getWishlist(_args.listUuid).label;
+              return content(wishlistHeadProvider.getWishlist(_args.listUuid),
                   snapshot.data, snapshot.connectionState);
             },
           );
@@ -114,17 +116,25 @@ class OpenedListPageState extends State<OpenedListPage> {
         actions: <Widget>[
           PopupMenuButton(
             key: Key("wishlistMenu"),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                key: Key("deleteItem"),
-                value: 1,
-                child: Text(getString(context, 'delete')),
-              ),
-              PopupMenuItem(
-                value: 2,
-                child: Text(getString(context, 'share')),
-              ),
-            ],
+            itemBuilder: (context) => _args.isGuest
+                ? [
+                    PopupMenuItem(
+                      key: Key("leaveShare"),
+                      value: 3,
+                      child: Text(getString(context, 'leave_share')),
+                    )
+                  ]
+                : [
+                    PopupMenuItem(
+                      key: Key("deleteItem"),
+                      value: 1,
+                      child: Text(getString(context, 'delete')),
+                    ),
+                    PopupMenuItem(
+                      value: 2,
+                      child: Text(getString(context, 'share')),
+                    ),
+                  ],
             icon: Icon(Icons.more_horiz),
             onSelected: (value) {
               switch (value) {
@@ -140,6 +150,16 @@ class OpenedListPageState extends State<OpenedListPage> {
                   break;
                 case 2:
                   askPermissions(wishlistHead.uuid);
+                  break;
+                case 3:
+                  confirmShareLeaving().then((value) async {
+                    if (value == true) {
+                      openListsPage();
+                      GetIt.I.get<WishlistsListProvider>().leaveShare(
+                          wishlistHead.uuid,
+                          GetIt.I.get<UserService>().user.email);
+                    }
+                  });
                   break;
               }
             },
@@ -270,6 +290,36 @@ class OpenedListPageState extends State<OpenedListPage> {
                 child: Text(getString(context, 'delete_item'))),
             FlatButton(
               key: Key("cancelWishlistDeletion"),
+              onPressed: () {
+                result = false;
+                Navigator.of(context).pop();
+              },
+              child: Text(getString(context, 'cancel_deletion')),
+            ),
+          ],
+        );
+      },
+    );
+    return result;
+  }
+
+  Future<bool> confirmShareLeaving() async {
+    bool result = false;
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(getString(context, 'confirm_share_leaving')),
+          actions: <Widget>[
+            FlatButton(
+                key: Key("confirmShareLeaving"),
+                onPressed: () {
+                  result = true;
+                  Navigator.of(context).pop();
+                },
+                child: Text(getString(context, 'confirm_leave'))),
+            FlatButton(
+              key: Key("cancelShareLeaving"),
               onPressed: () {
                 result = false;
                 Navigator.of(context).pop();

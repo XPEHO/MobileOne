@@ -113,4 +113,12 @@ class WishlistsListProvider with ChangeNotifier {
 
     notifyListeners();
   }
+
+  leaveShare(String listUuid, String email) async {
+    await Firestore.instance.collection("guests").document(email).updateData({
+      "lists": FieldValue.arrayRemove([listUuid])
+    });
+
+    notifyListeners();
+  }
 }

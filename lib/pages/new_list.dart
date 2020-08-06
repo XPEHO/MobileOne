@@ -1,6 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_empty_list.dart';
 import 'package:MobileOne/widgets/widget_emty_template.dart';
 import 'package:MobileOne/widgets/widget_list.dart';
@@ -160,7 +161,7 @@ class NewListsState extends State<NewLists> {
           itemBuilder: (BuildContext ctxt, index) {
             return GestureDetector(
                 onTap: () {
-                  openOpenedListPage(lists[index]);
+                  openOpenedListPage(lists[index], false);
                 },
                 child: WidgetLists(
                     lists[index], getString(context, "shared_count")));
@@ -200,7 +201,7 @@ class NewListsState extends State<NewLists> {
           itemBuilder: (BuildContext ctxt, index) {
             return GestureDetector(
                 onTap: () {
-                  openOpenedListPage(lists[index]);
+                  openOpenedListPage(lists[index], true);
                 },
                 child: WidgetLists(
                     guestList[index], getString(context, "shared_count")));
@@ -214,7 +215,8 @@ class NewListsState extends State<NewLists> {
     Navigator.of(context).pushNamed('/createList');
   }
 
-  void openOpenedListPage(uuid) {
-    Navigator.of(context).pushNamed('/openedListPage', arguments: uuid);
+  void openOpenedListPage(String uuid, bool isGuest) {
+    Navigator.of(context).pushNamed('/openedListPage',
+        arguments: OpenedListArguments(listUuid: uuid, isGuest: isGuest));
   }
 }

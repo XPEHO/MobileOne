@@ -118,5 +118,8 @@
     "wishlist_name": "Wishlist name",
     "quantity": "Quantity",
     "create_list": "Create list",
-    "no_sharing": "No sharing"
+    "no_sharing": "No sharing",
+    "leave_share": "Leave",
+    "confirm_share_leaving": "Are you sure you wish to leave this wishlist ?",
+    "confirm_leave": "LEAVE"
 }

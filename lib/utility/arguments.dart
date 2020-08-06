@@ -19,3 +19,9 @@ class ItemArguments {
   String itemUuid;
   ItemArguments({this.buttonName, this.listUuid, this.itemUuid});
 }
+
+class OpenedListArguments {
+  String listUuid;
+  bool isGuest;
+  OpenedListArguments({this.listUuid, this.isGuest});
+}

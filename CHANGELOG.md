@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Update openedListPage : User can now validate an item
 - Update openedListPage : User can now change a wishlist name
 - Update ItemPage : Item popup is now a complete page
+- Update OpenedListPage : User can now leave a shared wishlist
 
 ### Deprecated
 
