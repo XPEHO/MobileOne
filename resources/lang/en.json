@@ -15,7 +15,7 @@
     "no_user": "No user signed in",
     "signed_out": "User signed out",
     "loyalty_cards": "Cards",
-    "my_lists": "My Lists",
+    "my_lists": "My Lists :",
     "shared": "Shared",
     "profile": "Profile",
     "center_icon_newlist": "New list",
@@ -116,5 +116,7 @@
     "confirm_account_deletion": "Are you sure you wish to delete your account ?",
     "delete_account": "DELETE",
     "wishlist_name": "Wishlist name",
-    "quantity": "Quantity"
+    "quantity": "Quantity",
+    "create_list": "Create list",
+    "no_sharing": "No sharing"
 }

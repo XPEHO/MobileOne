@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
-import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
+import 'package:MobileOne/pages/new_list.dart';
 import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/pages/share.dart';
@@ -34,7 +34,7 @@ class MainPageState extends State<MainPage> {
   final _imageService = GetIt.I.get<ImageService>();
   final _prefService = GetIt.I.get<PreferencesService>();
   final _userService = GetIt.I.get<UserService>();
-  Widget _currentScreen = Lists();
+  Widget _currentScreen = NewLists();
 
   List _actions = [];
 
@@ -147,7 +147,7 @@ class MainPageState extends State<MainPage> {
           break;
         case LISTS_PAGE:
           _floatingButtonIcon = Icon(Icons.add);
-          _currentScreen = Lists();
+          _currentScreen = NewLists();
           break;
         case SHARE_PAGE:
           _floatingButtonIcon = Icon(Icons.share);

@@ -72,6 +72,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - fr.json : Wrong password typo on the French connection page
 - OpenedListPage : An infinite loading message is no longer displayed on an empty wishlist
 - Rotation : User can no longer change the screen rotation
+- New_list : Empty main screen
 
 ### Security
 

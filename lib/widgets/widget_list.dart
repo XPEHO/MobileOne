@@ -35,6 +35,7 @@ class WidgetListsState extends State<WidgetLists> {
           }
           return Container(
             width: MediaQuery.of(context).size.width * 0.23,
+            height: MediaQuery.of(context).size.width * 0.05,
             child: Card(
               elevation: 3,
               color: WHITE,
