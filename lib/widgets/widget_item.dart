@@ -71,18 +71,18 @@ class WidgetItemState extends State<WidgetItem> {
                 Flexible(
                   flex: 1,
                   child: IconButton(
-                    padding: EdgeInsets.only(right: 12.0),
-                    icon: Icon(
-                      Icons.check_circle,
-                      color: GREEN,
-                    ),
-                    onPressed: () =>
+                      padding: EdgeInsets.only(right: 12.0),
+                      icon: Icon(
+                        Icons.check_circle,
+                        color: GREEN,
+                      ),
+                      onPressed: () {
                         GetIt.I.get<ItemsListProvider>().validateItem(
                               listUuid: _listUuid,
                               itemUuid: _itemlist.uuid,
                               isValidated: false,
-                            ),
-                  ),
+                            );
+                      }),
                 ),
                 Flexible(flex: 1, child: Image(image: _itemImage))
               ]),

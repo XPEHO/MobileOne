@@ -10,6 +10,7 @@ import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -26,9 +27,29 @@ class OpenedListPage extends StatefulWidget {
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
+  String listUuid;
   final _myController = TextEditingController();
   final _wishlistProvider = GetIt.I.get<WishlistHeadProvider>();
   OpenedListArguments _args;
+  List itemChecked = [];
+
+  void getvalidated(listUuid) async {
+    List check = [];
+    await Firestore.instance
+        .collection("items")
+        .document(_args.listUuid)
+        .get()
+        .then((value) {
+      if (value.data != null) {
+        value.data.keys.forEach((element) {
+          if (value.data[element]["isValidated"] == true) {
+            check.add(value.data[element]["isValidated"]);
+          }
+        });
+        itemChecked = check;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +99,9 @@ class OpenedListPageState extends State<OpenedListPage> {
   Widget content(
       Wishlist wishlistHead, DocumentSnapshot snapshot, ConnectionState state) {
     List<WishlistItem> wishlist = getSortedList(snapshot);
+    getvalidated(listUuid);
 
+    var pourcentage = (wishlist.isNotEmpty) ? (100 / wishlist.length) : 0;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -174,64 +197,84 @@ class OpenedListPageState extends State<OpenedListPage> {
             );
           }
           return SafeArea(
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: new ListView.builder(
-                  padding: EdgeInsets.only(top: 30),
-                  itemCount: wishlist.length,
-                  itemBuilder: (BuildContext ctxt, int index) {
-                    return Container(
-                      child: Dismissible(
-                          confirmDismiss: (DismissDirection direction) async {
-                            if (direction == DismissDirection.endToStart) {
-                              return await buildDeleteShowDialog(context);
-                            } else {
-                              return true;
-                            }
-                          },
-                          background: Container(
-                            color: GREEN,
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: WHITE,
-                                  )),
-                            ),
-                          ),
-                          secondaryBackground: Container(
-                            color: RED,
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: WHITE,
-                                  )),
-                            ),
-                          ),
-                          key: UniqueKey(),
-                          child: WidgetItem(wishlist[index], wishlistHead.uuid,
-                              wishlist[index].uuid),
-                          onDismissed: (direction) {
-                            if (direction == DismissDirection.endToStart) {
-                              deleteItemFromList(
-                                listUuid: wishlistHead.uuid,
-                                itemUuid: wishlist[index].uuid,
-                              );
-                            } else {
-                              validateItem(
-                                listUuid: wishlistHead.uuid,
-                                item: wishlist[index],
-                              );
-                            }
-                          }),
-                    );
-                  }),
+            child: Column(
+              children: <Widget>[
+                Visibility(
+                  visible: (itemChecked.length >= 1) ? true : false,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FAProgressBar(
+                      currentValue:
+                          (pourcentage.toInt() * (itemChecked.length) == 99)
+                              ? pourcentage.toInt() * (itemChecked.length) + 1
+                              : pourcentage.toInt() * (itemChecked.length),
+                      displayText: '%',
+                      changeColorValue: 50,
+                      changeProgressColor: Colors.green,
+                    ),
+                  ),
+                ),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height - 150,
+                  child: new ListView.builder(
+                      itemCount: wishlist.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        return Container(
+                          child: Dismissible(
+                              confirmDismiss:
+                                  (DismissDirection direction) async {
+                                if (direction == DismissDirection.endToStart) {
+                                  return await buildDeleteShowDialog(context);
+                                } else {
+                                  return true;
+                                }
+                              },
+                              background: Container(
+                                color: GREEN,
+                                child: Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: WHITE,
+                                      )),
+                                ),
+                              ),
+                              secondaryBackground: Container(
+                                color: RED,
+                                child: Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(right: 8.0),
+                                      child: Icon(
+                                        Icons.delete,
+                                        color: WHITE,
+                                      )),
+                                ),
+                              ),
+                              key: UniqueKey(),
+                              child: WidgetItem(wishlist[index],
+                                  wishlistHead.uuid, wishlist[index].uuid),
+                              onDismissed: (direction) {
+                                if (direction == DismissDirection.endToStart) {
+                                  deleteItemFromList(
+                                    listUuid: wishlistHead.uuid,
+                                    itemUuid: wishlist[index].uuid,
+                                  );
+                                } else {
+                                  validateItem(
+                                    listUuid: wishlistHead.uuid,
+                                    item: wishlist[index],
+                                  );
+                                }
+                              }),
+                        );
+                      }),
+                ),
+              ],
             ),
           );
         },
