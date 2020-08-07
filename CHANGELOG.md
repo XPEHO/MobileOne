@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add loyalty cards deletion
 - Add password changing
 - Add item picked picture
+- Add Logo
 
 ### Changed
 
