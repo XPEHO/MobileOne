@@ -7,7 +7,7 @@ class ItemsListProvider with ChangeNotifier {
     return Firestore.instance.collection('items').document(listUuid).get();
   }
 
-  addItemTolist({
+  Future<void> addItemTolist({
     @required String name,
     @required int count,
     @required int typeIndex,
@@ -68,7 +68,7 @@ class ItemsListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  updateItemInList({
+  Future<void> updateItemInList({
     @required String itemUuid,
     @required String name,
     @required int count,
@@ -111,7 +111,6 @@ class ItemsListProvider with ChangeNotifier {
         .collection("items")
         .document(listUuid)
         .updateData({itemUuid: FieldValue.delete()});
-    notifyListeners();
   }
 
   validateItem({

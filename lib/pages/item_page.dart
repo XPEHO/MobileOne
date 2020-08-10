@@ -111,6 +111,12 @@ class EditItemPageState extends State<EditItemPage> {
     _args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
       appBar: AppBar(
+        leading: new IconButton(
+            icon: new Icon(Icons.arrow_back),
+            onPressed: () {
+              FocusScope.of(context).unfocus();
+              Navigator.pop(context);
+            }),
         iconTheme: ThemeData.light().iconTheme,
         actionsIconTheme: ThemeData.light().iconTheme,
         backgroundColor: Colors.white,
@@ -389,7 +395,7 @@ class EditItemPageState extends State<EditItemPage> {
   }
 
   void uddapteItemInList(int _typeIndex) async {
-    _itemsListProvider.updateItemInList(
+    await _itemsListProvider.updateItemInList(
       itemUuid: _args.itemUuid,
       name: _name,
       count: _count,
@@ -397,18 +403,20 @@ class EditItemPageState extends State<EditItemPage> {
       imageLink: imageLink,
       listUuid: _args.listUuid,
     );
+    FocusScope.of(context).unfocus();
     Navigator.of(context).pop();
     clearPopupFields();
   }
 
   void addItemToList(int _typeIndex) async {
-    _itemsListProvider.addItemTolist(
+    await _itemsListProvider.addItemTolist(
       name: _name,
       count: _count,
       typeIndex: _typeIndex,
       imageLink: imageLink,
       listUuid: _args.listUuid,
     );
+    FocusScope.of(context).unfocus();
     Navigator.of(context).pop();
     clearPopupFields();
   }

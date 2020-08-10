@@ -77,6 +77,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Rotation : User can no longer change the screen rotation
 - New_list : Empty main screen
 - target sdk is outdated
+- OpenedListPage : Screen don't blink anymore on item creation/deletion
 
 ### Security
 
