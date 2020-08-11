@@ -65,16 +65,12 @@ class NewProfileState extends State<NewProfile> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Center(
-                  child: Container(
-                    key: Key(KEY_GALLERY),
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    width: MediaQuery.of(context).size.width * 0.3,
-                    child: _buildProfilePicture(user),
-                  ),
-                ),
+                    child: Container(
+                  child: _buildProfilePicture(user),
+                )),
                 Container(
                   height: MediaQuery.of(context).size.height,
-                  width: MediaQuery.of(context).size.width * 0.5,
+                  width: MediaQuery.of(context).size.width * 0.6,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -88,7 +84,7 @@ class NewProfileState extends State<NewProfile> {
                                 ? user.displayName
                                 : user.email,
                             style: TextStyle(
-                              fontSize: 20,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: WHITE,
                             ),
@@ -103,7 +99,7 @@ class NewProfileState extends State<NewProfile> {
                           child: Text(
                             user.email,
                             style: TextStyle(
-                              fontSize: 15,
+                              fontSize: 13,
                               color: WHITE,
                             ),
                           ),
@@ -246,7 +242,7 @@ class NewProfileState extends State<NewProfile> {
               backgroundImage: FileImage(
                 File(selectedPicturePath),
               ),
-              radius: 24.0,
+              radius: 30.0,
             );
           } else {
             if (user.photoUrl != null && user.photoUrl.isNotEmpty) {
@@ -255,7 +251,7 @@ class NewProfileState extends State<NewProfile> {
                 backgroundImage: NetworkImage(
                   user.photoUrl,
                 ),
-                radius: 24.0,
+                radius: 30.0,
               );
             } else {
               userPicture = CircleAvatar(
@@ -263,14 +259,15 @@ class NewProfileState extends State<NewProfile> {
                 child: Icon(
                   Icons.person,
                   color: Colors.grey,
-                  size: 50,
+                  size: 30,
                 ),
-                radius: 24.0,
+                radius: 30.0,
               );
             }
           }
 
           return GestureDetector(
+            key: Key(KEY_GALLERY),
             onTap: () => _selectPicture(provider),
             child: userPicture,
           );

@@ -16,7 +16,7 @@
     "signed_out": "Utilisateur déconnecté",
     "loyalty_cards": "Cartes",
     "my_lists": "Listes",
-    "shared": "Partager",
+    "shared": "Partages",
     "profile": "Profil",
     "center_icon_newlist": "Nouvelle liste",
     "center_icon_share": "Partager",
@@ -123,5 +123,6 @@
     "confirm_share_leaving": "Etes-vous sûr de vouloir quitter cette liste ?",
     "confirm_leave": "QUITTER",
     "microphone_access": "Veuillez accorder les permissions d'accès au microphone pour utiliser cette fonctionnalité",
-    "talk": "Vous pouvez parler"
+    "talk": "Vous pouvez parler",
+    "all_my_lists": "Mes listes:"
 }

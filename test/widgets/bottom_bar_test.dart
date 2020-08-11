@@ -120,6 +120,6 @@ void main() {
     //THEN
     expect(find.byKey(Key(KEY_SHARE_PAGE + "_selected")), findsOneWidget);
     expect(find.byKey(Key(KEY_CENTER_TEXT)), findsOneWidget);
-    expect(find.text("Partager"), findsNWidgets(2));
+    expect(find.text("Partages"), findsOneWidget);
   });
 }

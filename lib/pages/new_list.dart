@@ -53,7 +53,7 @@ class NewListsState extends State<NewLists> {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          getString(context, 'my_lists'),
+                          getString(context, 'all_my_lists'),
                         ),
                       ),
                     ),

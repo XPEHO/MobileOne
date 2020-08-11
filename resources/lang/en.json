@@ -15,7 +15,7 @@
     "no_user": "No user signed in",
     "signed_out": "User signed out",
     "loyalty_cards": "Cards",
-    "my_lists": "My Lists :",
+    "my_lists": "Lists",
     "shared": "Shared",
     "profile": "Profile",
     "center_icon_newlist": "New list",
@@ -123,5 +123,6 @@
     "confirm_share_leaving": "Are you sure you wish to leave this wishlist ?",
     "confirm_leave": "LEAVE",
     "microphone_access": "Please grant microphone permissions to the app to use this service",
-    "talk": "You can talk now"
+    "talk": "You can talk now",
+    "all_my_lists": "My lists:"
 }
