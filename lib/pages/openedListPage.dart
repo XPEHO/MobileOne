@@ -5,6 +5,7 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_item.dart';
@@ -27,11 +28,18 @@ class OpenedListPage extends StatefulWidget {
 }
 
 class OpenedListPageState extends State<OpenedListPage> {
+  var _analytics = GetIt.I.get<AnalyticsService>();
   String listUuid;
   final _myController = TextEditingController();
   final _wishlistProvider = GetIt.I.get<WishlistHeadProvider>();
   OpenedListArguments _args;
   List itemChecked = [];
+
+  @override
+  void initState() {
+    _analytics.setCurrentPage("isOnOpenedListPage");
+    super.initState();
+  }
 
   void getvalidated(listUuid) async {
     List check = [];
@@ -172,6 +180,8 @@ class OpenedListPageState extends State<OpenedListPage> {
                   });
                   break;
                 case 2:
+                  _analytics
+                      .sendAnalyticsEvent("share_list_from_openedlistpage");
                   askPermissions(wishlistHead.uuid);
                   break;
                 case 3:
@@ -183,6 +193,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                           GetIt.I.get<UserService>().user.email);
                     }
                   });
+
                   break;
               }
             },
@@ -264,11 +275,13 @@ class OpenedListPageState extends State<OpenedListPage> {
                                     listUuid: wishlistHead.uuid,
                                     itemUuid: wishlist[index].uuid,
                                   );
+                                  _analytics.sendAnalyticsEvent("delete_item");
                                 } else {
                                   validateItem(
                                     listUuid: wishlistHead.uuid,
                                     item: wishlist[index],
                                   );
+                                  _analytics.sendAnalyticsEvent("check_item");
                                 }
                               }),
                         );

@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/item_page.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -14,6 +15,8 @@ class ItemsListProviderMock extends Mock implements ItemsListProvider {}
 
 class ImageServiceMock extends Mock implements ImageService {}
 
+class AnalyticsServiceMock extends Mock implements AnalyticsService {}
+
 main() {
   group('Items scan tests', () {
     setSupportedLocales([Locale('fr', 'FR')]);
@@ -21,7 +24,10 @@ main() {
     GetIt.I.registerSingleton<ImageService>(_imageService);
     var _itemsProvider = ItemsListProviderMock();
     GetIt.I.registerSingleton<ItemsListProvider>(_itemsProvider);
+    final _analyticsService = AnalyticsServiceMock();
+    GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
     final _editItemPageState = EditItemPageState();
+
     test('Item label should be set to scanned item name', () async {
       //GIVEN
       var response = await http.get(

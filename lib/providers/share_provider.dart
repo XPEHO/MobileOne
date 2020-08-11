@@ -1,3 +1,4 @@
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class ShareProvider with ChangeNotifier {
+  var _analytics = GetIt.I.get<AnalyticsService>();
   var userService = GetIt.I.get<UserService>();
   Future<DocumentSnapshot> get ownerLists {
     return Firestore.instance
@@ -55,6 +57,7 @@ class ShareProvider with ChangeNotifier {
         },
       );
     }
+    _analytics.sendAnalyticsEvent("user_shared_list");
     notifyListeners();
   }
 
@@ -97,7 +100,7 @@ class ShareProvider with ChangeNotifier {
         .updateData({
       listUuid: FieldValue.arrayRemove([email])
     });
-
+    _analytics.sendAnalyticsEvent("delete_shared");
     notifyListeners();
   }
 }

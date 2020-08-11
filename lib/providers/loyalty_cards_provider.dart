@@ -1,3 +1,4 @@
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/database.dart';
 import 'package:barcode_scan/barcode_scan.dart';
@@ -7,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:uuid/uuid.dart';
 
 class LoyaltyCardsProvider with ChangeNotifier {
+  var _analytics = GetIt.I.get<AnalyticsService>();
   Future<DocumentSnapshot> get loyaltyCards {
     return Firestore.instance
         .collection("loyaltycards")
@@ -23,6 +25,7 @@ class LoyaltyCardsProvider with ChangeNotifier {
         'label': _name,
       },
     }, merge: true);
+    _analytics.sendAnalyticsEvent("update_loyalty_card_name : $_name");
     notifyListeners();
   }
 
@@ -66,6 +69,7 @@ class LoyaltyCardsProvider with ChangeNotifier {
         }
       });
     }
+    _analytics.sendAnalyticsEvent("add_loyalty_card");
     notifyListeners();
   }
 
@@ -74,6 +78,7 @@ class LoyaltyCardsProvider with ChangeNotifier {
         .collection("loyaltycards")
         .document(GetIt.I.get<UserService>().user.uid)
         .updateData({cardUuid: FieldValue.delete()});
+    _analytics.sendAnalyticsEvent("delete_loyalty_card");
     notifyListeners();
   }
 }

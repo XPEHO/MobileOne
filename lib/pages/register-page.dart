@@ -1,4 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/services/authentication_service.dart';
@@ -17,6 +18,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class RegisterPageState extends State<RegisterPage> {
+  var _analytics = GetIt.I.get<AnalyticsService>();
   final _formKey = GlobalKey<FormState>();
   final _emailController = new TextEditingController();
   final _passwordController = new TextEditingController();
@@ -26,6 +28,12 @@ class RegisterPageState extends State<RegisterPage> {
   String _confirmPassword;
 
   final _authService = GetIt.I.get<AuthenticationService>();
+
+  @override
+  initState() {
+    _analytics.setCurrentPage("isOnregisterPage");
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -215,6 +223,7 @@ class RegisterPageState extends State<RegisterPage> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           createAccount();
+          _analytics.sendAnalyticsEvent("account_registred");
         }
       },
       child: Text(getString(context, 'create_account')),

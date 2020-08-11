@@ -1,3 +1,4 @@
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,7 @@ import 'package:uuid/uuid.dart';
 
 class WishlistsListProvider with ChangeNotifier {
   final UserService userService = GetIt.I.get<UserService>();
-
+  var _analytics = GetIt.I.get<AnalyticsService>();
   Future<DocumentSnapshot> get ownerLists {
     return Firestore.instance
         .collection("owners")
@@ -59,6 +60,7 @@ class WishlistsListProvider with ChangeNotifier {
   }
 
   deleteWishlist(String listUuid, String userUid) async {
+    _analytics.sendAnalyticsEvent("delete_wishlist");
     List tmpList = [];
     DocumentSnapshot tmpDoc;
 
@@ -115,6 +117,7 @@ class WishlistsListProvider with ChangeNotifier {
   }
 
   leaveShare(String listUuid, String email) async {
+    _analytics.sendAnalyticsEvent("Leave_share");
     await Firestore.instance.collection("guests").document(email).updateData({
       "lists": FieldValue.arrayRemove([listUuid])
     });

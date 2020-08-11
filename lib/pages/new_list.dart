@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_empty_list.dart';
@@ -20,6 +21,12 @@ class NewListsState extends State<NewLists> {
   var lists = [];
   var guestList = [];
   var _userService = GetIt.I.get<UserService>();
+  var _analytics = GetIt.I.get<AnalyticsService>();
+  @override
+  void initState() {
+    _analytics.setCurrentPage("isOnListPage");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

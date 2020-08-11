@@ -1,4 +1,5 @@
 import 'package:MobileOne/pages/authentication-page.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -12,6 +13,8 @@ class AuthenticationServiceMock extends Mock implements AuthenticationService {}
 
 class PreferencesServiceMock extends Mock implements PreferencesService {}
 
+class AnalyticsServiceMock extends Mock implements AnalyticsService {}
+
 main() {
   group('login skip', () {
     GetIt.I.registerSingleton<UserService>(UserServiceMock());
@@ -21,6 +24,8 @@ main() {
 
     var _prefService = PreferencesServiceMock();
     GetIt.I.registerSingleton<PreferencesService>(_prefService);
+    final _analyticsService = AnalyticsServiceMock();
+    GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
 
     var _authenticationPageState = AuthenticationPageState();
 

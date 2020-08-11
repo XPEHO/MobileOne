@@ -1,4 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,7 +14,6 @@ const KEY_AUTH_PAGE_TEXT = "authentication_page_text";
 
 class AuthenticationPage extends StatefulWidget {
   AuthenticationPage({Key key}) : super(key: key);
-
   @override
   AuthenticationPageState createState() => AuthenticationPageState();
 }
@@ -22,12 +22,14 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = new TextEditingController();
   final _passwordController = new TextEditingController();
+
   String _email;
   String _password;
 
   var _userService = GetIt.I.get<UserService>();
   var _authenticationService = GetIt.I.get<AuthenticationService>();
   var _preferencesService = GetIt.I.get<PreferencesService>();
+  var _analytics = GetIt.I.get<AnalyticsService>();
 
   @override
   void dispose() {
@@ -60,6 +62,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   @override
   void initState() {
+    _analytics.setCurrentPage("isOnAuthenticationPage");
     loginSkip().then((skip) {
       if (skip) {
         openMainPage(context);

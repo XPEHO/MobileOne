@@ -1,3 +1,4 @@
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -18,6 +19,8 @@ class MockGoogleSignInAuthentication extends Mock
 
 class MockAuthResult extends Mock implements AuthResult {}
 
+class AnalyticsServiceMock extends Mock implements AnalyticsService {}
+
 final service = AuthenticationService();
 
 void main() {
@@ -34,6 +37,9 @@ void main() {
 
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
     GetIt.I.registerSingleton<FirebaseAuth>(_firebaseAuth);
+
+    final _analyticsService = AnalyticsServiceMock();
+    GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
 
     /*test('googleSignIn error', () async {
       //GIVEN

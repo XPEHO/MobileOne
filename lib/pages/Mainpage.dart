@@ -7,6 +7,7 @@ import 'package:MobileOne/pages/new_list.dart';
 import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/pages/share.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/utility/arguments.dart';
@@ -35,6 +36,7 @@ class MainPageState extends State<MainPage> {
   final _prefService = GetIt.I.get<PreferencesService>();
   final _userService = GetIt.I.get<UserService>();
   Widget _currentScreen = NewLists();
+  var _analytics = GetIt.I.get<AnalyticsService>();
 
   List _actions = [];
 
@@ -91,6 +93,7 @@ class MainPageState extends State<MainPage> {
   }
 
   Future _getImage() async {
+    _analytics.sendAnalyticsEvent("change_picture_from_camera");
     // Pick picture
     final pickedFile = await _imageService.pickCamera();
 
@@ -167,9 +170,11 @@ class MainPageState extends State<MainPage> {
 
   goToCreateListPage() {
     Navigator.of(context).pushNamed("/createList");
+    _analytics.sendAnalyticsEvent("add_wishlist");
   }
 
   goToSharedPage() async {
+    _analytics.sendAnalyticsEvent("share_list_from_button");
     await askPermissions();
   }
 
@@ -197,6 +202,7 @@ class MainPageState extends State<MainPage> {
             colorCard,
           );
     }
+    _analytics.sendAnalyticsEvent("add_loyalty_card");
   }
 
   String generateRandomHexColor() {

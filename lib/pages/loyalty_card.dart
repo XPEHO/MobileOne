@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/widgets/widget_loyaltyCards.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -16,6 +17,12 @@ class LoyaltyCards extends StatefulWidget {
 
 class LoyaltyCardsState extends State<LoyaltyCards> {
   String uuidOfCard;
+  var _analytics = GetIt.I.get<AnalyticsService>();
+  @override
+  void initState() {
+    _analytics.setCurrentPage("isOnLoyaltyCardPage");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,5 +105,6 @@ class LoyaltyCardsState extends State<LoyaltyCards> {
 
   void deleteCard(String uuid) {
     GetIt.I.get<LoyaltyCardsProvider>().deleteCard(uuid);
+    _analytics.sendAnalyticsEvent("delete_loyalty_card");
   }
 }

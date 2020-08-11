@@ -1,3 +1,4 @@
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -6,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthenticationService {
   final _authService = GetIt.I.get<FirebaseAuth>();
   final _googleService = GetIt.I.get<GoogleSignIn>();
-
+  var _analytics = GetIt.I.get<AnalyticsService>();
   Future<FirebaseUser> googleSignInSilently() async {
     final GoogleSignInAccount googleUser =
         await _googleService.signInSilently();
@@ -37,6 +38,7 @@ class AuthenticationService {
   }
 
   Future<FirebaseUser> signIn(String email, String password) async {
+    _analytics.loging();
     FirebaseUser _user = (await _authService.signInWithEmailAndPassword(
       email: email,
       password: password,
@@ -64,6 +66,7 @@ class AuthenticationService {
   }
 
   Future<bool> sendVerificationEmail(FirebaseUser _user) async {
+    _analytics.sendAnalyticsEvent("email_verification");
     try {
       await _user.sendEmailVerification();
       return true;

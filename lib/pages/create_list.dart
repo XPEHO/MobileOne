@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:MobileOne/utility/colors.dart';
@@ -12,9 +13,10 @@ class CreateList extends StatefulWidget {
 
 class CreateListPage extends State<CreateList> {
   final _myController = TextEditingController();
-
+  var _analytics = GetIt.I.get<AnalyticsService>();
   @override
   void initState() {
+    _analytics.setCurrentPage("isOnCreateListPage");
     super.initState();
   }
 

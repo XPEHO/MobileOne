@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/widgets/widget_list.dart';
 import 'package:MobileOne/pages/share_one.dart';
@@ -13,11 +14,14 @@ class ShareTwo extends StatefulWidget {
 }
 
 class ShareStateTwoState extends State<ShareTwo> {
+  var _analytics = GetIt.I.get<AnalyticsService>();
   final _myController = TextEditingController();
   var _listSelected;
   var userService = GetIt.I.get<UserService>();
   var shareProvider = GetIt.I.get<ShareProvider>();
+
   void initState() {
+    _analytics.setCurrentPage("isOneShareTwoPage");
     super.initState();
   }
 

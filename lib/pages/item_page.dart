@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:MobileOne/arguments/arguments.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'dart:io';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
@@ -30,6 +31,7 @@ class EditItemPageState extends State<EditItemPage> {
   final itemCountController = new TextEditingController();
   final _itemNameFocusNode = FocusNode();
   final _itemQuantityFocusNode = FocusNode();
+  var _analytics = GetIt.I.get<AnalyticsService>();
   String _name;
   int _count = 1;
   String _type;
@@ -93,6 +95,7 @@ class EditItemPageState extends State<EditItemPage> {
 
   @override
   void initState() {
+    _analytics.setCurrentPage("isOnItemsPage");
     itemCountController.text = "1";
     _itemImage = AssetImage("assets/images/canned-food.png");
     WidgetsBinding.instance.addPostFrameCallback((_) => getData());
@@ -102,6 +105,7 @@ class EditItemPageState extends State<EditItemPage> {
 
   void getData() {
     if (_args.buttonName == getString(context, "popup_update")) {
+      _analytics.sendAnalyticsEvent("update_item");
       getItems();
     }
   }
@@ -122,14 +126,16 @@ class EditItemPageState extends State<EditItemPage> {
         backgroundColor: Colors.white,
         actions: <Widget>[
           IconButton(
-            icon: SvgPicture.asset(
-              "assets/images/qr-code.svg",
-              color: Colors.lime[600],
-              width: 24,
-              height: 24,
-            ),
-            onPressed: () => scanAnItem(),
-          ),
+              icon: SvgPicture.asset(
+                "assets/images/qr-code.svg",
+                color: Colors.lime[600],
+                width: 24,
+                height: 24,
+              ),
+              onPressed: () {
+                _analytics.sendAnalyticsEvent("scanItem");
+                scanAnItem();
+              }),
           IconButton(
             key: Key("item_picture_button"),
             icon: Icon(
@@ -138,6 +144,7 @@ class EditItemPageState extends State<EditItemPage> {
               size: 24,
             ),
             onPressed: () {
+              _analytics.sendAnalyticsEvent("takePictureOfItem");
               pickImage();
             },
           ),
@@ -393,6 +400,7 @@ class EditItemPageState extends State<EditItemPage> {
   }
 
   void uddapteItemInList(int _typeIndex) async {
+    _analytics.sendAnalyticsEvent("update_item");
     await _itemsListProvider.updateItemInList(
       itemUuid: _args.itemUuid,
       name: _name,
@@ -407,6 +415,7 @@ class EditItemPageState extends State<EditItemPage> {
   }
 
   void addItemToList(int _typeIndex) async {
+    _analytics.sendAnalyticsEvent("add_item");
     await _itemsListProvider.addItemTolist(
       name: _name,
       count: _count,
@@ -428,12 +437,14 @@ class EditItemPageState extends State<EditItemPage> {
   }
 
   void incrementCounter() {
+    _analytics.sendAnalyticsEvent("increment_counter_quantity");
     _count = _count + 1;
     itemCountController.text = (_count).toString();
   }
 
   void decrementCounter() {
     if (_count > 0) {
+      _analytics.sendAnalyticsEvent("decrement_counter_quantity");
       _count = _count - 1;
       itemCountController.text = (_count).toString();
     }

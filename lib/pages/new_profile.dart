@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/change_password.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
@@ -28,6 +29,12 @@ class NewProfileState extends State<NewProfile> {
   final _prefService = GetIt.I.get<PreferencesService>();
   var _authService = GetIt.I.get<AuthenticationService>();
   final _auth = GetIt.I.get<FirebaseAuth>();
+  var _analytics = GetIt.I.get<AnalyticsService>();
+  @override
+  initState() {
+    _analytics.setCurrentPage("isOnProfilePage");
+    super.initState();
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -225,6 +232,7 @@ class NewProfileState extends State<NewProfile> {
   }
 
   Widget _buildProfilePicture(FirebaseUser user) {
+    _analytics.sendAnalyticsEvent("change_picture_from_gallery");
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<UserPictureProvider>(),
       child: Consumer<UserPictureProvider>(
@@ -296,6 +304,7 @@ class NewProfileState extends State<NewProfile> {
       ModalRoute.withName('/'),
     );
     _userService.user = null;
+    _analytics.sendAnalyticsEvent("logout");
   }
 
   reconnectUser(FirebaseUser user) async {
@@ -357,6 +366,7 @@ class NewProfileState extends State<NewProfile> {
           msg: getString(context, 'default_error'),
         );
     }
+    _analytics.sendAnalyticsEvent("delete_account");
   }
 
   signout(FirebaseUser user) {

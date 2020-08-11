@@ -1,4 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -17,6 +18,7 @@ class ChangePassword extends StatefulWidget {
 }
 
 class ChangePasswordState extends State<ChangePassword> {
+  var _analytics = GetIt.I.get<AnalyticsService>();
   final _formKey = GlobalKey<FormState>();
   final _newPasswordController = new TextEditingController();
   final _confirmNewPasswordController = new TextEditingController();
@@ -101,6 +103,7 @@ class ChangePasswordState extends State<ChangePassword> {
       onPressed: () {
         if (_formKey.currentState.validate()) {
           changePassword();
+          _analytics.sendAnalyticsEvent("change_password");
         }
       },
       child: Text(getString(context, 'confirm_password_changing')),

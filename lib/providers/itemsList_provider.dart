@@ -65,6 +65,7 @@ class ItemsListProvider with ChangeNotifier {
         }
       });
     }
+
     notifyListeners();
   }
 

@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_share_contact.dart';
 import 'package:contacts_service/contacts_service.dart';
@@ -16,6 +17,7 @@ class ShareOne extends StatefulWidget {
 }
 
 class ShareStateOneState extends State<ShareOne> {
+  var _analytics = GetIt.I.get<AnalyticsService>();
   var uuid = Uuid();
   var newUuid;
   final _myController = TextEditingController();
@@ -32,6 +34,7 @@ class ShareStateOneState extends State<ShareOne> {
   bool isVisible = false;
 
   void initState() {
+    _analytics.setCurrentPage("isOnShareOnePage");
     super.initState();
     newUuid = uuid.v4();
     getContacts();

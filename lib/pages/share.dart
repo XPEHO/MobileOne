@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_share_lists.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -15,6 +16,13 @@ class Share extends StatefulWidget {
 }
 
 class ShareState extends State<Share> {
+  var _analytics = GetIt.I.get<AnalyticsService>();
+  @override
+  void initState() {
+    _analytics.setCurrentPage("isOnSharePage");
+    super.initState();
+  }
+
   var previousList;
   @override
   Widget build(BuildContext context) {
@@ -88,6 +96,8 @@ class ShareState extends State<Share> {
                         return GestureDetector(
                           onTap: () {
                             previousList = wishlist[index];
+                            _analytics.sendAnalyticsEvent(
+                                "share_list_from_share_page");
                             askPermissions();
                           },
                           child: WidgetShareListWithSomeone(

@@ -1,7 +1,9 @@
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class Cards extends StatefulWidget {
   @override
@@ -9,6 +11,13 @@ class Cards extends StatefulWidget {
 }
 
 class CardsState extends State<Cards> {
+  var _analytics = GetIt.I.get<AnalyticsService>();
+  @override
+  void initState() {
+    _analytics.setCurrentPage("isOnBigCardPage");
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     CardArguments args = ModalRoute.of(context).settings.arguments;

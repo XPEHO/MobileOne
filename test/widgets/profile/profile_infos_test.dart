@@ -2,6 +2,7 @@ import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
@@ -53,6 +54,8 @@ class ImageServiceMock extends Mock implements ImageService {}
 
 class UserPictureMock extends Mock implements UserPictureProvider {}
 
+class AnalyticsServiceMock extends Mock implements AnalyticsService {}
+
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
 
@@ -69,7 +72,8 @@ void main() {
     final _imageService = ImageServiceMock();
     final _prefs = PreferencesMock();
     final _picture = UserPictureMock();
-
+    final _analyticsService = AnalyticsServiceMock();
+    GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
     GetIt.instance.registerSingleton<FirebaseAuth>(auth);
     GetIt.instance.registerSingleton<FirebaseUser>(user);

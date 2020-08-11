@@ -6,7 +6,6 @@ const int CARD_PAGE = 0;
 const int LISTS_PAGE = 1;
 const int SHARE_PAGE = 2;
 const int PROFILE_PAGE = 3;
-
 const KEY_CENTER_TEXT = "center_text";
 const KEY_CARD_PAGE = "Cards";
 const KEY_LISTS_PAGE = "Lists";

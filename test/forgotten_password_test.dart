@@ -1,3 +1,4 @@
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
@@ -10,6 +11,8 @@ class MockFirebaseAuth extends Mock implements FirebaseAuth {}
 
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
 
+class AnalyticsServiceMock extends Mock implements AnalyticsService {}
+
 final service = AuthenticationService();
 
 void main() {
@@ -19,6 +22,9 @@ void main() {
 
     GetIt.I.registerSingleton<FirebaseAuth>(_firebaseAuth);
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
+
+    final _analyticsService = AnalyticsServiceMock();
+    GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
 
     test('Email sent successfully', () async {
       //GIVEN
