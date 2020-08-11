@@ -208,7 +208,7 @@ class NewListsState extends State<NewLists> {
           itemBuilder: (BuildContext ctxt, index) {
             return GestureDetector(
                 onTap: () {
-                  openOpenedListPage(lists[index], true);
+                  openOpenedListPage(guestList[index], true);
                 },
                 child: WidgetLists(
                     guestList[index], getString(context, "shared_count")));

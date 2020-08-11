@@ -121,5 +121,7 @@
     "no_sharing": "Aucun partage",
     "leave_share": "Quitter",
     "confirm_share_leaving": "Etes-vous sûr de vouloir quitter cette liste ?",
-    "confirm_leave": "QUITTER"
+    "confirm_leave": "QUITTER",
+    "microphone_access": "Veuillez accorder les permissions d'accès au microphone pour utiliser cette fonctionnalité",
+    "talk": "Vous pouvez parler"
 }

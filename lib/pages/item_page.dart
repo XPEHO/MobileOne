@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/arguments/arguments.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/analytics_services.dart';
@@ -16,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:speech_to_text/speech_to_text.dart';
 
 class EditItemPage extends StatefulWidget {
   EditItemPage({
@@ -48,6 +50,8 @@ class EditItemPageState extends State<EditItemPage> {
   ItemArguments _args;
   var _itemImage;
   File pickedImage;
+  final SpeechToText speech = SpeechToText();
+  bool isInitialized;
 
   Future<void> getItems() async {
     String labelValue;
@@ -101,6 +105,11 @@ class EditItemPageState extends State<EditItemPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => getData());
     super.initState();
     _itemNameFocusNode.requestFocus();
+    initializeSpeech();
+  }
+
+  initializeSpeech() async {
+    isInitialized = await speech.initialize();
   }
 
   void getData() {
@@ -126,16 +135,22 @@ class EditItemPageState extends State<EditItemPage> {
         backgroundColor: Colors.white,
         actions: <Widget>[
           IconButton(
-              icon: SvgPicture.asset(
-                "assets/images/qr-code.svg",
-                color: Colors.lime[600],
-                width: 24,
-                height: 24,
-              ),
-              onPressed: () {
-                _analytics.sendAnalyticsEvent("scanItem");
-                scanAnItem();
-              }),
+            icon: Icon(
+              Icons.mic,
+              color: Colors.lime[600],
+              size: 24,
+            ),
+            onPressed: () => recordAudio(),
+          ),
+          IconButton(
+            icon: SvgPicture.asset(
+              "assets/images/qr-code.svg",
+              color: Colors.lime[600],
+              width: 24,
+              height: 24,
+            ),
+            onPressed: () => scanAnItem(),
+          ),
           IconButton(
             key: Key("item_picture_button"),
             icon: Icon(
@@ -181,6 +196,57 @@ class EditItemPageState extends State<EditItemPage> {
         ),
       ),
     );
+  }
+
+  recordAudio() async {
+    if (isInitialized) {
+      await buildRecordPopup();
+      await speech.cancel();
+      await speech.stop();
+    } else {
+      Fluttertoast.showToast(msg: getString(context, 'microphone_access'));
+    }
+  }
+
+  listenRecord() async {
+    await speech.listen(
+      partialResults: false,
+      onResult: (result) {
+        setState(() {
+          itemNameController.text = result.recognizedWords;
+          _name = result.recognizedWords;
+          Navigator.of(context).pop();
+        });
+      },
+    );
+  }
+
+  Future<bool> buildRecordPopup() async {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          listenRecord();
+          return new AlertDialog(
+            backgroundColor: Colors.teal[900],
+            scrollable: true,
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Icon(
+                  Icons.mic,
+                  color: WHITE,
+                  size: 36,
+                ),
+                Text(
+                  getString(context, "talk"),
+                  style: TextStyle(color: WHITE),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   Future<void> pickImage() async {

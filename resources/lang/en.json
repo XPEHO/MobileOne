@@ -121,5 +121,7 @@
     "no_sharing": "No sharing",
     "leave_share": "Leave",
     "confirm_share_leaving": "Are you sure you wish to leave this wishlist ?",
-    "confirm_leave": "LEAVE"
+    "confirm_leave": "LEAVE",
+    "microphone_access": "Please grant microphone permissions to the app to use this service",
+    "talk": "You can talk now"
 }

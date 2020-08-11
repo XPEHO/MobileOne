@@ -74,5 +74,14 @@
 	<array>
 		<dict/>
 	</array>
+	<key>NSContactsUsageDescription</key>  	
+	<string>This app requires contacts access to function properly.</string> 
+	<key>NSCameraUsageDescription</key>
+	<string>Camera permission is required for barcode scanning.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>This app requires microphone access to function properly</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone permission is required for speech recognition</string>
+
 </dict>
 </plist>
