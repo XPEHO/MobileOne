@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:path/path.dart' as path;
+import 'package:MobileOne/arguments/arguments.dart';
+import 'package:MobileOne/services/image_service.dart';
 import 'dart:io';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
@@ -14,7 +15,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 
 class EditItemPage extends StatefulWidget {
   EditItemPage({
@@ -41,11 +41,11 @@ class EditItemPageState extends State<EditItemPage> {
   String unit = "";
 
   var _itemsListProvider = GetIt.I.get<ItemsListProvider>();
+  var _imageService = GetIt.I.get<ImageService>();
 
   ItemArguments _args;
   var _itemImage;
   File pickedImage;
-  final _picker = ImagePicker();
 
   Future<void> getItems() async {
     String labelValue;
@@ -108,7 +108,7 @@ class EditItemPageState extends State<EditItemPage> {
 
   @override
   Widget build(BuildContext context) {
-    _args = ModalRoute.of(context).settings.arguments;
+    _args = Arguments.value(context);
     return Scaffold(
       appBar: AppBar(
         leading: new IconButton(
@@ -131,6 +131,7 @@ class EditItemPageState extends State<EditItemPage> {
             onPressed: () => scanAnItem(),
           ),
           IconButton(
+            key: Key("item_picture_button"),
             icon: Icon(
               Icons.camera,
               color: Colors.lime[600],
@@ -176,23 +177,20 @@ class EditItemPageState extends State<EditItemPage> {
   }
 
   Future<void> pickImage() async {
-    await _picker.getImage(source: ImageSource.camera).then((image) {
-      pickedImage = File(image.path);
-    });
-    uploadFile(_args.listUuid);
-    setState(() {
-      _itemImage = FileImage(pickedImage);
-    });
-  }
+    await _imageService
+        .pickCamera()
+        .then((image) => pickedImage = File(image.path));
 
-  Future<void> uploadFile(String listUuid) async {
-    StorageReference storageReference = FirebaseStorage.instance
-        .ref()
-        .child('mobileone/$listUuid/${path.basename(pickedImage.path)}');
+    StorageReference storageReference =
+        _imageService.uploadFile(_args.listUuid, pickedImage);
     StorageUploadTask uploadTask = storageReference.putFile(pickedImage);
     await uploadTask.onComplete;
     storageReference.getDownloadURL().then((fileURL) {
       imageLink = fileURL;
+    });
+
+    setState(() {
+      _itemImage = FileImage(pickedImage);
     });
   }
 

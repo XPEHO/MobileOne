@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/item_page.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/services/image_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -11,9 +12,13 @@ import 'package:mockito/mockito.dart';
 
 class ItemsListProviderMock extends Mock implements ItemsListProvider {}
 
+class ImageServiceMock extends Mock implements ImageService {}
+
 main() {
   group('Items scan tests', () {
     setSupportedLocales([Locale('fr', 'FR')]);
+    final _imageService = ImageServiceMock();
+    GetIt.I.registerSingleton<ImageService>(_imageService);
     var _itemsProvider = ItemsListProviderMock();
     GetIt.I.registerSingleton<ItemsListProvider>(_itemsProvider);
     final _editItemPageState = EditItemPageState();
