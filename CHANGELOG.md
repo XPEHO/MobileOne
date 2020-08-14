@@ -81,6 +81,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - OpenedListPage : Screen don't blink anymore on item creation/deletion
 - Analytics tags
 - New_profile : user avatar is oval
+- OpenedListPage : Screen don't overflow anymore on wishlist name changing
 
 ### Security
 

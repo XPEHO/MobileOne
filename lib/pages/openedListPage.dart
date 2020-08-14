@@ -208,86 +208,92 @@ class OpenedListPageState extends State<OpenedListPage> {
             );
           }
           return SafeArea(
-            child: Column(
-              children: <Widget>[
-                Visibility(
-                  visible: (itemChecked.length >= 1) ? true : false,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: FAProgressBar(
-                      currentValue:
-                          (pourcentage.toInt() * (itemChecked.length) == 99)
-                              ? pourcentage.toInt() * (itemChecked.length) + 1
-                              : pourcentage.toInt() * (itemChecked.length),
-                      displayText: '%',
-                      changeColorValue: 50,
-                      changeProgressColor: Colors.green,
+            child: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  Visibility(
+                    visible: (itemChecked.length >= 1) ? true : false,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: FAProgressBar(
+                        currentValue:
+                            (pourcentage.toInt() * (itemChecked.length) == 99)
+                                ? pourcentage.toInt() * (itemChecked.length) + 1
+                                : pourcentage.toInt() * (itemChecked.length),
+                        displayText: '%',
+                        changeColorValue: 50,
+                        changeProgressColor: Colors.green,
+                      ),
                     ),
                   ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 150,
-                  child: new ListView.builder(
-                      itemCount: wishlist.length,
-                      itemBuilder: (BuildContext ctxt, int index) {
-                        return Container(
-                          child: Dismissible(
-                              confirmDismiss:
-                                  (DismissDirection direction) async {
-                                if (direction == DismissDirection.endToStart) {
-                                  return await buildDeleteShowDialog(context);
-                                } else {
-                                  return true;
-                                }
-                              },
-                              background: Container(
-                                color: GREEN,
-                                child: Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: WHITE,
-                                      )),
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height - 150,
+                    child: new ListView.builder(
+                        itemCount: wishlist.length,
+                        itemBuilder: (BuildContext ctxt, int index) {
+                          return Container(
+                            child: Dismissible(
+                                confirmDismiss:
+                                    (DismissDirection direction) async {
+                                  if (direction ==
+                                      DismissDirection.endToStart) {
+                                    return await buildDeleteShowDialog(context);
+                                  } else {
+                                    return true;
+                                  }
+                                },
+                                background: Container(
+                                  color: GREEN,
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: Icon(
+                                          Icons.check,
+                                          color: WHITE,
+                                        )),
+                                  ),
                                 ),
-                              ),
-                              secondaryBackground: Container(
-                                color: RED,
-                                child: Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(right: 8.0),
-                                      child: Icon(
-                                        Icons.delete,
-                                        color: WHITE,
-                                      )),
+                                secondaryBackground: Container(
+                                  color: RED,
+                                  child: Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: WHITE,
+                                        )),
+                                  ),
                                 ),
-                              ),
-                              key: UniqueKey(),
-                              child: WidgetItem(wishlist[index],
-                                  wishlistHead.uuid, wishlist[index].uuid),
-                              onDismissed: (direction) {
-                                if (direction == DismissDirection.endToStart) {
-                                  deleteItemFromList(
-                                    listUuid: wishlistHead.uuid,
-                                    itemUuid: wishlist[index].uuid,
-                                  );
-                                  _analytics.sendAnalyticsEvent("delete_item");
-                                } else {
-                                  validateItem(
-                                    listUuid: wishlistHead.uuid,
-                                    item: wishlist[index],
-                                  );
-                                  _analytics.sendAnalyticsEvent("check_item");
-                                }
-                              }),
-                        );
-                      }),
-                ),
-              ],
+                                key: UniqueKey(),
+                                child: WidgetItem(wishlist[index],
+                                    wishlistHead.uuid, wishlist[index].uuid),
+                                onDismissed: (direction) {
+                                  if (direction ==
+                                      DismissDirection.endToStart) {
+                                    deleteItemFromList(
+                                      listUuid: wishlistHead.uuid,
+                                      itemUuid: wishlist[index].uuid,
+                                    );
+                                    _analytics
+                                        .sendAnalyticsEvent("delete_item");
+                                  } else {
+                                    validateItem(
+                                      listUuid: wishlistHead.uuid,
+                                      item: wishlist[index],
+                                    );
+                                    _analytics.sendAnalyticsEvent("check_item");
+                                  }
+                                }),
+                          );
+                        }),
+                  ),
+                ],
+              ),
             ),
           );
         },
