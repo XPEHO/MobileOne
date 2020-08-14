@@ -346,12 +346,10 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   void openMainPage(context) {
     (_userService.user.isEmailVerified == false)
-        ? Navigator.of(context).pushNamed(
-            '/profile',
-          )
-        : Navigator.of(context).pushNamed(
-            '/mainpage',
-          );
+        ? Navigator.of(context).pushNamedAndRemoveUntil(
+            '/profile', (Route<dynamic> route) => false)
+        : Navigator.of(context).pushNamedAndRemoveUntil(
+            '/mainpage', (Route<dynamic> route) => false);
   }
 
   void openForgottenPasswordPage(context) {
