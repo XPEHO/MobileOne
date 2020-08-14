@@ -1,5 +1,7 @@
+import 'package:MobileOne/services/image_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 import 'package:uuid/uuid.dart';
 
 class ItemsListProvider with ChangeNotifier {
@@ -13,6 +15,7 @@ class ItemsListProvider with ChangeNotifier {
     @required int typeIndex,
     @required String imageLink,
     @required String listUuid,
+    @required String imageName,
   }) async {
     var uuid = Uuid();
     var newUuid = uuid.v4();
@@ -52,6 +55,7 @@ class ItemsListProvider with ChangeNotifier {
           'unit': typeIndex,
           'image': imageLink,
           'isValidated': false,
+          'imageName': imageName,
         }
       });
     } else {
@@ -62,6 +66,7 @@ class ItemsListProvider with ChangeNotifier {
           'unit': typeIndex,
           'image': imageLink,
           'isValidated': false,
+          'imageName': imageName,
         }
       });
     }
@@ -76,6 +81,7 @@ class ItemsListProvider with ChangeNotifier {
     @required int typeIndex,
     @required String imageLink,
     @required String listUuid,
+    @required String imageName,
   }) async {
     await Firestore.instance.collection("items").document(listUuid).updateData({
       itemUuid: {
@@ -84,6 +90,7 @@ class ItemsListProvider with ChangeNotifier {
         'unit': typeIndex,
         'image': imageLink,
         'isValidated': false,
+        'imageName': imageName,
       }
     });
     notifyListeners();
@@ -92,8 +99,13 @@ class ItemsListProvider with ChangeNotifier {
   deleteItemInList({
     @required String listUuid,
     @required String itemUuid,
+    @required String imageName,
   }) async {
     var listItemsCount;
+
+    if (imageName != null) {
+      GetIt.I.get<ImageService>().deleteFile(listUuid, imageName);
+    }
 
     await Firestore.instance
         .collection("wishlists")

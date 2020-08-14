@@ -5,6 +5,7 @@ class WishlistItem {
   String label;
   int quantity;
   int unit;
+  String imageName;
 
   WishlistItem.fromMap(String uuid, Map<String, dynamic> map) {
     this.uuid = uuid;
@@ -13,5 +14,6 @@ class WishlistItem {
     this.label = map["label"];
     this.quantity = map["quantity"];
     this.unit = map["unit"];
+    this.imageName = map["imageName"];
   }
 }

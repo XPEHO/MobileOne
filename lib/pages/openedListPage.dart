@@ -281,6 +281,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                                     deleteItemFromList(
                                       listUuid: wishlistHead.uuid,
                                       itemUuid: wishlist[index].uuid,
+                                      imageName: wishlist[index].imageName,
                                     );
                                     _analytics
                                         .sendAnalyticsEvent("delete_item");
@@ -324,10 +325,10 @@ class OpenedListPageState extends State<OpenedListPage> {
     );
   }
 
-  void deleteItemFromList({String listUuid, String itemUuid}) {
-    GetIt.I
-        .get<ItemsListProvider>()
-        .deleteItemInList(listUuid: listUuid, itemUuid: itemUuid);
+  void deleteItemFromList(
+      {String listUuid, String itemUuid, String imageName}) {
+    GetIt.I.get<ItemsListProvider>().deleteItemInList(
+        listUuid: listUuid, itemUuid: itemUuid, imageName: imageName);
   }
 
   void validateItem({String listUuid, WishlistItem item}) {
