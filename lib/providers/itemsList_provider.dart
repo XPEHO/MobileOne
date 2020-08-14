@@ -112,6 +112,8 @@ class ItemsListProvider with ChangeNotifier {
         .collection("items")
         .document(listUuid)
         .updateData({itemUuid: FieldValue.delete()});
+
+    notifyListeners();
   }
 
   validateItem({

@@ -34,6 +34,7 @@ class OpenedListPageState extends State<OpenedListPage> {
   final _wishlistProvider = GetIt.I.get<WishlistHeadProvider>();
   OpenedListArguments _args;
   List itemChecked = [];
+  var currentValue;
 
   @override
   void initState() {
@@ -110,6 +111,12 @@ class OpenedListPageState extends State<OpenedListPage> {
     getvalidated(listUuid);
 
     var pourcentage = (wishlist.isNotEmpty) ? (100 / wishlist.length) : 0;
+    currentValue = (itemChecked.length == wishlist.length &&
+            pourcentage.toInt() * itemChecked.length != 100)
+        ? pourcentage.toInt() * itemChecked.length +
+            100 -
+            pourcentage.toInt() * itemChecked.length
+        : pourcentage.toInt() * itemChecked.length;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -216,10 +223,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: FAProgressBar(
-                        currentValue:
-                            (pourcentage.toInt() * (itemChecked.length) == 99)
-                                ? pourcentage.toInt() * (itemChecked.length) + 1
-                                : pourcentage.toInt() * (itemChecked.length),
+                        currentValue: currentValue,
                         displayText: '%',
                         changeColorValue: 50,
                         changeProgressColor: Colors.green,
@@ -279,6 +283,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                                       listUuid: wishlistHead.uuid,
                                       itemUuid: wishlist[index].uuid,
                                     );
+
                                     _analytics
                                         .sendAnalyticsEvent("delete_item");
                                   } else {
