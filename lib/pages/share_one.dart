@@ -197,13 +197,10 @@ class ShareStateOneState extends State<ShareOne> {
       },
       child: Visibility(
         visible: isVisible,
-        child: Container(
-          margin: const EdgeInsets.all(10.0),
-          color: Colors.amber[600],
-          width: MediaQuery.of(context).size.width - 50,
-          height: 20.0,
-          child: Text("${_myController.text}"),
-        ),
+        child: (_myController.text.length > 2)
+            ? WidgetShareContact(
+                name: _myController.text, email: _myController.text)
+            : Container(),
       ),
     );
   }
@@ -271,8 +268,10 @@ class ShareStateOneState extends State<ShareOne> {
               openSharePage();
             }
           },
-          child: WidgetShareContact(contact.displayName, contact.avatar,
-              contact.emails.elementAt(0).value),
+          child: WidgetShareContact(
+              name: contact.displayName,
+              avatar: contact.avatar,
+              email: contact.emails.elementAt(0).value),
         );
       },
     );
