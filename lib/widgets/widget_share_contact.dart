@@ -6,7 +6,7 @@ class WidgetShareContact extends StatefulWidget {
   final Uint8List avatar;
   final String name;
   final String email;
-  WidgetShareContact(this.name, this.avatar, this.email);
+  WidgetShareContact({this.name, this.avatar, this.email});
   State<StatefulWidget> createState() => WidgetShareContactState();
 }
 
@@ -22,14 +22,20 @@ class WidgetShareContactState extends State<WidgetShareContact> {
                   backgroundImage: MemoryImage(widget.avatar),
                 ),
               )
-            : Padding(
-                padding: EdgeInsets.only(top: 16.0),
-                child: CircleAvatar(
-                  backgroundColor: Colors
-                      .primaries[Random().nextInt(Colors.primaries.length)],
-                  child: Text(widget.name.substring(0, 2)),
-                ),
-              ),
+            : (widget.email.length > 2)
+                ? Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: CircleAvatar(
+                      backgroundColor: Colors
+                          .primaries[Random().nextInt(Colors.primaries.length)],
+                      child: Text(widget.name.substring(0, 2)),
+                    ),
+                  )
+                : CircleAvatar(
+                    backgroundColor: Colors
+                        .primaries[Random().nextInt(Colors.primaries.length)],
+                    child: Text(widget.email.substring(0, 2)),
+                  ),
         Padding(
           padding: const EdgeInsets.only(top: 16.0),
           child: Container(
