@@ -18,6 +18,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart';
+import 'package:path/path.dart' as path;
 
 class EditItemPage extends StatefulWidget {
   EditItemPage({
@@ -38,6 +39,8 @@ class EditItemPageState extends State<EditItemPage> {
   int _count = 1;
   String _type;
   String imageLink = "assets/images/canned-food.png";
+  String _imageName;
+  String _oldImageName;
 
   String alert = "";
   String label = "";
@@ -52,6 +55,7 @@ class EditItemPageState extends State<EditItemPage> {
   File pickedImage;
   final SpeechToText speech = SpeechToText();
   bool isInitialized;
+  String imageType = "Default";
 
   Future<void> getItems() async {
     String labelValue;
@@ -66,6 +70,9 @@ class EditItemPageState extends State<EditItemPage> {
       labelValue = value[_args.itemUuid]["label"];
       quantityValue = value[_args.itemUuid]["quantity"].toString();
       imageLink = value[_args.itemUuid]["image"];
+      if (value[_args.itemUuid]["imageName"] != null) {
+        _imageName = value[_args.itemUuid]["imageName"];
+      }
       if (imageLink != "assets/images/canned-food.png") {
         _itemImage = NetworkImage(imageLink);
       }
@@ -254,17 +261,11 @@ class EditItemPageState extends State<EditItemPage> {
         .pickCamera()
         .then((image) => pickedImage = File(image.path));
 
-    StorageReference storageReference =
-        _imageService.uploadFile(_args.listUuid, pickedImage);
-    StorageUploadTask uploadTask = storageReference.putFile(pickedImage);
-    await uploadTask.onComplete;
-    storageReference.getDownloadURL().then((fileURL) {
-      imageLink = fileURL;
-    });
-
     setState(() {
       _itemImage = FileImage(pickedImage);
     });
+
+    imageType = "Picked";
   }
 
   Text buildErrorMessage() {
@@ -308,25 +309,6 @@ class EditItemPageState extends State<EditItemPage> {
       return 4;
     } else {
       return 1;
-    }
-  }
-
-  _onValidate() async {
-    if (itemNameController == null ||
-        itemCountController == null ||
-        _type == null ||
-        itemNameController.text == "" ||
-        itemCountController.text == "") {
-      setState(() {
-        alert = getString(context, "popup_alert");
-      });
-    } else {
-      int _typeIndex = getTypeIndex();
-      if (_args.buttonName == getString(context, "popup_update")) {
-        uddapteItemInList(_typeIndex);
-      } else {
-        addItemToList(_typeIndex);
-      }
     }
   }
 
@@ -465,7 +447,63 @@ class EditItemPageState extends State<EditItemPage> {
     _type = null;
   }
 
-  void uddapteItemInList(int _typeIndex) async {
+  _onValidate() async {
+    if (itemNameController == null ||
+        itemCountController == null ||
+        _type == null ||
+        itemNameController.text == "" ||
+        itemCountController.text == "") {
+      setState(() {
+        alert = getString(context, "popup_alert");
+      });
+    } else {
+      if (_args.buttonName == getString(context, "popup_update")) {
+        waitForImageUpload(true);
+      } else {
+        waitForImageUpload(false);
+      }
+    }
+  }
+
+  void waitForImageUpload(bool upload) {
+    int _typeIndex = getTypeIndex();
+    _oldImageName = _imageName;
+    if (imageType == "Picked") {
+      StorageReference ref = getStorageRef();
+      StorageUploadTask uploadTask = uploadItemPicture(ref);
+      uploadTask.onComplete.then((_) {
+        ref.getDownloadURL().then((fileURL) {
+          imageLink = fileURL;
+          if (upload) {
+            updapteItemInList(_typeIndex);
+            if (_oldImageName != null) {
+              _imageService.deleteFile(_args.listUuid, _oldImageName);
+            }
+          } else {
+            addItemToList(_typeIndex);
+          }
+        });
+      });
+    } else if (imageType == "Scanned") {
+      _imageName = null;
+      if (upload) {
+        updapteItemInList(_typeIndex);
+        if (_oldImageName != null) {
+          _imageService.deleteFile(_args.listUuid, _oldImageName);
+        }
+      } else {
+        addItemToList(_typeIndex);
+      }
+    } else {
+      if (upload) {
+        updapteItemInList(_typeIndex);
+      } else {
+        addItemToList(_typeIndex);
+      }
+    }
+  }
+
+  void updapteItemInList(int _typeIndex) async {
     _analytics.sendAnalyticsEvent("update_item");
     await _itemsListProvider.updateItemInList(
       itemUuid: _args.itemUuid,
@@ -474,6 +512,7 @@ class EditItemPageState extends State<EditItemPage> {
       typeIndex: _typeIndex,
       imageLink: imageLink,
       listUuid: _args.listUuid,
+      imageName: _imageName,
     );
     FocusScope.of(context).unfocus();
     Navigator.of(context).pop();
@@ -488,10 +527,20 @@ class EditItemPageState extends State<EditItemPage> {
       typeIndex: _typeIndex,
       imageLink: imageLink,
       listUuid: _args.listUuid,
+      imageName: _imageName,
     );
     FocusScope.of(context).unfocus();
     Navigator.of(context).pop();
     clearPopupFields();
+  }
+
+  StorageReference getStorageRef() {
+    _imageName = path.basename(pickedImage.path);
+    return _imageService.uploadFile(_args.listUuid, pickedImage);
+  }
+
+  StorageUploadTask uploadItemPicture(StorageReference storageReference) {
+    return storageReference.putFile(pickedImage);
   }
 
   void handleSubmittedItemCount(int input) {
@@ -540,5 +589,7 @@ class EditItemPageState extends State<EditItemPage> {
         alert = getString(context, "cant_find_article");
       });
     }
+
+    imageType = "Scanned";
   }
 }

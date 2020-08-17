@@ -56,7 +56,7 @@ class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 void main() {
   setSupportedLocales([Locale("fr", "FR")]);
 
-  testWidgets("Take a picture of a item", (WidgetTester tester) async {
+  testWidgets("Take a picture of an item", (WidgetTester tester) async {
     // GIVEN
 
     final _itemsListMock = ItemsListProviderMock();
@@ -100,6 +100,5 @@ void main() {
 
     // THEN
     verify(_imageService.pickCamera());
-    verify(_imageService.uploadFile(any, any));
   });
 }

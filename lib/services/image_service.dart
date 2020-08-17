@@ -19,4 +19,11 @@ class ImageService {
         .ref()
         .child('mobileone/$listUuid/${path.basename(pickedImage.path)}');
   }
+
+  deleteFile(String listUuid, String imageName) {
+    FirebaseStorage.instance
+        .ref()
+        .child('mobileone/$listUuid/$imageName')
+        .delete();
+  }
 }
