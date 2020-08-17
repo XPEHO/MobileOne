@@ -228,8 +228,11 @@ class OpenedListPageState extends State<OpenedListPage> {
                   ),
                   Container(
                     width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 150,
+                    height: MediaQuery.of(context).size.height - 80,
                     child: new ListView.builder(
+                        padding: const EdgeInsets.only(
+                          bottom: kFloatingActionButtonMargin + 48,
+                        ),
                         itemCount: wishlist.length,
                         itemBuilder: (BuildContext ctxt, int index) {
                           return Container(
