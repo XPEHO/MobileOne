@@ -87,7 +87,7 @@ void main() {
     when(_imagePicker.getImage(source: ImageSource.camera)).thenAnswer(
         (_) => Future.value(PickedFile("assets/images/facebook_f.png")));
 
-    when(_imageService.pickCamera()).thenAnswer(
+    when(_imageService.pickCamera(100)).thenAnswer(
         (_) => Future.value(PickedFile("assets/images/facebook_f.png")));
 
     when(_imageService.uploadFile(any, any)).thenReturn(_storageReference);
@@ -105,6 +105,6 @@ void main() {
     await tester.pumpAndSettle(Duration(seconds: 1));
 
     // THEN
-    verify(_imageService.pickCamera());
+    verify(_imageService.pickCamera(100));
   });
 }
