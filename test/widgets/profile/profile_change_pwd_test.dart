@@ -4,6 +4,7 @@ import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -56,6 +57,8 @@ class UserPictureMock extends Mock implements UserPictureProvider {}
 
 class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
+class ColorServiceMock extends Mock implements ColorService {}
+
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
 
@@ -81,6 +84,8 @@ void main() {
     GetIt.I.registerSingleton<ImageService>(_imageService);
     GetIt.I.registerSingleton<PreferencesService>(_prefs);
     GetIt.I.registerSingleton<UserPictureProvider>(_picture);
+    final _colorService = ColorServiceMock();
+    GetIt.I.registerSingleton<ColorService>(_colorService);
 
     when(auth.currentUser()).thenAnswer((realInvocation) => Future.value(user));
     final _displayName = "Dupond Jean";

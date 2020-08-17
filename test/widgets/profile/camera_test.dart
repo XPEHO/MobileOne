@@ -6,6 +6,7 @@ import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -65,6 +66,8 @@ class UserPictureProviderMock extends Mock implements UserPictureProvider {}
 
 class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
+class ColorServiceMock extends Mock implements ColorService {}
+
 void main() {
   setSupportedLocales([Locale("fr", "FR")]);
   testWidgets("Open camera and see profile picture changed",
@@ -93,6 +96,8 @@ void main() {
     GetIt.I.registerSingleton<AuthenticationService>(_authService);
     final _analyticsService = AnalyticsServiceMock();
     GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
+    final _colorService = ColorServiceMock();
+    GetIt.I.registerSingleton<ColorService>(_colorService);
 
     when(_userService.user).thenReturn(user);
 

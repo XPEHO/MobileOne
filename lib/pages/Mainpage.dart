@@ -8,6 +8,7 @@ import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/utility/arguments.dart';
@@ -37,6 +38,8 @@ class MainPageState extends State<MainPage> {
   final _userService = GetIt.I.get<UserService>();
   Widget _currentScreen = NewLists();
   var _analytics = GetIt.I.get<AnalyticsService>();
+  var _colorsApp = GetIt.I.get<ColorService>();
+  var bottomBackground;
 
   List _actions = [];
 
@@ -118,11 +121,12 @@ class MainPageState extends State<MainPage> {
         value: GetIt.I.get<UserPictureProvider>(),
         child: Consumer<UserPictureProvider>(
           builder: (context, provider, _) => Scaffold(
+            backgroundColor: bottomBackground,
             body: PageStorage(bucket: _bucket, child: _currentScreen),
             floatingActionButton: FloatingActionButton(
                 key: Key("floating_button"),
                 child: _floatingButtonIcon,
-                backgroundColor: Colors.deepOrange,
+                backgroundColor: _colorsApp.buttonColor,
                 onPressed: () {
                   _floatingButtonAction();
                 }),
@@ -147,18 +151,22 @@ class MainPageState extends State<MainPage> {
           _floatingButtonIcon = SvgPicture.asset("assets/images/qr-code.svg",
               color: WHITE, width: 24, height: 24);
           _currentScreen = LoyaltyCards();
+          bottomBackground = _colorsApp.colorTheme;
           break;
         case LISTS_PAGE:
           _floatingButtonIcon = Icon(Icons.add);
           _currentScreen = NewLists();
+          bottomBackground = _colorsApp.colorTheme;
           break;
         case SHARE_PAGE:
           _floatingButtonIcon = Icon(Icons.share);
           _currentScreen = Share();
+          bottomBackground = _colorsApp.colorTheme;
           break;
         case PROFILE_PAGE:
           _floatingButtonIcon = Icon(Icons.camera);
           _currentScreen = NewProfile();
+          bottomBackground = WHITE;
           break;
       }
     });

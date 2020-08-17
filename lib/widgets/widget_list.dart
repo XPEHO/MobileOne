@@ -43,21 +43,23 @@ class WidgetListsState extends State<WidgetLists> {
                 child: Column(
                   children: <Widget>[
                     Padding(
-                      padding: EdgeInsets.only(top: 5, bottom: 5),
-                      child: Text(
-                        wishlist?.label ?? "",
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: BLACK, fontSize: 12.0),
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        height: MediaQuery.of(context).size.width * 0.12,
+                        child: Text(
+                          wishlist?.label ?? "",
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(color: BLACK, fontSize: 12.0),
+                        ),
                       ),
                     ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.23 / 2,
-                      child: Image.asset("assets/images/basket_my_lists.png"),
-                    ),
-                    Text(
-                      "${wishlist?.itemCount} ${getString(context, 'articles')}" ??
-                          "",
-                      style: TextStyle(color: GREY, fontSize: 8.0),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 10.0),
+                      child: Text(
+                        "${wishlist?.itemCount} ${getString(context, 'items')}" ??
+                            "",
+                        style: TextStyle(color: GREY, fontSize: 8.0),
+                      ),
                     ),
                     Text(
                       _numberOfItemShared,

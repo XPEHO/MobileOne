@@ -1,4 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/utility/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/services/authentication_service.dart';
@@ -18,7 +20,7 @@ class ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
   String _email;
 
   final _authService = GetIt.I.get<AuthenticationService>();
-
+  var _colorsApp = GetIt.I.get<ColorService>();
   @override
   void dispose() {
     _emailController.dispose();
@@ -32,6 +34,7 @@ class ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: _colorsApp.colorTheme,
         resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Center(
@@ -51,6 +54,7 @@ class ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
                       style: TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
+                        color: WHITE,
                       ),
                     ),
                   ),
@@ -89,13 +93,17 @@ class ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
                             ),
                           ),
                           RaisedButton(
+                            color: _colorsApp.buttonColor,
                             key: Key("forgotten_password_button"),
                             onPressed: () {
                               if (_formKey.currentState.validate()) {
                                 resetPassword();
                               }
                             },
-                            child: Text(getString(context, 'reset_password')),
+                            child: Text(
+                              getString(context, 'reset_password'),
+                              style: TextStyle(color: WHITE),
+                            ),
                           ),
                         ],
                       ),
@@ -111,7 +119,7 @@ class ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
                           child: Text(
                             getString(context, 'authentication_page_button'),
                             style: TextStyle(
-                              color: Colors.blue,
+                              color: WHITE,
                             ),
                           ),
                         ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/arguments/arguments.dart';
 import 'package:MobileOne/services/image_service.dart';
@@ -49,6 +50,7 @@ class EditItemPageState extends State<EditItemPage> {
 
   var _itemsListProvider = GetIt.I.get<ItemsListProvider>();
   var _imageService = GetIt.I.get<ImageService>();
+  var _colorsApp = GetIt.I.get<ColorService>();
 
   ItemArguments _args;
   var _itemImage;
@@ -130,48 +132,7 @@ class EditItemPageState extends State<EditItemPage> {
   Widget build(BuildContext context) {
     _args = Arguments.value(context);
     return Scaffold(
-      appBar: AppBar(
-        leading: new IconButton(
-            icon: new Icon(Icons.arrow_back),
-            onPressed: () {
-              FocusScope.of(context).unfocus();
-              Navigator.pop(context);
-            }),
-        iconTheme: ThemeData.light().iconTheme,
-        actionsIconTheme: ThemeData.light().iconTheme,
-        backgroundColor: Colors.white,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(
-              Icons.mic,
-              color: Colors.lime[600],
-              size: 24,
-            ),
-            onPressed: () => recordAudio(),
-          ),
-          IconButton(
-            icon: SvgPicture.asset(
-              "assets/images/qr-code.svg",
-              color: Colors.lime[600],
-              width: 24,
-              height: 24,
-            ),
-            onPressed: () => scanAnItem(),
-          ),
-          IconButton(
-            key: Key("item_picture_button"),
-            icon: Icon(
-              Icons.camera,
-              color: Colors.lime[600],
-              size: 24,
-            ),
-            onPressed: () {
-              _analytics.sendAnalyticsEvent("takePictureOfItem");
-              pickImage();
-            },
-          ),
-        ],
-      ),
+      backgroundColor: _colorsApp.colorTheme,
       body: SafeArea(
         child: Container(
           height: MediaQuery.of(context).size.height,
@@ -179,21 +140,103 @@ class EditItemPageState extends State<EditItemPage> {
           child: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                Container(
+                Row(
+                  children: [
+                    Stack(
+                      children: [
+                        Container(
+                          color: WHITE,
+                          width: MediaQuery.of(context).size.width * 0.8,
+                          height: MediaQuery.of(context).size.height * 0.40,
+                          child: Image(image: _itemImage),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15.0),
+                          child: Align(
+                            alignment: Alignment.topLeft,
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.arrow_back,
+                              ),
+                              onPressed: () {
+                                goToPreviousPage();
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.2,
+                      height: MediaQuery.of(context).size.height * 0.40,
+                      color: Colors.lime[600],
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              Icons.mic,
+                              color: WHITE,
+                              size: 24,
+                            ),
+                            onPressed: () => recordAudio(),
+                          ),
+                          IconButton(
+                            icon: SvgPicture.asset(
+                              "assets/images/qr-code.svg",
+                              color: WHITE,
+                              width: 24,
+                              height: 24,
+                            ),
+                            onPressed: () => scanAnItem(),
+                          ),
+                          IconButton(
+                            key: Key("item_picture_button"),
+                            icon: Icon(
+                              Icons.camera,
+                              color: WHITE,
+                              size: 24,
+                            ),
+                            onPressed: () {
+                              _analytics
+                                  .sendAnalyticsEvent("takePictureOfItem");
+                              pickImage();
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
                     height: MediaQuery.of(context).size.height * 0.10,
-                    child: buildTextField(context)),
-                Container(
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    child: buildQuantity(context)),
-                Container(
-                    height: MediaQuery.of(context).size.height * 0.20,
-                    child: buildUnit(context)),
-                Container(
-                    height: MediaQuery.of(context).size.height * 0.30,
-                    child: Image(image: _itemImage)),
-                Container(
+                    child: buildTextField(context),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.05,
+                    child: buildQuantity(context),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
                     height: MediaQuery.of(context).size.height * 0.10,
-                    child: buildValidationButton(context)),
+                    width: MediaQuery.of(context).size.height * 0.7,
+                    child: buildUnit(context),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      width: MediaQuery.of(context).size.width * 0.4,
+                      child: buildValidationButton(context)),
+                ),
                 Container(
                     height: MediaQuery.of(context).size.height * 0.05,
                     child: buildErrorMessage()),
@@ -234,23 +277,26 @@ class EditItemPageState extends State<EditItemPage> {
         builder: (BuildContext context) {
           listenRecord();
           return new AlertDialog(
-            backgroundColor: Colors.teal[900],
+            backgroundColor: _colorsApp.microColor,
             scrollable: true,
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Icon(
-                  Icons.mic,
-                  color: WHITE,
-                  size: 36,
-                ),
-                Text(
-                  getString(context, "talk"),
-                  style: TextStyle(color: WHITE),
-                ),
-              ],
+            content: Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    Icons.mic,
+                    color: WHITE,
+                    size: 36,
+                  ),
+                  Text(
+                    getString(context, "talk"),
+                    style: TextStyle(color: WHITE),
+                  ),
+                ],
+              ),
             ),
           );
         });
@@ -275,26 +321,16 @@ class EditItemPageState extends State<EditItemPage> {
     );
   }
 
-  Row buildValidationButton(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-            child: RaisedButton(
-              onPressed: () {
-                _onValidate();
-              },
-              child: Text(
-                _args.buttonName,
-                style: TextStyle(color: WHITE, fontWeight: FontWeight.bold),
-              ),
-              color: Colors.lime[600],
-            ),
-          ),
-        ),
-      ],
+  RaisedButton buildValidationButton(BuildContext context) {
+    return RaisedButton(
+      color: Colors.lime[600],
+      onPressed: () {
+        _onValidate();
+      },
+      child: Text(
+        _args.buttonName,
+        style: TextStyle(color: WHITE, fontWeight: FontWeight.bold),
+      ),
     );
   }
 
@@ -326,91 +362,90 @@ class EditItemPageState extends State<EditItemPage> {
 
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: DropdownButtonFormField<String>(
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: TRANSPARENT),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.8,
+        child: DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: TRANSPARENT),
+              borderRadius: BorderRadius.all(Radius.circular(15)),
+            ),
+            filled: true,
+            fillColor: _colorsApp.greyColor,
           ),
-          filled: true,
-          fillColor: Colors.grey[300],
+          hint: Text(
+            getString(context, 'item_type'),
+          ),
+          onChanged: (text) {
+            setState(() {
+              _type = text;
+            });
+          },
+          value: _type,
+          items: items.map((String value) {
+            return new DropdownMenuItem<String>(
+              value: value,
+              child:
+                  new Text(value, style: TextStyle(color: GREY, fontSize: 13)),
+            );
+          }).toList(),
         ),
-        hint: Text(
-          getString(context, 'item_type'),
-        ),
-        onChanged: (text) {
-          setState(() {
-            _type = text;
-          });
-        },
-        value: _type,
-        items: items.map((String value) {
-          return new DropdownMenuItem<String>(
-            value: value,
-            child: new Text(value),
-          );
-        }).toList(),
       ),
     );
   }
 
-  Widget buildQuantity(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(bottom: 12.0),
-          child: Text(
-            getString(context, 'quantity'),
-            style: TextStyle(color: Colors.grey[700]),
+  Row buildQuantity(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: MediaQuery.of(context).size.width * 0.3,
+        ),
+        Container(
+          child: BubbleButton(
+            icon: Icon(Icons.remove, color: WHITE),
+            color: Colors.lime[600],
+            onPressed: () => decrementCounter(),
           ),
         ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Flexible(
-              flex: 1,
-              child: BubbleButton(
-                icon: Icon(Icons.remove, color: WHITE),
-                color: Colors.lime[600],
-                onPressed: () => decrementCounter(),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.2,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 8.0, left: 8.0),
+            child: TextField(
+              focusNode: _itemQuantityFocusNode,
+              onSubmitted: (_) => _onValidate(),
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(5),
+              ],
+              style: TextStyle(
+                fontSize: 18,
               ),
-            ),
-            Expanded(
-              flex: 1,
-              child: TextField(
-                focusNode: _itemQuantityFocusNode,
-                onSubmitted: (_) => _onValidate(),
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(5),
-                ],
-                style: TextStyle(
-                  fontSize: 18,
+              key: Key("item_count_label"),
+              textAlign: TextAlign.center,
+              decoration: InputDecoration(
+                contentPadding: EdgeInsets.all(10),
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: TRANSPARENT),
                 ),
-                key: Key("item_count_label"),
-                textAlign: TextAlign.center,
-                decoration: InputDecoration(
-                  contentPadding: EdgeInsets.all(10),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: TRANSPARENT),
-                  ),
-                  filled: true,
-                  fillColor: Colors.grey[300],
-                  hintText: getString(context, 'item_count'),
-                ),
-                keyboardType: TextInputType.number,
-                controller: itemCountController,
-                onChanged: (text) => handleSubmittedItemCount(int.parse(text)),
+                filled: true,
+                fillColor: Colors.grey[300],
+                hintText: getString(context, 'item_count'),
               ),
+              keyboardType: TextInputType.number,
+              controller: itemCountController,
+              onChanged: (text) => handleSubmittedItemCount(int.parse(text)),
             ),
-            Flexible(
-              flex: 1,
-              child: BubbleButton(
-                onPressed: () => incrementCounter(),
-                icon: Icon(Icons.add, color: WHITE),
-                color: Colors.lime[600],
-              ),
-            ),
-          ],
+          ),
+        ),
+        Container(
+          child: BubbleButton(
+            icon: Icon(Icons.add, color: WHITE),
+            color: Colors.lime[600],
+            onPressed: () => incrementCounter(),
+          ),
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.25,
         ),
       ],
     );
@@ -419,22 +454,25 @@ class EditItemPageState extends State<EditItemPage> {
   Widget buildTextField(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: TextField(
-        focusNode: _itemNameFocusNode,
-        key: Key("item_name_label"),
-        textAlign: TextAlign.center,
-        textInputAction: TextInputAction.next,
-        onSubmitted: (_) => _itemQuantityFocusNode.requestFocus(),
-        decoration: InputDecoration(
-          hintText: getString(context, 'item_name'),
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: TRANSPARENT),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.5,
+        child: TextField(
+          focusNode: _itemNameFocusNode,
+          key: Key("item_name_label"),
+          textAlign: TextAlign.center,
+          textInputAction: TextInputAction.next,
+          onSubmitted: (_) => _itemQuantityFocusNode.requestFocus(),
+          decoration: InputDecoration(
+            hintText: getString(context, 'item_name'),
+            enabledBorder: OutlineInputBorder(
+              borderSide: BorderSide(color: TRANSPARENT),
+            ),
+            filled: true,
+            fillColor: Colors.grey[300],
           ),
-          filled: true,
-          fillColor: Colors.grey[300],
+          controller: itemNameController,
+          onChanged: (text) => handleSubmittedItemName(text),
         ),
-        controller: itemNameController,
-        onChanged: (text) => handleSubmittedItemName(text),
       ),
     );
   }
@@ -591,5 +629,9 @@ class EditItemPageState extends State<EditItemPage> {
     }
 
     imageType = "Scanned";
+  }
+
+  goToPreviousPage() {
+    Navigator.of(context).pop();
   }
 }

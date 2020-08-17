@@ -1,6 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
@@ -27,6 +28,7 @@ class ChangePasswordState extends State<ChangePassword> {
   var _authService = GetIt.I.get<AuthenticationService>();
   var _preferencesService = GetIt.I.get<PreferencesService>();
   var _userService = GetIt.I.get<UserService>();
+  var _colorsApp = GetIt.I.get<ColorService>();
 
   @override
   void dispose() {
@@ -46,6 +48,7 @@ class ChangePasswordState extends State<ChangePassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _colorsApp.colorTheme,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Column(
@@ -53,7 +56,10 @@ class ChangePasswordState extends State<ChangePassword> {
               Align(
                 alignment: Alignment.topLeft,
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back),
+                  icon: Icon(
+                    Icons.arrow_back,
+                    color: WHITE,
+                  ),
                   onPressed: () {
                     openProfilPage();
                   },
@@ -69,6 +75,7 @@ class ChangePasswordState extends State<ChangePassword> {
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
+                      color: WHITE,
                     ),
                   ),
                 ),
@@ -98,7 +105,7 @@ class ChangePasswordState extends State<ChangePassword> {
   RaisedButton buildChangePasswordButton(BuildContext context) {
     return RaisedButton(
       key: Key("change_password_button"),
-      color: BLUE,
+      color: _colorsApp.buttonColor,
       textColor: WHITE,
       onPressed: () {
         if (_formKey.currentState.validate()) {
