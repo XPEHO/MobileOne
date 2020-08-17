@@ -1,4 +1,5 @@
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:barcode_widget/barcode_widget.dart';
@@ -12,6 +13,7 @@ class Cards extends StatefulWidget {
 
 class CardsState extends State<Cards> {
   var _analytics = GetIt.I.get<AnalyticsService>();
+  var _colorsApp = GetIt.I.get<ColorService>();
   @override
   void initState() {
     _analytics.setCurrentPage("isOnBigCardPage");
@@ -22,6 +24,7 @@ class CardsState extends State<Cards> {
   Widget build(BuildContext context) {
     CardArguments args = ModalRoute.of(context).settings.arguments;
     return Scaffold(
+      backgroundColor: _colorsApp.colorTheme,
       body: Column(
         children: <Widget>[
           Padding(
@@ -29,7 +32,7 @@ class CardsState extends State<Cards> {
             child: Align(
               alignment: Alignment.topLeft,
               child: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: Icon(Icons.arrow_back, color: WHITE),
                 onPressed: () {
                   goToLoyaltyCardsPage();
                 },

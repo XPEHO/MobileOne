@@ -58,7 +58,7 @@
     "submit_button": "Valider",
     "shared_with_me": "Partagé avec moi : ",
     "hint_name_new_list": "Alimentations, sports ...",
-    "articles": "articles",
+    "items": "articles",
     "item_type": "Type",
     "item_unit": "Unités",
     "item_liters": "Litres",
@@ -124,5 +124,6 @@
     "confirm_leave": "QUITTER",
     "microphone_access": "Veuillez accorder les permissions d'accès au microphone pour utiliser cette fonctionnalité",
     "talk": "Vous pouvez parler",
-    "all_my_lists": "Mes listes:"
+    "all_my_lists": "Mes listes :",
+    "empty_items": "Aucun article pour le moment"
 }

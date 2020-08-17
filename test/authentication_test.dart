@@ -1,6 +1,7 @@
 import 'package:MobileOne/pages/authentication-page.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,6 +16,8 @@ class PreferencesServiceMock extends Mock implements PreferencesService {}
 
 class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
+class ColorServiceMock extends Mock implements ColorService {}
+
 main() {
   group('login skip', () {
     GetIt.I.registerSingleton<UserService>(UserServiceMock());
@@ -26,6 +29,8 @@ main() {
     GetIt.I.registerSingleton<PreferencesService>(_prefService);
     final _analyticsService = AnalyticsServiceMock();
     GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
+    final _colorService = ColorServiceMock();
+    GetIt.I.registerSingleton<ColorService>(_colorService);
 
     var _authenticationPageState = AuthenticationPageState();
 

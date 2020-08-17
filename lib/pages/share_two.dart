@@ -1,6 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/widgets/widget_list.dart';
 import 'package:MobileOne/pages/share_one.dart';
@@ -19,7 +20,7 @@ class ShareStateTwoState extends State<ShareTwo> {
   var _listSelected;
   var userService = GetIt.I.get<UserService>();
   var shareProvider = GetIt.I.get<ShareProvider>();
-
+  var _colorsApp = GetIt.I.get<ColorService>();
   void initState() {
     _analytics.setCurrentPage("isOneShareTwoPage");
     super.initState();
@@ -51,6 +52,7 @@ class ShareStateTwoState extends State<ShareTwo> {
   Scaffold buildShareList(BuildContext context, wishlists) {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
+      backgroundColor: _colorsApp.colorTheme,
       body: Column(
         children: <Widget>[
           Padding(
@@ -67,6 +69,7 @@ class ShareStateTwoState extends State<ShareTwo> {
                     child: IconButton(
                       icon: Icon(
                         Icons.arrow_back,
+                        color: WHITE,
                       ),
                       onPressed: () {
                         openSharePage();
@@ -83,6 +86,7 @@ class ShareStateTwoState extends State<ShareTwo> {
                         getString(context, "which_list"),
                         style: TextStyle(
                           fontSize: 20,
+                          color: WHITE,
                         ),
                       ),
                     ),
@@ -105,11 +109,11 @@ class ShareStateTwoState extends State<ShareTwo> {
                     ),
                   ),
                   radius: 12,
-                  backgroundColor: GREEN,
+                  backgroundColor: _colorsApp.buttonColor,
                 ),
                 Expanded(
                   child: Divider(
-                    color: Colors.black,
+                    color: WHITE,
                     height: 80,
                     thickness: 1,
                     indent: 20,
@@ -125,26 +129,25 @@ class ShareStateTwoState extends State<ShareTwo> {
                     ),
                   ),
                   radius: 12,
-                  backgroundColor: BLUE,
+                  backgroundColor: _colorsApp.buttonColor,
                 ),
               ],
             ),
           ),
           Container(
-            width: MediaQuery.of(context).size.width - 50,
-            child: TextField(
-              controller: _myController,
-              decoration: InputDecoration(
-                hintText: getString(context, "share_email"),
-                labelText: getString(context, 'search'),
-                border: OutlineInputBorder(
-                  borderSide: BorderSide(
-                    color: BLUE,
+            color: WHITE,
+            width: MediaQuery.of(context).size.width,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+              child: TextFormField(
+                decoration: InputDecoration(
+                  hintText: getString(context, "share_list"),
+                  suffixIcon: Icon(
+                    Icons.search,
+                    color: BLACK,
                   ),
                 ),
-                suffixIcon: Icon(
-                  Icons.search,
-                ),
+                controller: _myController,
               ),
             ),
           ),
@@ -155,6 +158,9 @@ class ShareStateTwoState extends State<ShareTwo> {
             ),
             child: Text(
               getString(context, 'my_lists'),
+              style: TextStyle(
+                color: WHITE,
+              ),
             ),
           ),
           Padding(

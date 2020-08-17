@@ -1,6 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:MobileOne/utility/colors.dart';
@@ -14,6 +15,8 @@ class CreateList extends StatefulWidget {
 class CreateListPage extends State<CreateList> {
   final _myController = TextEditingController();
   var _analytics = GetIt.I.get<AnalyticsService>();
+  var _colorsApp = GetIt.I.get<ColorService>();
+
   @override
   void initState() {
     _analytics.setCurrentPage("isOnCreateListPage");
@@ -29,6 +32,7 @@ class CreateListPage extends State<CreateList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _colorsApp.colorTheme,
       body: SingleChildScrollView(
         child: Center(
           child: Column(
@@ -38,7 +42,7 @@ class CreateListPage extends State<CreateList> {
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: IconButton(
-                    icon: Icon(Icons.arrow_back),
+                    icon: Icon(Icons.arrow_back, color: WHITE),
                     onPressed: () {
                       openListsPage();
                     },
@@ -48,12 +52,14 @@ class CreateListPage extends State<CreateList> {
               Container(
                 height: MediaQuery.of(context).size.height * 0.3,
                 width: MediaQuery.of(context).size.width * 0.3,
-                child: Image.asset("assets/images/basket_create_list.png"),
+                child: Image.asset(
+                  'assets/images/square-logo.png',
+                ),
               ),
               Card(
                 elevation: 5,
                 child: Container(
-                  color: Colors.grey[200],
+                  color: _colorsApp.greyColor,
                   width: MediaQuery.of(context).size.width * 0.7,
                   height: MediaQuery.of(context).size.height * 0.1,
                   child: Form(
@@ -73,7 +79,7 @@ class CreateListPage extends State<CreateList> {
                 ),
               ),
               RaisedButton(
-                color: ORANGE,
+                color: _colorsApp.buttonColor,
                 onPressed: () {
                   addListToDataBase();
                 },

@@ -1,9 +1,10 @@
 import 'package:MobileOne/arguments/arguments.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
-import 'package:MobileOne/pages/item_page.dart';
+import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -53,6 +54,8 @@ class StorageUploadTaskMock extends Mock implements StorageUploadTask {}
 
 class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
+class ColorServiceMock extends Mock implements ColorService {}
+
 void main() {
   setSupportedLocales([Locale("fr", "FR")]);
 
@@ -69,6 +72,9 @@ void main() {
     final _storageUploadTask = StorageUploadTaskMock();
     final _analyticsService = AnalyticsServiceMock();
     GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
+
+    final _colorService = ColorServiceMock();
+    GetIt.I.registerSingleton<ColorService>(_colorService);
 
     final mockArguments = MockArguments();
     Arguments.proxy = mockArguments;

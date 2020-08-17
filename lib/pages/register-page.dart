@@ -1,5 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/utility/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/services/authentication_service.dart';
@@ -23,6 +25,7 @@ class RegisterPageState extends State<RegisterPage> {
   final _emailController = new TextEditingController();
   final _passwordController = new TextEditingController();
   final _confirmPasswordController = new TextEditingController();
+  var _colorsApp = GetIt.I.get<ColorService>();
   String _email;
   String _password;
   String _confirmPassword;
@@ -58,6 +61,7 @@ class RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _colorsApp.colorTheme,
       body: SingleChildScrollView(
         child: Column(
           children: <Widget>[
@@ -71,6 +75,7 @@ class RegisterPageState extends State<RegisterPage> {
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.bold,
+                    color: WHITE,
                   ),
                 ),
               ),
@@ -104,7 +109,7 @@ class RegisterPageState extends State<RegisterPage> {
                       child: Text(
                         getString(context, 'authentication_page_button'),
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: WHITE,
                         ),
                       ),
                     ),

@@ -1,6 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_share_contact.dart';
 import 'package:contacts_service/contacts_service.dart';
@@ -22,6 +23,7 @@ class ShareStateOneState extends State<ShareOne> {
   var newUuid;
   final _myController = TextEditingController();
   var shareProvider = GetIt.I.get<ShareProvider>();
+  var _colorsApp = GetIt.I.get<ColorService>();
   String emailRegexp =
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
   Contact contact;
@@ -80,6 +82,7 @@ class ShareStateOneState extends State<ShareOne> {
     bool isSearching = _myController.text.isNotEmpty;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
+      backgroundColor: _colorsApp.colorTheme,
       body: Column(
         children: <Widget>[
           header(context),
@@ -88,18 +91,13 @@ class ShareStateOneState extends State<ShareOne> {
               : Container(height: MediaQuery.of(context).size.height * 0.1),
           searchContact(context),
           searchNewContact(context, _argsShare.previousList),
-          Padding(
-            padding: EdgeInsets.only(top: 5),
-            child: Container(
-              width: MediaQuery.of(context).size.width - 10,
-              height: MediaQuery.of(context).size.height - 300,
-              child: loader == false
-                  ? Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : buildListView(isSearching, _argsShare.previousList),
-            ),
-          )
+          loader == false
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : Container(
+                  height: MediaQuery.of(context).size.height * 0.5,
+                  child: buildListView(isSearching, _argsShare.previousList)),
         ],
       ),
     );
@@ -116,7 +114,7 @@ class ShareStateOneState extends State<ShareOne> {
             Align(
               alignment: Alignment.topLeft,
               child: IconButton(
-                icon: Icon(Icons.arrow_back),
+                icon: Icon(Icons.arrow_back, color: WHITE),
                 onPressed: () {
                   openSharePage();
                 },
@@ -130,6 +128,7 @@ class ShareStateOneState extends State<ShareOne> {
                   getString(context, "with_who"),
                   style: TextStyle(
                     fontSize: 20,
+                    color: WHITE,
                   ),
                 ),
               ),
@@ -155,11 +154,11 @@ class ShareStateOneState extends State<ShareOne> {
               ),
             ),
             radius: 12,
-            backgroundColor: BLUE,
+            backgroundColor: _colorsApp.buttonColor,
           ),
           Expanded(
               child: Divider(
-            color: Colors.black,
+            color: WHITE,
             height: 80,
             thickness: 1,
             indent: 20,
@@ -169,12 +168,12 @@ class ShareStateOneState extends State<ShareOne> {
             child: Text(
               getString(context, "step_two"),
               style: TextStyle(
-                color: WHITE,
+                color: BLACK,
                 fontSize: 10,
               ),
             ),
             radius: 12,
-            backgroundColor: GREY,
+            backgroundColor: WHITE,
           ),
         ],
       ),
@@ -195,50 +194,56 @@ class ShareStateOneState extends State<ShareOne> {
           }
         }
       },
-      child: Visibility(
-        visible: isVisible,
-        child: (_myController.text.length > 2)
-            ? WidgetShareContact(
-                name: _myController.text, email: _myController.text)
-            : Container(),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Visibility(
+          visible: isVisible,
+          child: (_myController.text.length > 2)
+              ? WidgetShareContact(
+                  name: _myController.text, email: _myController.text)
+              : Container(),
+        ),
       ),
     );
   }
 
   Container searchContact(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 50,
-      child: TextFormField(
-        decoration: InputDecoration(
-          hintText: getString(context, "share_email"),
-          labelText: getString(context, 'search'),
-          border: OutlineInputBorder(
-            borderSide: BorderSide(color: BLUE),
+      color: WHITE,
+      width: MediaQuery.of(context).size.width,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+        child: TextFormField(
+          decoration: InputDecoration(
+            hintText: getString(context, "share_email"),
+            suffixIcon: Icon(
+              Icons.search,
+              color: BLACK,
+            ),
           ),
-          suffixIcon: Icon(Icons.search),
+          controller: _myController,
+          onChanged: (string) {
+            setState(
+              () {
+                if (contactsFilter.isEmpty) {
+                  isVisible = true;
+                } else {
+                  isVisible = false;
+                }
+                contactsFilter = contacts
+                    .where((conta) => (conta.displayName
+                            .toLowerCase()
+                            .contains(string.toLowerCase()) ||
+                        conta.emails
+                            .elementAt(0)
+                            .value
+                            .toLowerCase()
+                            .contains(string.toLowerCase())))
+                    .toList();
+              },
+            );
+          },
         ),
-        controller: _myController,
-        onChanged: (string) {
-          setState(
-            () {
-              if (contactsFilter.isEmpty) {
-                isVisible = true;
-              } else {
-                isVisible = false;
-              }
-              contactsFilter = contacts
-                  .where((conta) => (conta.displayName
-                          .toLowerCase()
-                          .contains(string.toLowerCase()) ||
-                      conta.emails
-                          .elementAt(0)
-                          .value
-                          .toLowerCase()
-                          .contains(string.toLowerCase())))
-                  .toList();
-            },
-          );
-        },
       ),
     );
   }
@@ -268,10 +273,13 @@ class ShareStateOneState extends State<ShareOne> {
               openSharePage();
             }
           },
-          child: WidgetShareContact(
-              name: contact.displayName,
-              avatar: contact.avatar,
-              email: contact.emails.elementAt(0).value),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: WidgetShareContact(
+                name: contact.displayName,
+                avatar: contact.avatar,
+                email: contact.emails.elementAt(0).value),
+          ),
         );
       },
     );

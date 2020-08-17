@@ -65,8 +65,8 @@ class BottomBarState extends State<BottomBar> {
                 textAlign: TextAlign.center,
                 key: Key(KEY_CENTER_TEXT),
                 style: TextStyle(
-                  color: Colors.green,
-                  fontSize: 10.0,
+                  color: GREEN,
+                  fontSize: 9.0,
                   fontWeight: FontWeight.w800,
                 ),
               ),
@@ -83,6 +83,7 @@ class BottomBarState extends State<BottomBar> {
 
   Row buildLeftItems(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Expanded(
           flex: 1,
@@ -114,6 +115,7 @@ class BottomBarState extends State<BottomBar> {
 
   Row buildRightItems(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Expanded(
           flex: 1,
@@ -173,7 +175,7 @@ class BottomBarItem extends StatelessWidget {
           Icon(_icon, color: _itemColor),
           Text(
             _text,
-            style: TextStyle(color: _itemColor, fontSize: 10.0),
+            style: TextStyle(color: _itemColor, fontSize: 10),
           ),
         ],
       ),

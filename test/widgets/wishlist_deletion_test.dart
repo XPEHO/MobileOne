@@ -6,6 +6,7 @@ import 'package:MobileOne/pages/openedListPage.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -48,6 +49,8 @@ class MockArguments extends Mock implements Arguments {}
 
 class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
+class ColorServiceMock extends Mock implements ColorService {}
+
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
 
@@ -60,6 +63,9 @@ void main() {
     GetIt.I.registerSingleton<WishlistHeadProvider>(_wishlistHeadProvider);
     final _analyticsService = AnalyticsServiceMock();
     GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
+
+    final _colorService = ColorServiceMock();
+    GetIt.I.registerSingleton<ColorService>(_colorService);
 
     final wishlist = MockWishlist();
     when(wishlist.label).thenReturn("test");

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:MobileOne/pages/card_page.dart';
-import 'package:MobileOne/pages/item_page.dart';
+import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
@@ -13,6 +13,7 @@ import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/pages/share_one.dart';
 import 'package:MobileOne/pages/share_two.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +51,7 @@ void instantiateServices() {
   getIt.registerSingleton(ImageService());
   getIt.registerSingleton(UserPictureProvider());
   getIt.registerSingleton(WishlistHeadProvider());
+  getIt.registerSingleton(ColorService());
 }
 
 void main() {

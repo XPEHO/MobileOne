@@ -58,7 +58,7 @@
     "submit_button": "Submit",
     "shared_with_me": "Shared with me : ",
     "hint_name_new_list": "Foods, Hobbies ...",
-    "articles": "articles",
+    "items": "items",
     "item_type": "Type",
     "item_unit": "Units",
     "item_liters": "Liters",
@@ -124,5 +124,6 @@
     "confirm_leave": "LEAVE",
     "microphone_access": "Please grant microphone permissions to the app to use this service",
     "talk": "You can talk now",
-    "all_my_lists": "My lists:"
+    "all_my_lists": "My lists:",
+    "empty_items": "No items for the moment"
 }

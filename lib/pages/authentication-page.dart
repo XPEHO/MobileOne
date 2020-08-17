@@ -1,7 +1,9 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/utility/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -30,6 +32,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   var _authenticationService = GetIt.I.get<AuthenticationService>();
   var _preferencesService = GetIt.I.get<PreferencesService>();
   var _analytics = GetIt.I.get<AnalyticsService>();
+  var _colorsApp = GetIt.I.get<ColorService>();
 
   @override
   void dispose() {
@@ -74,6 +77,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: _colorsApp.colorTheme,
       key: Key("authentication"),
       body: Container(
         height: MediaQuery.of(context).size.height,
@@ -90,22 +94,34 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w400,
+                      color: WHITE,
                     ),
                   ),
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20.0),
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  child: Image.asset(
+                    'assets/images/square-logo.png',
+                    width: 100,
+                  ),
+                ),
+              ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.5,
+                height: MediaQuery.of(context).size.height * 0.4,
                 child: buildForm(context),
               ),
               Container(
-                height: MediaQuery.of(context).size.height * 0.15,
+                height: MediaQuery.of(context).size.height * 0.1,
                 child: Center(
                   child: Text(
                     getString(context, 'or'),
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
+                      color: WHITE,
                     ),
                   ),
                 ),
@@ -123,7 +139,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: MediaQuery.of(context).size.height * 0.17,
+                  height: MediaQuery.of(context).size.height * 0.15,
                   child: buildBottomLinks(context),
                 ),
               ),
@@ -147,7 +163,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
             child: Text(
               getString(context, 'create_account'),
               style: TextStyle(
-                color: Colors.blue,
+                color: WHITE,
               ),
             ),
           ),
@@ -158,7 +174,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
             child: Text(
               getString(context, 'forgotten_password'),
               style: TextStyle(
-                color: Colors.blue,
+                color: WHITE,
               ),
             ),
           ),
@@ -174,7 +190,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
         getString(context, 'google'),
         style: TextStyle(color: Colors.grey[600], fontWeight: FontWeight.bold),
       ),
-      color: Colors.white,
+      color: WHITE,
       icon: new Image.asset(
         'assets/images/Google_g.png',
         width: 20,
@@ -286,7 +302,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
               ),
               RaisedButton(
                 key: Key("sign_in_button"),
-                color: Colors.blue,
+                color: _colorsApp.buttonColor,
                 textColor: Colors.white,
                 onPressed: () {
                   if (_formKey.currentState.validate()) {

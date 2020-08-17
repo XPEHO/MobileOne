@@ -1,6 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_share_lists.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +18,7 @@ class Share extends StatefulWidget {
 
 class ShareState extends State<Share> {
   var _analytics = GetIt.I.get<AnalyticsService>();
+  var _colorsApp = GetIt.I.get<ColorService>();
   @override
   void initState() {
     _analytics.setCurrentPage("isOnSharePage");
@@ -53,6 +55,7 @@ class ShareState extends State<Share> {
     var wishlist = userWishlists["lists"] ?? [];
 
     return Scaffold(
+      backgroundColor: _colorsApp.colorTheme,
       body: SafeArea(
         child: Column(
           children: <Widget>[
@@ -75,6 +78,7 @@ class ShareState extends State<Share> {
                           getString(context, "my_shares"),
                           style: TextStyle(
                             fontSize: 20,
+                            color: WHITE,
                           ),
                         ),
                       ),
@@ -83,32 +87,33 @@ class ShareState extends State<Share> {
                 ),
               ),
             ),
-            SafeArea(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      itemCount: wishlist.length,
-                      itemBuilder: (BuildContext ctxt, int index) {
-                        return GestureDetector(
-                          onTap: () {
-                            previousList = wishlist[index];
-                            _analytics.sendAnalyticsEvent(
-                                "share_list_from_share_page");
-                            askPermissions();
-                          },
-                          child: WidgetShareListWithSomeone(
-                            wishlist[index],
-                          ),
-                        );
-                      },
+            Column(
+              children: <Widget>[
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height * 0.68,
+                  child: ListView.builder(
+                    padding: const EdgeInsets.only(
+                      bottom: kFloatingActionButtonMargin + 24,
                     ),
+                    scrollDirection: Axis.vertical,
+                    itemCount: wishlist.length,
+                    itemBuilder: (BuildContext ctxt, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          previousList = wishlist[index];
+                          _analytics
+                              .sendAnalyticsEvent("share_list_from_share_page");
+                          askPermissions();
+                        },
+                        child: WidgetShareListWithSomeone(
+                          wishlist[index],
+                        ),
+                      );
+                    },
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ],
         ),

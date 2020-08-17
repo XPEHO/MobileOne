@@ -4,6 +4,7 @@ import 'package:MobileOne/pages/change_password.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -30,6 +31,7 @@ class NewProfileState extends State<NewProfile> {
   var _authService = GetIt.I.get<AuthenticationService>();
   final _auth = GetIt.I.get<FirebaseAuth>();
   var _analytics = GetIt.I.get<AnalyticsService>();
+  var _colorsApp = GetIt.I.get<ColorService>();
   @override
   initState() {
     _analytics.setCurrentPage("isOnProfilePage");
@@ -58,7 +60,7 @@ class NewProfileState extends State<NewProfile> {
       child: Column(
         children: <Widget>[
           Container(
-            color: CYAN,
+            color: _colorsApp.colorTheme,
             height: MediaQuery.of(context).size.height * 0.3,
             width: MediaQuery.of(context).size.width,
             child: Row(

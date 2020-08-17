@@ -6,6 +6,7 @@ import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_item.dart';
@@ -32,6 +33,7 @@ class OpenedListPageState extends State<OpenedListPage> {
   String listUuid;
   final _myController = TextEditingController();
   final _wishlistProvider = GetIt.I.get<WishlistHeadProvider>();
+  var _colorsApp = GetIt.I.get<ColorService>();
   OpenedListArguments _args;
   List itemChecked = [];
 
@@ -111,94 +113,14 @@ class OpenedListPageState extends State<OpenedListPage> {
 
     var pourcentage = (wishlist.isNotEmpty) ? (100 / wishlist.length) : 0;
     return Scaffold(
+      backgroundColor: _colorsApp.colorTheme,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           openItemPage(
               getString(context, 'popup_add'), wishlistHead.uuid, null);
         },
         child: Icon(Icons.add),
-        backgroundColor: GREEN,
-      ),
-      appBar: AppBar(
-        iconTheme: ThemeData.light().iconTheme,
-        actionsIconTheme: ThemeData.light().iconTheme,
-        textTheme: ThemeData.light().textTheme,
-        backgroundColor: Colors.white,
-        title: Center(
-          child: TextField(
-            controller: _myController,
-            textAlign: TextAlign.center,
-            decoration: InputDecoration(
-              hintText: getString(context, "wishlist_name"),
-              hintStyle: TextStyle(color: Colors.grey[600]),
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: TRANSPARENT),
-              ),
-              filled: true,
-              fillColor: Colors.transparent,
-            ),
-            onSubmitted: (_) {
-              _wishlistProvider.changeWishlistLabel(
-                  _myController.text, wishlistHead.uuid);
-              _wishlistProvider.fetchWishlist(wishlistHead.uuid);
-            },
-          ),
-        ),
-        actions: <Widget>[
-          PopupMenuButton(
-            key: Key("wishlistMenu"),
-            itemBuilder: (context) => _args.isGuest
-                ? [
-                    PopupMenuItem(
-                      key: Key("leaveShare"),
-                      value: 3,
-                      child: Text(getString(context, 'leave_share')),
-                    )
-                  ]
-                : [
-                    PopupMenuItem(
-                      key: Key("deleteItem"),
-                      value: 1,
-                      child: Text(getString(context, 'delete')),
-                    ),
-                    PopupMenuItem(
-                      value: 2,
-                      child: Text(getString(context, 'share')),
-                    ),
-                  ],
-            icon: Icon(Icons.more_horiz),
-            onSelected: (value) {
-              switch (value) {
-                case 1:
-                  confirmWishlistDeletion().then((value) async {
-                    if (value == true) {
-                      openListsPage();
-                      GetIt.I.get<WishlistsListProvider>().deleteWishlist(
-                          wishlistHead.uuid,
-                          GetIt.I.get<UserService>().user.uid);
-                    }
-                  });
-                  break;
-                case 2:
-                  _analytics
-                      .sendAnalyticsEvent("share_list_from_openedlistpage");
-                  askPermissions(wishlistHead.uuid);
-                  break;
-                case 3:
-                  confirmShareLeaving().then((value) async {
-                    if (value == true) {
-                      openListsPage();
-                      GetIt.I.get<WishlistsListProvider>().leaveShare(
-                          wishlistHead.uuid,
-                          GetIt.I.get<UserService>().user.email);
-                    }
-                  });
-
-                  break;
-              }
-            },
-          )
-        ],
+        backgroundColor: _colorsApp.buttonColor,
       ),
       body: Builder(
         builder: (context) {
@@ -211,96 +133,234 @@ class OpenedListPageState extends State<OpenedListPage> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  Visibility(
-                    visible: (itemChecked.length >= 1) ? true : false,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FAProgressBar(
-                        currentValue:
-                            (pourcentage.toInt() * (itemChecked.length) == 99)
-                                ? pourcentage.toInt() * (itemChecked.length) + 1
-                                : pourcentage.toInt() * (itemChecked.length),
-                        displayText: '%',
-                        changeColorValue: 50,
-                        changeProgressColor: Colors.green,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height - 80,
-                    child: new ListView.builder(
-                        padding: const EdgeInsets.only(
-                          bottom: kFloatingActionButtonMargin + 48,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Flexible(
+                        flex: 1,
+                        child: IconButton(
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: WHITE,
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
                         ),
-                        itemCount: wishlist.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
-                          return Container(
-                            child: Dismissible(
-                                confirmDismiss:
-                                    (DismissDirection direction) async {
-                                  if (direction ==
-                                      DismissDirection.endToStart) {
-                                    return await buildDeleteShowDialog(context);
-                                  } else {
-                                    return true;
-                                  }
-                                },
-                                background: Container(
-                                  color: GREEN,
-                                  child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 8.0),
-                                        child: Icon(
-                                          Icons.check,
-                                          color: WHITE,
-                                        )),
-                                  ),
-                                ),
-                                secondaryBackground: Container(
-                                  color: RED,
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 8.0),
-                                        child: Icon(
-                                          Icons.delete,
-                                          color: WHITE,
-                                        )),
-                                  ),
-                                ),
-                                key: UniqueKey(),
-                                child: WidgetItem(wishlist[index],
-                                    wishlistHead.uuid, wishlist[index].uuid),
-                                onDismissed: (direction) {
-                                  if (direction ==
-                                      DismissDirection.endToStart) {
-                                    deleteItemFromList(
-                                      listUuid: wishlistHead.uuid,
-                                      itemUuid: wishlist[index].uuid,
-                                      imageName: wishlist[index].imageName,
-                                    );
-                                    _analytics
-                                        .sendAnalyticsEvent("delete_item");
-                                  } else {
-                                    validateItem(
-                                      listUuid: wishlistHead.uuid,
-                                      item: wishlist[index],
-                                    );
-                                    _analytics.sendAnalyticsEvent("check_item");
-                                  }
-                                }),
-                          );
-                        }),
+                      ),
+                      Flexible(
+                        flex: 2,
+                        child: TextField(
+                          style: TextStyle(
+                            color: WHITE,
+                          ),
+                          controller: _myController,
+                          textAlign: TextAlign.center,
+                          decoration: InputDecoration(
+                            hintText: getString(context, "wishlist_name"),
+                            hintStyle: TextStyle(color: _colorsApp.greyColor),
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: TRANSPARENT),
+                            ),
+                            filled: true,
+                            fillColor: Colors.transparent,
+                          ),
+                          onSubmitted: (_) {
+                            _wishlistProvider.changeWishlistLabel(
+                                _myController.text, wishlistHead.uuid);
+                            _wishlistProvider.fetchWishlist(wishlistHead.uuid);
+                          },
+                        ),
+                      ),
+                      Flexible(
+                          flex: 1,
+                          child: PopupMenuButton(
+                            key: Key("wishlistMenu"),
+                            itemBuilder: (context) => _args.isGuest
+                                ? [
+                                    PopupMenuItem(
+                                      key: Key("leaveShare"),
+                                      value: 3,
+                                      child: Text(
+                                          getString(context, 'leave_share')),
+                                    )
+                                  ]
+                                : [
+                                    PopupMenuItem(
+                                      key: Key("deleteItem"),
+                                      value: 1,
+                                      child: Text(getString(context, 'delete')),
+                                    ),
+                                    PopupMenuItem(
+                                      value: 2,
+                                      child: Text(getString(context, 'share')),
+                                    ),
+                                  ],
+                            icon: Icon(Icons.more_horiz, color: WHITE),
+                            onSelected: (value) {
+                              switch (value) {
+                                case 1:
+                                  confirmWishlistDeletion().then((value) async {
+                                    if (value == true) {
+                                      openListsPage();
+                                      GetIt.I
+                                          .get<WishlistsListProvider>()
+                                          .deleteWishlist(
+                                              wishlistHead.uuid,
+                                              GetIt.I
+                                                  .get<UserService>()
+                                                  .user
+                                                  .uid);
+                                    }
+                                  });
+                                  break;
+                                case 2:
+                                  _analytics.sendAnalyticsEvent(
+                                      "share_list_from_openedlistpage");
+                                  askPermissions(wishlistHead.uuid);
+                                  break;
+                                case 3:
+                                  confirmShareLeaving().then((value) async {
+                                    if (value == true) {
+                                      openListsPage();
+                                      GetIt.I
+                                          .get<WishlistsListProvider>()
+                                          .leaveShare(
+                                              wishlistHead.uuid,
+                                              GetIt.I
+                                                  .get<UserService>()
+                                                  .user
+                                                  .email);
+                                    }
+                                  });
+
+                                  break;
+                              }
+                            },
+                          )),
+                    ],
                   ),
+                  progressindicator(pourcentage),
+                  (wishlist.length > 0)
+                      ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: MediaQuery.of(context).size.height - 150,
+                          child: new ListView.builder(
+                              itemCount: wishlist.length,
+                              itemBuilder: (BuildContext ctxt, int index) {
+                                return Container(
+                                  child: Dismissible(
+                                      confirmDismiss:
+                                          (DismissDirection direction) async {
+                                        if (direction ==
+                                            DismissDirection.endToStart) {
+                                          return await buildDeleteShowDialog(
+                                              context);
+                                        } else {
+                                          return true;
+                                        }
+                                      },
+                                      background: Container(
+                                        color: GREEN,
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0),
+                                              child: Icon(
+                                                Icons.check,
+                                                color: WHITE,
+                                              )),
+                                        ),
+                                      ),
+                                      secondaryBackground: Container(
+                                        color: RED,
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 8.0),
+                                              child: Icon(
+                                                Icons.delete,
+                                                color: WHITE,
+                                              )),
+                                        ),
+                                      ),
+                                      key: UniqueKey(),
+                                      child: WidgetItem(
+                                          wishlist[index],
+                                          wishlistHead.uuid,
+                                          wishlist[index].uuid),
+                                      onDismissed: (direction) {
+                                        if (direction ==
+                                            DismissDirection.endToStart) {
+                                          deleteItemFromList(
+                                            listUuid: wishlistHead.uuid,
+                                            itemUuid: wishlist[index].uuid,
+                                          );
+                                          _analytics.sendAnalyticsEvent(
+                                              "delete_item");
+                                        } else {
+                                          validateItem(
+                                            listUuid: wishlistHead.uuid,
+                                            item: wishlist[index],
+                                          );
+                                          _analytics
+                                              .sendAnalyticsEvent("check_item");
+                                        }
+                                      }),
+                                );
+                              }),
+                        )
+                      : emptyList(),
                 ],
               ),
             ),
           );
         },
+      ),
+    );
+  }
+
+  emptyList() {
+    return Column(
+      children: [
+        Container(
+          height: MediaQuery.of(context).size.height * 0.2,
+          child: Image.asset(
+            "assets/images/square-logo.png",
+            height: 100,
+            width: 100,
+          ),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.3,
+          child: Icon(Icons.add_shopping_cart, size: 100, color: WHITE),
+        ),
+        Container(
+          height: MediaQuery.of(context).size.height * 0.3,
+          child: Text(
+            getString(context, "empty_items"),
+            style: TextStyle(color: WHITE, fontSize: 20),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Visibility progressindicator(num pourcentage) {
+    return Visibility(
+      visible: (itemChecked.length >= 1) ? true : false,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FAProgressBar(
+          currentValue: (pourcentage.toInt() * (itemChecked.length) == 99)
+              ? pourcentage.toInt() * (itemChecked.length) + 1
+              : pourcentage.toInt() * (itemChecked.length),
+          displayText: '%',
+          changeColorValue: 50,
+          changeProgressColor: Colors.green,
+        ),
       ),
     );
   }

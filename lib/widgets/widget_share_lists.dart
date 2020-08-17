@@ -36,7 +36,7 @@ class WidgetShareListWithSomeoneState
         .get()
         .then((value) {
       labelValue = value["label"];
-      countValue = value["itemCounts"] + " " + getString(context, 'articles');
+      countValue = value["itemCounts"] + " " + getString(context, 'items');
     });
 
     setState(() {
@@ -78,7 +78,7 @@ class WidgetShareListWithSomeoneState
           children: <Widget>[
             Padding(
               padding: EdgeInsets.only(
-                left: 30,
+                left: 10,
                 top: 10,
               ),
               child: Container(
@@ -87,39 +87,42 @@ class WidgetShareListWithSomeoneState
                   elevation: 3,
                   color: WHITE,
                   child: Container(
+                    height: MediaQuery.of(context).size.height * 0.15,
                     child: Column(
                       children: <Widget>[
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: 5,
-                            bottom: 5,
-                          ),
-                          child: Text(
-                            _label,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              color: BLACK,
-                              fontSize: 12.0,
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.09,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              _label,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: BLACK,
+                                fontSize: 12.0,
+                              ),
                             ),
                           ),
                         ),
                         Container(
-                          width: MediaQuery.of(context).size.width * 0.23 / 2,
-                          child:
-                              Image.asset("assets/images/basket_my_lists.png"),
-                        ),
-                        Text(
-                          _count,
-                          style: TextStyle(
-                            color: GREY,
-                            fontSize: 10.0,
-                          ),
-                        ),
-                        Text(
-                          "$numberOfItemShared $sharedCount",
-                          style: TextStyle(
-                            color: GREY,
-                            fontSize: 10.0,
+                          height: MediaQuery.of(context).size.height * 0.05,
+                          child: Column(
+                            children: [
+                              Text(
+                                _count,
+                                style: TextStyle(
+                                  color: GREY,
+                                  fontSize: 10.0,
+                                ),
+                              ),
+                              Text(
+                                "$numberOfItemShared $sharedCount",
+                                style: TextStyle(
+                                  color: GREY,
+                                  fontSize: 10.0,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -130,12 +133,12 @@ class WidgetShareListWithSomeoneState
             ),
             Padding(
               padding: EdgeInsets.only(
-                left: 140,
+                left: 120,
                 top: 15,
               ),
               child: Container(
-                width: MediaQuery.of(context).size.width - 160,
-                height: 80,
+                height: MediaQuery.of(context).size.height * 0.15,
+                width: MediaQuery.of(context).size.width * 0.6,
                 child: Stack(
                   children: <Widget>[
                     Text(
@@ -143,6 +146,7 @@ class WidgetShareListWithSomeoneState
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
+                        color: WHITE,
                       ),
                     ),
                     Padding(
@@ -150,44 +154,45 @@ class WidgetShareListWithSomeoneState
                         left: 10,
                         top: 20,
                       ),
-                      child: Container(
-                        width: 250,
-                        height: 100,
-                        child: ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          itemCount: _emails[_listUuid] != null
-                              ? _emails[_listUuid].length
-                              : 0,
-                          itemBuilder: (BuildContext ctxt, int index) {
-                            numberOfItemShared =
-                                _emails[_listUuid].length.toString();
+                      child: ListView.builder(
+                        scrollDirection: Axis.vertical,
+                        itemCount: _emails[_listUuid] != null
+                            ? _emails[_listUuid].length
+                            : 0,
+                        itemBuilder: (BuildContext ctxt, int index) {
+                          numberOfItemShared =
+                              _emails[_listUuid].length.toString();
 
-                            var emailSelected = _emails[_listUuid][index];
-                            return Row(
-                              children: <Widget>[
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width - 200,
-                                  child: Text(
-                                    _emails[_listUuid][index],
-                                    overflow: TextOverflow.ellipsis,
+                          var emailSelected = _emails[_listUuid][index];
+                          return Row(
+                            children: <Widget>[
+                              Container(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                child: Text(
+                                  _emails[_listUuid][index],
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: WHITE,
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    shareProvider.deleteShared(
-                                        _listUuid, emailSelected);
-                                  },
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  shareProvider.deleteShared(
+                                      _listUuid, emailSelected);
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
                                   child: Image.asset(
-                                    'assets/images/delete.png',
-                                    height: 30,
-                                    width: 30,
+                                    'assets/images/eraser.png',
+                                    height: 15,
+                                    width: 15,
                                   ),
                                 ),
-                              ],
-                            );
-                          },
-                        ),
+                              ),
+                            ],
+                          );
+                        },
                       ),
                     )
                   ],
