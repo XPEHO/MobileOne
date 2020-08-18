@@ -304,7 +304,7 @@ class EditItemPageState extends State<EditItemPage> {
 
   Future<void> pickImage() async {
     await _imageService
-        .pickCamera(20)
+        .pickCamera(30, 720, 720)
         .then((image) => pickedImage = File(image.path));
 
     setState(() {

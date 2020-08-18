@@ -104,7 +104,7 @@ void main() {
     when(_picker.getImage(source: ImageSource.camera)).thenAnswer(
         (_) => Future.value(PickedFile("assets/images/facebook_f.png")));
 
-    when(_imageService.pickCamera(100)).thenAnswer(
+    when(_imageService.pickCamera(100, 1080, 1080)).thenAnswer(
         (_) => Future.value(PickedFile("assets/images/facebook_f.png")));
     when(_userService.user).thenReturn(user);
     when(user.email).thenReturn("test@test.test");

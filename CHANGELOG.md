@@ -87,6 +87,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - OpenedListPage : Screen don't overflow anymore on wishlist name changing
 - openedListPage : Ugly padding in wishlist screen
 - Picture : Item picture is now deleted from the storage on the item deletion/modification
+- Picture : Item picture is now stored smaller
 
 ### Security
 

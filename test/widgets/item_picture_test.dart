@@ -7,7 +7,6 @@ import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -48,10 +47,6 @@ class ImageServiceMock extends Mock implements ImageService {}
 
 class MockArguments extends Mock implements Arguments {}
 
-class StorageReferenceMock extends Mock implements StorageReference {}
-
-class StorageUploadTaskMock extends Mock implements StorageUploadTask {}
-
 class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
 class ColorServiceMock extends Mock implements ColorService {}
@@ -68,8 +63,6 @@ void main() {
     GetIt.I.registerSingleton<ImageService>(_imageService);
     final _imagePicker = ImagePickerMock();
     GetIt.I.registerSingleton<ImagePicker>(_imagePicker);
-    final _storageReference = StorageReferenceMock();
-    final _storageUploadTask = StorageUploadTaskMock();
     final _analyticsService = AnalyticsServiceMock();
     GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
 
@@ -84,18 +77,15 @@ void main() {
       itemUuid: "",
     ));
 
-    when(_imagePicker.getImage(source: ImageSource.camera)).thenAnswer(
-        (_) => Future.value(PickedFile("assets/images/facebook_f.png")));
+    when(_imagePicker.getImage(
+            source: ImageSource.camera,
+            imageQuality: 30,
+            maxWidth: 720,
+            maxHeight: 720))
+        .thenAnswer((_) => Future.value(PickedFile("")));
 
-    when(_imageService.pickCamera(100)).thenAnswer(
-        (_) => Future.value(PickedFile("assets/images/facebook_f.png")));
-
-    when(_imageService.uploadFile(any, any)).thenReturn(_storageReference);
-
-    when(_storageReference.putFile(any)).thenReturn(_storageUploadTask);
-
-    when(_storageReference.getDownloadURL())
-        .thenAnswer((_) => Future.value(""));
+    when(_imageService.pickCamera(30, 720, 720))
+        .thenAnswer((_) => Future.value(PickedFile("")));
 
     //WHEN
     await tester.pumpWidget(buildTestableWidget(EditItemPage()));
@@ -105,6 +95,6 @@ void main() {
     await tester.pumpAndSettle(Duration(seconds: 1));
 
     // THEN
-    verify(_imageService.pickCamera(100));
+    verify(_imageService.pickCamera(30, 720, 720));
   });
 }
