@@ -29,6 +29,10 @@ class ChangePasswordState extends State<ChangePassword> {
   var _preferencesService = GetIt.I.get<PreferencesService>();
   var _userService = GetIt.I.get<UserService>();
   var _colorsApp = GetIt.I.get<ColorService>();
+  IconData _iconPasswordVisibility = Icons.visibility_off;
+  bool _passwordVisibility = true;
+  IconData _iconConfirmPasswordVisibility = Icons.visibility_off;
+  bool _confirmPasswordVisibility = true;
 
   @override
   void dispose() {
@@ -117,69 +121,119 @@ class ChangePasswordState extends State<ChangePassword> {
     );
   }
 
-  Container buildNewPassword(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.95,
-      height: MediaQuery.of(context).size.width * 0.2,
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return getString(context, 'fill_new_password');
-          }
-          if (_newPassword.length < PASSWORD_MINIMAL_LENGHT) {
-            return getString(context, 'too_short_new_password');
-          }
-          return null;
-        },
-        key: Key("new_password_label"),
-        textAlign: TextAlign.start,
-        decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: TRANSPARENT),
+  Row buildNewPassword(BuildContext context) {
+    return Row(
+      children: [
+        Flexible(
+          flex: 6,
+          child: Padding(
+            padding: const EdgeInsets.all(
+              8.0,
             ),
-            filled: true,
-            fillColor: Colors.grey[300],
-            labelText: getString(context, 'new_password_label'),
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-            )),
-        controller: _newPasswordController,
-        obscureText: true,
-        onChanged: (text) => handleSubmittedNewPassword(text),
-      ),
+            child: TextFormField(
+              validator: (value) {
+                if (value.isEmpty) {
+                  return getString(context, 'fill_new_password');
+                }
+                if (_newPassword.length < PASSWORD_MINIMAL_LENGHT) {
+                  return getString(context, 'too_short_new_password');
+                }
+                return null;
+              },
+              key: Key("new_password_label"),
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: TRANSPARENT),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelText: getString(context, 'new_password_label'),
+                  labelStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )),
+              controller: _newPasswordController,
+              obscureText: _passwordVisibility,
+              onChanged: (text) => handleSubmittedNewPassword(text),
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 1,
+          child: IconButton(
+            color: WHITE,
+            icon: Icon(_iconPasswordVisibility),
+            onPressed: () {
+              setState(() {
+                _passwordVisibility
+                    ? _iconPasswordVisibility = Icons.visibility
+                    : _iconPasswordVisibility = Icons.visibility_off;
+                _passwordVisibility
+                    ? _passwordVisibility = false
+                    : _passwordVisibility = true;
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 
-  Container buildConfirmNewPassword(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width * 0.95,
-      height: MediaQuery.of(context).size.width * 0.2,
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return getString(context, 'fill_confirm_new_password');
-          }
-          if (_newPassword != _confirmNewPassword) {
-            return getString(context, 'new_password_not_confirmed');
-          }
-          return null;
-        },
-        key: Key("confirm_new_password_label"),
-        textAlign: TextAlign.start,
-        decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: TRANSPARENT),
+  Row buildConfirmNewPassword(BuildContext context) {
+    return Row(
+      children: [
+        Flexible(
+          flex: 6,
+          child: Padding(
+            padding: const EdgeInsets.all(
+              8.0,
             ),
-            filled: true,
-            fillColor: Colors.grey[300],
-            labelText: getString(context, 'confirm_new_password_label'),
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-            )),
-        controller: _confirmNewPasswordController,
-        obscureText: true,
-        onChanged: (text) => handleSubmittedConfirmNewPassword(text),
-      ),
+            child: TextFormField(
+              validator: (value) {
+                if (value.isEmpty) {
+                  return getString(context, 'fill_confirm_new_password');
+                }
+                if (_newPassword != _confirmNewPassword) {
+                  return getString(context, 'new_password_not_confirmed');
+                }
+                return null;
+              },
+              key: Key("confirm_new_password_label"),
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: TRANSPARENT),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelText: getString(context, 'confirm_new_password_label'),
+                  labelStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )),
+              controller: _confirmNewPasswordController,
+              obscureText: _confirmPasswordVisibility,
+              onChanged: (text) => handleSubmittedConfirmNewPassword(text),
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 1,
+          child: IconButton(
+            color: WHITE,
+            icon: Icon(_iconConfirmPasswordVisibility),
+            onPressed: () {
+              setState(() {
+                _confirmPasswordVisibility
+                    ? _iconConfirmPasswordVisibility = Icons.visibility
+                    : _iconConfirmPasswordVisibility = Icons.visibility_off;
+                _confirmPasswordVisibility
+                    ? _confirmPasswordVisibility = false
+                    : _confirmPasswordVisibility = true;
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 

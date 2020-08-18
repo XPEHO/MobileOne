@@ -34,6 +34,9 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
 
+  IconData _iconVisibility = Icons.visibility_off;
+  bool _passwordVisibility = true;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -158,7 +161,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
         children: <Widget>[
           FlatButton(
             key: Key("register_page_button"),
-            color: Colors.transparent,
+            color: TRANSPARENT,
             onPressed: () => openRegisterPage(context),
             child: Text(
               getString(context, 'create_account'),
@@ -169,7 +172,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
           ),
           FlatButton(
             key: Key("forgotten_password_button"),
-            color: Colors.transparent,
+            color: TRANSPARENT,
             onPressed: () => openForgottenPasswordPage(context),
             child: Text(
               getString(context, 'forgotten_password'),
@@ -258,7 +261,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                   textAlign: TextAlign.start,
                   decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
+                        borderSide: BorderSide(color: TRANSPARENT),
                       ),
                       filled: true,
                       fillColor: Colors.grey[300],
@@ -270,35 +273,59 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                   onChanged: (text) => handleSubmittedEmail(text),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 8.0,
-                  right: 8.0,
-                  bottom: 8.0,
-                ),
-                child: TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return getString(context, 'fill_password');
-                    }
-                    return null;
-                  },
-                  key: Key("auth_password_label"),
-                  textAlign: TextAlign.start,
-                  decoration: InputDecoration(
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.transparent),
+              Row(
+                children: [
+                  Flexible(
+                    flex: 6,
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                        left: 8.0,
+                        right: 8.0,
+                        bottom: 8.0,
                       ),
-                      filled: true,
-                      fillColor: Colors.grey[300],
-                      labelText: getString(context, 'password_label'),
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      )),
-                  controller: _passwordController,
-                  obscureText: true,
-                  onChanged: (text) => handleSubmittedPassword(text),
-                ),
+                      child: TextFormField(
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return getString(context, 'fill_password');
+                          }
+                          return null;
+                        },
+                        key: Key("auth_password_label"),
+                        textAlign: TextAlign.start,
+                        decoration: InputDecoration(
+                            enabledBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color: TRANSPARENT),
+                            ),
+                            filled: true,
+                            fillColor: Colors.grey[300],
+                            labelText: getString(context, 'password_label'),
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            )),
+                        controller: _passwordController,
+                        obscureText: _passwordVisibility,
+                        onChanged: (text) => handleSubmittedPassword(text),
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: IconButton(
+                      color: WHITE,
+                      icon: Icon(_iconVisibility),
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisibility
+                              ? _iconVisibility = Icons.visibility
+                              : _iconVisibility = Icons.visibility_off;
+                          _passwordVisibility
+                              ? _passwordVisibility = false
+                              : _passwordVisibility = true;
+                        });
+                      },
+                    ),
+                  )
+                ],
               ),
               RaisedButton(
                 key: Key("sign_in_button"),

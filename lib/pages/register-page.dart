@@ -29,6 +29,10 @@ class RegisterPageState extends State<RegisterPage> {
   String _email;
   String _password;
   String _confirmPassword;
+  IconData _iconPasswordVisibility = Icons.visibility_off;
+  bool _passwordVisibility = true;
+  IconData _iconConfirmPasswordVisibility = Icons.visibility_off;
+  bool _confirmPasswordVisibility = true;
 
   final _authService = GetIt.I.get<AuthenticationService>();
 
@@ -104,7 +108,7 @@ class RegisterPageState extends State<RegisterPage> {
                 child: Row(
                   children: <Widget>[
                     FlatButton(
-                      color: Colors.transparent,
+                      color: TRANSPARENT,
                       onPressed: () => openAuthenticationPage(context),
                       child: Text(
                         getString(context, 'authentication_page_button'),
@@ -123,10 +127,13 @@ class RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Container buildEmail(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width - 10,
-      height: 90,
+  Padding buildEmail(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(
+        left: 8.0,
+        right: 8.0,
+        bottom: 8.0,
+      ),
       child: TextFormField(
         validator: (value) {
           if (value.isEmpty) {
@@ -142,7 +149,7 @@ class RegisterPageState extends State<RegisterPage> {
         textAlign: TextAlign.start,
         decoration: InputDecoration(
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.transparent),
+              borderSide: BorderSide(color: TRANSPARENT),
             ),
             filled: true,
             fillColor: Colors.grey[300],
@@ -156,69 +163,119 @@ class RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  Container buildPassword(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width - 10,
-      height: 90,
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return getString(context, 'fill_password');
-          }
-          if (_password.length < PASSWORD_MINIMAL_LENGHT) {
-            return getString(context, 'too_short_password');
-          }
-          return null;
-        },
-        key: Key("password_label"),
-        textAlign: TextAlign.start,
-        decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.transparent),
+  Row buildPassword(BuildContext context) {
+    return Row(
+      children: [
+        Flexible(
+          flex: 6,
+          child: Padding(
+            padding: const EdgeInsets.all(
+              8.0,
             ),
-            filled: true,
-            fillColor: Colors.grey[300],
-            labelText: getString(context, 'password_label'),
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-            )),
-        controller: _passwordController,
-        obscureText: true,
-        onChanged: (text) => handleSubmittedPassword(text),
-      ),
+            child: TextFormField(
+              validator: (value) {
+                if (value.isEmpty) {
+                  return getString(context, 'fill_password');
+                }
+                if (_password.length < PASSWORD_MINIMAL_LENGHT) {
+                  return getString(context, 'too_short_password');
+                }
+                return null;
+              },
+              key: Key("password_label"),
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: TRANSPARENT),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelText: getString(context, 'password_label'),
+                  labelStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )),
+              controller: _passwordController,
+              obscureText: _passwordVisibility,
+              onChanged: (text) => handleSubmittedPassword(text),
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 1,
+          child: IconButton(
+            color: WHITE,
+            icon: Icon(_iconPasswordVisibility),
+            onPressed: () {
+              setState(() {
+                _passwordVisibility
+                    ? _iconPasswordVisibility = Icons.visibility
+                    : _iconPasswordVisibility = Icons.visibility_off;
+                _passwordVisibility
+                    ? _passwordVisibility = false
+                    : _passwordVisibility = true;
+              });
+            },
+          ),
+        )
+      ],
     );
   }
 
-  Container buildConfirmPassword(BuildContext context) {
-    return Container(
-      width: MediaQuery.of(context).size.width - 10,
-      height: 90,
-      child: TextFormField(
-        validator: (value) {
-          if (value.isEmpty) {
-            return getString(context, 'fill_confirm_password');
-          }
-          if (_password != _confirmPassword) {
-            return getString(context, 'password_not_confirmed');
-          }
-          return null;
-        },
-        key: Key("confirm_password_label"),
-        textAlign: TextAlign.start,
-        decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.transparent),
+  Row buildConfirmPassword(BuildContext context) {
+    return Row(
+      children: [
+        Flexible(
+          flex: 6,
+          child: Padding(
+            padding: const EdgeInsets.all(
+              8.0,
             ),
-            filled: true,
-            fillColor: Colors.grey[300],
-            labelText: getString(context, 'confirm_password_label'),
-            labelStyle: TextStyle(
-              fontWeight: FontWeight.bold,
-            )),
-        controller: _confirmPasswordController,
-        obscureText: true,
-        onChanged: (text) => handleSubmittedConfirmPassword(text),
-      ),
+            child: TextFormField(
+              validator: (value) {
+                if (value.isEmpty) {
+                  return getString(context, 'fill_confirm_password');
+                }
+                if (_password != _confirmPassword) {
+                  return getString(context, 'password_not_confirmed');
+                }
+                return null;
+              },
+              key: Key("confirm_password_label"),
+              textAlign: TextAlign.start,
+              decoration: InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: TRANSPARENT),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[300],
+                  labelText: getString(context, 'confirm_password_label'),
+                  labelStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  )),
+              controller: _confirmPasswordController,
+              obscureText: _confirmPasswordVisibility,
+              onChanged: (text) => handleSubmittedConfirmPassword(text),
+            ),
+          ),
+        ),
+        Flexible(
+          flex: 1,
+          child: IconButton(
+            color: WHITE,
+            icon: Icon(_iconConfirmPasswordVisibility),
+            onPressed: () {
+              setState(() {
+                _confirmPasswordVisibility
+                    ? _iconConfirmPasswordVisibility = Icons.visibility
+                    : _iconConfirmPasswordVisibility = Icons.visibility_off;
+                _confirmPasswordVisibility
+                    ? _confirmPasswordVisibility = false
+                    : _confirmPasswordVisibility = true;
+              });
+            },
+          ),
+        ),
+      ],
     );
   }
 
