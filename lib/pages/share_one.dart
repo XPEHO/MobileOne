@@ -83,22 +83,24 @@ class ShareStateOneState extends State<ShareOne> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: _colorsApp.colorTheme,
-      body: Column(
-        children: <Widget>[
-          header(context),
-          (_argsShare.isOnlyOneStep == false)
-              ? headerSteps(context)
-              : Container(height: MediaQuery.of(context).size.height * 0.1),
-          searchContact(context),
-          searchNewContact(context, _argsShare.previousList),
-          loader == false
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Container(
-                  height: MediaQuery.of(context).size.height * 0.5,
-                  child: buildListView(isSearching, _argsShare.previousList)),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            header(context),
+            (_argsShare.isOnlyOneStep == false)
+                ? headerSteps(context)
+                : Container(height: MediaQuery.of(context).size.height * 0.1),
+            searchContact(context),
+            searchNewContact(context, _argsShare.previousList),
+            loader == false
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Container(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: buildListView(isSearching, _argsShare.previousList)),
+          ],
+        ),
       ),
     );
   }

@@ -23,6 +23,8 @@ class WidgetListsState extends State<WidgetLists> {
   final String _numberOfItemShared;
   WidgetListsState(this._listUuid, this._numberOfItemShared);
 
+  test() {}
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(

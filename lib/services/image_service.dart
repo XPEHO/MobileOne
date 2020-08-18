@@ -10,8 +10,13 @@ class ImageService {
     return _picker.getImage(source: ImageSource.gallery);
   }
 
-  Future<PickedFile> pickCamera() {
-    return _picker.getImage(source: ImageSource.camera);
+  Future<PickedFile> pickCamera(
+      int quality, double maxWidth, double maxHeight) {
+    return _picker.getImage(
+        source: ImageSource.camera,
+        imageQuality: quality,
+        maxWidth: maxWidth,
+        maxHeight: maxHeight);
   }
 
   StorageReference uploadFile(String listUuid, File pickedImage) {

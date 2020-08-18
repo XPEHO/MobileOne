@@ -98,7 +98,7 @@ class MainPageState extends State<MainPage> {
   Future _getImage() async {
     _analytics.sendAnalyticsEvent("change_picture_from_camera");
     // Pick picture
-    final pickedFile = await _imageService.pickCamera();
+    final pickedFile = await _imageService.pickCamera(100, 1080, 1080);
 
     if (pickedFile != null) {
       // Save picture path into Provider
