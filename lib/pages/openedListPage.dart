@@ -295,9 +295,10 @@ class OpenedListPageState extends State<OpenedListPage> {
                                         if (direction ==
                                             DismissDirection.endToStart) {
                                           deleteItemFromList(
-                                            listUuid: wishlistHead.uuid,
-                                            itemUuid: wishlist[index].uuid,
-                                          );
+                                              listUuid: wishlistHead.uuid,
+                                              itemUuid: wishlist[index].uuid,
+                                              imageName:
+                                                  wishlist[index].imageName);
                                           _analytics.sendAnalyticsEvent(
                                               "delete_item");
                                         } else {
