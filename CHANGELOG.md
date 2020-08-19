@@ -88,6 +88,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - openedListPage : Ugly padding in wishlist screen
 - Picture : Item picture is now deleted from the storage on the item deletion/modification
 - Picture : Item picture is now stored smaller
+- Password : User can now see the password he his typing
 
 ### Security
 
