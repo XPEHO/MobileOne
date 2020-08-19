@@ -299,6 +299,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                                               itemUuid: wishlist[index].uuid,
                                               imageName:
                                                   wishlist[index].imageName);
+                                          wishlist.removeAt(index);
                                           _analytics.sendAnalyticsEvent(
                                               "delete_item");
                                         } else {
