@@ -1,5 +1,6 @@
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/utility/arguments.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -8,6 +9,7 @@ import 'package:uuid/uuid.dart';
 class WishlistsListProvider with ChangeNotifier {
   final UserService userService = GetIt.I.get<UserService>();
   var _analytics = GetIt.I.get<AnalyticsService>();
+
   Future<DocumentSnapshot> get ownerLists {
     return Firestore.instance
         .collection("owners")
@@ -19,16 +21,19 @@ class WishlistsListProvider with ChangeNotifier {
     return Firestore.instance.collection("guests").document(email).get();
   }
 
-  addWishlist(String text) async {
-    bool doesListExist = false;
-    final newUuid = Uuid().v4();
+  Future<void> createWishlist(BuildContext context) async {
+    String uuid = await GetIt.I.get<WishlistsListProvider>().addWishlist();
+    if (uuid != null) {
+      Navigator.of(context).pushNamed('/openedListPage',
+          arguments: OpenedListArguments(listUuid: uuid, isGuest: false));
+      notifyListeners();
+    }
+  }
 
-    //Create a wishlist
-    await Firestore.instance.collection("wishlists").document(newUuid).setData({
-      'itemCounts': "0",
-      'label': text,
-      'timestamp': new DateTime.now(),
-    });
+  Future<String> addWishlist() async {
+    bool doesListExist = false;
+    String listNumber;
+    final newUuid = Uuid().v4();
 
     //Check if the user already have a wishlist
     await Firestore.instance
@@ -37,6 +42,18 @@ class WishlistsListProvider with ChangeNotifier {
         .get()
         .then((value) {
       doesListExist = value.exists;
+
+      value.data.isNotEmpty
+          ? listNumber =
+              "Wishlist " + (value.data["lists"].length + 1).toString()
+          : listNumber = "Wishlist 1";
+    });
+
+    //Create a wishlist
+    await Firestore.instance.collection("wishlists").document(newUuid).setData({
+      'itemCounts': "0",
+      'label': listNumber,
+      'timestamp': new DateTime.now(),
     });
 
     //Create the document and set document's data to the new wishlist if the user does not have an existing wishlist
@@ -56,7 +73,8 @@ class WishlistsListProvider with ChangeNotifier {
         "lists": ["$newUuid"]
       });
     }
-    notifyListeners();
+
+    return newUuid;
   }
 
   deleteWishlist(String listUuid, String userUid) async {

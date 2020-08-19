@@ -7,6 +7,7 @@ import 'package:MobileOne/pages/new_list.dart';
 import 'package:MobileOne/pages/new_profile.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/pages/share.dart';
+import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -57,7 +58,7 @@ class MainPageState extends State<MainPage> {
     super.initState();
     _actions = [
       scanLoyaltyCardsBareCode,
-      goToCreateListPage,
+      createWishlist,
       goToSharedPage,
       _getImage,
     ];
@@ -176,8 +177,8 @@ class MainPageState extends State<MainPage> {
     debugPrint("no action assigned");
   }
 
-  goToCreateListPage() {
-    Navigator.of(context).pushNamed("/createList");
+  Future<void> createWishlist() async {
+    await GetIt.I.get<WishlistsListProvider>().createWishlist(context);
     _analytics.sendAnalyticsEvent("add_wishlist");
   }
 

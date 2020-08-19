@@ -76,7 +76,7 @@ class OpenedListPageState extends State<OpenedListPage> {
             future: itemsListProvider.fetchItemList(_args.listUuid),
             builder: (context, snapshot) {
               _myController.text =
-                  wishlistHeadProvider.getWishlist(_args.listUuid).label;
+                  wishlistHeadProvider.getWishlist(_args.listUuid)?.label;
               return content(wishlistHeadProvider.getWishlist(_args.listUuid),
                   snapshot.data, snapshot.connectionState);
             },
