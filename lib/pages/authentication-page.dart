@@ -1,7 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
-import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,7 +29,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   var _userService = GetIt.I.get<UserService>();
   var _authenticationService = GetIt.I.get<AuthenticationService>();
-  var _preferencesService = GetIt.I.get<PreferencesService>();
+
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
 
@@ -52,28 +51,9 @@ class AuthenticationPageState extends State<AuthenticationPage> {
     _email = input;
   }
 
-  Future<bool> loginSkip() async {
-    if (_preferencesService.getEmail() != null) {
-      if (_preferencesService.isEmailPasswordMode()) {
-        _userService.user = await _authenticationService.signIn(
-            _preferencesService.getEmail(), _preferencesService.getPassword());
-        return true;
-      } else if (_preferencesService.isGoogleMode()) {
-        _userService.user = await _authenticationService.googleSignInSilently();
-        return true;
-      }
-    }
-    return false;
-  }
-
   @override
   void initState() {
     _analytics.setCurrentPage("isOnAuthenticationPage");
-    loginSkip().then((skip) {
-      if (skip) {
-        openMainPage(context);
-      }
-    });
     super.initState();
   }
 
@@ -392,7 +372,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
         ? Navigator.of(context).pushNamedAndRemoveUntil(
             '/profile', (Route<dynamic> route) => false)
         : Navigator.of(context).pushNamedAndRemoveUntil(
-            '/mainpage', (Route<dynamic> route) => false);
+            '/mainPage', (Route<dynamic> route) => false);
   }
 
   void openForgottenPasswordPage(context) {
