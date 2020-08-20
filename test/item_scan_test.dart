@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
@@ -19,6 +20,8 @@ class ImageServiceMock extends Mock implements ImageService {}
 class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
 class ColorServiceMock extends Mock implements ColorService {}
+
+class LoyaltyCardsProvidermock extends Mock implements LoyaltyCardsProvider {}
 
 main() {
   group('Items scan tests', () {

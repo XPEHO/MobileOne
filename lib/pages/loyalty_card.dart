@@ -4,7 +4,6 @@ import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/widgets/widget_loyaltyCards.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -31,27 +30,16 @@ class LoyaltyCardsState extends State<LoyaltyCards> {
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<LoyaltyCardsProvider>(),
       child: Consumer<LoyaltyCardsProvider>(
-        builder: (context, loyaltyCardsProvider, child) {
-          return FutureBuilder<DocumentSnapshot>(
-            future: loyaltyCardsProvider.loyaltyCards,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting)
-                return CircularProgressIndicator(
-                  strokeWidth: 1,
-                );
-              else {
-                return content(snapshot.data);
-              }
-            },
-          );
-        },
-      ),
+          builder: (context, loyaltyCardsProvider, child) {
+        return Builder(builder: (BuildContext context) {
+          return content(loyaltyCardsProvider.allLoyaltycards);
+        });
+      }),
     );
   }
 
-  Widget content(DocumentSnapshot snapshot) {
-    final cards = snapshot?.data ?? {};
-
+  Widget content(Map<String, dynamic> card) {
+    final cards = card ?? {};
     return Scaffold(
       backgroundColor: _colorsApp.colorTheme,
       body: SafeArea(

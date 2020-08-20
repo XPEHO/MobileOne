@@ -1,11 +1,13 @@
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/new_profile.dart';
+import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/loyalty_cards_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -59,6 +61,10 @@ class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
 class ColorServiceMock extends Mock implements ColorService {}
 
+class LoyaltyCardsServiceMock extends Mock implements LoyaltyCardsService {}
+
+class LoyaltyCardsProvidermock extends Mock implements LoyaltyCardsProvider {}
+
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
 
@@ -87,6 +93,11 @@ void main() {
     GetIt.I.registerSingleton<UserPictureProvider>(_picture);
     final _colorService = ColorServiceMock();
     GetIt.I.registerSingleton<ColorService>(_colorService);
+    final _loyaltycardsService = LoyaltyCardsServiceMock();
+    GetIt.I.registerSingleton<LoyaltyCardsService>(_loyaltycardsService);
+
+    final _loyaltycardsProvider = LoyaltyCardsProvider();
+    GetIt.I.registerSingleton<LoyaltyCardsProvider>(_loyaltycardsProvider);
 
     when(auth.currentUser()).thenAnswer((realInvocation) => Future.value(user));
     final _displayName = "Dupond Jean";

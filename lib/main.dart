@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:MobileOne/dao/loyalty_cards_dao.dart';
 import 'package:MobileOne/dao/wishlist_dao.dart';
 import 'package:MobileOne/pages/card_page.dart';
 import 'package:MobileOne/pages/items_page.dart';
@@ -16,6 +17,7 @@ import 'package:MobileOne/pages/share_two.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/loyalty_cards_service.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -41,10 +43,14 @@ GetIt getIt = GetIt.instance;
 
 void instantiateServices() {
   getIt.registerSingleton(FirebaseAuth.instance);
-  getIt.registerSingleton(GoogleSignIn());
-  getIt.registerSingleton(WishlistDao());
   getIt.registerSingleton(AnalyticsService());
   getIt.registerSingleton(UserService());
+  getIt.registerSingleton(LoyaltyCardsDao());
+  getIt.registerSingleton(LoyaltyCardsService());
+
+  getIt.registerSingleton(GoogleSignIn());
+  getIt.registerSingleton(WishlistDao());
+
   getIt.registerSingleton(WishlistService());
   getIt.registerSingleton(AuthenticationService());
   getIt.registerSingleton(PreferencesService());
