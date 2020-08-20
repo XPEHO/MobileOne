@@ -1,12 +1,23 @@
+import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:uuid/uuid.dart';
 
 class ItemsListProvider with ChangeNotifier {
-  Future<DocumentSnapshot> fetchItemList(String listUuid) {
-    return Firestore.instance.collection('items').document(listUuid).get();
+  WishlistService wishlistService = GetIt.I.get<WishlistService>();
+
+  List<WishlistItem> getItemList(String listUuid) {
+    List<WishlistItem> itemList = wishlistService.getItemList(listUuid);
+    if (itemList == null) {
+      wishlistService
+          .fetchItemList(listUuid)
+          .whenComplete(() => notifyListeners());
+    }
+    return itemList;
   }
 
   Future<void> addItemTolist({

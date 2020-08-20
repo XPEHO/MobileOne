@@ -66,33 +66,25 @@ class OpenedListPageState extends State<OpenedListPage> {
     _args = Arguments.value(context);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(
-            value: GetIt.I.get<WishlistHeadProvider>()),
         ChangeNotifierProvider.value(value: GetIt.I.get<ItemsListProvider>()),
       ],
-      child: Consumer2<WishlistHeadProvider, ItemsListProvider>(
-        builder: (context, wishlistHeadProvider, itemsListProvider, child) {
-          return FutureBuilder<DocumentSnapshot>(
-            future: itemsListProvider.fetchItemList(_args.listUuid),
-            builder: (context, snapshot) {
-              _myController.text =
-                  wishlistHeadProvider.getWishlist(_args.listUuid).label;
-              return content(wishlistHeadProvider.getWishlist(_args.listUuid),
-                  snapshot.data, snapshot.connectionState);
-            },
-          );
+      child: Consumer<ItemsListProvider>(
+        builder: (context, itemsListProvider, child) {
+          return Builder(builder: (context) {
+            final wishlistHeadProvider = GetIt.I.get<WishlistHeadProvider>();
+            Wishlist wishlist =
+                wishlistHeadProvider.getWishlist(_args.listUuid);
+            _myController.text = wishlist.label;
+            return content(
+                wishlist, itemsListProvider.getItemList(_args.listUuid));
+          });
         },
       ),
     );
   }
 
-  List<WishlistItem> getSortedList(DocumentSnapshot snapshot) {
-    final wishlist = snapshot?.data ?? {};
-    final sortedList = wishlist.entries.map((element) {
-      return WishlistItem.fromMap(element.key, element.value);
-    }).toList();
-
-    sortedList.sort((WishlistItem a, WishlistItem b) {
+  List<WishlistItem> getSortedList(List<WishlistItem> items) {
+    items.sort((WishlistItem a, WishlistItem b) {
       final isAValidate = a.isValidated;
       final isBValidate = b.isValidated;
       if (isAValidate == isBValidate) {
@@ -103,15 +95,10 @@ class OpenedListPageState extends State<OpenedListPage> {
         return -1;
       }
     });
-    return sortedList;
+    return items;
   }
 
-  Widget content(
-      Wishlist wishlistHead, DocumentSnapshot snapshot, ConnectionState state) {
-    List<WishlistItem> wishlist = getSortedList(snapshot);
-    getvalidated(listUuid);
-
-    var pourcentage = (wishlist.isNotEmpty) ? (100 / wishlist.length) : 0;
+  Widget content(Wishlist wishlistHead, List<WishlistItem> items) {
     return Scaffold(
       backgroundColor: _colorsApp.colorTheme,
       floatingActionButton: FloatingActionButton(
@@ -124,11 +111,14 @@ class OpenedListPageState extends State<OpenedListPage> {
       ),
       body: Builder(
         builder: (context) {
-          if (state == ConnectionState.waiting) {
+          if (items == null) {
             return Center(
               child: Text(getString(context, "loading")),
             );
           }
+          List<WishlistItem> wishlist = getSortedList(items);
+          getvalidated(listUuid); // FIXME
+          var pourcentage = (wishlist.isNotEmpty) ? (100 / wishlist.length) : 0;
           return SafeArea(
             child: SingleChildScrollView(
               child: Column(
@@ -168,7 +158,6 @@ class OpenedListPageState extends State<OpenedListPage> {
                           onSubmitted: (_) {
                             _wishlistProvider.changeWishlistLabel(
                                 _myController.text, wishlistHead.uuid);
-                            _wishlistProvider.fetchWishlist(wishlistHead.uuid);
                           },
                         ),
                       ),

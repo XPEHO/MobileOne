@@ -13,25 +13,22 @@ class WidgetLists extends StatefulWidget {
 
   WidgetLists(this._listUuid, this._numberOfItemShared);
 
-  State<StatefulWidget> createState() {
-    return WidgetListsState(_listUuid, _numberOfItemShared);
-  }
+  State<StatefulWidget> createState() => WidgetListsState();
 }
 
 class WidgetListsState extends State<WidgetLists> {
-  final String _listUuid;
-  final String _numberOfItemShared;
-  WidgetListsState(this._listUuid, this._numberOfItemShared);
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<WishlistHeadProvider>(),
       child: Consumer<WishlistHeadProvider>(
         builder: (context, wishlistHeadProvider, child) {
-          Wishlist wishlist = wishlistHeadProvider.getWishlist(_listUuid);
+          Wishlist wishlist =
+              wishlistHeadProvider.getWishlist(widget._listUuid);
           if (wishlist == null) {
-            wishlistHeadProvider.fetchWishlist(_listUuid);
+            return Center(
+              child: Text(getString(context, "loading")),
+            );
           }
           return Container(
             width: MediaQuery.of(context).size.width * 0.23,
@@ -62,7 +59,7 @@ class WidgetListsState extends State<WidgetLists> {
                       ),
                     ),
                     Text(
-                      _numberOfItemShared,
+                      widget._numberOfItemShared,
                       style: TextStyle(color: GREY, fontSize: 8.0),
                     ),
                   ],
