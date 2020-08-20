@@ -4,7 +4,6 @@ import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_share_lists.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get_it/get_it.dart';
@@ -32,28 +31,24 @@ class ShareState extends State<Share> {
       value: GetIt.I.get<ShareProvider>(),
       child: Consumer<ShareProvider>(
         builder: (context, shareProvider, child) {
-          return FutureBuilder<DocumentSnapshot>(
-              future: shareProvider.ownerLists,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData)
-                  return Center(
-                    child: CircularProgressIndicator(
-                      backgroundColor: WHITE,
-                    ),
-                  );
-                else {
-                  return content(snapshot.data);
-                }
-              });
+          return FutureBuilder<List>(
+            future: shareProvider.ownerLists,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting)
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              else {
+                return content(snapshot.data);
+              }
+            },
+          );
         },
       ),
     );
   }
 
-  Widget content(DocumentSnapshot snapshot) {
-    var userWishlists = snapshot?.data ?? {};
-    var wishlist = userWishlists["lists"] ?? [];
-
+  Widget content(List wishlist) {
     return Scaffold(
       backgroundColor: _colorsApp.colorTheme,
       body: SafeArea(

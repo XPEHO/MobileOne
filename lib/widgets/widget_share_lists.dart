@@ -56,10 +56,9 @@ class WidgetShareListWithSomeoneState
       value: GetIt.I.get<ShareProvider>(),
       child: Consumer<ShareProvider>(
         builder: (context, shareProvider, child) {
-          return FutureBuilder<DocumentSnapshot>(
-            future: shareProvider.shareLists,
-            builder: (context, snapshot) {
-              return content(snapshot.data);
+          return Builder(
+            builder: (BuildContext context) {
+              return content(shareProvider.shareLists);
             },
           );
         },
@@ -67,10 +66,10 @@ class WidgetShareListWithSomeoneState
     );
   }
 
-  Widget content(DocumentSnapshot snapshot) {
+  Widget content(Map<String, dynamic> lists) {
     var sharedCount = getString(context, "shared_count");
 
-    var _emails = snapshot?.data ?? {};
+    var _emails = lists ?? {};
 
     return Row(
       children: <Widget>[

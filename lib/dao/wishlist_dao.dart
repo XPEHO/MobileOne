@@ -7,6 +7,9 @@ class WishlistDao {
   Future<DocumentSnapshot> guestLists(String email) =>
       Firestore.instance.collection("guests").document(email).get();
 
+  Future<DocumentSnapshot> fetchShareLists(String userUuid) =>
+      Firestore.instance.collection("shared").document(userUuid).get();
+
   addWishlist(String text, String wishlistUuid, String userUuid) async {
     //Create a wishlist
     await Firestore.instance
@@ -113,5 +116,72 @@ class WishlistDao {
 
   Future<DocumentSnapshot> fetchItemList(String listUuid) {
     return Firestore.instance.collection('items').document(listUuid).get();
+  }
+
+  addSharedToDataBase(String sharedWith, String liste, String userUuid) async {
+    final shared =
+        await Firestore.instance.collection("shared").document(userUuid).get();
+    bool doesDocumentExist = shared.exists;
+
+    if (doesDocumentExist == true) {
+      await Firestore.instance
+          .collection("shared")
+          .document(userUuid)
+          .updateData(
+        {
+          liste: FieldValue.arrayUnion(
+            ["$sharedWith"],
+          )
+        },
+      );
+    } else {
+      await Firestore.instance.collection("shared").document(userUuid).setData(
+        {
+          liste: FieldValue.arrayUnion(
+            ["$sharedWith"],
+          )
+        },
+      );
+    }
+  }
+
+  addGuestToDataBase(String uuidUser, String list) async {
+    bool doesListExist = false;
+
+    await Firestore.instance.collection("guests").document(uuidUser).get().then(
+      (value) {
+        doesListExist = value.exists;
+      },
+    );
+
+    if (doesListExist) {
+      await Firestore.instance
+          .collection("guests")
+          .document(uuidUser)
+          .updateData(
+        {
+          "lists": FieldValue.arrayUnion(["$list"])
+        },
+      );
+    } else {
+      await Firestore.instance.collection("guests").document(uuidUser).setData(
+        {
+          "lists": FieldValue.arrayUnion(["$list"])
+        },
+      );
+    }
+  }
+
+  deleteShared(String listUuid, String email, String userUuid) async {
+    await Firestore.instance.collection("guests").document(email).updateData({
+      "lists": FieldValue.arrayRemove([listUuid])
+    });
+
+    await Firestore.instance
+        .collection("shared")
+        .document(userUuid)
+        .updateData({
+      listUuid: FieldValue.arrayRemove([email])
+    });
   }
 }

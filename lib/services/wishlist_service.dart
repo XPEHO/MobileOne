@@ -15,6 +15,7 @@ class WishlistService {
 
   Map<String, Wishlist> _wishlists = {};
   Map<String, List<WishlistItem>> _itemlists = {};
+  Map<String, dynamic> _shareLists = {};
 
   Future<List> get ownerLists async {
     DocumentSnapshot ownerLists =
@@ -34,6 +35,19 @@ class WishlistService {
     } else {
       List data = guestLists.data["lists"];
       return data ?? List();
+    }
+  }
+
+  getSharelist() => _shareLists;
+
+  Future<Map<String, dynamic>> fetchShareLists() async {
+    DocumentSnapshot shareLists =
+        await dao.fetchShareLists(userService.user.uid);
+    if (shareLists?.data == null) {
+      return Map();
+    } else {
+      _shareLists = shareLists.data;
+      return _shareLists ?? Map();
     }
   }
 
@@ -85,5 +99,22 @@ class WishlistService {
     _itemlists[listUuid] = itemList;
 
     return itemList;
+  }
+
+  addSharedToDataBase(String sharedWith, String liste) async {
+    dao.addSharedToDataBase(sharedWith, liste, userService.user.uid);
+    _shareLists = Map();
+    _analytics.sendAnalyticsEvent("user_shared_list");
+  }
+
+  addGuestToDataBase(String uuidUser, String list) async {
+    dao.addGuestToDataBase(uuidUser, list);
+    _shareLists = Map();
+  }
+
+  deleteShared(String listUuid, String email) async {
+    dao.deleteShared(listUuid, email, userService.user.uid);
+    _shareLists = Map();
+    _analytics.sendAnalyticsEvent("delete_shared");
   }
 }
