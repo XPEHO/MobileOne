@@ -125,5 +125,6 @@
     "microphone_access": "Please grant microphone permissions to the app to use this service",
     "talk": "You can talk now",
     "all_my_lists": "My lists:",
-    "empty_items": "No items for the moment"
+    "empty_items": "No items for the moment",
+    "splash_text": "Share your lists with"
 }

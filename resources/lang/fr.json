@@ -125,5 +125,6 @@
     "microphone_access": "Veuillez accorder les permissions d'accès au microphone pour utiliser cette fonctionnalité",
     "talk": "Vous pouvez parler",
     "all_my_lists": "Mes listes :",
-    "empty_items": "Aucun article pour le moment"
+    "empty_items": "Aucun article pour le moment",
+    "splash_text": "Partagez vos listes avec"
 }

@@ -301,8 +301,8 @@ class NewProfileState extends State<NewProfile> {
     _prefService.sharedPreferences.remove("email");
     _prefService.sharedPreferences.remove("password");
     _prefService.sharedPreferences.remove("mode");
-    Navigator.of(context)
-        .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+        '/authentication', (Route<dynamic> route) => false);
     _userService.user = null;
     _analytics.sendAnalyticsEvent("logout");
   }
