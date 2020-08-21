@@ -52,42 +52,51 @@ class ShareState extends State<Share> {
 
   Widget content(List wishlist) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: _colorsApp.colorTheme,
+        centerTitle: true,
+        title: Text(
+          getString(context, "my_shares"),
+          style: TextStyle(
+            fontSize: 20,
+            color: WHITE,
+          ),
+        ),
+      ),
       backgroundColor: _colorsApp.colorTheme,
-      body: SingleChildScrollView(
-        child: SafeArea(
+      body:
+          (wishlist.length != 0) ? buildLIstView(wishlist) : buildEmptyShare(),
+    );
+  }
+
+  Widget buildEmptyShare() {
+    return SingleChildScrollView(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.7,
+        child: Center(
           child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(
-                  top: 30,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                child: Text(
+                  getString(context, "need_list_to_share"),
+                  style: TextStyle(fontSize: 15, color: WHITE),
                 ),
-                child: Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 50,
-                  child: Stack(
-                    children: <Widget>[
-                      Padding(
-                        padding: EdgeInsets.only(
-                          top: 7,
-                        ),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Text(
-                            getString(context, "my_shares"),
-                            style: TextStyle(
-                              fontSize: 20,
-                              color: WHITE,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+              ),
+              Container(
+                height: MediaQuery.of(context).size.height * 0.17,
+                child: GestureDetector(
+                  onTap: () {
+                    openCreateListPage();
+                  },
+                  child: EmptyLists(
+                    icon: Icons.add_shopping_cart,
+                    text: getString(context, "create_list"),
+                    color: _colorsApp.microColor,
+                    textAndIconColor: WHITE,
                   ),
                 ),
               ),
-              (wishlist.length != 0)
-                  ? buildLIstView(wishlist)
-                  : buildEmptyShare()
             ],
           ),
         ),
@@ -95,41 +104,10 @@ class ShareState extends State<Share> {
     );
   }
 
-  Widget buildEmptyShare() {
-    return Container(
-      height: MediaQuery.of(context).size.height * 0.7,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Container(
-            child: Text(
-              getString(context, "need_list_to_share"),
-              style: TextStyle(fontSize: 15, color: WHITE),
-            ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.17,
-            child: GestureDetector(
-              onTap: () {
-                openCreateListPage();
-              },
-              child: EmptyLists(
-                icon: Icons.add_shopping_cart,
-                text: getString(context, "create_list"),
-                color: _colorsApp.microColor,
-                textAndIconColor: WHITE,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Container buildLIstView(wishlist) {
     return Container(
       width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.76,
+      height: double.infinity,
       child: ListView.builder(
         padding: const EdgeInsets.only(
           bottom: kFloatingActionButtonMargin + 24,

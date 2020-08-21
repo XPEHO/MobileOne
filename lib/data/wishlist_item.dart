@@ -7,6 +7,8 @@ class WishlistItem {
   int unit;
   String imageName;
 
+  WishlistItem();
+
   WishlistItem.fromMap(String uuid, Map<String, dynamic> map) {
     this.uuid = uuid;
     this.imageUrl = map["image"];

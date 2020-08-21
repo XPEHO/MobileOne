@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 
 class WidgetLists extends StatefulWidget {
   final String listUuid;
-  final String numberOfItemShared;
-  WidgetLists({this.listUuid, this.numberOfItemShared});
+  final int numberOfItemShared;
+  WidgetLists({@required this.listUuid, this.numberOfItemShared});
 
   State<StatefulWidget> createState() => WidgetListsState();
 }
@@ -52,22 +52,20 @@ class WidgetListsState extends State<WidgetLists> {
                   ),
                   Column(
                     children: [
-                      Container(
-                        child: Text(
-                          "${wishlist?.itemCount} ${getString(context, 'items')}" ??
-                              "",
-                          style:
-                              TextStyle(color: Colors.grey[900], fontSize: 8.0),
-                        ),
+                      Text(
+                        "${wishlist?.itemCount} ${getString(context, 'items')}" ??
+                            "",
+                        style:
+                            TextStyle(color: Colors.grey[900], fontSize: 8.0),
                       ),
-                      Container(
-                        child: Text(
-                          "${widget.numberOfItemShared} ${getString(context, 'shared')}" ??
-                              "",
-                          style:
-                              TextStyle(color: Colors.grey[900], fontSize: 8.0),
-                        ),
-                      ),
+                      widget.numberOfItemShared == null
+                          ? Container()
+                          : Text(
+                              "${widget.numberOfItemShared} ${getString(context, 'shared')}" ??
+                                  "",
+                              style: TextStyle(
+                                  color: Colors.grey[900], fontSize: 8.0),
+                            ),
                     ],
                   ),
                 ],

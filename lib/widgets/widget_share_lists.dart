@@ -2,9 +2,9 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
 
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:MobileOne/widgets/widget_list.dart';
 import 'package:flutter/material.dart';
-import 'package:MobileOne/utility/database.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -23,34 +23,7 @@ class WidgetShareListWithSomeoneState
   WidgetShareListWithSomeoneState(this._listUuid);
   var userService = GetIt.I.get<UserService>();
   var shareProvider = GetIt.I.get<ShareProvider>();
-
-  String label = "";
-  String count = "";
-  var numberOfItemShared = "0";
-  Future<void> getListDetails() async {
-    String labelValue;
-    String countValue;
-
-    await databaseReference
-        .collection("wishlists")
-        .document(_listUuid)
-        .get()
-        .then((value) {
-      labelValue = value["label"];
-      countValue = value["itemCounts"] + " " + getString(context, 'items');
-    });
-
-    setState(() {
-      label = labelValue;
-      count = countValue;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getListDetails();
-  }
+  final wishlistService = GetIt.I.get<WishlistService>();
 
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
@@ -59,7 +32,7 @@ class WidgetShareListWithSomeoneState
         builder: (context, shareProvider, child) {
           return Builder(
             builder: (BuildContext context) {
-              return content(shareProvider.shareLists);
+              return content(shareProvider.shareLists ?? {});
             },
           );
         },
@@ -68,7 +41,7 @@ class WidgetShareListWithSomeoneState
   }
 
   Widget content(Map<String, dynamic> lists) {
-    var _emails = lists ?? {};
+    List _emails = lists[_listUuid] ?? List();
 
     return Row(
       children: <Widget>[
@@ -83,8 +56,9 @@ class WidgetShareListWithSomeoneState
                 width: MediaQuery.of(context).size.width * 0.23,
                 height: MediaQuery.of(context).size.width * 0.3,
                 child: WidgetLists(
-                    listUuid: _listUuid,
-                    numberOfItemShared: numberOfItemShared),
+                  listUuid: _listUuid,
+                  numberOfItemShared: _emails.length,
+                ),
               ),
             ),
             Padding(
@@ -95,7 +69,7 @@ class WidgetShareListWithSomeoneState
               child: Container(
                 height: MediaQuery.of(context).size.height * 0.12,
                 width: MediaQuery.of(context).size.width * 0.6,
-                child: Stack(
+                child: Column(
                   children: <Widget>[
                     Text(
                       getString(context, "shared_with"),
@@ -105,27 +79,18 @@ class WidgetShareListWithSomeoneState
                         color: WHITE,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: 10,
-                        top: 20,
-                      ),
+                    Expanded(
                       child: ListView.builder(
                         scrollDirection: Axis.vertical,
-                        itemCount: _emails[_listUuid] != null
-                            ? _emails[_listUuid].length
-                            : 0,
+                        itemCount: _emails.length,
                         itemBuilder: (BuildContext ctxt, int index) {
-                          numberOfItemShared =
-                              _emails[_listUuid].length.toString();
-
-                          var emailSelected = _emails[_listUuid][index];
+                          var emailSelected = _emails[index];
                           return Row(
                             children: <Widget>[
                               Container(
                                 width: MediaQuery.of(context).size.width * 0.4,
                                 child: Text(
-                                  _emails[_listUuid][index],
+                                  _emails[index],
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
                                     color: WHITE,

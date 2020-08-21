@@ -7,6 +7,15 @@ import 'package:get_it/get_it.dart';
 class ItemsListProvider with ChangeNotifier {
   WishlistService wishlistService = GetIt.I.get<WishlistService>();
 
+  int progress(listUuid) {
+    final itemLists = wishlistService.getItemList(listUuid);
+    if (itemLists == null || itemLists.isEmpty) {
+      return 0;
+    }
+    final validatedItems = itemLists.where((element) => element.isValidated);
+    return ((100 * validatedItems.length) / itemLists.length).floor();
+  }
+
   List<WishlistItem> getItemList(String listUuid) {
     List<WishlistItem> itemList = wishlistService.getItemList(listUuid);
     if (itemList == null) {

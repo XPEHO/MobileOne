@@ -86,6 +86,7 @@ void main() {
     when(wishlist.label).thenReturn("test");
     when(_wishlistHeadProvider.getWishlist(any)).thenReturn(wishlist);
     when(_itemsListProvider.getItemList(any)).thenReturn(List());
+    when(_itemsListProvider.progress(any)).thenReturn(0);
 
     final mockArguments = MockArguments();
     Arguments.proxy = mockArguments;

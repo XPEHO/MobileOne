@@ -207,7 +207,6 @@ class ListsState extends State<Lists> {
                     padding: const EdgeInsets.all(5.0),
                     child: WidgetLists(
                       listUuid: lists[index],
-                      numberOfItemShared: "0",
                     ),
                   ),
                 ));
@@ -255,7 +254,6 @@ class ListsState extends State<Lists> {
                       padding: const EdgeInsets.all(5.0),
                       child: WidgetLists(
                         listUuid: guestList[index],
-                        numberOfItemShared: "0",
                       ),
                     ));
               },

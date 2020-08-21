@@ -57,17 +57,19 @@ class WishlistService {
     return data;
   }
 
-  getSharelist() => _shareLists;
+  getSharelist() => _shareLists[userService.user.uid];
 
   Future<Map<String, dynamic>> fetchShareLists() async {
     DocumentSnapshot shareLists =
         await dao.fetchShareLists(userService.user.uid);
+    var data;
     if (shareLists?.data == null) {
-      return Map();
+      data = Map();
     } else {
-      _shareLists = shareLists.data;
-      return _shareLists ?? Map();
+      data = shareLists.data ?? Map();
     }
+    _shareLists[userService.user.uid] = data;
+    return data;
   }
 
   addWishlist(String text) async {
@@ -101,8 +103,8 @@ class WishlistService {
 
   changeWishlistLabel(String label, String listUuid) async {
     label == null ? label = "" : label = label;
-    await dao.changeWishlistLabel(label, listUuid);
-    await fetchWishlist(listUuid);
+    dao.changeWishlistLabel(label, listUuid);
+    _wishlists[listUuid].label = label;
   }
 
   getwishlist(uuid) => _wishlists[uuid];
@@ -149,7 +151,7 @@ class WishlistService {
   }) async {
     var uuid = Uuid();
     var newUuid = uuid.v4();
-    await dao.addItemTolist(
+    dao.addItemTolist(
         name: name,
         count: count,
         typeIndex: typeIndex,
@@ -157,7 +159,15 @@ class WishlistService {
         listUuid: listUuid,
         imageName: imageName,
         itemUuid: newUuid);
-    _flush();
+    final item = WishlistItem();
+    item.uuid = newUuid;
+    item.label = name;
+    item.quantity = count;
+    item.imageUrl = imageLink;
+    item.imageName = imageName;
+    item.unit = typeIndex;
+    item.isValidated = false;
+    _itemlists[listUuid].add(item);
   }
 
   Future<void> updateItemInList({
@@ -169,7 +179,7 @@ class WishlistService {
     @required String listUuid,
     @required String imageName,
   }) async {
-    await dao.updateItemInList(
+    dao.updateItemInList(
         itemUuid: itemUuid,
         name: name,
         count: count,
@@ -177,7 +187,14 @@ class WishlistService {
         imageLink: imageLink,
         listUuid: listUuid,
         imageName: imageName);
-    _flush();
+
+    final item =
+        _itemlists[listUuid].firstWhere((element) => element.uuid == itemUuid);
+    item.label = name;
+    item.quantity = count;
+    item.imageUrl = imageLink;
+    item.imageName = imageName;
+    item.unit = typeIndex;
   }
 
   deleteItemInList({
@@ -188,9 +205,9 @@ class WishlistService {
     if (imageName != null) {
       GetIt.I.get<ImageService>().deleteFile(listUuid, imageName);
     }
-    await dao.deleteItemInList(
+    dao.deleteItemInList(
         listUuid: listUuid, itemUuid: itemUuid, imageName: imageName);
-    _flush();
+    _itemlists[listUuid].removeWhere((element) => element.uuid == itemUuid);
   }
 
   validateItem({
@@ -198,8 +215,10 @@ class WishlistService {
     @required String itemUuid,
     @required bool isValidated,
   }) async {
-    await dao.validateItem(
+    dao.validateItem(
         listUuid: listUuid, itemUuid: itemUuid, isValidated: isValidated);
-    _flush();
+    _itemlists[listUuid]
+        .firstWhere((element) => element.uuid == itemUuid)
+        .isValidated = isValidated;
   }
 }

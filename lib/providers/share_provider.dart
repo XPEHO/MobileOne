@@ -15,9 +15,8 @@ class ShareProvider with ChangeNotifier {
 
   Map<String, dynamic> get shareLists {
     Map<String, dynamic> shareLists = wishlistService.getSharelist();
-    if (shareLists.isEmpty) {
+    if (shareLists == null) {
       wishlistService.fetchShareLists().whenComplete(() => notifyListeners());
-      return shareLists;
     }
     return shareLists;
   }
