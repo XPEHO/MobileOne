@@ -3,6 +3,7 @@ import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:MobileOne/widgets/widget_list.dart';
 import 'package:MobileOne/pages/share_one.dart';
 import 'package:MobileOne/utility/colors.dart';
@@ -21,9 +22,49 @@ class ShareStateTwoState extends State<ShareTwo> {
   var userService = GetIt.I.get<UserService>();
   var shareProvider = GetIt.I.get<ShareProvider>();
   var _colorsApp = GetIt.I.get<ColorService>();
+  var wishlistService = GetIt.I.get<WishlistService>();
+
+  String liste;
+  List<dynamic> test = [];
+  List listsFilter;
+
   void initState() {
     _analytics.setCurrentPage("isOneShareTwoPage");
     super.initState();
+    listsFilter = [];
+    _myController.addListener(() {
+      filterLists();
+    });
+  }
+
+  var wish;
+  filterLists() async {
+    List _lists = [];
+
+    print(test);
+    _lists = test;
+    var t = wish = wishlistService.ownerLists[0];
+    print(t);
+/*
+    for (int i = 0; i < test.length; i++) {
+      _lists.add(test[i]);
+    }
+*/
+    //print(_lists);
+
+    //print(_lists[0]);
+
+    if (_myController.text.isNotEmpty) {
+      _lists.retainWhere((liste) {
+        String searchTerm = _myController.text.toLowerCase();
+        String listLabel = liste.toLowerCase();
+        return listLabel.contains(searchTerm);
+      });
+      setState(() {
+        listsFilter = _lists;
+      });
+      print(listsFilter);
+    }
   }
 
   Widget build(BuildContext context) {
