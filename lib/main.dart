@@ -3,6 +3,7 @@ import 'package:MobileOne/pages/card_page.dart';
 import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
 import 'package:MobileOne/pages/new_profile.dart';
+import 'package:MobileOne/pages/splash.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/providers/share_provider.dart';
@@ -71,6 +72,7 @@ class MyApp extends StatelessWidget {
   final FirebaseApp app;
 
   final _preferencesService = GetIt.I.get<PreferencesService>();
+
   @override
   Widget build(BuildContext context) {
     _preferencesService.initSharedPreferences();
@@ -95,10 +97,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: "/",
+      initialRoute: "/splash",
       routes: {
-        '/mainpage': (context) => MainPage(),
-        '/': (context) => AuthenticationPage(),
+        '/splash': (context) => SplashPage(),
+        '/mainPage': (context) => MainPage(),
+        '/authentication': (context) => AuthenticationPage(),
         '/registerPage': (context) => RegisterPage(),
         '/forgottenPasswordPage': (context) => ForgottenPasswordPage(),
         '/createList': (context) => CreateList(),

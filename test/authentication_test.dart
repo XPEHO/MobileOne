@@ -1,4 +1,4 @@
-import 'package:MobileOne/pages/authentication-page.dart';
+import 'package:MobileOne/pages/splash.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
@@ -32,7 +32,7 @@ main() {
     final _colorService = ColorServiceMock();
     GetIt.I.registerSingleton<ColorService>(_colorService);
 
-    var _authenticationPageState = AuthenticationPageState();
+    var _authenticationPageState = SplashPageState();
 
     test('login skip should automatically log in on user/pwd mode', () async {
       //GIVEN
@@ -46,7 +46,7 @@ main() {
       when(_prefService.getPassword()).thenReturn(_password);
 
       //WHEN
-      var result = await _authenticationPageState.loginSkip();
+      var result = await _authenticationPageState.openNextScreen();
 
       //THEN
       expect(true, result);
@@ -61,7 +61,7 @@ main() {
       when(_prefService.isGoogleMode()).thenReturn(true);
 
       //WHEN
-      var result = await _authenticationPageState.loginSkip();
+      var result = await _authenticationPageState.openNextScreen();
 
       //THEN
       expect(true, result);
@@ -76,7 +76,7 @@ main() {
       when(_prefService.isGoogleMode()).thenReturn(false);
 
       //WHEN
-      var result = await _authenticationPageState.loginSkip();
+      var result = await _authenticationPageState.openNextScreen();
 
       //THEN
       expect(false, result);
