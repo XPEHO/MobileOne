@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:MobileOne/dao/loyalty_cards_dao.dart';
+import 'package:MobileOne/dao/wishlist_dao.dart';
 import 'package:MobileOne/pages/card_page.dart';
 import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
@@ -17,6 +19,8 @@ import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/share_service.dart';
+import 'package:MobileOne/services/loyalty_cards_service.dart';
+import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
@@ -40,20 +44,27 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 GetIt getIt = GetIt.instance;
 
 void instantiateServices() {
-  getIt.registerSingleton(UserService());
-  getIt.registerSingleton(AnalyticsService());
-  getIt.registerSingleton(GoogleSignIn());
   getIt.registerSingleton(FirebaseAuth.instance);
+  getIt.registerSingleton(AnalyticsService());
+  getIt.registerSingleton(UserService());
+  getIt.registerSingleton(LoyaltyCardsDao());
+  getIt.registerSingleton(LoyaltyCardsService());
+
+  getIt.registerSingleton(GoogleSignIn());
+  getIt.registerSingleton(WishlistDao());
+
+  getIt.registerSingleton(WishlistService());
   getIt.registerSingleton(AuthenticationService());
   getIt.registerSingleton(PreferencesService());
+  getIt.registerSingleton(ColorService());
+  getIt.registerSingleton(ImageService());
   getIt.registerSingleton(WishlistsListProvider());
   getIt.registerSingleton(ItemsListProvider());
   getIt.registerSingleton(ShareProvider());
   getIt.registerSingleton(LoyaltyCardsProvider());
-  getIt.registerSingleton(ImageService());
   getIt.registerSingleton(UserPictureProvider());
   getIt.registerSingleton(WishlistHeadProvider());
-  getIt.registerSingleton(ColorService());
+
   getIt.registerSingleton(ShareService());
 }
 

@@ -2,12 +2,14 @@ import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/Mainpage.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
+import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/loyalty_cards_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -71,6 +73,10 @@ class ColorServiceMock extends Mock implements ColorService {}
 
 class ShareServiceMock extends Mock implements ShareService {}
 
+class LoyaltyCardsProviderMock extends Mock implements LoyaltyCardsProvider {}
+
+class LoyaltyCardsServiceMock extends Mock implements LoyaltyCardsService {}
+
 void main() {
   setSupportedLocales([Locale("fr", "FR")]);
   testWidgets("Open camera and see profile picture changed",
@@ -104,6 +110,11 @@ void main() {
     final _shareService = ShareServiceMock();
     GetIt.I.registerSingleton<ShareService>(_shareService);
 
+    final _loyaltycardsService = LoyaltyCardsServiceMock();
+    GetIt.I.registerSingleton<LoyaltyCardsService>(_loyaltycardsService);
+
+    final _loyaltycardsProvider = LoyaltyCardsProviderMock();
+    GetIt.I.registerSingleton<LoyaltyCardsProvider>(_loyaltycardsProvider);
     when(_userService.user).thenReturn(user);
 
     when(_picker.getImage(source: ImageSource.camera)).thenAnswer(
@@ -114,6 +125,9 @@ void main() {
     when(_userService.user).thenReturn(user);
     when(user.email).thenReturn("test@test.test");
     when(user.uid).thenReturn("42");
+    when(_wishlistProvider.ownerLists).thenReturn(List());
+    when(_wishlistProvider.guestLists(any)).thenReturn(List());
+
     // WHEN
     await tester.pumpWidget(buildTestableWidget(MainPage()));
     await tester.pump(new Duration(milliseconds: 1000));

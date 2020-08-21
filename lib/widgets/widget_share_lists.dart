@@ -3,7 +3,6 @@ import 'package:MobileOne/providers/share_provider.dart';
 
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/widgets/widget_list.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/utility/database.dart';
 import 'package:MobileOne/utility/colors.dart';
@@ -58,10 +57,9 @@ class WidgetShareListWithSomeoneState
       value: GetIt.I.get<ShareProvider>(),
       child: Consumer<ShareProvider>(
         builder: (context, shareProvider, child) {
-          return FutureBuilder<DocumentSnapshot>(
-            future: shareProvider.shareLists,
-            builder: (context, snapshot) {
-              return content(snapshot.data);
+          return Builder(
+            builder: (BuildContext context) {
+              return content(shareProvider.shareLists);
             },
           );
         },
@@ -69,8 +67,8 @@ class WidgetShareListWithSomeoneState
     );
   }
 
-  Widget content(DocumentSnapshot snapshot) {
-    var _emails = snapshot?.data ?? {};
+  Widget content(Map<String, dynamic> lists) {
+    var _emails = lists ?? {};
 
     return Row(
       children: <Widget>[

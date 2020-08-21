@@ -1,33 +1,21 @@
 import 'package:MobileOne/data/wishlist.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class WishlistHeadProvider with ChangeNotifier {
-  Map<String, Wishlist> _wishlists = {};
-
-  void fetchWishlist(String uuid) async {
-    debugPrint("fetch wishlist head from firebase");
-    final wishlist =
-        await Firestore.instance.collection("wishlists").document(uuid).get();
-
-    if (wishlist?.data != null) {
-      _wishlists[uuid] = Wishlist.fromMap(uuid, wishlist.data);
-      notifyListeners();
-    } else {
-      debugPrint("unable to fetch wishlist with uuid $uuid");
-    }
-  }
+  final WishlistService wishlistService = GetIt.I.get<WishlistService>();
 
   changeWishlistLabel(String label, String listUuid) async {
-    label == null ? label = "" : label = label;
-    await Firestore.instance.collection("wishlists").document(listUuid).setData(
-      {
-        "label": label,
-      },
-      merge: true,
-    );
+    await wishlistService.changeWishlistLabel(label, listUuid);
     notifyListeners();
   }
 
-  Wishlist getWishlist(uuid) => _wishlists[uuid];
+  Wishlist getWishlist(uuid) {
+    final wishlist = wishlistService.getwishlist(uuid);
+    if (wishlist == null) {
+      wishlistService.fetchWishlist(uuid).whenComplete(() => notifyListeners());
+    }
+    return wishlist;
+  }
 }

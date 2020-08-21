@@ -11,7 +11,6 @@ import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/widgets/widget_empty_list.dart';
 import 'package:MobileOne/widgets/widget_emty_template.dart';
 import 'package:MobileOne/widgets/widget_list.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -167,23 +166,21 @@ class ListsState extends State<Lists> {
   }
 
   buildFuturBuilderList(WishlistsListProvider provider) {
-    return FutureBuilder<DocumentSnapshot>(
-      future: provider.ownerLists,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
+    return Builder(
+      builder: (context) {
+        final ownerLists = provider.ownerLists;
+        if (ownerLists == null)
           return Center(
             child: CircularProgressIndicator(),
           );
         else {
-          return contentList(snapshot.data);
+          return contentList(ownerLists);
         }
       },
     );
   }
 
-  Widget contentList(DocumentSnapshot snapshot) {
-    var owner = snapshot?.data ?? {};
-    lists = owner["lists"] ?? [];
+  Widget contentList(List lists) {
     if (lists.isEmpty) {
       return Padding(
         padding: const EdgeInsets.only(left: 8.0),
@@ -221,23 +218,21 @@ class ListsState extends State<Lists> {
   }
 
   buildFuturBuilderGuest(WishlistsListProvider provider) {
-    return FutureBuilder<DocumentSnapshot>(
-      future: provider.guestLists(_userService.user.email),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting)
+    return Builder(
+      builder: (context) {
+        final guestLists = provider.guestLists(_userService.user.email);
+        if (guestLists == null)
           return Center(
             child: CircularProgressIndicator(),
           );
         else {
-          return contentGuest(snapshot.data);
+          return contentGuest(guestLists);
         }
       },
     );
   }
 
-  Widget contentGuest(DocumentSnapshot snapshot) {
-    final guest = snapshot?.data ?? {};
-    guestList = guest["lists"] ?? [];
+  Widget contentGuest(List guestList) {
     if (guestList.isEmpty) {
       return emptyShare();
     } else {

@@ -13,24 +13,21 @@ class WidgetLists extends StatefulWidget {
   final String numberOfItemShared;
   WidgetLists({this.listUuid, this.numberOfItemShared});
 
-  State<StatefulWidget> createState() {
-    return WidgetListsState(listUuid);
-  }
+  State<StatefulWidget> createState() => WidgetListsState();
 }
 
 class WidgetListsState extends State<WidgetLists> {
-  final String listUuid;
-  WidgetListsState(this.listUuid);
-
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<WishlistHeadProvider>(),
       child: Consumer<WishlistHeadProvider>(
         builder: (context, wishlistHeadProvider, child) {
-          Wishlist wishlist = wishlistHeadProvider.getWishlist(listUuid);
+          Wishlist wishlist = wishlistHeadProvider.getWishlist(widget.listUuid);
           if (wishlist == null) {
-            wishlistHeadProvider.fetchWishlist(listUuid);
+            return Center(
+              child: Text(getString(context, "loading")),
+            );
           }
           return CustomPaint(
             painter: CurvePainter(),

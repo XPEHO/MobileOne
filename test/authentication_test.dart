@@ -1,7 +1,9 @@
 import 'package:MobileOne/pages/splash.dart';
+import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/loyalty_cards_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -21,6 +23,10 @@ class ColorServiceMock extends Mock implements ColorService {}
 
 class ShareServiceMock extends Mock implements ShareService {}
 
+class LoyaltyCardsServiceMock extends Mock implements LoyaltyCardsService {}
+
+class LoyaltyCardsProvidermock extends Mock implements LoyaltyCardsProvider {}
+
 main() {
   group('login skip', () {
     GetIt.I.registerSingleton<UserService>(UserServiceMock());
@@ -38,6 +44,10 @@ main() {
     GetIt.I.registerSingleton<ShareService>(_shareService);
 
     var _authenticationPageState = SplashPageState();
+    final _loyaltycardsService = LoyaltyCardsServiceMock();
+    GetIt.I.registerSingleton<LoyaltyCardsService>(_loyaltycardsService);
+    final _loyaltycardsProvider = LoyaltyCardsProvider();
+    GetIt.I.registerSingleton<LoyaltyCardsProvider>(_loyaltycardsProvider);
 
     test('login skip should automatically log in on user/pwd mode', () async {
       //GIVEN
