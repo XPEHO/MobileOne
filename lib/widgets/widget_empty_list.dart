@@ -1,10 +1,11 @@
-import 'package:MobileOne/utility/colors.dart';
 import 'package:flutter/material.dart';
 
 class EmptyLists extends StatelessWidget {
   final String text;
   final IconData icon;
-  EmptyLists({this.text, this.icon});
+  final Color color;
+  final Color textAndIconColor;
+  EmptyLists({this.text, this.icon, this.color, this.textAndIconColor});
 
   @override
   Widget build(BuildContext context) {
@@ -12,16 +13,20 @@ class EmptyLists extends StatelessWidget {
       width: MediaQuery.of(context).size.width * 0.22,
       child: Card(
         elevation: 3,
-        color: WHITE,
+        color: color,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             Text(
               text,
               textAlign: TextAlign.center,
-              style: TextStyle(color: GREY),
+              style: TextStyle(color: textAndIconColor),
             ),
-            Icon(icon, color: GREY),
+            Icon(
+              icon,
+              color: textAndIconColor,
+              size: 50,
+            ),
           ],
         ),
       ),

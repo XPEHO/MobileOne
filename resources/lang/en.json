@@ -126,5 +126,6 @@
     "talk": "You can talk now",
     "all_my_lists": "My lists:",
     "empty_items": "No items for the moment",
-    "splash_text": "Share your lists with"
+    "splash_text": "Share your lists with",
+    "need_list_to_share": "You must have a list to share it"
 }

@@ -1,6 +1,6 @@
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
-import 'package:MobileOne/pages/new_profile.dart';
+import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
@@ -8,6 +8,7 @@ import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -67,6 +68,8 @@ class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
 class ColorServiceMock extends Mock implements ColorService {}
 
+class ShareServiceMock extends Mock implements ShareService {}
+
 void main() {
   setSupportedLocales([Locale("fr", "FR")]);
 
@@ -97,6 +100,8 @@ void main() {
     GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
     final _colorService = ColorServiceMock();
     GetIt.I.registerSingleton<ColorService>(_colorService);
+    final _shareService = ShareServiceMock();
+    GetIt.I.registerSingleton<ShareService>(_shareService);
 
     when(_imageService.pickGallery()).thenAnswer((realInvocation) =>
         Future.value(PickedFile("assets/images/facebook_f.png")));
@@ -111,7 +116,7 @@ void main() {
     when(user.providerData).thenReturn(List.of([]));
 
     //WHEN
-    await tester.pumpWidget(buildTestableWidget(NewProfile()));
+    await tester.pumpWidget(buildTestableWidget(Profile()));
 
     await tester.pumpAndSettle(Duration(seconds: 1));
     await tester.tap(find.byKey(Key(KEY_GALLERY)));

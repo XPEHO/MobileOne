@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
-import 'package:MobileOne/pages/new_list.dart';
-import 'package:MobileOne/pages/new_profile.dart';
+import 'package:MobileOne/pages/list.dart';
+import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/services/analytics_services.dart';
@@ -36,7 +36,7 @@ class MainPageState extends State<MainPage> {
   final _imageService = GetIt.I.get<ImageService>();
   final _prefService = GetIt.I.get<PreferencesService>();
   final _userService = GetIt.I.get<UserService>();
-  Widget _currentScreen = NewLists();
+  Widget _currentScreen = Lists();
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
   var bottomBackground;
@@ -155,7 +155,7 @@ class MainPageState extends State<MainPage> {
           break;
         case LISTS_PAGE:
           _floatingButtonIcon = Icon(Icons.add);
-          _currentScreen = NewLists();
+          _currentScreen = Lists();
           bottomBackground = _colorsApp.colorTheme;
           break;
         case SHARE_PAGE:
@@ -165,7 +165,7 @@ class MainPageState extends State<MainPage> {
           break;
         case PROFILE_PAGE:
           _floatingButtonIcon = Icon(Icons.camera);
-          _currentScreen = NewProfile();
+          _currentScreen = Profile();
           bottomBackground = WHITE;
           break;
       }
@@ -195,7 +195,7 @@ class MainPageState extends State<MainPage> {
   }
 
   goToSharePage() {
-    Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
+    Navigator.popUntil(context, ModalRoute.withName('/mainPage'));
   }
 
   scanLoyaltyCardsBareCode() async {

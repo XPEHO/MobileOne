@@ -7,6 +7,7 @@ import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/share_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -20,6 +21,8 @@ class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
 class ColorServiceMock extends Mock implements ColorService {}
 
+class ShareServiceMock extends Mock implements ShareService {}
+
 main() {
   group('Items scan tests', () {
     setSupportedLocales([Locale('fr', 'FR')]);
@@ -31,6 +34,8 @@ main() {
     GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
     final _colorService = ColorServiceMock();
     GetIt.I.registerSingleton<ColorService>(_colorService);
+    final _shareService = ShareServiceMock();
+    GetIt.I.registerSingleton<ShareService>(_shareService);
     final _editItemPageState = EditItemPageState();
 
     test('Item label should be set to scanned item name', () async {

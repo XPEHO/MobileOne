@@ -20,11 +20,11 @@ const KEY_GALLERY = "Gallery";
 const KEY_PASSWORD = "Password";
 const KEY_DELETE_ACCOUNT = "debug_delete_account_button";
 
-class NewProfile extends StatefulWidget {
-  NewProfileState createState() => NewProfileState();
+class Profile extends StatefulWidget {
+  ProfileState createState() => ProfileState();
 }
 
-class NewProfileState extends State<NewProfile> {
+class ProfileState extends State<Profile> {
   final _userService = GetIt.I.get<UserService>();
   final _imageService = GetIt.I.get<ImageService>();
   final _prefService = GetIt.I.get<PreferencesService>();

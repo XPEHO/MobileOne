@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:MobileOne/pages/card_page.dart';
 import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/pages/loyalty_card.dart';
-import 'package:MobileOne/pages/new_profile.dart';
+import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/splash.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
@@ -16,6 +16,7 @@ import 'package:MobileOne/pages/share_two.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/share_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
@@ -53,6 +54,7 @@ void instantiateServices() {
   getIt.registerSingleton(UserPictureProvider());
   getIt.registerSingleton(WishlistHeadProvider());
   getIt.registerSingleton(ColorService());
+  getIt.registerSingleton(ShareService());
 }
 
 void main() {
@@ -111,7 +113,7 @@ class MyApp extends StatelessWidget {
         '/share': (context) => Share(),
         "/cards": (contaxt) => Cards(),
         "/loyaltycards": (contaxt) => LoyaltyCards(),
-        "/profile": (context) => NewProfile(),
+        "/profile": (context) => Profile(),
         "/createItem": (context) => EditItemPage(),
       },
     );

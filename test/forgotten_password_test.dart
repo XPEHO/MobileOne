@@ -1,6 +1,7 @@
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/share_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -15,6 +16,8 @@ class MockGoogleSignIn extends Mock implements GoogleSignIn {}
 class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
 class ColorServiceMock extends Mock implements ColorService {}
+
+class ShareServiceMock extends Mock implements ShareService {}
 
 final service = AuthenticationService();
 
@@ -31,6 +34,9 @@ void main() {
 
     final _colorService = ColorServiceMock();
     GetIt.I.registerSingleton<ColorService>(_colorService);
+
+    final _shareService = ShareServiceMock();
+    GetIt.I.registerSingleton<ShareService>(_shareService);
 
     test('Email sent successfully', () async {
       //GIVEN

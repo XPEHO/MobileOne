@@ -1,6 +1,7 @@
 import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/wishlist_head_provider.dart';
+import 'package:MobileOne/utility/curvePainter.dart';
 
 import 'package:flutter/material.dart';
 import 'package:MobileOne/utility/colors.dart';
@@ -8,20 +9,18 @@ import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
 class WidgetLists extends StatefulWidget {
-  final String _listUuid;
-  final String _numberOfItemShared;
-
-  WidgetLists(this._listUuid, this._numberOfItemShared);
+  final String listUuid;
+  final String numberOfItemShared;
+  WidgetLists({this.listUuid, this.numberOfItemShared});
 
   State<StatefulWidget> createState() {
-    return WidgetListsState(_listUuid, _numberOfItemShared);
+    return WidgetListsState(listUuid);
   }
 }
 
 class WidgetListsState extends State<WidgetLists> {
-  final String _listUuid;
-  final String _numberOfItemShared;
-  WidgetListsState(this._listUuid, this._numberOfItemShared);
+  final String listUuid;
+  WidgetListsState(this.listUuid);
 
   @override
   Widget build(BuildContext context) {
@@ -29,44 +28,52 @@ class WidgetListsState extends State<WidgetLists> {
       value: GetIt.I.get<WishlistHeadProvider>(),
       child: Consumer<WishlistHeadProvider>(
         builder: (context, wishlistHeadProvider, child) {
-          Wishlist wishlist = wishlistHeadProvider.getWishlist(_listUuid);
+          Wishlist wishlist = wishlistHeadProvider.getWishlist(listUuid);
           if (wishlist == null) {
-            wishlistHeadProvider.fetchWishlist(_listUuid);
+            wishlistHeadProvider.fetchWishlist(listUuid);
           }
-          return Container(
-            width: MediaQuery.of(context).size.width * 0.23,
-            height: MediaQuery.of(context).size.width * 0.05,
-            child: Card(
-              elevation: 3,
-              color: WHITE,
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        height: MediaQuery.of(context).size.width * 0.12,
+          return CustomPaint(
+            painter: CurvePainter(),
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.23,
+              height: MediaQuery.of(context).size.width * 0.05,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8.0),
+                    child: Container(
+                      height: MediaQuery.of(context).size.width * 0.05,
+                      child: Text(
+                        wishlist?.label ?? "",
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            color: BLACK,
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                  Column(
+                    children: [
+                      Container(
                         child: Text(
-                          wishlist?.label ?? "",
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(color: BLACK, fontSize: 12.0),
+                          "${wishlist?.itemCount} ${getString(context, 'items')}" ??
+                              "",
+                          style:
+                              TextStyle(color: Colors.grey[900], fontSize: 8.0),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: Text(
-                        "${wishlist?.itemCount} ${getString(context, 'items')}" ??
-                            "",
-                        style: TextStyle(color: GREY, fontSize: 8.0),
+                      Container(
+                        child: Text(
+                          "${widget.numberOfItemShared} ${getString(context, 'shared')}" ??
+                              "",
+                          style:
+                              TextStyle(color: Colors.grey[900], fontSize: 8.0),
+                        ),
                       ),
-                    ),
-                    Text(
-                      _numberOfItemShared,
-                      style: TextStyle(color: GREY, fontSize: 8.0),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
+                ],
               ),
             ),
           );

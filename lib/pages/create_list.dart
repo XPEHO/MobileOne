@@ -26,7 +26,7 @@ class CreateListPage extends State<CreateList> {
   void addListToDataBase() {
     GetIt.I.get<WishlistsListProvider>().addWishlist(_myController.text);
     FocusScope.of(context).unfocus();
-    Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
+    Navigator.popUntil(context, ModalRoute.withName('/mainPage'));
   }
 
   @override
@@ -94,6 +94,6 @@ class CreateListPage extends State<CreateList> {
 
   void openListsPage() {
     FocusScope.of(context).unfocus();
-    Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
+    Navigator.popUntil(context, ModalRoute.withName('/mainPage'));
   }
 }

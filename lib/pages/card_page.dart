@@ -266,6 +266,6 @@ class CardsState extends State<Cards> {
   }
 
   goToLoyaltyCardsPage() {
-    Navigator.popUntil(context, ModalRoute.withName("/mainpage"));
+    Navigator.popUntil(context, ModalRoute.withName("/mainPage"));
   }
 }

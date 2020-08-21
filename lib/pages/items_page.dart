@@ -139,112 +139,112 @@ class EditItemPageState extends State<EditItemPage> {
           width: MediaQuery.of(context).size.width,
           child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Row(
-                  children: [
-                    Stack(
-                      children: [
-                        Container(
-                          color: WHITE,
-                          width: MediaQuery.of(context).size.width * 0.8,
-                          height: MediaQuery.of(context).size.height * 0.40,
-                          child: Image(image: _itemImage),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15.0),
-                          child: Align(
-                            alignment: Alignment.topLeft,
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.arrow_back,
-                              ),
-                              onPressed: () {
-                                goToPreviousPage();
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.2,
-                      height: MediaQuery.of(context).size.height * 0.40,
-                      color: Colors.lime[600],
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          IconButton(
-                            icon: Icon(
-                              Icons.mic,
-                              color: WHITE,
-                              size: 24,
-                            ),
-                            onPressed: () => recordAudio(),
-                          ),
-                          IconButton(
-                            icon: SvgPicture.asset(
-                              "assets/images/qr-code.svg",
-                              color: WHITE,
-                              width: 24,
-                              height: 24,
-                            ),
-                            onPressed: () => scanAnItem(),
-                          ),
-                          IconButton(
-                            key: Key("item_picture_button"),
-                            icon: Icon(
-                              Icons.camera,
-                              color: WHITE,
-                              size: 24,
-                            ),
-                            onPressed: () {
-                              _analytics
-                                  .sendAnalyticsEvent("takePictureOfItem");
-                              pickImage();
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: buildImageAndButtons(context),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.10,
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  child: Align(
+                    alignment: Alignment.center,
                     child: buildTextField(context),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    child: buildQuantity(context),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.10,
-                    width: MediaQuery.of(context).size.height * 0.7,
-                    child: buildUnit(context),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Container(
-                      height: MediaQuery.of(context).size.height * 0.05,
-                      width: MediaQuery.of(context).size.width * 0.4,
-                      child: buildValidationButton(context)),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: buildQuantity(context),
                 ),
                 Container(
-                    height: MediaQuery.of(context).size.height * 0.05,
-                    child: buildErrorMessage()),
+                  height: MediaQuery.of(context).size.height * 0.15,
+                  child: buildUnit(context),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: buildValidationButton(context),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.1,
+                  child: buildErrorMessage(),
+                ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Row buildImageAndButtons(BuildContext context) {
+    return Row(
+      children: [
+        Stack(
+          children: [
+            Container(
+              color: WHITE,
+              width: MediaQuery.of(context).size.width * 0.8,
+              height: MediaQuery.of(context).size.height * 0.40,
+              child: Image(image: _itemImage),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15.0),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: IconButton(
+                  icon: Icon(
+                    Icons.arrow_back,
+                  ),
+                  onPressed: () {
+                    goToPreviousPage();
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.2,
+          height: MediaQuery.of(context).size.height * 0.40,
+          color: Colors.lime[600],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.mic,
+                  color: WHITE,
+                  size: 24,
+                ),
+                onPressed: () => recordAudio(),
+              ),
+              IconButton(
+                icon: SvgPicture.asset(
+                  "assets/images/qr-code.svg",
+                  color: WHITE,
+                  width: 24,
+                  height: 24,
+                ),
+                onPressed: () => scanAnItem(),
+              ),
+              IconButton(
+                key: Key("item_picture_button"),
+                icon: Icon(
+                  Icons.camera,
+                  color: WHITE,
+                  size: 24,
+                ),
+                onPressed: () {
+                  _analytics.sendAnalyticsEvent("takePictureOfItem");
+                  pickImage();
+                },
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -321,16 +321,21 @@ class EditItemPageState extends State<EditItemPage> {
     );
   }
 
-  RaisedButton buildValidationButton(BuildContext context) {
-    return RaisedButton(
-      color: Colors.lime[600],
-      onPressed: () {
-        _onValidate();
-      },
-      child: Text(
-        _args.buttonName,
-        style: TextStyle(color: WHITE, fontWeight: FontWeight.bold),
-      ),
+  Row buildValidationButton(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        RaisedButton(
+          color: Colors.lime[600],
+          onPressed: () {
+            _onValidate();
+          },
+          child: Text(
+            _args.buttonName,
+            style: TextStyle(color: WHITE, fontWeight: FontWeight.bold),
+          ),
+        ),
+      ],
     );
   }
 
@@ -396,10 +401,8 @@ class EditItemPageState extends State<EditItemPage> {
 
   Row buildQuantity(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-          width: MediaQuery.of(context).size.width * 0.3,
-        ),
         Container(
           child: BubbleButton(
             icon: Icon(Icons.remove, color: WHITE),
@@ -444,36 +447,27 @@ class EditItemPageState extends State<EditItemPage> {
             onPressed: () => incrementCounter(),
           ),
         ),
-        Container(
-          width: MediaQuery.of(context).size.width * 0.25,
-        ),
       ],
     );
   }
 
   Widget buildTextField(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.5,
-        child: TextField(
-          focusNode: _itemNameFocusNode,
-          key: Key("item_name_label"),
-          textAlign: TextAlign.center,
-          textInputAction: TextInputAction.next,
-          onSubmitted: (_) => _itemQuantityFocusNode.requestFocus(),
-          decoration: InputDecoration(
-            hintText: getString(context, 'item_name'),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: TRANSPARENT),
-            ),
-            filled: true,
-            fillColor: Colors.grey[300],
-          ),
-          controller: itemNameController,
-          onChanged: (text) => handleSubmittedItemName(text),
+    return TextField(
+      focusNode: _itemNameFocusNode,
+      key: Key("item_name_label"),
+      textAlign: TextAlign.center,
+      textInputAction: TextInputAction.next,
+      onSubmitted: (_) => _itemQuantityFocusNode.requestFocus(),
+      decoration: InputDecoration(
+        hintText: getString(context, 'item_name'),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: TRANSPARENT),
         ),
+        filled: true,
+        fillColor: Colors.grey[300],
       ),
+      controller: itemNameController,
+      onChanged: (text) => handleSubmittedItemName(text),
     );
   }
 
@@ -618,7 +612,7 @@ class EditItemPageState extends State<EditItemPage> {
       handleSubmittedItemName(article["product"]["product_name"].toString() +
           " - " +
           article["product"]["brands"].toString());
-      imageLink = article["product"]["image_small_url"];
+      imageLink = article["product"]["image_url"];
       setState(() {
         _itemImage = NetworkImage(imageLink);
       });

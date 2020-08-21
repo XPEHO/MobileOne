@@ -6,6 +6,7 @@ import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -51,6 +52,8 @@ class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
 class ColorServiceMock extends Mock implements ColorService {}
 
+class ShareServiceMock extends Mock implements ShareService {}
+
 void main() {
   setSupportedLocales([Locale("fr", "FR")]);
 
@@ -68,6 +71,8 @@ void main() {
 
     final _colorService = ColorServiceMock();
     GetIt.I.registerSingleton<ColorService>(_colorService);
+    final _shareService = ShareServiceMock();
+    GetIt.I.registerSingleton<ShareService>(_shareService);
 
     final mockArguments = MockArguments();
     Arguments.proxy = mockArguments;

@@ -1,7 +1,10 @@
 import 'package:MobileOne/localization/localization.dart';
+
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/share_service.dart';
+
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/utility/colors.dart';
@@ -13,24 +16,26 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
-class NewLists extends StatefulWidget {
+class Lists extends StatefulWidget {
   State<StatefulWidget> createState() {
-    return NewListsState();
+    return ListsState();
   }
 }
 
-class NewListsState extends State<NewLists> {
+class ListsState extends State<Lists> {
   var lists = [];
   var guestList = [];
   var _userService = GetIt.I.get<UserService>();
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
-
+  var share = GetIt.I.get<ShareService>();
   @override
   void initState() {
     _analytics.setCurrentPage("isOnListPage");
     super.initState();
   }
+
+  var numberOfShare;
 
   @override
   Widget build(BuildContext context) {
@@ -44,51 +49,17 @@ class NewListsState extends State<NewLists> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Image.asset('assets/images/square-logo.png',
-                        width: 100, height: 100),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    child: logo(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(left: 16.0, bottom: 16),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              getString(context, 'all_my_lists'),
-                              style: TextStyle(color: WHITE),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.17,
-                          child: buildFuturBuilderList(wishlistsListProvider),
-                        ),
-                      ],
-                    ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.3,
+                    child: allMyLists(context, wishlistsListProvider),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: Column(
-                      children: <Widget>[
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(left: 16.0, bottom: 16),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              getString(context, 'shared_with_me'),
-                              style: TextStyle(color: WHITE),
-                            ),
-                          ),
-                        ),
-                        buildFuturBuilderGuest(wishlistsListProvider),
-                      ],
-                    ),
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    child: allSharedLists(context, wishlistsListProvider),
                   ),
                 ],
               ),
@@ -96,6 +67,61 @@ class NewListsState extends State<NewLists> {
           ),
         );
       }),
+    );
+  }
+
+  Padding allSharedLists(
+      BuildContext context, WishlistsListProvider wishlistsListProvider) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, bottom: 16),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                getString(context, 'shared_with_me'),
+                style: TextStyle(color: WHITE),
+              ),
+            ),
+          ),
+          buildFuturBuilderGuest(wishlistsListProvider),
+        ],
+      ),
+    );
+  }
+
+  Padding allMyLists(
+      BuildContext context, WishlistsListProvider wishlistsListProvider) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, bottom: 16),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                getString(context, 'all_my_lists'),
+                style: TextStyle(color: WHITE),
+              ),
+            ),
+          ),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.17,
+            child: buildFuturBuilderList(wishlistsListProvider),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Padding logo() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child:
+          Image.asset('assets/images/square-logo.png', width: 100, height: 100),
     );
   }
 
@@ -109,8 +135,10 @@ class NewListsState extends State<NewLists> {
               openCreateListPage();
             },
             child: EmptyLists(
-                icon: Icons.add_shopping_cart,
-                text: getString(context, "create_list")),
+              icon: Icons.add_shopping_cart,
+              text: getString(context, "create_list"),
+              textAndIconColor: GREY,
+            ),
           ),
           EmptyTemplate(),
           EmptyTemplate(),
@@ -126,6 +154,7 @@ class NewListsState extends State<NewLists> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.3,
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Icon(Icons.share, size: 90, color: _colorsApp.greyColor),
           Text(
@@ -153,7 +182,7 @@ class NewListsState extends State<NewLists> {
   }
 
   Widget contentList(DocumentSnapshot snapshot) {
-    final owner = snapshot?.data ?? {};
+    var owner = snapshot?.data ?? {};
     lists = owner["lists"] ?? [];
     if (lists.isEmpty) {
       return Padding(
@@ -177,8 +206,13 @@ class NewListsState extends State<NewLists> {
                 },
                 child: Container(
                   height: 100,
-                  child: WidgetLists(
-                      lists[index], getString(context, "shared_count")),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: WidgetLists(
+                      listUuid: lists[index],
+                      numberOfItemShared: "0",
+                    ),
+                  ),
                 ));
           },
         ),
@@ -222,8 +256,13 @@ class NewListsState extends State<NewLists> {
                     onTap: () {
                       openOpenedListPage(guestList[index], true);
                     },
-                    child: WidgetLists(
-                        guestList[index], getString(context, "shared_count")));
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: WidgetLists(
+                        listUuid: guestList[index],
+                        numberOfItemShared: "0",
+                      ),
+                    ));
               },
             ),
           ),

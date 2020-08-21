@@ -1,6 +1,8 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
+
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/widgets/widget_list.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/utility/database.dart';
@@ -22,10 +24,10 @@ class WidgetShareListWithSomeoneState
   WidgetShareListWithSomeoneState(this._listUuid);
   var userService = GetIt.I.get<UserService>();
   var shareProvider = GetIt.I.get<ShareProvider>();
-  var numberOfItemShared = "0";
-  String _label = "";
-  String _count = "";
 
+  String label = "";
+  String count = "";
+  var numberOfItemShared = "0";
   Future<void> getListDetails() async {
     String labelValue;
     String countValue;
@@ -40,8 +42,8 @@ class WidgetShareListWithSomeoneState
     });
 
     setState(() {
-      _label = labelValue;
-      _count = countValue;
+      label = labelValue;
+      count = countValue;
     });
   }
 
@@ -68,8 +70,6 @@ class WidgetShareListWithSomeoneState
   }
 
   Widget content(DocumentSnapshot snapshot) {
-    var sharedCount = getString(context, "shared_count");
-
     var _emails = snapshot?.data ?? {};
 
     return Row(
@@ -83,52 +83,10 @@ class WidgetShareListWithSomeoneState
               ),
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.23,
-                child: Card(
-                  elevation: 3,
-                  color: WHITE,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.15,
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.09,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              _label,
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: BLACK,
-                                fontSize: 12.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.05,
-                          child: Column(
-                            children: [
-                              Text(
-                                _count,
-                                style: TextStyle(
-                                  color: GREY,
-                                  fontSize: 10.0,
-                                ),
-                              ),
-                              Text(
-                                "$numberOfItemShared $sharedCount",
-                                style: TextStyle(
-                                  color: GREY,
-                                  fontSize: 10.0,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                height: MediaQuery.of(context).size.width * 0.3,
+                child: WidgetLists(
+                    listUuid: _listUuid,
+                    numberOfItemShared: numberOfItemShared),
               ),
             ),
             Padding(
@@ -137,7 +95,7 @@ class WidgetShareListWithSomeoneState
                 top: 15,
               ),
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.15,
+                height: MediaQuery.of(context).size.height * 0.12,
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Stack(
                   children: <Widget>[

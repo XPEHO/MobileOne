@@ -84,6 +84,7 @@ class ShareStateOneState extends State<ShareOne> {
       resizeToAvoidBottomPadding: false,
       backgroundColor: _colorsApp.colorTheme,
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           header(context),
           (_argsShare.isOnlyOneStep == false)
@@ -96,7 +97,7 @@ class ShareStateOneState extends State<ShareOne> {
                   child: CircularProgressIndicator(),
                 )
               : Container(
-                  height: MediaQuery.of(context).size.height * 0.5,
+                  height: MediaQuery.of(context).size.height * 0.65,
                   child: buildListView(isSearching, _argsShare.previousList)),
         ],
       ),
@@ -201,7 +202,9 @@ class ShareStateOneState extends State<ShareOne> {
           child: (_myController.text.length > 2)
               ? WidgetShareContact(
                   name: _myController.text, email: _myController.text)
-              : Container(),
+              : Container(
+                  height: 1,
+                ),
         ),
       ),
     );
@@ -210,7 +213,6 @@ class ShareStateOneState extends State<ShareOne> {
   Container searchContact(BuildContext context) {
     return Container(
       color: WHITE,
-      width: MediaQuery.of(context).size.width,
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: TextFormField(
@@ -274,7 +276,7 @@ class ShareStateOneState extends State<ShareOne> {
             }
           },
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(5.0),
             child: WidgetShareContact(
                 name: contact.displayName,
                 avatar: contact.avatar,
@@ -286,7 +288,7 @@ class ShareStateOneState extends State<ShareOne> {
   }
 
   void openSharePage() {
-    Navigator.popUntil(context, ModalRoute.withName('/mainpage'));
+    Navigator.popUntil(context, ModalRoute.withName('/mainPage'));
   }
 
   void openShareTwoPage() {

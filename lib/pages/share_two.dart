@@ -195,8 +195,7 @@ class ShareStateTwoState extends State<ShareTwo> {
                           }
                         },
                         child: WidgetLists(
-                          wishlists[index],
-                          getString(context, "shared_count"),
+                          listUuid: wishlists[index],
                         ),
                       );
                     },
@@ -211,6 +210,6 @@ class ShareStateTwoState extends State<ShareTwo> {
   }
 
   void openSharePage() {
-    Navigator.popUntil(context, ModalRoute.withName("/mainpage"));
+    Navigator.popUntil(context, ModalRoute.withName("/mainPage"));
   }
 }
