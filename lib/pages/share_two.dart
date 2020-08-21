@@ -1,5 +1,7 @@
+import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
+import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -23,10 +25,10 @@ class ShareStateTwoState extends State<ShareTwo> {
   var shareProvider = GetIt.I.get<ShareProvider>();
   var _colorsApp = GetIt.I.get<ColorService>();
   var wishlistService = GetIt.I.get<WishlistService>();
+  var whislistHeadProvider = GetIt.I.get<WishlistHeadProvider>();
+  var test;
 
-  String liste;
-  List<dynamic> test = [];
-  List listsFilter;
+  List<String> listsFilter = [];
 
   void initState() {
     _analytics.setCurrentPage("isOneShareTwoPage");
@@ -37,33 +39,27 @@ class ShareStateTwoState extends State<ShareTwo> {
     });
   }
 
-  var wish;
-  filterLists() async {
-    List _lists = [];
+  String wish;
+  filterLists() {
+    List<String> _lists = [];
 
-    print(test);
-    _lists = test;
-    var t = wish = wishlistService.ownerLists[0];
-    print(t);
-/*
+    _lists = [];
+
     for (int i = 0; i < test.length; i++) {
-      _lists.add(test[i]);
+      wish = whislistHeadProvider.getWishlist(test[i]).label;
+      _lists.add(wish);
     }
-*/
-    //print(_lists);
-
-    //print(_lists[0]);
 
     if (_myController.text.isNotEmpty) {
       _lists.retainWhere((liste) {
         String searchTerm = _myController.text.toLowerCase();
         String listLabel = liste.toLowerCase();
+
         return listLabel.contains(searchTerm);
       });
       setState(() {
         listsFilter = _lists;
       });
-      print(listsFilter);
     }
   }
 
@@ -90,7 +86,39 @@ class ShareStateTwoState extends State<ShareTwo> {
     );
   }
 
+  GestureDetector searchNewListe(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        searchTermEmail = _myController.text;
+        /*if (RegExp(emailRegexp).hasMatch(searchTermEmail)) {
+          if (previousList == null || uuid == null) {
+            openShareTwoPage();
+          } else {
+            shareProvider.addSharedToDataBase(searchTermEmail, previousList);
+            shareProvider.addGuestToDataBase(searchTermEmail, previousList);
+            openSharePage();
+          }
+        }*/
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Visibility(
+          visible: true,
+          child: Container(
+            height: 100,
+            child: (_myController.text.length > 2 && listsFilter.isNotEmpty)
+                ? WidgetLists(
+                    listUuid: "patate",
+                  )
+                : Container(),
+          ),
+        ),
+      ),
+    );
+  }
+
   Scaffold buildShareList(BuildContext context, wishlists) {
+    test = wishlists;
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: _colorsApp.colorTheme,
@@ -189,6 +217,17 @@ class ShareStateTwoState extends State<ShareTwo> {
                   ),
                 ),
                 controller: _myController,
+                onChanged: (string) {
+                  setState(
+                    () {
+                      listsFilter = test
+                          .where((liste) => (liste
+                              .toLowerCase()
+                              .contains(string.toLowerCase())))
+                          .toList();
+                    },
+                  );
+                },
               ),
             ),
           ),
@@ -204,6 +243,7 @@ class ShareStateTwoState extends State<ShareTwo> {
               ),
             ),
           ),
+          searchNewListe(context),
           Padding(
             padding: EdgeInsets.only(
               top: 20,

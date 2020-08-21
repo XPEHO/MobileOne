@@ -24,11 +24,11 @@ class WidgetListsState extends State<WidgetLists> {
       child: Consumer<WishlistHeadProvider>(
         builder: (context, wishlistHeadProvider, child) {
           Wishlist wishlist = wishlistHeadProvider.getWishlist(widget.listUuid);
-          if (wishlist == null) {
+          /* if (wishlist == null) {
             return Center(
               child: Text(getString(context, "loading")),
             );
-          }
+          }*/
           return CustomPaint(
             painter: CurvePainter(),
             child: Container(
