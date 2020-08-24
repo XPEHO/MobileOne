@@ -17,10 +17,9 @@ class WishlistHeadProvider with ChangeNotifier {
       wishlistService.fetchWishlist(uuid).whenComplete(() => notifyListeners());
     }
     return wishlist;
-    
   }
 
-  get filteredLists(String filterText) {
+  List<dynamic> filteredLists(String filterText) {
     return wishlistService.filterLists(filterText);
   }
 }

@@ -159,28 +159,25 @@ class WishlistDao {
     }
   }
 
-  addGuestToDataBase(String uuidUser, String list) async {
+  addGuestToDataBase(String email, String listUuid) async {
     bool doesListExist = false;
 
-    await Firestore.instance.collection("guests").document(uuidUser).get().then(
+    await Firestore.instance.collection("guests").document(email).get().then(
       (value) {
         doesListExist = value.exists;
       },
     );
 
     if (doesListExist) {
-      await Firestore.instance
-          .collection("guests")
-          .document(uuidUser)
-          .updateData(
+      await Firestore.instance.collection("guests").document(email).updateData(
         {
-          "lists": FieldValue.arrayUnion(["$list"])
+          "lists": FieldValue.arrayUnion(["$listUuid"])
         },
       );
     } else {
-      await Firestore.instance.collection("guests").document(uuidUser).setData(
+      await Firestore.instance.collection("guests").document(email).setData(
         {
-          "lists": FieldValue.arrayUnion(["$list"])
+          "lists": FieldValue.arrayUnion(["$listUuid"])
         },
       );
     }

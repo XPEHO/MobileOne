@@ -26,8 +26,8 @@ class ShareProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  addGuestToDataBase(String uuidUser, String list) async {
-    wishlistService.addGuestToDataBase(uuidUser, list);
+  addGuestToDataBase(String email, String listUuid) async {
+    wishlistService.addGuestToDataBase(email, listUuid);
     notifyListeners();
   }
 

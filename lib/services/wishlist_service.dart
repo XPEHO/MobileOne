@@ -134,8 +134,8 @@ class WishlistService {
     _flush();
   }
 
-  addGuestToDataBase(String uuidUser, String list) async {
-    dao.addGuestToDataBase(uuidUser, list);
+  addGuestToDataBase(String email, String listUuid) async {
+    dao.addGuestToDataBase(email, listUuid);
     _flush();
   }
 
@@ -226,9 +226,13 @@ class WishlistService {
         .isValidated = isValidated;
   }
 
-  List<Wishlist> filterLists(String filterText) {
+  List<dynamic> filterLists(String filterText) {
     return _wishlists.values
-        .where((aList) => aList.label.contains(filterText))
+        .where((aList) => aList.label.toLowerCase().contains(filterText))
         .toList();
+  }
+
+  set wishlists(Map<String, Wishlist> wishlists) {
+    _wishlists = wishlists;
   }
 }

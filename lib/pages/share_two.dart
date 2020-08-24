@@ -5,12 +5,10 @@ import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/user_service.dart';
-import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:MobileOne/widgets/widget_list.dart';
 import 'package:MobileOne/pages/share_one.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 
@@ -21,13 +19,11 @@ class ShareTwo extends StatefulWidget {
 class ShareStateTwoState extends State<ShareTwo> {
   var _analytics = GetIt.I.get<AnalyticsService>();
   final _myController = TextEditingController();
-  var _listSelected;
+
   var userService = GetIt.I.get<UserService>();
   var shareProvider = GetIt.I.get<ShareProvider>();
   var _colorsApp = GetIt.I.get<ColorService>();
-  var wishlistService = GetIt.I.get<WishlistService>();
-  var whislistHeadProvider = GetIt.I.get<WishlistHeadProvider>();
-
+  var wishlistHeadProvider = GetIt.I.get<WishlistHeadProvider>();
   String _filterText = "";
 
   void initState() {
@@ -43,117 +39,109 @@ class ShareStateTwoState extends State<ShareTwo> {
   }
 
   Widget build(BuildContext context) {
-    return Consumer<WishlistHeadProvider>(
-      builder: (context, provider, _) {
-        return buildShareList(context, provider.filteredLists(_filterText));
-      },
+    return ChangeNotifierProvider.value(
+      value: GetIt.I.get<WishlistHeadProvider>(),
+      child: Consumer<WishlistHeadProvider>(builder: (context, provider, _) {
+        return Builder(builder: (BuildContext context) {
+          return buildShareList(provider.filteredLists(_filterText));
+        });
+      }),
     );
   }
 
-  Scaffold buildShareList(BuildContext context, List<Wishlist> wishlists) {
+  Scaffold buildShareList(List<Wishlist> wishlists) {
     return Scaffold(
-      appBar: buildeAppBar(),
-      resizeToAvoidBottomPadding: false,
       backgroundColor: _colorsApp.colorTheme,
-      body: Column(
-        children: <Widget>[
-          buildHeader(),
-          Container(
-            color: WHITE,
-            width: MediaQuery.of(context).size.width,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-              child: TextFormField(
-                decoration: InputDecoration(
-                  hintText: getString(context, "share_list"),
-                  suffixIcon: Icon(
-                    Icons.search,
-                    color: BLACK,
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            buildeAppBar(),
+            buildHeader(),
+            Container(
+              color: WHITE,
+              width: MediaQuery.of(context).size.width,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: getString(context, "share_list"),
+                    suffixIcon: Icon(
+                      Icons.search,
+                      color: BLACK,
+                    ),
                   ),
+                  controller: _myController,
+                  onChanged: (value) {
+                    setState(
+                      () {
+                        filterLists(value);
+                      },
+                    );
+                  },
                 ),
-                controller: _myController,
-                onChanged: (value) {
-                  setState(
-                    () {
-                      filterLists(value);
-                    },
-                  );
-                },
               ),
             ),
-          ),
-          Container(
-            height: 100,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: wishlists.length,
-              itemBuilder: (BuildContext ctxt, int index) {
-                return WidgetLists(
-                  listUuid: wishlists[index].uuid,
-                );
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 50.0,
-              right: 300,
-            ),
-            child: Text(
-              getString(context, 'my_lists'),
-              style: TextStyle(
-                color: WHITE,
+            Padding(
+              padding: EdgeInsets.only(
+                top: 50.0,
+                right: 300,
+              ),
+              child: Text(
+                getString(context, 'my_lists'),
+                style: TextStyle(
+                  color: WHITE,
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 20,
-            ),
-            child: Column(
-              children: <Widget>[
-                Container(
-                  height: 100,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: wishlists.length,
-                    itemBuilder: (BuildContext ctxt, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          _listSelected = wishlists[index];
-                          if (searchTermEmail != null) {
-                            shareProvider.addSharedToDataBase(
-                                searchTermEmail, _listSelected);
-                            shareProvider.addGuestToDataBase(
-                                searchTermEmail, _listSelected);
-                            openSharePage();
-                          } else {
-                            shareProvider.addSharedToDataBase(
-                                contactSelected.emails.elementAt(0).value,
-                                _listSelected);
-                            shareProvider.addGuestToDataBase(
-                                contactSelected.emails.elementAt(0).value,
-                                _listSelected);
-                            openSharePage();
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 100,
-                            child: WidgetLists(
-                              listUuid: wishlists[index],
+            Padding(
+              padding: EdgeInsets.only(
+                top: 20,
+              ),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: wishlists.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        return GestureDetector(
+                          onTap: () {
+                            final _selectedUuid = wishlists[index].uuid;
+                            if (searchTermEmail != null) {
+                              shareProvider.addSharedToDataBase(
+                                  searchTermEmail.toLowerCase(), _selectedUuid);
+                              shareProvider.addGuestToDataBase(
+                                  searchTermEmail.toLowerCase(), _selectedUuid);
+                              openSharePage();
+                            } else {
+                              shareProvider.addSharedToDataBase(
+                                  contactSelected.emails.elementAt(0).value,
+                                  _selectedUuid);
+                              shareProvider.addGuestToDataBase(
+                                  contactSelected.emails.elementAt(0).value,
+                                  _selectedUuid);
+                              openSharePage();
+                            }
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 100,
+                              child: WidgetLists(
+                                listUuid: wishlists[index].uuid,
+                              ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -201,7 +189,7 @@ class ShareStateTwoState extends State<ShareTwo> {
     );
   }
 
-  buildHeader() {
+  Padding buildHeader() {
     return Padding(
       padding: EdgeInsets.only(left: 100, right: 100),
       child: Row(
