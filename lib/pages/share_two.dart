@@ -12,6 +12,7 @@ import 'package:MobileOne/utility/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 class ShareTwo extends StatefulWidget {
   ShareStateTwoState createState() => ShareStateTwoState();
@@ -26,154 +27,37 @@ class ShareStateTwoState extends State<ShareTwo> {
   var _colorsApp = GetIt.I.get<ColorService>();
   var wishlistService = GetIt.I.get<WishlistService>();
   var whislistHeadProvider = GetIt.I.get<WishlistHeadProvider>();
-  var allUuuid;
 
-  List<String> listsFilter = [];
-  List<String> listsUuidFilter = [];
+  String _filterText = "";
 
   void initState() {
     _analytics.setCurrentPage("isOneShareTwoPage");
     super.initState();
-    listsFilter = [];
-    _myController.addListener(() {
-      filterLists();
+    _myController.text = _filterText;
+  }
+
+  filterLists(String value) {
+    setState(() {
+      _filterText = value;
     });
   }
 
-  filterLists() {
-    String wish;
-    List<String> _lists = [];
-    listsUuidFilter = [];
-    for (int i = 0; i < allUuuid.length; i++) {
-      wish = whislistHeadProvider.getWishlist(allUuuid[i]).label;
-      _lists.add(wish);
-      listsUuidFilter.add(whislistHeadProvider.getWishlist(allUuuid[i]).uuid);
-    }
-
-    if (_myController.text.isNotEmpty) {
-      _lists.retainWhere((liste) {
-        String searchTerm = _myController.text.toLowerCase();
-        String listLabel = liste.toLowerCase();
-
-        return listLabel.contains(searchTerm);
-      });
-      setState(() {
-        listsFilter = _lists;
-        listsUuidFilter.length = listsFilter.length;
-      });
-    }
-  }
-
   Widget build(BuildContext context) {
-    return StreamBuilder<DocumentSnapshot>(
-      stream: Firestore.instance
-          .collection("owners")
-          .document(userService.user.uid)
-          .get()
-          .asStream(),
-      builder: (context, snapshot) {
-        var userWishlists = snapshot?.data?.data ?? {};
-        var wishlists = userWishlists["lists"] ?? [];
-        if (!snapshot.hasData)
-          return Center(
-            child: CircularProgressIndicator(
-              backgroundColor: WHITE,
-            ),
-          );
-        else {
-          return buildShareList(context, wishlists);
-        }
+    return Consumer<WishlistHeadProvider>(
+      builder: (context, provider, _) {
+        return buildShareList(context, provider.filteredLists(_filterText));
       },
     );
   }
 
-  Scaffold buildShareList(BuildContext context, wishlists) {
-    allUuuid = wishlists;
-
+  Scaffold buildShareList(BuildContext context, List<Wishlist> wishlists) {
     return Scaffold(
+      appBar: buildeAppBar(),
       resizeToAvoidBottomPadding: false,
       backgroundColor: _colorsApp.colorTheme,
       body: Column(
         children: <Widget>[
-          Padding(
-            padding: EdgeInsets.only(
-              top: 30,
-            ),
-            child: Container(
-              width: MediaQuery.of(context).size.width,
-              height: 50,
-              child: Stack(
-                children: <Widget>[
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: WHITE,
-                      ),
-                      onPressed: () {
-                        openSharePage();
-                      },
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      top: 7,
-                    ),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Text(
-                        getString(context, "which_list"),
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: WHITE,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 100, right: 100),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                CircleAvatar(
-                  child: Text(
-                    getString(context, "step_one"),
-                    style: TextStyle(
-                      color: WHITE,
-                      fontSize: 10,
-                    ),
-                  ),
-                  radius: 12,
-                  backgroundColor: _colorsApp.buttonColor,
-                ),
-                Expanded(
-                  child: Divider(
-                    color: WHITE,
-                    height: 80,
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                  ),
-                ),
-                CircleAvatar(
-                  child: Text(
-                    getString(context, "step_two"),
-                    style: TextStyle(
-                      color: WHITE,
-                      fontSize: 10,
-                    ),
-                  ),
-                  radius: 12,
-                  backgroundColor: _colorsApp.buttonColor,
-                ),
-              ],
-            ),
-          ),
+          buildHeader(),
           Container(
             color: WHITE,
             width: MediaQuery.of(context).size.width,
@@ -188,36 +72,28 @@ class ShareStateTwoState extends State<ShareTwo> {
                   ),
                 ),
                 controller: _myController,
-                onChanged: (string) {
+                onChanged: (value) {
                   setState(
                     () {
-                      listsFilter = allUuuid
-                          .where((liste) => {
-                                liste
-                                    .toLowerCase()
-                                    .contains(string.toLowerCase())
-                              })
-                          .toList();
+                      filterLists(value);
                     },
                   );
                 },
               ),
             ),
           ),
-          (_myController.text.length >= 1 && listsFilter.isNotEmpty)
-              ? Container(
-                  height: 100,
-                  child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: listsFilter.length,
-                      itemBuilder: (BuildContext ctxt, int index) {
-                        return WidgetLists(
-                          listUuid: whislistHeadProvider
-                              .getWishlist(listsUuidFilter[index])
-                              .uuid,
-                        );
-                      }))
-              : Container(),
+          Container(
+            height: 100,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: wishlists.length,
+              itemBuilder: (BuildContext ctxt, int index) {
+                return WidgetLists(
+                  listUuid: wishlists[index].uuid,
+                );
+              },
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(
               top: 50.0,
@@ -276,6 +152,91 @@ class ShareStateTwoState extends State<ShareTwo> {
                 ),
               ],
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  buildeAppBar() {
+    return Padding(
+      padding: EdgeInsets.only(
+        top: 30,
+      ),
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        height: 50,
+        child: Stack(
+          children: <Widget>[
+            Align(
+              alignment: Alignment.topLeft,
+              child: IconButton(
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: WHITE,
+                ),
+                onPressed: () {
+                  openSharePage();
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: 7,
+              ),
+              child: Align(
+                alignment: Alignment.topCenter,
+                child: Text(
+                  getString(context, "which_list"),
+                  style: TextStyle(
+                    fontSize: 20,
+                    color: WHITE,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  buildHeader() {
+    return Padding(
+      padding: EdgeInsets.only(left: 100, right: 100),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          CircleAvatar(
+            child: Text(
+              getString(context, "step_one"),
+              style: TextStyle(
+                color: WHITE,
+                fontSize: 10,
+              ),
+            ),
+            radius: 12,
+            backgroundColor: _colorsApp.buttonColor,
+          ),
+          Expanded(
+            child: Divider(
+              color: WHITE,
+              height: 80,
+              thickness: 1,
+              indent: 20,
+              endIndent: 20,
+            ),
+          ),
+          CircleAvatar(
+            child: Text(
+              getString(context, "step_two"),
+              style: TextStyle(
+                color: WHITE,
+                fontSize: 10,
+              ),
+            ),
+            radius: 12,
+            backgroundColor: _colorsApp.buttonColor,
           ),
         ],
       ),

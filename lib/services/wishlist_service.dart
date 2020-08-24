@@ -225,4 +225,10 @@ class WishlistService {
         .firstWhere((element) => element.uuid == itemUuid)
         .isValidated = isValidated;
   }
+
+  List<Wishlist> filterLists(String filterText) {
+    return _wishlists.values
+        .where((aList) => aList.label.contains(filterText))
+        .toList();
+  }
 }
