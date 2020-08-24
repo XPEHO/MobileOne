@@ -57,7 +57,6 @@ class WidgetShareListWithSomeoneState
                 height: MediaQuery.of(context).size.width * 0.3,
                 child: WidgetLists(
                   listUuid: _listUuid,
-                  numberOfItemShared: _emails.length,
                 ),
               ),
             ),

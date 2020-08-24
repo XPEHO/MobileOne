@@ -97,7 +97,7 @@ class ShareStateOneState extends State<ShareOne> {
                   child: CircularProgressIndicator(),
                 )
               : Container(
-                  height: MediaQuery.of(context).size.height * 0.65,
+                  height: MediaQuery.of(context).size.height * 0.64,
                   child: buildListView(isSearching, _argsShare.previousList)),
         ],
       ),

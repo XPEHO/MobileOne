@@ -24,11 +24,11 @@ class WidgetListsState extends State<WidgetLists> {
       child: Consumer<WishlistHeadProvider>(
         builder: (context, wishlistHeadProvider, child) {
           Wishlist wishlist = wishlistHeadProvider.getWishlist(widget.listUuid);
-          /* if (wishlist == null) {
+          if (wishlist == null) {
             return Center(
               child: Text(getString(context, "loading")),
             );
-          }*/
+          }
           return CustomPaint(
             painter: CurvePainter(),
             child: Container(
@@ -58,14 +58,6 @@ class WidgetListsState extends State<WidgetLists> {
                         style:
                             TextStyle(color: Colors.grey[900], fontSize: 8.0),
                       ),
-                      widget.numberOfItemShared == null
-                          ? Container()
-                          : Text(
-                              "${widget.numberOfItemShared} ${getString(context, 'shared')}" ??
-                                  "",
-                              style: TextStyle(
-                                  color: Colors.grey[900], fontSize: 8.0),
-                            ),
                     ],
                   ),
                 ],

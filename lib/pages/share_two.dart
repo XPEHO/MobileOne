@@ -29,6 +29,7 @@ class ShareStateTwoState extends State<ShareTwo> {
   var test;
 
   List<String> listsFilter = [];
+  List<String> listsUuidFilter = [];
 
   void initState() {
     _analytics.setCurrentPage("isOneShareTwoPage");
@@ -42,8 +43,6 @@ class ShareStateTwoState extends State<ShareTwo> {
   String wish;
   filterLists() {
     List<String> _lists = [];
-
-    _lists = [];
 
     for (int i = 0; i < test.length; i++) {
       wish = whislistHeadProvider.getWishlist(test[i]).label;
@@ -86,39 +85,9 @@ class ShareStateTwoState extends State<ShareTwo> {
     );
   }
 
-  GestureDetector searchNewListe(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        searchTermEmail = _myController.text;
-        /*if (RegExp(emailRegexp).hasMatch(searchTermEmail)) {
-          if (previousList == null || uuid == null) {
-            openShareTwoPage();
-          } else {
-            shareProvider.addSharedToDataBase(searchTermEmail, previousList);
-            shareProvider.addGuestToDataBase(searchTermEmail, previousList);
-            openSharePage();
-          }
-        }*/
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Visibility(
-          visible: true,
-          child: Container(
-            height: 100,
-            child: (_myController.text.length > 2 && listsFilter.isNotEmpty)
-                ? WidgetLists(
-                    listUuid: "patate",
-                  )
-                : Container(),
-          ),
-        ),
-      ),
-    );
-  }
-
   Scaffold buildShareList(BuildContext context, wishlists) {
     test = wishlists;
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: _colorsApp.colorTheme,
@@ -231,6 +200,20 @@ class ShareStateTwoState extends State<ShareTwo> {
               ),
             ),
           ),
+          (_myController.text.length >= 1 && listsFilter.isNotEmpty)
+              ? Container(
+                  height: 100,
+                  child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: wishlists.length,
+                      itemBuilder: (BuildContext ctxt, int index) {
+                        return WidgetLists(
+                          listUuid: whislistHeadProvider
+                              .getWishlist(listsUuidFilter[index])
+                              .uuid,
+                        );
+                      }))
+              : Container(),
           Padding(
             padding: EdgeInsets.only(
               top: 50.0,
@@ -243,7 +226,6 @@ class ShareStateTwoState extends State<ShareTwo> {
               ),
             ),
           ),
-          searchNewListe(context),
           Padding(
             padding: EdgeInsets.only(
               top: 20,
@@ -275,8 +257,14 @@ class ShareStateTwoState extends State<ShareTwo> {
                             openSharePage();
                           }
                         },
-                        child: WidgetLists(
-                          listUuid: wishlists[index],
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Container(
+                            height: 100,
+                            child: WidgetLists(
+                              listUuid: wishlists[index],
+                            ),
+                          ),
                         ),
                       );
                     },
