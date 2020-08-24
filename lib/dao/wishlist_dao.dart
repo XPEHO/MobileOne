@@ -11,14 +11,27 @@ class WishlistDao {
   Future<DocumentSnapshot> fetchShareLists(String userUuid) =>
       Firestore.instance.collection("shared").document(userUuid).get();
 
-  addWishlist(String text, String wishlistUuid, String userUuid) async {
+  Future<void> addWishlist(String wishlistUuid, String userUuid) async {
+    String wishlistName;
+
+    await Firestore.instance
+        .collection("owners")
+        .document(userUuid)
+        .get()
+        .then((value) {
+      value.data.isNotEmpty
+          ? wishlistName =
+              "Wishlist " + (value.data["lists"].length + 1).toString()
+          : wishlistName = "Wishlist 1";
+    });
+
     //Create a wishlist
     await Firestore.instance
         .collection("wishlists")
         .document(wishlistUuid)
         .setData({
       'itemCounts': "0",
-      'label': text,
+      'label': wishlistName,
       'timestamp': new DateTime.now(),
     });
 

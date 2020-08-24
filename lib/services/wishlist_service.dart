@@ -4,6 +4,7 @@ import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/utility/arguments.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -72,9 +73,12 @@ class WishlistService {
     return data;
   }
 
-  addWishlist(String text) async {
+  addWishlist(BuildContext context) async {
     final wishlistUuid = Uuid().v4();
-    await dao.addWishlist(text, wishlistUuid, userService.user.uid);
+    await dao.addWishlist(wishlistUuid, userService.user.uid).whenComplete(() =>
+        Navigator.of(context).pushNamed('/openedListPage',
+            arguments:
+                OpenedListArguments(listUuid: wishlistUuid, isGuest: false)));
     _flush();
   }
 

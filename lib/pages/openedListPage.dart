@@ -280,29 +280,31 @@ class OpenedListPageState extends State<OpenedListPage> {
   }
 
   emptyList() {
-    return Center(
-      child: Column(
-        children: [
-          Container(
-            height: MediaQuery.of(context).size.height * 0.2,
-            child: Image.asset(
-              "assets/images/square-logo.png",
-              height: 100,
-              width: 100,
+    return SingleChildScrollView(
+      child: Center(
+        child: Column(
+          children: [
+            Container(
+              height: MediaQuery.of(context).size.height * 0.2,
+              child: Image.asset(
+                "assets/images/square-logo.png",
+                height: 100,
+                width: 100,
+              ),
             ),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.3,
-            child: Icon(Icons.add_shopping_cart, size: 100, color: WHITE),
-          ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.3,
-            child: Text(
-              getString(context, "empty_items"),
-              style: TextStyle(color: WHITE, fontSize: 20),
+            Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: Icon(Icons.add_shopping_cart, size: 100, color: WHITE),
             ),
-          ),
-        ],
+            Container(
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: Text(
+                getString(context, "empty_items"),
+                style: TextStyle(color: WHITE, fontSize: 20),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

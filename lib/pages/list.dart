@@ -131,7 +131,7 @@ class ListsState extends State<Lists> {
         children: <Widget>[
           GestureDetector(
             onTap: () {
-              openCreateListPage();
+              createList();
             },
             child: EmptyLists(
               icon: Icons.add_shopping_cart,
@@ -186,7 +186,7 @@ class ListsState extends State<Lists> {
         padding: const EdgeInsets.only(left: 8.0),
         child: GestureDetector(
             onTap: () {
-              openCreateListPage();
+              createList();
             },
             child: buildEmptyTemplate()),
       );
@@ -264,8 +264,8 @@ class ListsState extends State<Lists> {
     }
   }
 
-  void openCreateListPage() {
-    Navigator.of(context).pushNamed('/createList');
+  void createList() async {
+    await GetIt.I.get<WishlistsListProvider>().addWishlist(context);
   }
 
   void openOpenedListPage(String uuid, bool isGuest) {

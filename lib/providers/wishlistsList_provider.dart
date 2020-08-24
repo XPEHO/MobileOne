@@ -21,14 +21,13 @@ class WishlistsListProvider with ChangeNotifier {
     return guestLists ?? List();
   }
 
-  addWishlist(String text) async {
-    await wishlistService.addWishlist(text);
+  addWishlist(BuildContext context) async {
+    await wishlistService.addWishlist(context);
     notifyListeners();
   }
 
   deleteWishlist(String listUuid, String userUid) async {
     await wishlistService.deleteWishlist(listUuid, userUid);
-
     notifyListeners();
   }
 

@@ -92,6 +92,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Password : User can now see the password he his typing
 - Progress_bar : Progress bar value error
 - openedListPage and new_list : change ui 
+- list Creation : User don't have to use the creation list page to create a list anymore
 
 ### Security
 

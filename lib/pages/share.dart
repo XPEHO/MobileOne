@@ -1,5 +1,6 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
+import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
@@ -87,7 +88,7 @@ class ShareState extends State<Share> {
                 height: MediaQuery.of(context).size.height * 0.17,
                 child: GestureDetector(
                   onTap: () {
-                    openCreateListPage();
+                    createList();
                   },
                   child: EmptyLists(
                     icon: Icons.add_shopping_cart,
@@ -164,7 +165,7 @@ class ShareState extends State<Share> {
     Navigator.popUntil(context, ModalRoute.withName("/mainPage"));
   }
 
-  void openCreateListPage() {
-    Navigator.of(context).pushNamed('/createList');
+  void createList() async {
+    await GetIt.I.get<WishlistsListProvider>().addWishlist(context);
   }
 }
