@@ -26,7 +26,7 @@ class ShareStateTwoState extends State<ShareTwo> {
   var _colorsApp = GetIt.I.get<ColorService>();
   var wishlistService = GetIt.I.get<WishlistService>();
   var whislistHeadProvider = GetIt.I.get<WishlistHeadProvider>();
-  var test;
+  var allUuuid;
 
   List<String> listsFilter = [];
   List<String> listsUuidFilter = [];
@@ -40,13 +40,14 @@ class ShareStateTwoState extends State<ShareTwo> {
     });
   }
 
-  String wish;
   filterLists() {
+    String wish;
     List<String> _lists = [];
-
-    for (int i = 0; i < test.length; i++) {
-      wish = whislistHeadProvider.getWishlist(test[i]).label;
+    listsUuidFilter = [];
+    for (int i = 0; i < allUuuid.length; i++) {
+      wish = whislistHeadProvider.getWishlist(allUuuid[i]).label;
       _lists.add(wish);
+      listsUuidFilter.add(whislistHeadProvider.getWishlist(allUuuid[i]).uuid);
     }
 
     if (_myController.text.isNotEmpty) {
@@ -58,6 +59,7 @@ class ShareStateTwoState extends State<ShareTwo> {
       });
       setState(() {
         listsFilter = _lists;
+        listsUuidFilter.length = listsFilter.length;
       });
     }
   }
@@ -86,7 +88,7 @@ class ShareStateTwoState extends State<ShareTwo> {
   }
 
   Scaffold buildShareList(BuildContext context, wishlists) {
-    test = wishlists;
+    allUuuid = wishlists;
 
     return Scaffold(
       resizeToAvoidBottomPadding: false,
@@ -189,10 +191,12 @@ class ShareStateTwoState extends State<ShareTwo> {
                 onChanged: (string) {
                   setState(
                     () {
-                      listsFilter = test
-                          .where((liste) => (liste
-                              .toLowerCase()
-                              .contains(string.toLowerCase())))
+                      listsFilter = allUuuid
+                          .where((liste) => {
+                                liste
+                                    .toLowerCase()
+                                    .contains(string.toLowerCase())
+                              })
                           .toList();
                     },
                   );
@@ -205,7 +209,7 @@ class ShareStateTwoState extends State<ShareTwo> {
                   height: 100,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: wishlists.length,
+                      itemCount: listsFilter.length,
                       itemBuilder: (BuildContext ctxt, int index) {
                         return WidgetLists(
                           listUuid: whislistHeadProvider
