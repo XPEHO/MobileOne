@@ -153,6 +153,6 @@ class ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
   }
 
   void openAuthenticationPage(context) {
-    Navigator.popUntil(context, ModalRoute.withName('/'));
+    Navigator.popUntil(context, ModalRoute.withName('/authentication'));
   }
 }

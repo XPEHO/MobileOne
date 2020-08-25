@@ -310,6 +310,6 @@ class RegisterPageState extends State<RegisterPage> {
   }
 
   void openAuthenticationPage(context) {
-    Navigator.popUntil(context, ModalRoute.withName('/'));
+    Navigator.popUntil(context, ModalRoute.withName('/authentication'));
   }
 }
