@@ -111,8 +111,7 @@ class SplashPageState extends State<SplashPage>
         autologin = true;
       }
       if (_userService.user != null) {
-        Navigator.of(context).pushNamedAndRemoveUntil(
-            "/mainPage", (Route<dynamic> route) => false);
+        openMainPage();
       }
       return autologin;
     } else {
@@ -120,5 +119,13 @@ class SplashPageState extends State<SplashPage>
           "/authentication", (Route<dynamic> route) => false);
     }
     return false;
+  }
+
+  void openMainPage() {
+    (_userService.user.isEmailVerified == false)
+        ? Navigator.of(context).pushNamedAndRemoveUntil(
+            '/profile', (Route<dynamic> route) => false)
+        : Navigator.of(context).pushNamedAndRemoveUntil(
+            '/mainPage', (Route<dynamic> route) => false);
   }
 }
