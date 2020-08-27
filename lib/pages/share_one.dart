@@ -216,6 +216,9 @@ class ShareStateOneState extends State<ShareOne> {
       child: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
         child: TextFormField(
+          autocorrect: false,
+          enableSuggestions: false,
+          keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
             hintText: getString(context, "share_email"),
             suffixIcon: Icon(

@@ -98,6 +98,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - list Creation : User don't have to use the creation list page to create a list anymore
 - user must validate his account before access to the app
 - Authentication path : The path to the authentication page is now /authentication
+- Email/password : The autocorrect is now disabled on email and password texts
 
 ### Security
 

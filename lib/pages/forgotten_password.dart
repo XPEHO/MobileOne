@@ -69,6 +69,8 @@ class ForgottenPasswordPageState extends State<ForgottenPasswordPage> {
                               width: MediaQuery.of(context).size.width - 10,
                               height: 90,
                               child: TextFormField(
+                                autocorrect: false,
+                                enableSuggestions: false,
                                 validator: (value) {
                                   if (value.isEmpty) {
                                     return getString(context, 'fill_email');

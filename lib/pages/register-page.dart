@@ -135,6 +135,9 @@ class RegisterPageState extends State<RegisterPage> {
         bottom: 8.0,
       ),
       child: TextFormField(
+        autocorrect: false,
+        enableSuggestions: false,
+        keyboardType: TextInputType.emailAddress,
         validator: (value) {
           if (value.isEmpty) {
             return getString(context, 'fill_email');
@@ -173,6 +176,8 @@ class RegisterPageState extends State<RegisterPage> {
               8.0,
             ),
             child: TextFormField(
+              autocorrect: false,
+              enableSuggestions: false,
               validator: (value) {
                 if (value.isEmpty) {
                   return getString(context, 'fill_password');
@@ -231,6 +236,8 @@ class RegisterPageState extends State<RegisterPage> {
               8.0,
             ),
             child: TextFormField(
+              autocorrect: false,
+              enableSuggestions: false,
               validator: (value) {
                 if (value.isEmpty) {
                   return getString(context, 'fill_confirm_password');

@@ -231,6 +231,9 @@ class AuthenticationPageState extends State<AuthenticationPage> {
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                 child: TextFormField(
+                  autocorrect: false,
+                  enableSuggestions: false,
+                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty) {
                       return getString(context, 'fill_email');
@@ -264,6 +267,8 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                         bottom: 8.0,
                       ),
                       child: TextFormField(
+                        autocorrect: false,
+                        enableSuggestions: false,
                         validator: (value) {
                           if (value.isEmpty) {
                             return getString(context, 'fill_password');

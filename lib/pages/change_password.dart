@@ -131,6 +131,8 @@ class ChangePasswordState extends State<ChangePassword> {
               8.0,
             ),
             child: TextFormField(
+              autocorrect: false,
+              enableSuggestions: false,
               validator: (value) {
                 if (value.isEmpty) {
                   return getString(context, 'fill_new_password');
@@ -189,6 +191,8 @@ class ChangePasswordState extends State<ChangePassword> {
               8.0,
             ),
             child: TextFormField(
+              autocorrect: false,
+              enableSuggestions: false,
               validator: (value) {
                 if (value.isEmpty) {
                   return getString(context, 'fill_confirm_new_password');
