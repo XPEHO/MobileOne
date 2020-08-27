@@ -52,58 +52,62 @@ class WidgetItemState extends State<WidgetItem> {
       builder: (context) {
         return Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: _colorsApp.greyColor,
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
+          child: InkWell(
+            onTap: () {
+              openItemPage(
+                  getString(context, 'popup_update'), _listUuid, _itemUuid);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: _colorsApp.greyColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                ),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                title: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(getProductName(completeName)),
-                    Text(getProductBrand(completeName)),
-                  ],
-                ),
-                subtitle: Row(
-                  children: <Widget>[
-                    Text("x${_itemlist.quantity.toString()} ${getUnitText()}"),
-                  ],
-                ),
-                leading: SizedBox(
-                  width: 72,
-                  height: 72,
-                  child: Row(children: <Widget>[
-                    Flexible(
-                      flex: 1,
-                      child: IconButton(
-                          padding: EdgeInsets.only(right: 12.0),
-                          icon: Icon(
-                            Icons.check_circle,
-                            color: GREEN,
-                          ),
-                          onPressed: () {
-                            GetIt.I.get<ItemsListProvider>().validateItem(
-                                  listUuid: _listUuid,
-                                  itemUuid: _itemlist.uuid,
-                                  isValidated: false,
-                                );
-                          }),
-                    ),
-                    Flexible(flex: 1, child: Image(image: _itemImage))
-                  ]),
-                ),
-                trailing: IconButton(
-                  onPressed: () {
-                    openItemPage(getString(context, 'popup_update'), _listUuid,
-                        _itemUuid);
-                  },
-                  icon: Icon(Icons.edit, color: BLACK),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  title: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(getProductName(completeName)),
+                      Text(getProductBrand(completeName)),
+                    ],
+                  ),
+                  subtitle: Row(
+                    children: <Widget>[
+                      Text(
+                          "x${_itemlist.quantity.toString()} ${getUnitText()}"),
+                    ],
+                  ),
+                  leading: SizedBox(
+                    width: 72,
+                    height: 72,
+                    child: Row(children: <Widget>[
+                      Flexible(
+                        flex: 1,
+                        child: IconButton(
+                            padding: EdgeInsets.only(right: 12.0),
+                            icon: Icon(
+                              Icons.check_circle,
+                              color: GREEN,
+                            ),
+                            onPressed: () {
+                              GetIt.I.get<ItemsListProvider>().validateItem(
+                                    listUuid: _listUuid,
+                                    itemUuid: _itemlist.uuid,
+                                    isValidated: false,
+                                  );
+                            }),
+                      ),
+                      Flexible(flex: 1, child: Image(image: _itemImage))
+                    ]),
+                  ),
+                  trailing: Icon(
+                    Icons.navigate_next,
+                    color: BLACK,
+                  ),
                 ),
               ),
             ),
@@ -118,36 +122,40 @@ class WidgetItemState extends State<WidgetItem> {
       builder: (context) {
         return Padding(
           padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: _colorsApp.greyColor,
-              borderRadius: BorderRadius.all(
-                Radius.circular(5),
+          child: InkWell(
+            onTap: () {
+              openItemPage(
+                  getString(context, 'popup_update'), _listUuid, _itemUuid);
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: _colorsApp.greyColor,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(5),
+                ),
               ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ListTile(
-                title: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(getProductName(completeName)),
-                    Text(getProductBrand(completeName)),
-                  ],
-                ),
-                subtitle: Row(
-                  children: <Widget>[
-                    Text("x${_itemlist.quantity.toString()} ${getUnitText()}"),
-                  ],
-                ),
-                leading: Image(image: _itemImage),
-                trailing: IconButton(
-                  onPressed: () {
-                    openItemPage(getString(context, 'popup_update'), _listUuid,
-                        _itemUuid);
-                  },
-                  icon: Icon(Icons.edit, color: BLACK),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListTile(
+                  title: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(getProductName(completeName)),
+                      Text(getProductBrand(completeName)),
+                    ],
+                  ),
+                  subtitle: Row(
+                    children: <Widget>[
+                      Text(
+                          "x${_itemlist.quantity.toString()} ${getUnitText()}"),
+                    ],
+                  ),
+                  leading: Image(image: _itemImage),
+                  trailing: Icon(
+                    Icons.navigate_next,
+                    color: BLACK,
+                  ),
                 ),
               ),
             ),

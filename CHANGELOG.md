@@ -42,7 +42,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Update OpenedListPage : User can now leave a shared wishlist
 - Update openedListPage : User can see the progress indicor when check items
 - Update Global Ui
-- Update Lists ui 
+- Update Lists ui
+- Update OpenedListPage : User can now click on an item
 
 ### Deprecated
 
