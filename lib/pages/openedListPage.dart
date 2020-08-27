@@ -32,6 +32,7 @@ class OpenedListPageState extends State<OpenedListPage> {
 
   final _myController = TextEditingController();
   final _wishlistProvider = GetIt.I.get<WishlistHeadProvider>();
+  final _itemListProvider = GetIt.I.get<ItemsListProvider>();
   var _colorsApp = GetIt.I.get<ColorService>();
   OpenedListArguments _args;
 
@@ -48,7 +49,7 @@ class OpenedListPageState extends State<OpenedListPage> {
     _args = Arguments.value(context);
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: GetIt.I.get<ItemsListProvider>()),
+        ChangeNotifierProvider.value(value: _itemListProvider),
       ],
       child: Consumer<ItemsListProvider>(
         builder: (context, itemsListProvider, child) {
@@ -232,6 +233,10 @@ class OpenedListPageState extends State<OpenedListPage> {
       itemBuilder: (context) => _args.isGuest
           ? [
               PopupMenuItem(
+                value: 4,
+                child: Text(getString(context, 'restart_wishlist')),
+              ),
+              PopupMenuItem(
                 key: Key("leaveShare"),
                 value: 3,
                 child: Text(getString(context, 'leave_share')),
@@ -246,6 +251,11 @@ class OpenedListPageState extends State<OpenedListPage> {
               PopupMenuItem(
                 value: 2,
                 child: Text(getString(context, 'share')),
+              ),
+              PopupMenuItem(
+                key: Key("restartWishlist"),
+                value: 4,
+                child: Text(getString(context, 'restart_wishlist')),
               ),
             ],
       icon: Icon(Icons.more_vert, color: WHITE),
@@ -272,7 +282,9 @@ class OpenedListPageState extends State<OpenedListPage> {
                     wishlistHead.uuid, GetIt.I.get<UserService>().user.email);
               }
             });
-
+            break;
+          case 4:
+            confirmWishlistRestart(wishlistHead.uuid);
             break;
         }
       },
@@ -357,6 +369,33 @@ class OpenedListPageState extends State<OpenedListPage> {
           itemUuid: item.uuid,
           isValidated: true,
         );
+  }
+
+  Future<void> confirmWishlistRestart(String listUuid) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(getString(context, 'confirm_wishlist_restart')),
+          actions: <Widget>[
+            FlatButton(
+                key: Key("confirmWishlistRestart"),
+                onPressed: () {
+                  _itemListProvider.uncheckAllItems(listUuid: listUuid);
+                  Navigator.of(context).pop();
+                },
+                child: Text(getString(context, 'confirm_restart_wishlist'))),
+            FlatButton(
+              key: Key("cancelWishlistRestart"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(getString(context, 'cancel_deletion')),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<bool> confirmWishlistDeletion() async {

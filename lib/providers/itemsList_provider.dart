@@ -86,4 +86,9 @@ class ItemsListProvider with ChangeNotifier {
         listUuid: listUuid, itemUuid: itemUuid, isValidated: isValidated);
     notifyListeners();
   }
+
+  uncheckAllItems({@required String listUuid}) async {
+    await wishlistService.uncheckAllItems(listUuid: listUuid);
+    notifyListeners();
+  }
 }

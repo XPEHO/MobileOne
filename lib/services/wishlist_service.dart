@@ -235,4 +235,9 @@ class WishlistService {
   set wishlists(Map<String, Wishlist> wishlists) {
     _wishlists = wishlists;
   }
+
+  uncheckAllItems({@required String listUuid}) async {
+    await dao.uncheckAllItems(listUuid: listUuid);
+    _flush();
+  }
 }

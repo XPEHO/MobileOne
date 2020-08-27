@@ -319,4 +319,23 @@ class WishlistDao {
       merge: true,
     );
   }
+
+  uncheckAllItems({@required String listUuid}) async {
+    Map<String, dynamic> tmpMap;
+
+    await Firestore.instance
+        .collection("items")
+        .document(listUuid)
+        .get()
+        .then((value) => tmpMap = value.data);
+
+    tmpMap.forEach((key, value) {
+      value["isValidated"] = false;
+    });
+
+    await Firestore.instance
+        .collection("items")
+        .document(listUuid)
+        .setData(tmpMap);
+  }
 }

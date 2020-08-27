@@ -74,8 +74,8 @@
     "confirm_item_deletion": "Are you sure you wish to delete this item ?",
     "confirm_wishlist_deletion": "Are you sure you wish to delete this wishlist ?",
     "delete_item": "DELETE",
-    "delete": "delete",
-    "share": "share",
+    "delete": "Delete",
+    "share": "Share",
     "cancel_deletion": "CANCEL",
     "shared_with": "Shared with ",
     "share_email": "Enter an email ...",
@@ -127,5 +127,8 @@
     "all_my_lists": "My lists:",
     "empty_items": "No items for the moment",
     "splash_text": "Share your lists with",
-    "need_list_to_share": "You must have a list to share it"
+    "need_list_to_share": "You must have a list to share it",
+    "restart_wishlist": "Restart",
+    "confirm_wishlist_restart": "Are you sure you wish to uncheck all the items ?",
+    "confirm_restart_wishlist": "RESTART"
 }
