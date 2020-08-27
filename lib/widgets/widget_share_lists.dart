@@ -102,13 +102,12 @@ class WidgetShareListWithSomeoneState
                                       _listUuid, emailSelected);
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                    'assets/images/eraser.png',
-                                    height: 15,
-                                    width: 15,
-                                  ),
-                                ),
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Icon(
+                                      Icons.delete_forever,
+                                      size: 30,
+                                      color: GREY,
+                                    )),
                               ),
                             ],
                           );
