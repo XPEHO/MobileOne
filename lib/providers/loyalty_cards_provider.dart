@@ -20,6 +20,13 @@ class LoyaltyCardsProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  updateLoyaltycardsColor(
+      String _color, String _cardUuid, String userUuid) async {
+    await loyaltycardsService.updateLoyaltycardsColor(
+        _color, _cardUuid, userUuid);
+    notifyListeners();
+  }
+
   deleteCard(String cardUuid) async {
     await loyaltycardsService.deleteCard(cardUuid);
     notifyListeners();

@@ -1,7 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
+import 'package:MobileOne/services/loyalty_cards_service.dart';
 import 'package:MobileOne/services/user_service.dart';
-import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:barcode/barcode.dart';
 import 'package:barcode_widget/barcode_widget.dart';
@@ -22,6 +22,7 @@ class LoyaltyCardsWidget extends StatefulWidget {
 
 class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
   var userService = GetIt.I.get<UserService>();
+  var _loyaltyCardsService = GetIt.I.get<LoyaltyCardsService>();
   final Map<String, dynamic> _card;
   final String _uuidcard;
   final TextEditingController _controller;
@@ -29,6 +30,8 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
 
   FocusNode _focus = new FocusNode();
   bool isBarcodeSquare = false;
+
+  Color cardColor;
 
   @override
   void initState() {
@@ -46,10 +49,8 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
     _controller.text = _card["label"];
   }
 
-  Color randomColor;
-
   Widget build(BuildContext context) {
-    randomColor = Color(getColorFromHex(_card["color"]));
+    cardColor = Color(_loyaltyCardsService.getColorFromHex(_card["color"]));
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
       child: Stack(
@@ -58,7 +59,7 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
             height: MediaQuery.of(context).size.height * 0.21,
             width: MediaQuery.of(context).size.width * 0.75,
             decoration: BoxDecoration(
-              color: randomColor,
+              color: cardColor,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(5),
                 topRight: Radius.circular(22),
@@ -275,21 +276,12 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
     }
   }
 
-  int getColorFromHex(String hexColor) {
-    hexColor = hexColor.toUpperCase().replaceAll("#", "");
-    if (hexColor.length == 6) {
-      hexColor = "FF" + hexColor;
-    }
-    return int.parse(hexColor, radix: 16);
-  }
-
   updateLoyaltyCards(String _name) async {
     GetIt.I.get<LoyaltyCardsProvider>().updateLoyaltyCards(_name, _uuidcard);
   }
 
   openCardsPage() {
     FocusScope.of(context).unfocus();
-    Navigator.pushNamed(context, '/cards',
-        arguments: CardArguments(_card, randomColor));
+    Navigator.pushNamed(context, '/cards', arguments: _uuidcard);
   }
 }

@@ -1,10 +1,13 @@
+import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
-import 'package:MobileOne/utility/arguments.dart';
+import 'package:MobileOne/services/loyalty_cards_service.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 
 class Cards extends StatefulWidget {
   @override
@@ -14,101 +17,171 @@ class Cards extends StatefulWidget {
 class CardsState extends State<Cards> {
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
+  var _loyaltycardsProvider = GetIt.I.get<LoyaltyCardsProvider>();
+  var _userService = GetIt.I.get<UserService>();
+  var _loyaltyCardsService = GetIt.I.get<LoyaltyCardsService>();
+
+  String cardUuid;
+  ColorSwatch _tempMainColor;
+  ColorSwatch _mainColor = Colors.blue;
+  Color cardColor;
+  var card;
+
   @override
   void initState() {
     _analytics.setCurrentPage("isOnBigCardPage");
     super.initState();
   }
 
+  void _openDialog(String title, Widget content) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(6.0),
+          title: Text(title),
+          content: content,
+          actions: [
+            FlatButton(
+              child: Text('CANCEL'),
+              onPressed: Navigator.of(context).pop,
+            ),
+            FlatButton(
+              child: Text('SUBMIT'),
+              onPressed: () {
+                Navigator.of(context).pop();
+
+                setState(() {
+                  _mainColor = _tempMainColor;
+                });
+                addColorToDabase();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _openMainColorPicker() async {
+    _openDialog(
+      "Main Color picker",
+      MaterialColorPicker(
+        selectedColor: _mainColor,
+        allowShades: false,
+        onMainColorChange: (color) => setState(() => _tempMainColor = color),
+      ),
+    );
+  }
+
+  addColorToDabase() async {
+    await _loyaltycardsProvider.updateLoyaltycardsColor(
+        (_mainColor != Colors.blue)
+            ? '#${_mainColor.value.toRadixString(16)}'
+            : '#${card["color"].value.toRadixString(16)}',
+        cardUuid,
+        _userService.user.uid);
+  }
+
   @override
   Widget build(BuildContext context) {
-    CardArguments args = ModalRoute.of(context).settings.arguments;
+    cardUuid = ModalRoute.of(context).settings.arguments;
+    card = _loyaltycardsProvider.allLoyaltycards[cardUuid];
+    cardColor = (_tempMainColor != null)
+        ? _mainColor
+        : Color(_loyaltyCardsService.getColorFromHex(card["color"]));
     return Scaffold(
-      backgroundColor: _colorsApp.colorTheme,
-      body: Column(
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(top: 30.0),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: IconButton(
-                icon: Icon(Icons.arrow_back, color: WHITE),
-                onPressed: () {
-                  goToLoyaltyCardsPage();
-                },
-              ),
+      appBar: AppBar(
+        backgroundColor: _colorsApp.colorTheme,
+        actions: [
+          FlatButton(
+            onPressed: () {
+              _openMainColorPicker();
+            },
+            child: Icon(
+              Icons.color_lens,
+              color: WHITE,
             ),
           ),
-          Stack(
-            children: <Widget>[
-              Container(
-                height: MediaQuery.of(context).size.height * 0.8,
-                width: MediaQuery.of(context).size.width * 0.7,
-                decoration: BoxDecoration(
-                    color: args.colorOfCard,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(22),
-                        topRight: Radius.circular(5),
-                        bottomLeft: Radius.circular(22),
-                        bottomRight: Radius.circular(22))),
-              ),
-              Positioned(
-                top: MediaQuery.of(context).size.width * 0.2,
-                left: MediaQuery.of(context).size.width * 0.1,
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.6,
-                  width: MediaQuery.of(context).size.width * 0.5,
+        ],
+      ),
+      backgroundColor: _colorsApp.colorTheme,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            Stack(
+              children: <Widget>[
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.8,
+                  width: MediaQuery.of(context).size.width * 0.7,
                   decoration: BoxDecoration(
-                      color: WHITE,
-                      borderRadius: BorderRadius.all(Radius.circular(5))),
+                      color: cardColor,
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(22),
+                          topRight: Radius.circular(5),
+                          bottomLeft: Radius.circular(22),
+                          bottomRight: Radius.circular(22))),
                 ),
-              ),
-              Positioned(
-                top: MediaQuery.of(context).size.width * 0.55,
-                child: Container(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  width: MediaQuery.of(context).size.width * 0.8,
+                Positioned(
+                  top: MediaQuery.of(context).size.width * 0.2,
+                  left: MediaQuery.of(context).size.width * 0.1,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    decoration: BoxDecoration(
+                        color: WHITE,
+                        borderRadius: BorderRadius.all(Radius.circular(5))),
+                  ),
+                ),
+                Positioned(
+                  top: MediaQuery.of(context).size.width * 0.55,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.2,
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    child: Transform(
+                      child: getBarcodeWidget(card),
+                      alignment: FractionalOffset.center,
+                      transform: new Matrix4.identity()
+                        ..rotateZ(90 * 3.1415927 / 180),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  right: MediaQuery.of(context).size.width * 0.04,
                   child: Transform(
-                    child: getBarcodeWidget(args.cards),
+                    child: Center(
+                      child: Container(
+                        width: MediaQuery.of(context).size.width * 1,
+                        height: MediaQuery.of(context).size.height * 0.85,
+                        alignment: Alignment.center,
+                        child: Text(
+                          card["label"],
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      ),
+                    ),
                     alignment: FractionalOffset.center,
                     transform: new Matrix4.identity()
                       ..rotateZ(90 * 3.1415927 / 180),
                   ),
                 ),
-              ),
-              Positioned(
-                right: MediaQuery.of(context).size.width * 0.04,
-                child: Transform(
-                  child: Center(
-                    child: Container(
-                      width: MediaQuery.of(context).size.width * 1,
-                      height: MediaQuery.of(context).size.height * 0.85,
-                      alignment: Alignment.center,
-                      child: Text(
-                        args.cards["label"],
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
+                Positioned(
+                  top: MediaQuery.of(context).size.width * 0.05,
+                  left: MediaQuery.of(context).size.width * 0.6,
+                  child: Container(
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                        color: WHITE,
+                        borderRadius: BorderRadius.all(Radius.circular(50))),
                   ),
-                  alignment: FractionalOffset.center,
-                  transform: new Matrix4.identity()
-                    ..rotateZ(90 * 3.1415927 / 180),
                 ),
-              ),
-              Positioned(
-                top: MediaQuery.of(context).size.width * 0.05,
-                left: MediaQuery.of(context).size.width * 0.6,
-                child: Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(
-                      color: WHITE,
-                      borderRadius: BorderRadius.all(Radius.circular(50))),
-                ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -265,7 +338,10 @@ class CardsState extends State<Cards> {
     }
   }
 
-  goToLoyaltyCardsPage() {
-    Navigator.popUntil(context, ModalRoute.withName("/mainPage"));
+  goToLoyaltyCardsPage(context) async {
+    final result = await Navigator.of(context).pushNamed(
+      "/mainPage",
+    );
+    Navigator.of(context).pop(result);
   }
 }

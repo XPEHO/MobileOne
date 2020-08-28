@@ -41,9 +41,23 @@ class LoyaltyCardsService {
     _analytics.sendAnalyticsEvent("add_loyalty_card");
   }
 
+  updateLoyaltycardsColor(
+      String _color, String _cardUuid, String userUuid) async {
+    await dao.updateLoyaltycardsColor(_color, _cardUuid, userUuid);
+    _loyaltycards = {};
+  }
+
   deleteCard(String cardUuid) async {
     await dao.deleteCard(cardUuid, userService.user.uid);
     _loyaltycards = await fetchLoyaltycards();
     _analytics.sendAnalyticsEvent("delete_loyalty_card");
+  }
+
+  int getColorFromHex(String hexColor) {
+    hexColor = hexColor.toUpperCase().replaceAll("#", "");
+    if (hexColor.length == 6) {
+      hexColor = "FF" + hexColor;
+    }
+    return int.parse(hexColor, radix: 16);
   }
 }

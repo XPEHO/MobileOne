@@ -17,6 +17,18 @@ class LoyaltyCardsDao {
     }, merge: true);
   }
 
+  updateLoyaltycardsColor(
+      String _color, String _cardUuid, String userUuid) async {
+    await Firestore.instance
+        .collection("loyaltycards")
+        .document(userUuid)
+        .setData({
+      _cardUuid: {
+        'color': _color,
+      },
+    }, merge: true);
+  }
+
   addLoyaltyCardsToDataBase(String _name, String _result, BarcodeFormat _format,
       String _color, String userUuid) async {
     Uuid uuid = Uuid();
