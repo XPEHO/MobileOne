@@ -128,7 +128,10 @@
     "empty_items": "Aucun article pour le moment",
     "splash_text": "Partagez vos listes avec",
     "need_list_to_share": "Vous devez avoir une liste pour la partager",
+    "feedback": "Feedback MobileOne",
+    "feedback_text": "Donnez votre avis",
     "restart_wishlist": "Recommencer",
     "confirm_wishlist_restart": "Etes-vous sûr de vouloir décocher les objets de la liste ?",
     "confirm_restart_wishlist": "RECOMMENCER"
+
 }

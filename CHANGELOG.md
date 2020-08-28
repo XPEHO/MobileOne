@@ -27,8 +27,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add Logo
 - Add voice recognition
 - Add filter list
+- Add Feedbcack
 - Add sort items
 - Add restart wishlist button
+
 
 ### Changed
 

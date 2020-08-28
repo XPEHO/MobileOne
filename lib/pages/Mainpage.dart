@@ -25,6 +25,7 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -119,29 +120,73 @@ class MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-        value: GetIt.I.get<UserPictureProvider>(),
-        child: Consumer<UserPictureProvider>(
-          builder: (context, provider, _) => Scaffold(
-            backgroundColor: bottomBackground,
-            body: PageStorage(bucket: _bucket, child: _currentScreen),
-            floatingActionButton: FloatingActionButton(
-                key: Key("floating_button"),
-                child: _floatingButtonIcon,
-                backgroundColor: _colorsApp.buttonColor,
-                onPressed: () {
-                  _floatingButtonAction();
-                }),
-            floatingActionButtonLocation:
-                FloatingActionButtonLocation.centerDocked,
-            bottomNavigationBar: BottomAppBar(
-              shape: CircularNotchedRectangle(),
-              child: Container(
-                height: 60,
-                child: BottomBar(onBottomBarIndexSelected),
-              ),
+      value: GetIt.I.get<UserPictureProvider>(),
+      child: Consumer<UserPictureProvider>(
+        builder: (context, provider, _) => Scaffold(
+          appBar: AppBar(
+            backgroundColor: _colorsApp.colorTheme,
+          ),
+          backgroundColor: bottomBackground,
+          body: PageStorage(bucket: _bucket, child: _currentScreen),
+          floatingActionButton: FloatingActionButton(
+              key: Key("floating_button"),
+              child: _floatingButtonIcon,
+              backgroundColor: _colorsApp.buttonColor,
+              onPressed: () {
+                _floatingButtonAction();
+              }),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerDocked,
+          bottomNavigationBar: BottomAppBar(
+            shape: CircularNotchedRectangle(),
+            child: Container(
+              height: 60,
+              child: BottomBar(onBottomBarIndexSelected),
             ),
           ),
-        ));
+          drawer: Drawer(
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  child: Column(
+                    children: [
+                      Text(getString(context, "app_name")),
+                      Image.asset(
+                        "assets/images/square-logo.png",
+                        width: 100,
+                        height: 100,
+                      ),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                    color: _colorsApp.buttonColor,
+                  ),
+                ),
+                ListTile(
+                  title: Text(getString(context, "feedback_text")),
+                  onTap: () {
+                    sendFeedback();
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  sendFeedback() async {
+    final _controller = TextEditingController();
+    Navigator.pop(context);
+    final Email email = Email(
+      body: _controller.text,
+      subject: getString(context, 'feedback'),
+      recipients: ['xpeho.mobile@gmail.com'],
+    );
+
+    await FlutterEmailSender.send(email);
   }
 
   onBottomBarIndexSelected(index) {
