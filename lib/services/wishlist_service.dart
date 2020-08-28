@@ -113,17 +113,30 @@ class WishlistService {
 
   getwishlist(uuid) => _wishlists[uuid];
 
-  List<WishlistItem> getItemList(String listUuid) => _itemlists[listUuid];
+  List<WishlistItem> getItemList(String listUuid) =>
+      sortItemsInList(_itemlists[listUuid]);
 
   Future<List<WishlistItem>> fetchItemList(String listUuid) async {
     DocumentSnapshot snapshot = await dao.fetchItemList(listUuid);
 
     final wishlist = snapshot?.data ?? {};
-    final itemList = wishlist.entries.map((element) {
+    List<WishlistItem> itemList = wishlist.entries.map((element) {
       return WishlistItem.fromMap(element.key, element.value);
     }).toList();
 
+    itemList = sortItemsInList(itemList);
+
     _itemlists[listUuid] = itemList;
+
+    return itemList;
+  }
+
+  List<WishlistItem> sortItemsInList(List<WishlistItem> itemList) {
+    if (itemList != null) {
+      itemList.sort((a, b) => a.label.compareTo(b.label));
+      itemList.sort((a, b) =>
+          a.isValidated.toString().compareTo(b.isValidated.toString()));
+    }
 
     return itemList;
   }
