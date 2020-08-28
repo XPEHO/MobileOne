@@ -58,6 +58,7 @@ class EditItemPageState extends State<EditItemPage> {
   final SpeechToText speech = SpeechToText();
   bool isInitialized;
   String imageType = "Default";
+  String _localeId;
 
   Future<void> getItems() async {
     String labelValue;
@@ -119,6 +120,8 @@ class EditItemPageState extends State<EditItemPage> {
 
   initializeSpeech() async {
     isInitialized = await speech.initialize();
+    var systemLocale = await speech.systemLocale();
+    _localeId = systemLocale.localeId;
   }
 
   void getData() {
@@ -260,6 +263,7 @@ class EditItemPageState extends State<EditItemPage> {
 
   listenRecord() async {
     await speech.listen(
+      localeId: _localeId,
       partialResults: false,
       onResult: (result) {
         setState(() {
