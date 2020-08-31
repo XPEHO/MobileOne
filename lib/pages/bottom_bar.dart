@@ -45,14 +45,13 @@ class BottomBarState extends State<BottomBar> {
 
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Flexible(
-          flex: 2,
-          child: buildLeftItems(context),
-        ),
-        Expanded(
-          flex: 1,
+        Container(
+            width: MediaQuery.of(context).size.width * 0.4,
+            child: buildLeftItems(context)),
+        Container(
+          width: MediaQuery.of(context).size.width * 0.2,
           child: Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
             child: Align(
@@ -73,41 +72,38 @@ class BottomBarState extends State<BottomBar> {
             ),
           ),
         ),
-        Flexible(
-          flex: 2,
-          child: buildRightItems(context),
-        ),
+        Container(child: buildRightItems(context))
       ],
     );
   }
 
   Row buildLeftItems(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Expanded(
-          flex: 1,
+        Container(
+          width: MediaQuery.of(context).size.width * 0.2,
           child: BottomBarItem(
-            _currentItem == CARD_PAGE
-                ? KEY_CARD_PAGE + "_selected"
-                : KEY_CARD_PAGE,
-            computeColor(CARD_PAGE),
-            () => onSelectItem(CARD_PAGE),
-            getString(context, 'loyalty_cards'),
-            Icons.card_giftcard,
-          ),
+              _currentItem == CARD_PAGE
+                  ? KEY_CARD_PAGE + "_selected"
+                  : KEY_CARD_PAGE,
+              computeColor(CARD_PAGE),
+              () => onSelectItem(CARD_PAGE),
+              getString(context, 'loyalty_cards'),
+              Icons.card_giftcard,
+              10.0),
         ),
-        Expanded(
-          flex: 1,
+        Container(
+          width: MediaQuery.of(context).size.width * 0.2,
           child: BottomBarItem(
-            _currentItem == LISTS_PAGE
-                ? KEY_LISTS_PAGE + "_selected"
-                : KEY_LISTS_PAGE,
-            computeColor(LISTS_PAGE),
-            () => onSelectItem(LISTS_PAGE),
-            getString(context, 'my_lists'),
-            Icons.list,
-          ),
+              _currentItem == LISTS_PAGE
+                  ? KEY_LISTS_PAGE + "_selected"
+                  : KEY_LISTS_PAGE,
+              computeColor(LISTS_PAGE),
+              () => onSelectItem(LISTS_PAGE),
+              getString(context, 'my_lists'),
+              Icons.list,
+              10.0),
         ),
       ],
     );
@@ -115,31 +111,31 @@ class BottomBarState extends State<BottomBar> {
 
   Row buildRightItems(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        Expanded(
-          flex: 1,
+        Container(
+          width: MediaQuery.of(context).size.width * 0.22,
           child: BottomBarItem(
-            _currentItem == SHARE_PAGE
-                ? KEY_SHARE_PAGE + "_selected"
-                : KEY_SHARE_PAGE,
-            computeColor(SHARE_PAGE),
-            () => onSelectItem(SHARE_PAGE),
-            getString(context, 'shared'),
-            Icons.share,
-          ),
+              _currentItem == SHARE_PAGE
+                  ? KEY_SHARE_PAGE + "_selected"
+                  : KEY_SHARE_PAGE,
+              computeColor(SHARE_PAGE),
+              () => onSelectItem(SHARE_PAGE),
+              getString(context, 'shared'),
+              Icons.share,
+              9.0),
         ),
-        Expanded(
-          flex: 1,
+        Container(
+          width: MediaQuery.of(context).size.width * 0.18,
           child: BottomBarItem(
-            _currentItem == PROFILE_PAGE
-                ? KEY_PROFILE_PAGE + "_selected"
-                : KEY_PROFILE_PAGE,
-            computeColor(PROFILE_PAGE),
-            () => onSelectItem(PROFILE_PAGE),
-            getString(context, 'profile'),
-            Icons.person,
-          ),
+              _currentItem == PROFILE_PAGE
+                  ? KEY_PROFILE_PAGE + "_selected"
+                  : KEY_PROFILE_PAGE,
+              computeColor(PROFILE_PAGE),
+              () => onSelectItem(PROFILE_PAGE),
+              getString(context, 'profile'),
+              Icons.person,
+              9.5),
         ),
       ],
     );
@@ -159,23 +155,26 @@ class BottomBarItem extends StatelessWidget {
   final Color _itemColor;
   final String _text;
   final IconData _icon;
-
-  BottomBarItem(
-      this._key, this._itemColor, this._onItemTap, this._text, this._icon);
+  final double _textSize;
+  BottomBarItem(this._key, this._itemColor, this._onItemTap, this._text,
+      this._icon, this._textSize);
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
       key: Key(_key),
-      minWidth: 40,
       onPressed: () => _onItemTap(),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(_icon, color: _itemColor),
+          Icon(
+            _icon,
+            color: _itemColor,
+            size: 28,
+          ),
           Text(
             _text,
-            style: TextStyle(color: _itemColor, fontSize: 10),
+            style: TextStyle(color: _itemColor, fontSize: _textSize),
           ),
         ],
       ),
