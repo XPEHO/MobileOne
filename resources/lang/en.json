@@ -133,6 +133,8 @@
     "feedback_text": "Feedback",
     "restart_wishlist": "Restart",
     "confirm_wishlist_restart": "Are you sure you wish to uncheck all the items ?",
-    "confirm_restart_wishlist": "RESTART"
-
+    "confirm_restart_wishlist": "RESTART",
+    "verify_account": "Verify",
+    "verify_your_account": "Please, verify your account",
+    "invalid_email_password": "Invalid email/password"
 }

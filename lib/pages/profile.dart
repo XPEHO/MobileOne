@@ -3,13 +3,13 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/change_password.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
-import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/widgets/text_icon.dart';
+import 'package:MobileOne/widgets/widget_deletion_confirmation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -28,10 +28,10 @@ class ProfileState extends State<Profile> {
   final _userService = GetIt.I.get<UserService>();
   final _imageService = GetIt.I.get<ImageService>();
   final _prefService = GetIt.I.get<PreferencesService>();
-  var _authService = GetIt.I.get<AuthenticationService>();
   final _auth = GetIt.I.get<FirebaseAuth>();
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
+
   @override
   initState() {
     _analytics.setCurrentPage("isOnProfilePage");
@@ -180,11 +180,7 @@ class ProfileState extends State<Profile> {
                   width: MediaQuery.of(context).size.width,
                   child: InkWell(
                     onTap: () {
-                      confirmAccountDeletion().then((value) async {
-                        if (value == true) {
-                          reconnectUser(user);
-                        }
-                      });
+                      checkAccount(user);
                     },
                     child: RectangleTextIcon(
                       getString(context, 'debug_delete_account_button'),
@@ -202,34 +198,13 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  Future<bool> confirmAccountDeletion() async {
-    bool result = false;
+  Future<void> checkAccount(FirebaseUser user) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          content: Text(getString(context, 'confirm_account_deletion')),
-          actions: <Widget>[
-            FlatButton(
-                key: Key("confirmAccountDeletion"),
-                onPressed: () {
-                  result = true;
-                  Navigator.of(context).pop();
-                },
-                child: Text(getString(context, 'delete_account'))),
-            FlatButton(
-              key: Key("cancelAccountDeletion"),
-              onPressed: () {
-                result = false;
-                Navigator.of(context).pop();
-              },
-              child: Text(getString(context, 'cancel_deletion')),
-            ),
-          ],
-        );
+        return DeletionConfirmationPopupWidget();
       },
     );
-    return result;
   }
 
   Widget _buildProfilePicture(FirebaseUser user) {
@@ -308,68 +283,6 @@ class ProfileState extends State<Profile> {
         '/authentication', (Route<dynamic> route) => false);
     _userService.user = null;
     _analytics.sendAnalyticsEvent("logout");
-  }
-
-  reconnectUser(FirebaseUser user) async {
-    String result = await _authService.reconnectUser(
-        user, user.email, _prefService.getPassword());
-    switch (result) {
-      case "success":
-        deleteAccount(user);
-        break;
-      case "ERROR_USER_DISABLED":
-        Fluttertoast.showToast(msg: getString(context, 'user_disabled'));
-        break;
-      case "ERROR_USER_NOT_FOUND":
-        Fluttertoast.showToast(msg: getString(context, 'user_not_found'));
-        break;
-      case "ERROR_OPERATION_NOT_ALLOWED":
-        Fluttertoast.showToast(msg: getString(context, 'changing_not_allowed'));
-        break;
-      case "ERROR_INVALID_CREDENTIAL":
-        Fluttertoast.showToast(msg: getString(context, 'invalid_credential'));
-        break;
-      case "ERROR_WRONG_PASSWORD":
-        Fluttertoast.showToast(msg: getString(context, 'wrong_password'));
-        break;
-      default:
-        Fluttertoast.showToast(msg: getString(context, 'default_error'));
-    }
-  }
-
-  deleteAccount(FirebaseUser user) async {
-    String userUid = user.uid;
-    await _userService.deleteUserData(userUid);
-    String result = await _userService.deleteAccount(user);
-    switch (result) {
-      case "success":
-        _prefService.sharedPreferences.remove("email");
-        _prefService.sharedPreferences.remove("password");
-        _prefService.sharedPreferences.remove("mode");
-        Fluttertoast.showToast(
-          msg: getString(context, 'debug_account_deleted'),
-        );
-        openAuthenticationPage();
-        _userService.user = null;
-        break;
-      case "ERROR_REQUIRES_RECENT_LOGIN":
-        Fluttertoast.showToast(msg: getString(context, 'recent_login_needed'));
-        break;
-      case "ERROR_INVALID_CREDENTIAL":
-        Fluttertoast.showToast(msg: getString(context, 'invalid_credential'));
-        break;
-      case "ERROR_USER_DISABLED":
-        Fluttertoast.showToast(msg: getString(context, 'user_disabled'));
-        break;
-      case "ERROR_USER_NOT_FOUND":
-        Fluttertoast.showToast(msg: getString(context, 'user_not_found'));
-        break;
-      default:
-        Fluttertoast.showToast(
-          msg: getString(context, 'default_error'),
-        );
-    }
-    _analytics.sendAnalyticsEvent("delete_account");
   }
 
   signout(FirebaseUser user) {

@@ -133,6 +133,8 @@
     "feedback_text": "Donnez votre avis",
     "restart_wishlist": "Recommencer",
     "confirm_wishlist_restart": "Etes-vous sûr de vouloir décocher les objets de la liste ?",
-    "confirm_restart_wishlist": "RECOMMENCER"
-
+    "confirm_restart_wishlist": "RECOMMENCER",
+    "verify_account": "Vérifier",
+    "verify_your_account": "Veuillez vérifier votre compte",
+    "invalid_email_password": "Email/mot de passe incorrect"
 }

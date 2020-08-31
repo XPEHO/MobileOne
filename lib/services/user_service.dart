@@ -1,9 +1,12 @@
+import 'package:MobileOne/services/preferences_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class UserService with ChangeNotifier {
   static FirebaseUser _user;
+  final _prefService = GetIt.I.get<PreferencesService>();
 
   FirebaseUser get user {
     return _user;
@@ -87,5 +90,13 @@ class UserService with ChangeNotifier {
 
     //Delete all user wishlists
     await Firestore.instance.collection("owners").document(userUid).delete();
+  }
+
+  bool checkCurrentUser(String email, String password) {
+    if (_prefService.getEmail() == email &&
+        _prefService.getPassword() == password) {
+      return true;
+    }
+    return false;
   }
 }

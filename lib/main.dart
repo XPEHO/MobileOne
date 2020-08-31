@@ -45,6 +45,8 @@ GetIt getIt = GetIt.instance;
 void instantiateServices() {
   getIt.registerSingleton(FirebaseAuth.instance);
   getIt.registerSingleton(AnalyticsService());
+  getIt.registerSingleton(PreferencesService());
+
   getIt.registerSingleton(UserService());
   getIt.registerSingleton(LoyaltyCardsDao());
   getIt.registerSingleton(LoyaltyCardsService());
@@ -54,7 +56,6 @@ void instantiateServices() {
 
   getIt.registerSingleton(WishlistService());
   getIt.registerSingleton(AuthenticationService());
-  getIt.registerSingleton(PreferencesService());
   getIt.registerSingleton(ColorService());
   getIt.registerSingleton(ImageService());
   getIt.registerSingleton(WishlistsListProvider());
