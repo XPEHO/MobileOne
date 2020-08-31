@@ -5,6 +5,7 @@ import 'package:MobileOne/services/loyalty_cards_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:barcode_widget/barcode_widget.dart';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
@@ -14,7 +15,7 @@ class Cards extends StatefulWidget {
   CardsState createState() => CardsState();
 }
 
-class CardsState extends State<Cards> {
+class CardsState extends State<Cards> with TickerProviderStateMixin {
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
   var _loyaltycardsProvider = GetIt.I.get<LoyaltyCardsProvider>();
@@ -27,10 +28,26 @@ class CardsState extends State<Cards> {
   Color cardColor;
   var card;
 
+  Animation _rotation, _scale;
+  AnimationController _rotationController, _scaleController;
+
   @override
   void initState() {
     _analytics.setCurrentPage("isOnBigCardPage");
     super.initState();
+
+    _rotationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    _rotation = Tween(begin: 0.0, end: -(pi / 2)).animate(_rotationController);
+
+    _scaleController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 200));
+    _scale = Tween(begin: 1.0, end: 0.7).animate(_scaleController);
+
+    Future.delayed(Duration(milliseconds: 400), () {
+      _rotationController.forward();
+      _scaleController.forward();
+    });
   }
 
   void _openDialog(String title, Widget content) {
@@ -103,87 +120,117 @@ class CardsState extends State<Cards> {
               color: WHITE,
             ),
           ),
+          IconButton(
+              icon: Icon(Icons.rotate_90_degrees_ccw),
+              onPressed: () => _animate()),
         ],
       ),
       backgroundColor: _colorsApp.colorTheme,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Stack(
-              children: <Widget>[
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.8,
-                  width: MediaQuery.of(context).size.width * 0.7,
-                  decoration: BoxDecoration(
-                      color: cardColor,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(22),
-                          topRight: Radius.circular(5),
-                          bottomLeft: Radius.circular(22),
-                          bottomRight: Radius.circular(22))),
-                ),
-                Positioned(
-                  top: MediaQuery.of(context).size.width * 0.2,
-                  left: MediaQuery.of(context).size.width * 0.1,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    width: MediaQuery.of(context).size.width * 0.5,
-                    decoration: BoxDecoration(
-                        color: WHITE,
-                        borderRadius: BorderRadius.all(Radius.circular(5))),
-                  ),
-                ),
-                Positioned(
-                  top: MediaQuery.of(context).size.width * 0.55,
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    child: Transform(
-                      child: getBarcodeWidget(card),
-                      alignment: FractionalOffset.center,
-                      transform: new Matrix4.identity()
-                        ..rotateZ(90 * 3.1415927 / 180),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  right: MediaQuery.of(context).size.width * 0.04,
-                  child: Transform(
-                    child: Center(
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 1,
-                        height: MediaQuery.of(context).size.height * 0.85,
-                        alignment: Alignment.center,
-                        child: Text(
-                          card["label"],
-                          style: TextStyle(fontSize: 18),
+      body: AnimatedBuilder(
+        animation: _rotation,
+        builder: (context, child) {
+          return Transform.scale(
+            scale: _scale.value,
+            child: Transform.rotate(
+              angle: _rotation.value,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Stack(
+                      children: <Widget>[
+                        Container(
+                          height: MediaQuery.of(context).size.height * 0.8,
+                          width: MediaQuery.of(context).size.width * 0.7,
+                          decoration: BoxDecoration(
+                              color: cardColor,
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(22),
+                                  topRight: Radius.circular(5),
+                                  bottomLeft: Radius.circular(22),
+                                  bottomRight: Radius.circular(22))),
                         ),
-                      ),
+                        Positioned(
+                          top: MediaQuery.of(context).size.width * 0.2,
+                          left: MediaQuery.of(context).size.width * 0.1,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.6,
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            decoration: BoxDecoration(
+                                color: WHITE,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5))),
+                          ),
+                        ),
+                        Positioned(
+                          top: MediaQuery.of(context).size.width * 0.55,
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.2,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            child: Transform(
+                              child: getBarcodeWidget(card),
+                              alignment: FractionalOffset.center,
+                              transform: new Matrix4.identity()
+                                ..rotateZ(90 * 3.1415927 / 180),
+                            ),
+                          ),
+                        ),
+                        Positioned(
+                          right: MediaQuery.of(context).size.width * 0.04,
+                          child: Transform(
+                            child: Center(
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 1,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.85,
+                                alignment: Alignment.center,
+                                child: Text(
+                                  card["label"],
+                                  style: TextStyle(fontSize: 18),
+                                ),
+                              ),
+                            ),
+                            alignment: FractionalOffset.center,
+                            transform: new Matrix4.identity()
+                              ..rotateZ(90 * 3.1415927 / 180),
+                          ),
+                        ),
+                        Positioned(
+                          top: MediaQuery.of(context).size.width * 0.05,
+                          left: MediaQuery.of(context).size.width * 0.6,
+                          child: Container(
+                            height: 25,
+                            width: 25,
+                            decoration: BoxDecoration(
+                                color: WHITE,
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50))),
+                          ),
+                        ),
+                      ],
                     ),
-                    alignment: FractionalOffset.center,
-                    transform: new Matrix4.identity()
-                      ..rotateZ(90 * 3.1415927 / 180),
-                  ),
+                  ],
                 ),
-                Positioned(
-                  top: MediaQuery.of(context).size.width * 0.05,
-                  left: MediaQuery.of(context).size.width * 0.6,
-                  child: Container(
-                    height: 25,
-                    width: 25,
-                    decoration: BoxDecoration(
-                        color: WHITE,
-                        borderRadius: BorderRadius.all(Radius.circular(50))),
-                  ),
-                ),
-              ],
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
+  }
+
+  _animate() {
+    _rotationController.isCompleted
+        ? _rotationController.reverse()
+        : _rotationController.forward();
+  }
+
+  goToLoyaltyCardsPage(context) async {
+    final result = await Navigator.of(context).pushNamed(
+      "/mainPage",
+    );
+    Navigator.of(context).pop(result);
   }
 
   BarcodeWidget getBarcodeWidget(Map<String, dynamic> _card) {
@@ -336,12 +383,5 @@ class CardsState extends State<Cards> {
         );
         break;
     }
-  }
-
-  goToLoyaltyCardsPage(context) async {
-    final result = await Navigator.of(context).pushNamed(
-      "/mainPage",
-    );
-    Navigator.of(context).pop(result);
   }
 }

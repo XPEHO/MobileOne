@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/bottom_bar.dart';
-import 'package:MobileOne/pages/loyalty_card.dart';
-import 'package:MobileOne/pages/list.dart';
+import 'package:MobileOne/pages/loyaltycards_page.dart';
+import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/pages/share.dart';

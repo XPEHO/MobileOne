@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:MobileOne/dao/loyalty_cards_dao.dart';
 import 'package:MobileOne/dao/wishlist_dao.dart';
-import 'package:MobileOne/pages/card_page.dart';
+import 'package:MobileOne/pages/big_loyaltycard.dart';
 import 'package:MobileOne/pages/items_page.dart';
-import 'package:MobileOne/pages/loyalty_card.dart';
+import 'package:MobileOne/pages/loyaltycards_page.dart';
 import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/splash.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
@@ -73,7 +73,7 @@ void main() {
 
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
   runZoned(() {
     runApp(MyApp());
   }, onError: Crashlytics.instance.recordError);
@@ -87,6 +87,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     _preferencesService.initSharedPreferences();
     return MaterialApp(
       supportedLocales: getSupportedLocales(),
