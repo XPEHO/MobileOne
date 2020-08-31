@@ -30,6 +30,7 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
 
   FocusNode _focus = new FocusNode();
   bool isBarcodeSquare = false;
+  bool isWishlistNameModified = false;
 
   Color cardColor;
 
@@ -96,31 +97,7 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.04,
-                        child: TextField(
-                          focusNode: _focus,
-                          maxLines: 1,
-                          inputFormatters: [
-                            LengthLimitingTextInputFormatter(40),
-                          ],
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 18),
-                          controller: _controller,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 2, vertical: 0),
-                            isDense: true,
-                            hintText: getString(context, "card_name"),
-                          ),
-                          onSubmitted: (_) =>
-                              updateLoyaltyCards(_controller.text),
-                        ),
-                      ),
-                    ),
+                    buildNamePadding(context),
                   ],
                 ),
               ),
@@ -140,6 +117,65 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
               ),
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Padding buildNamePadding(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8.0, left: 16.0, right: 16.0),
+      child: Row(
+        children: [
+          Expanded(
+            flex: 5,
+            child: TextField(
+              focusNode: _focus,
+              maxLines: 1,
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(40),
+              ],
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 18),
+              controller: _controller,
+              decoration: InputDecoration(
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 2, vertical: 0),
+                isDense: true,
+                hintText: getString(context, "card_name"),
+              ),
+              onSubmitted: (_) {
+                updateLoyaltyCards(_controller.text);
+                setState(() {
+                  isWishlistNameModified = false;
+                });
+              },
+              onChanged: (_) {
+                if (!isWishlistNameModified) {
+                  setState(() {
+                    isWishlistNameModified = true;
+                  });
+                }
+              },
+            ),
+          ),
+          isWishlistNameModified
+              ? Flexible(
+                  flex: 1,
+                  child: InkWell(
+                    onTap: () {
+                      updateLoyaltyCards(_controller.text);
+                      setState(() {
+                        isWishlistNameModified = false;
+                      });
+                    },
+                    child: Icon(
+                      Icons.check,
+                      color: GREEN,
+                    ),
+                  ),
+                )
+              : Container(),
         ],
       ),
     );

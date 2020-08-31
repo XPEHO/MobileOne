@@ -108,6 +108,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Set the share deletion button icon to a material design icon
 - Email/password : The autocorrect is now disabled on email and password texts
 - Optimise Big loyalty card
+- LoyaltyCards : User can now validate the loyalty card name changes
 
 ### Security
 
