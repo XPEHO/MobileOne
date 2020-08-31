@@ -61,7 +61,7 @@ class ProfileState extends State<Profile> {
         children: <Widget>[
           Container(
             color: _colorsApp.colorTheme,
-            height: MediaQuery.of(context).size.height * 0.3,
+            height: MediaQuery.of(context).size.height * 0.25,
             width: MediaQuery.of(context).size.width,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -194,6 +194,9 @@ class ProfileState extends State<Profile> {
                   ),
                 )
               : Container(),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.1,
+          ),
         ],
       ),
     );

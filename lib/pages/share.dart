@@ -53,17 +53,6 @@ class ShareState extends State<Share> {
 
   Widget content(List wishlist) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: _colorsApp.colorTheme,
-        centerTitle: true,
-        title: Text(
-          getString(context, "my_shares"),
-          style: TextStyle(
-            fontSize: 20,
-            color: WHITE,
-          ),
-        ),
-      ),
       backgroundColor: _colorsApp.colorTheme,
       body:
           (wishlist.length != 0) ? buildLIstView(wishlist) : buildEmptyShare(),
