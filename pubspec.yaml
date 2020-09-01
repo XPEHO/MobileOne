@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+20
+version: 1.0.0+32
 
 environment:
   sdk: '>=2.2.0 <3.0.0'
@@ -51,6 +51,7 @@ dependencies:
   speech_to_text: ^2.4.1
   flutter_material_color_picker: ^1.0.5
   flutter_email_sender: ^3.0.1
+ 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -87,6 +88,8 @@ flutter:
     - resources/lang/en.json
     - resources/lang/fr.json
     - assets/images/
+    - pubspec.yaml
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

@@ -135,5 +135,11 @@
     "confirm_restart_wishlist": "RESTART",
     "verify_account": "Verify",
     "verify_your_account": "Please, verify your account",
-    "invalid_email_password": "Invalid email/password"
+    "invalid_email_password": "Invalid email/password",
+    "about": "About ",
+    "name_of_app": "App name : ",
+    "version": "App version : ",
+    "website": "Web site : ",
+    "company": "Developped by : ",
+    "xpeho_website": "https://xpeho.fr/"
 }
