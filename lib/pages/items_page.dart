@@ -65,21 +65,21 @@ class EditItemPageState extends State<EditItemPage> {
     String quantityValue;
     String unitValue;
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("items")
-        .document(_args.listUuid)
+        .doc(_args.listUuid)
         .get()
         .then((value) {
-      labelValue = value[_args.itemUuid]["label"];
-      quantityValue = value[_args.itemUuid]["quantity"].toString();
-      imageLink = value[_args.itemUuid]["image"];
-      if (value[_args.itemUuid]["imageName"] != null) {
-        _imageName = value[_args.itemUuid]["imageName"];
+      labelValue = value.data()[_args.itemUuid]["label"];
+      quantityValue = value.data()[_args.itemUuid]["quantity"].toString();
+      imageLink = value.data()[_args.itemUuid]["image"];
+      if (value.data()[_args.itemUuid]["imageName"] != null) {
+        _imageName = value.data()[_args.itemUuid]["imageName"];
       }
       if (imageLink != "assets/images/canned-food.png") {
         _itemImage = NetworkImage(imageLink);
       }
-      switch (value[_args.itemUuid]["unit"]) {
+      switch (value.data()[_args.itemUuid]["unit"]) {
         case 1:
           unitValue = getString(context, 'item_unit');
           break;

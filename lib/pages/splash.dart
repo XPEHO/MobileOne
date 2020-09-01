@@ -122,7 +122,7 @@ class SplashPageState extends State<SplashPage>
   }
 
   void openMainPage() {
-    (_userService.user.isEmailVerified == false)
+    (_userService.user.emailVerified == false)
         ? Navigator.of(context).pushNamedAndRemoveUntil(
             '/profile', (Route<dynamic> route) => false)
         : Navigator.of(context).pushNamedAndRemoveUntil(

@@ -35,10 +35,10 @@ class WishlistService {
     DocumentSnapshot ownerLists =
         await dao.fetchOwnerLists(userService.user.uid);
     var data;
-    if (ownerLists?.data == null) {
+    if (ownerLists?.data() == null) {
       data = List();
     } else {
-      data = ownerLists.data["lists"] ?? List();
+      data = ownerLists.data()["lists"] ?? List();
     }
     _ownerLists[userService.user.uid] = data;
     return data;
@@ -49,10 +49,10 @@ class WishlistService {
   Future<List> fetchGuestLists(String email) async {
     final guestLists = await dao.guestLists(email);
     var data;
-    if (guestLists?.data == null) {
+    if (guestLists?.data() == null) {
       data = List();
     } else {
-      data = guestLists.data["lists"] ?? List();
+      data = guestLists.data()["lists"] ?? List();
     }
     _guestLists[email] = data;
     return data;
@@ -64,10 +64,10 @@ class WishlistService {
     DocumentSnapshot shareLists =
         await dao.fetchShareLists(userService.user.uid);
     var data;
-    if (shareLists?.data == null) {
+    if (shareLists?.data() == null) {
       data = Map();
     } else {
-      data = shareLists.data ?? Map();
+      data = shareLists.data() ?? Map();
     }
     _shareLists[userService.user.uid] = data;
     return data;
@@ -97,8 +97,8 @@ class WishlistService {
   Future<Wishlist> fetchWishlist(String uuid) async {
     final wishlistData = await dao.fetchWishlist(uuid);
 
-    if (wishlistData?.data != null) {
-      final wishlist = Wishlist.fromMap(uuid, wishlistData.data);
+    if (wishlistData?.data() != null) {
+      final wishlist = Wishlist.fromMap(uuid, wishlistData.data());
       _wishlists[uuid] = wishlist;
       return wishlist;
     }
@@ -119,7 +119,7 @@ class WishlistService {
   Future<List<WishlistItem>> fetchItemList(String listUuid) async {
     DocumentSnapshot snapshot = await dao.fetchItemList(listUuid);
 
-    final wishlist = snapshot?.data ?? {};
+    final wishlist = snapshot?.data() ?? {};
     List<WishlistItem> itemList = wishlist.entries.map((element) {
       return WishlistItem.fromMap(element.key, element.value);
     }).toList();

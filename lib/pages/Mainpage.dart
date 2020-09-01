@@ -95,7 +95,7 @@ class MainPageState extends State<MainPage> {
     }
   }
 
-  _savePicturePreferences(String _picture, FirebaseUser user) async {
+  _savePicturePreferences(String _picture, User user) async {
     _prefService.setString('picture' + user.uid, _picture);
   }
 
@@ -230,7 +230,7 @@ class MainPageState extends State<MainPage> {
           builder: (context, snapshot) {
             version = "Unknown";
             if (snapshot.hasData) {
-              var yaml = loadYaml(snapshot.data);
+              var yaml = loadYaml(snapshot.data());
               version = yaml["version"];
             }
 

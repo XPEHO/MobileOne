@@ -19,10 +19,10 @@ class LoyaltyCardsService {
   Future<Map<String, dynamic>> fetchLoyaltycards() async {
     DocumentSnapshot loyaltycards =
         await dao.fetchLoyaltycards(userService.user.uid);
-    if (loyaltycards?.data == null) {
+    if (loyaltycards?.data() == null) {
       return Map();
     } else {
-      _loyaltycards = loyaltycards.data;
+      _loyaltycards = loyaltycards.data();
       return _loyaltycards ?? Map();
     }
   }

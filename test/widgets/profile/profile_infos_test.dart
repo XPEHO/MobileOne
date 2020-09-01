@@ -44,7 +44,7 @@ Widget buildTestableWidget(Widget widget) {
       home: widget);
 }
 
-class FirebaseUserMock extends Mock implements FirebaseUser {}
+class FirebaseUserMock extends Mock implements User {}
 
 class UserServiceMock extends Mock implements UserService {}
 
@@ -88,7 +88,7 @@ void main() {
     GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
     GetIt.instance.registerSingleton<FirebaseAuth>(auth);
-    GetIt.instance.registerSingleton<FirebaseUser>(user);
+    GetIt.instance.registerSingleton<User>(user);
     GetIt.I.registerSingleton<AuthenticationService>(AuthenticationService());
     GetIt.I.registerSingleton<UserService>(_userService);
     GetIt.I.registerSingleton<ImageService>(_imageService);
@@ -104,14 +104,14 @@ void main() {
     final _loyaltycardsProvider = LoyaltyCardsProvider();
     GetIt.I.registerSingleton<LoyaltyCardsProvider>(_loyaltycardsProvider);
 
-    when(auth.currentUser()).thenAnswer((realInvocation) => Future.value(user));
+    when(auth.currentUser).thenReturn(user);
     final _displayName = "Dupond Jean";
     when(user.displayName).thenReturn(_displayName);
 
     final _email = "Dupond.Jean@gmail.com";
     when(user.email).thenReturn(_email);
 
-    when(user.photoUrl).thenReturn("");
+    when(user.photoURL).thenReturn("");
 
     when(user.providerData).thenReturn(List.of([]));
 

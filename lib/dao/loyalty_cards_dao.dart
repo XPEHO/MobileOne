@@ -4,29 +4,29 @@ import 'package:uuid/uuid.dart';
 
 class LoyaltyCardsDao {
   Future<DocumentSnapshot> fetchLoyaltycards(String userUuid) =>
-      Firestore.instance.collection("loyaltycards").document(userUuid).get();
+      FirebaseFirestore.instance.collection("loyaltycards").doc(userUuid).get();
 
   updateLoyaltyCards(String _name, String _cardUuid, String userUuid) async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("loyaltycards")
-        .document(userUuid)
-        .setData({
+        .doc(userUuid)
+        .set({
       _cardUuid: {
         'label': _name,
       },
-    }, merge: true);
+    }, SetOptions(merge: true));
   }
 
   updateLoyaltycardsColor(
       String _color, String _cardUuid, String userUuid) async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("loyaltycards")
-        .document(userUuid)
-        .setData({
+        .doc(userUuid)
+        .set({
       _cardUuid: {
         'color': _color,
       },
-    }, merge: true);
+    }, SetOptions(merge: true));
   }
 
   addLoyaltyCardsToDataBase(String _name, String _result, BarcodeFormat _format,
@@ -34,17 +34,17 @@ class LoyaltyCardsDao {
     Uuid uuid = Uuid();
     var uuidCard = uuid.v4();
 
-    final loyaltycards = await Firestore.instance
+    final loyaltycards = await FirebaseFirestore.instance
         .collection("loyaltycards")
-        .document(userUuid)
+        .doc(userUuid)
         .get();
     bool doesLoyaltycardExist = loyaltycards?.exists;
 
     if (doesLoyaltycardExist == true) {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection("loyaltycards")
-          .document(userUuid)
-          .updateData({
+          .doc(userUuid)
+          .update({
         uuidCard: {
           'label': _name,
           'barecode': _result,
@@ -53,10 +53,10 @@ class LoyaltyCardsDao {
         },
       });
     } else {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection("loyaltycards")
-          .document(userUuid)
-          .setData({
+          .doc(userUuid)
+          .set({
         uuidCard: {
           'label': _name,
           'barecode': _result,
@@ -68,9 +68,9 @@ class LoyaltyCardsDao {
   }
 
   deleteCard(String cardUuid, String userUuid) async {
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("loyaltycards")
-        .document(userUuid)
-        .updateData({cardUuid: FieldValue.delete()});
+        .doc(userUuid)
+        .update({cardUuid: FieldValue.delete()});
   }
 }

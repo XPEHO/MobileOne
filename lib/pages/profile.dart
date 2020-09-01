@@ -40,22 +40,11 @@ class ProfileState extends State<Profile> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-      body: FutureBuilder(
-        future: _auth.currentUser(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return buildContent(context, snapshot.data);
-          } else {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-        },
-      ),
+      body: buildContent(context, _auth.currentUser),
     );
   }
 
-  Widget buildContent(BuildContext context, FirebaseUser user) {
+  Widget buildContent(BuildContext context, User user) {
     return SingleChildScrollView(
       child: Column(
         children: <Widget>[
@@ -82,9 +71,9 @@ class ProfileState extends State<Profile> {
                         child: Align(
                           alignment: Alignment.bottomLeft,
                           child: Text(
-                            user.displayName != null
+                            user?.displayName != null
                                 ? user.displayName
-                                : user.email,
+                                : user?.email,
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -113,7 +102,7 @@ class ProfileState extends State<Profile> {
               ],
             ),
           ),
-          (_userService.user.isEmailVerified == false)
+          (_userService.user.emailVerified == false)
               ? Container(
                   color: RED,
                   height: MediaQuery.of(context).size.height * 0.1,
@@ -198,7 +187,7 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  Future<void> checkAccount(FirebaseUser user) async {
+  Future<void> checkAccount(User user) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -207,7 +196,7 @@ class ProfileState extends State<Profile> {
     );
   }
 
-  Widget _buildProfilePicture(FirebaseUser user) {
+  Widget _buildProfilePicture(User user) {
     _analytics.sendAnalyticsEvent("change_picture_from_gallery");
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<UserPictureProvider>(),
@@ -225,11 +214,11 @@ class ProfileState extends State<Profile> {
               radius: 30.0,
             );
           } else {
-            if (user.photoUrl != null && user.photoUrl.isNotEmpty) {
+            if (user.photoURL != null && user.photoURL.isNotEmpty) {
               userPicture = CircleAvatar(
                 backgroundColor: WHITE,
                 backgroundImage: NetworkImage(
-                  user.photoUrl,
+                  user.photoURL,
                 ),
                 radius: 30.0,
               );
@@ -285,7 +274,7 @@ class ProfileState extends State<Profile> {
     _analytics.sendAnalyticsEvent("logout");
   }
 
-  signout(FirebaseUser user) {
+  signout(User user) {
     if (user != null) {
       try {
         openAuthenticationPage();

@@ -3,54 +3,56 @@ import 'package:flutter/material.dart';
 
 class WishlistDao {
   Future<DocumentSnapshot> fetchOwnerLists(String userUuid) =>
-      Firestore.instance.collection("owners").document(userUuid).get();
+      FirebaseFirestore.instance.collection("owners").doc(userUuid).get();
 
   Future<DocumentSnapshot> guestLists(String email) =>
-      Firestore.instance.collection("guests").document(email).get();
+      FirebaseFirestore.instance.collection("guests").doc(email).get();
 
   Future<DocumentSnapshot> fetchShareLists(String userUuid) =>
-      Firestore.instance.collection("shared").document(userUuid).get();
+      FirebaseFirestore.instance.collection("shared").doc(userUuid).get();
 
   Future<void> addWishlist(String wishlistUuid, String userUuid) async {
     String wishlistName;
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("owners")
-        .document(userUuid)
+        .doc(userUuid)
         .get()
         .then((value) {
-      value.data.isNotEmpty
+      value.data().isNotEmpty
           ? wishlistName =
-              "Wishlist " + (value.data["lists"].length + 1).toString()
+              "Wishlist " + (value.data()["lists"].length + 1).toString()
           : wishlistName = "Wishlist 1";
     });
 
     //Create a wishlist
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("wishlists")
-        .document(wishlistUuid)
-        .setData({
+        .doc(wishlistUuid)
+        .set({
       'itemCounts': "0",
       'label': wishlistName,
       'timestamp': new DateTime.now(),
     });
 
     //Check if the user already have a wishlist
-    final owners =
-        await Firestore.instance.collection("owners").document(userUuid).get();
+    final owners = await FirebaseFirestore.instance
+        .collection("owners")
+        .doc(userUuid)
+        .get();
     bool doesListExist = owners?.exists;
 
     //Create the document and set document's data to the new wishlist if the user does not have an existing wishlist
     //Or get the already existing wishlists, add the new one to the list and update the list in the database
     if (doesListExist) {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection("owners")
-          .document(userUuid)
-          .updateData({
+          .doc(userUuid)
+          .update({
         "lists": FieldValue.arrayUnion(["$wishlistUuid"])
       });
     } else {
-      await Firestore.instance.collection("owners").document(userUuid).setData(
+      await FirebaseFirestore.instance.collection("owners").doc(userUuid).set(
         {
           "lists": ["$wishlistUuid"]
         },
@@ -62,86 +64,88 @@ class WishlistDao {
     List tmpList = [];
     DocumentSnapshot tmpDoc;
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("owners")
-        .document(userUid)
+        .doc(userUid)
         .get()
-        .then((value) => tmpList = value.data["lists"]);
+        .then((value) => tmpList = value.data()["lists"]);
 
     tmpList.remove(listUuid);
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("owners")
-        .document(userUid)
-        .updateData({"lists": tmpList});
+        .doc(userUid)
+        .update({"lists": tmpList});
 
-    await Firestore.instance.collection("items").document(listUuid).delete();
+    await FirebaseFirestore.instance.collection("items").doc(listUuid).delete();
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("wishlists")
-        .document(listUuid)
+        .doc(listUuid)
         .delete();
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("shared")
-        .document(userUid)
+        .doc(userUid)
         .get()
         .then((value) => tmpDoc = value);
 
-    if (tmpDoc.data != null) {
-      if (tmpDoc.data[listUuid] != null) {
-        tmpDoc.data[listUuid].forEach((element) async {
-          await Firestore.instance
+    if (tmpDoc.data() != null) {
+      if (tmpDoc.data()[listUuid] != null) {
+        tmpDoc.data()[listUuid].forEach((element) async {
+          await FirebaseFirestore.instance
               .collection("guests")
-              .document(element)
-              .updateData({
+              .doc(element)
+              .update({
             "lists": FieldValue.arrayRemove([listUuid])
           });
         });
       }
     }
 
-    Map<String, dynamic> newMap = tmpDoc.data;
+    Map<String, dynamic> newMap = tmpDoc.data();
     if (newMap != null) {
       newMap.remove(listUuid);
 
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection("shared")
-          .document(userUid)
-          .setData(newMap);
+          .doc(userUid)
+          .set(newMap);
     }
   }
 
   leaveShare(String listUuid, String email) =>
-      Firestore.instance.collection("guests").document(email).updateData({
+      FirebaseFirestore.instance.collection("guests").doc(email).update({
         "lists": FieldValue.arrayRemove([listUuid])
       });
 
   Future<DocumentSnapshot> fetchWishlist(String uuid) =>
-      Firestore.instance.collection("wishlists").document(uuid).get();
+      FirebaseFirestore.instance.collection("wishlists").doc(uuid).get();
 
   changeWishlistLabel(String label, String listUuid) =>
-      Firestore.instance.collection("wishlists").document(listUuid).setData(
+      FirebaseFirestore.instance.collection("wishlists").doc(listUuid).set(
         {
           "label": label,
         },
-        merge: true,
+        SetOptions(merge: true),
       );
 
   Future<DocumentSnapshot> fetchItemList(String listUuid) {
-    return Firestore.instance.collection('items').document(listUuid).get();
+    return FirebaseFirestore.instance.collection('items').doc(listUuid).get();
   }
 
   addSharedToDataBase(String sharedWith, String liste, String userUuid) async {
-    final shared =
-        await Firestore.instance.collection("shared").document(userUuid).get();
+    final shared = await FirebaseFirestore.instance
+        .collection("shared")
+        .doc(userUuid)
+        .get();
     bool doesDocumentExist = shared.exists;
 
     if (doesDocumentExist == true) {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection("shared")
-          .document(userUuid)
-          .updateData(
+          .doc(userUuid)
+          .update(
         {
           liste: FieldValue.arrayUnion(
             ["$sharedWith"],
@@ -149,7 +153,7 @@ class WishlistDao {
         },
       );
     } else {
-      await Firestore.instance.collection("shared").document(userUuid).setData(
+      await FirebaseFirestore.instance.collection("shared").doc(userUuid).set(
         {
           liste: FieldValue.arrayUnion(
             ["$sharedWith"],
@@ -162,20 +166,20 @@ class WishlistDao {
   addGuestToDataBase(String email, String listUuid) async {
     bool doesListExist = false;
 
-    await Firestore.instance.collection("guests").document(email).get().then(
+    await FirebaseFirestore.instance.collection("guests").doc(email).get().then(
       (value) {
         doesListExist = value.exists;
       },
     );
 
     if (doesListExist) {
-      await Firestore.instance.collection("guests").document(email).updateData(
+      await FirebaseFirestore.instance.collection("guests").doc(email).update(
         {
           "lists": FieldValue.arrayUnion(["$listUuid"])
         },
       );
     } else {
-      await Firestore.instance.collection("guests").document(email).setData(
+      await FirebaseFirestore.instance.collection("guests").doc(email).set(
         {
           "lists": FieldValue.arrayUnion(["$listUuid"])
         },
@@ -184,14 +188,11 @@ class WishlistDao {
   }
 
   deleteShared(String listUuid, String email, String userUuid) async {
-    await Firestore.instance.collection("guests").document(email).updateData({
+    await FirebaseFirestore.instance.collection("guests").doc(email).update({
       "lists": FieldValue.arrayRemove([listUuid])
     });
 
-    await Firestore.instance
-        .collection("shared")
-        .document(userUuid)
-        .updateData({
+    await FirebaseFirestore.instance.collection("shared").doc(userUuid).update({
       listUuid: FieldValue.arrayRemove([email])
     });
   }
@@ -208,22 +209,22 @@ class WishlistDao {
     var listItemsCount;
     bool doesDocumentExist = false;
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("wishlists")
-        .document(listUuid)
+        .doc(listUuid)
         .get()
         .then((value) {
-      listItemsCount = value["itemCounts"];
+      listItemsCount = value.data()["itemCounts"];
     });
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("wishlists")
-        .document(listUuid)
-        .updateData({"itemCounts": (int.parse(listItemsCount) + 1).toString()});
+        .doc(listUuid)
+        .update({"itemCounts": (int.parse(listItemsCount) + 1).toString()});
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("items")
-        .document(listUuid)
+        .doc(listUuid)
         .get()
         .then((value) {
       doesDocumentExist = value.exists;
@@ -231,10 +232,10 @@ class WishlistDao {
 
     //Create the item
     if (doesDocumentExist == true) {
-      await Firestore.instance
+      await FirebaseFirestore.instance
           .collection("items")
-          .document(listUuid)
-          .updateData({
+          .doc(listUuid)
+          .update({
         itemUuid: {
           'label': name,
           'quantity': count,
@@ -245,7 +246,7 @@ class WishlistDao {
         }
       });
     } else {
-      await Firestore.instance.collection("items").document(listUuid).setData({
+      await FirebaseFirestore.instance.collection("items").doc(listUuid).set({
         itemUuid: {
           'label': name,
           'quantity': count,
@@ -267,7 +268,7 @@ class WishlistDao {
     @required String listUuid,
     @required String imageName,
   }) async {
-    await Firestore.instance.collection("items").document(listUuid).updateData({
+    await FirebaseFirestore.instance.collection("items").doc(listUuid).update({
       itemUuid: {
         'label': name,
         'quantity': count,
@@ -286,23 +287,23 @@ class WishlistDao {
   }) async {
     var listItemsCount;
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("wishlists")
-        .document(listUuid)
+        .doc(listUuid)
         .get()
         .then((value) {
-      listItemsCount = value["itemCounts"];
+      listItemsCount = value.data()["itemCounts"];
     });
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("wishlists")
-        .document(listUuid)
-        .updateData({"itemCounts": (int.parse(listItemsCount) - 1).toString()});
+        .doc(listUuid)
+        .update({"itemCounts": (int.parse(listItemsCount) - 1).toString()});
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("items")
-        .document(listUuid)
-        .updateData({itemUuid: FieldValue.delete()});
+        .doc(listUuid)
+        .update({itemUuid: FieldValue.delete()});
   }
 
   Future<void> validateItem({
@@ -310,32 +311,32 @@ class WishlistDao {
     @required String itemUuid,
     @required bool isValidated,
   }) async {
-    await Firestore.instance.collection("items").document(listUuid).setData(
+    await FirebaseFirestore.instance.collection("items").doc(listUuid).set(
       {
         itemUuid: {
           'isValidated': isValidated,
         }
       },
-      merge: true,
+      SetOptions(merge: true),
     );
   }
 
   uncheckAllItems({@required String listUuid}) async {
     Map<String, dynamic> tmpMap;
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("items")
-        .document(listUuid)
+        .doc(listUuid)
         .get()
-        .then((value) => tmpMap = value.data);
+        .then((value) => tmpMap = value.data());
 
     tmpMap.forEach((key, value) {
       value["isValidated"] = false;
     });
 
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("items")
-        .document(listUuid)
-        .setData(tmpMap);
+        .doc(listUuid)
+        .set(tmpMap);
   }
 }

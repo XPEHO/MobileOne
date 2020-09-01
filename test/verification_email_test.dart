@@ -12,7 +12,7 @@ class MockGoogleSignIn extends Mock implements GoogleSignIn {}
 
 class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
-class MockUser extends Mock implements FirebaseUser {}
+class MockUser extends Mock implements User {}
 
 final service = AuthenticationService();
 
@@ -23,7 +23,7 @@ void main() {
     final _firebaseUser = MockUser();
 
     GetIt.I.registerSingleton<FirebaseAuth>(_firebaseAuth);
-    GetIt.I.registerSingleton<FirebaseUser>(_firebaseUser);
+    GetIt.I.registerSingleton<User>(_firebaseUser);
 
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
 

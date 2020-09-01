@@ -8,14 +8,14 @@ class AuthenticationService {
   final _authService = GetIt.I.get<FirebaseAuth>();
   final _googleService = GetIt.I.get<GoogleSignIn>();
   var _analytics = GetIt.I.get<AnalyticsService>();
-  Future<FirebaseUser> googleSignInSilently() async {
+  Future<User> googleSignInSilently() async {
     final GoogleSignInAccount googleUser =
         await _googleService.signInSilently();
     if (googleUser != null) {
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
+      final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
@@ -25,21 +25,21 @@ class AuthenticationService {
     return null;
   }
 
-  Future<FirebaseUser> googleSignIn() async {
+  Future<User> googleSignIn() async {
     final GoogleSignInAccount googleUser = await _googleService.signIn();
     final GoogleSignInAuthentication googleAuth =
         await googleUser.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
+    final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
     return (await _authService.signInWithCredential(credential)).user;
   }
 
-  Future<FirebaseUser> signIn(String email, String password) async {
+  Future<User> signIn(String email, String password) async {
     _analytics.loging();
-    FirebaseUser _user = (await _authService.signInWithEmailAndPassword(
+    User _user = (await _authService.signInWithEmailAndPassword(
       email: email,
       password: password,
     ))
@@ -65,7 +65,7 @@ class AuthenticationService {
     }
   }
 
-  Future<bool> sendVerificationEmail(FirebaseUser _user) async {
+  Future<bool> sendVerificationEmail(User _user) async {
     _analytics.sendAnalyticsEvent("email_verification");
     try {
       await _user.sendEmailVerification();
@@ -90,7 +90,7 @@ class AuthenticationService {
     }
   }
 
-  Future<void> signOut(FirebaseUser user) async {
+  Future<void> signOut(User user) async {
     await _authService.signOut();
     user = null;
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -99,7 +99,7 @@ class AuthenticationService {
     prefs.remove("mode");
   }
 
-  Future<String> changePassword(FirebaseUser user, String password) async {
+  Future<String> changePassword(User user, String password) async {
     try {
       await user.updatePassword(password);
       return "success";
@@ -108,9 +108,8 @@ class AuthenticationService {
     }
   }
 
-  Future<String> reconnectUser(
-      FirebaseUser user, String email, String password) async {
-    AuthCredential credentials = EmailAuthProvider.getCredential(
+  Future<String> reconnectUser(User user, String email, String password) async {
+    AuthCredential credentials = EmailAuthProvider.credential(
       email: email,
       password: password,
     );

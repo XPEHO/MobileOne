@@ -224,7 +224,7 @@ class DeletionConfirmationPopupWidgetState
     return result;
   }
 
-  reconnectUser(FirebaseUser user) async {
+  reconnectUser(User user) async {
     String result = await _authService.reconnectUser(
         user, user.email, _prefService.getPassword());
     switch (result) {
@@ -251,7 +251,7 @@ class DeletionConfirmationPopupWidgetState
     }
   }
 
-  deleteAccount(FirebaseUser user) async {
+  deleteAccount(User user) async {
     String userUid = user.uid;
     await _userService.deleteUserData(userUid);
     String result = await _userService.deleteAccount(user);

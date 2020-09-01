@@ -47,7 +47,7 @@ Widget buildTestableWidget(Widget widget) {
       home: widget);
 }
 
-class FirebaseUserMock extends Mock implements FirebaseUser {}
+class FirebaseUserMock extends Mock implements User {}
 
 class UserServiceMock extends Mock implements UserService {}
 
@@ -83,7 +83,7 @@ void main() {
       (WidgetTester tester) async {
     // GIVEN
     final user = FirebaseUserMock();
-    GetIt.instance.registerSingleton<FirebaseUser>(user);
+    GetIt.instance.registerSingleton<User>(user);
 
     final _userService = UserServiceMock();
     GetIt.I.registerSingleton<UserService>(_userService);
@@ -109,24 +109,23 @@ void main() {
     GetIt.I.registerSingleton<ColorService>(_colorService);
     final _shareService = ShareServiceMock();
     GetIt.I.registerSingleton<ShareService>(_shareService);
-
     final _loyaltycardsService = LoyaltyCardsServiceMock();
     GetIt.I.registerSingleton<LoyaltyCardsService>(_loyaltycardsService);
-
     final _loyaltycardsProvider = LoyaltyCardsProviderMock();
     GetIt.I.registerSingleton<LoyaltyCardsProvider>(_loyaltycardsProvider);
-    when(_userService.user).thenReturn(user);
 
     when(_picker.getImage(source: ImageSource.camera)).thenAnswer(
         (_) => Future.value(PickedFile("assets/images/facebook_f.png")));
-
     when(_imageService.pickCamera(100, 1080, 1080)).thenAnswer(
         (_) => Future.value(PickedFile("assets/images/facebook_f.png")));
     when(_userService.user).thenReturn(user);
+    when(user.displayName).thenReturn("");
     when(user.email).thenReturn("test@test.test");
     when(user.uid).thenReturn("42");
     when(_wishlistProvider.ownerLists).thenReturn(List());
     when(_wishlistProvider.guestLists(any)).thenReturn(List());
+    when(auth.currentUser).thenReturn(user);
+    when(user.providerData).thenReturn([]);
 
     // WHEN
     await tester.pumpWidget(buildTestableWidget(MainPage()));

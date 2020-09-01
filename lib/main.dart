@@ -68,9 +68,10 @@ void instantiateServices() {
   getIt.registerSingleton(ShareService());
 }
 
-void main() {
-  instantiateServices();
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  instantiateServices();
 
   Crashlytics.instance.enableInDevMode = true;
   FlutterError.onError = Crashlytics.instance.recordFlutterError;

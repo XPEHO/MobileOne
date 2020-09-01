@@ -5,19 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class UserService with ChangeNotifier {
-  static FirebaseUser _user;
+  static User _user;
   final _prefService = GetIt.I.get<PreferencesService>();
 
-  FirebaseUser get user {
+  User get user {
     return _user;
   }
 
-  set user(FirebaseUser user) {
+  set user(User user) {
     _user = user;
     notifyListeners();
   }
 
-  Future<String> deleteAccount(FirebaseUser user) async {
+  Future<String> deleteAccount(User user) async {
     try {
       await user.delete();
       return "success";
@@ -31,65 +31,71 @@ class UserService with ChangeNotifier {
     List tmpShare = [];
 
     //Get all user wishlists
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("owners")
-        .document(userUid)
+        .doc(userUid)
         .get()
         .then((value) {
-      if (value.data != null) {
-        tmpList = value.data["lists"];
+      if (value.data() != null) {
+        tmpList = value.data()["lists"];
       }
     });
 
     if (tmpList != null) {
       tmpList.forEach((element) async {
         //Delete all list guests
-        await Firestore.instance
+        await FirebaseFirestore.instance
             .collection("shared")
-            .document(userUid)
+            .doc(userUid)
             .get()
             .then((value) {
-          if (value.data != null) {
-            tmpShare = value.data[element];
+          if (value.data() != null) {
+            tmpShare = value.data()[element];
           }
         });
 
         if (tmpShare != null) {
           tmpShare.forEach((email) async {
-            await Firestore.instance
+            await FirebaseFirestore.instance
                 .collection("guests")
-                .document(email)
-                .updateData({
+                .doc(email)
+                .update({
               "lists": FieldValue.arrayRemove([element])
             });
           });
         }
 
         //Delete all user wishlists items
-        await Firestore.instance.collection("items").document(element).delete();
+        await FirebaseFirestore.instance
+            .collection("items")
+            .doc(element)
+            .delete();
 
         //Delete all wishlists
-        await Firestore.instance
+        await FirebaseFirestore.instance
             .collection("wishlists")
-            .document(element)
+            .doc(element)
             .delete();
       });
     }
 
     //Delete user loyaltycards
-    await Firestore.instance
+    await FirebaseFirestore.instance
         .collection("loyaltycards")
-        .document(userUid)
+        .doc(userUid)
         .delete();
 
     //Delete all wishlists shared with the user
-    await Firestore.instance.collection("guests").document(user.email).delete();
+    await FirebaseFirestore.instance
+        .collection("guests")
+        .doc(user.email)
+        .delete();
 
     //Delete all user share
-    await Firestore.instance.collection("shared").document(userUid).delete();
+    await FirebaseFirestore.instance.collection("shared").doc(userUid).delete();
 
     //Delete all user wishlists
-    await Firestore.instance.collection("owners").document(userUid).delete();
+    await FirebaseFirestore.instance.collection("owners").doc(userUid).delete();
   }
 
   bool checkCurrentUser(String email, String password) {

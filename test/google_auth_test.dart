@@ -10,7 +10,7 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:mockito/mockito.dart';
 
-class MockUser extends Mock implements FirebaseUser {}
+class MockUser extends Mock implements User {}
 
 class MockGoogleSignIn extends Mock implements GoogleSignIn {}
 
@@ -21,7 +21,7 @@ class MockGoogleSignInAccount extends Mock implements GoogleSignInAccount {}
 class MockGoogleSignInAuthentication extends Mock
     implements GoogleSignInAuthentication {}
 
-class MockAuthResult extends Mock implements AuthResult {}
+class MockAuthResult extends Mock implements UserCredential {}
 
 class AnalyticsServiceMock extends Mock implements AnalyticsService {}
 
@@ -92,6 +92,9 @@ void main() {
       // Google
       when(_googleSignIn.signIn())
           .thenAnswer((realInvocation) => Future.value(_account));
+
+      when(_authentication.accessToken).thenReturn("");
+      when(_authentication.idToken).thenReturn("");
 
       when(_account.authentication)
           .thenAnswer((realInvocation) => Future.value(_authentication));

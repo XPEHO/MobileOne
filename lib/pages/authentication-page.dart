@@ -182,7 +182,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   }
 
   onGoogleButtonPressed(BuildContext context) async {
-    _authenticationService.googleSignIn().then((FirebaseUser user) async {
+    _authenticationService.googleSignIn().then((User user) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('mode', "google");
       _userService.user = user;
@@ -334,7 +334,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
           await _authenticationService.signIn(_email, _password);
 
       if (_userService.user != null) {
-        if (_userService.user.isEmailVerified == false) {
+        if (_userService.user.emailVerified == false) {
           bool verif = await _authenticationService
               .sendVerificationEmail(_userService.user);
           switch (verif) {
@@ -373,7 +373,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   }
 
   void openMainPage(context) {
-    (_userService.user.isEmailVerified == false)
+    (_userService.user.emailVerified == false)
         ? Navigator.of(context).pushNamedAndRemoveUntil(
             '/profile', (Route<dynamic> route) => false)
         : Navigator.of(context).pushNamedAndRemoveUntil(
