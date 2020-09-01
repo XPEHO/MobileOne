@@ -22,6 +22,7 @@ import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
 import 'package:MobileOne/localization/delegate.dart';
@@ -81,11 +82,46 @@ void main() async {
   }, onError: Crashlytics.instance.recordError);
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   MyApp({this.app});
   final FirebaseApp app;
 
+  @override
+  MyAppState createState() => MyAppState();
+}
+
+class MyAppState extends State<MyApp> {
   final _preferencesService = GetIt.I.get<PreferencesService>();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+
+  @override
+  void initState() {
+    super.initState();
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        debugPrint("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        debugPrint("onLaunch: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        debugPrint("onResume: $message");
+      },
+    );
+
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(
+            sound: true, badge: true, alert: true, provisional: true));
+
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {});
+
+    _firebaseMessaging.getToken().then((String token) {
+      assert(token != null);
+      debugPrint("token : $token");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
