@@ -1,5 +1,5 @@
 {
-    "app_name": "MobileOne",
+    "app_name": "Simp'List",
     "open_main_page": "Page principale",
     "company_name": "XPEHO",
     "login": "nom d'utilisateur",
@@ -47,7 +47,6 @@
     "authentication_page_text": "Connectez-vous",
     "register_page_text": "Créer votre compte",
     "or": "ou",
-    "mobile_one": "MobileOne",
     "forgotten_password": "Mot de passe oublié ?",
     "verification_email_sent": "Un email de vérificartion a été envoyé",
     "verification_email_error": "Une erreur est survenue durant l'envoi de l'email de vérification",
