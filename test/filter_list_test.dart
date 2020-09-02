@@ -1,5 +1,7 @@
+import 'package:MobileOne/dao/messaging_dao.dart';
 import 'package:MobileOne/dao/wishlist_dao.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
@@ -13,6 +15,8 @@ void main() {
     GetIt.I.registerSingleton<WishlistDao>(WishlistDao());
     GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
     GetIt.I.registerSingleton(UserService());
+    GetIt.I.registerSingleton<MessagingDao>(MessagingDao());
+    GetIt.I.registerSingleton<MessagingService>(MessagingService());
     GetIt.I.registerSingleton(AnalyticsService());
 
     final service = WishlistService();

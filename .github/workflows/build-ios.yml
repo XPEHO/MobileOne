@@ -15,6 +15,12 @@ jobs:
           FIREBASE_CONFIG: ${{ secrets.IOS_GOOGLE_SERVICES }}
         run: |
           echo $FIREBASE_CONFIG > ./ios/Runner/GoogleService-Info.plist
+      - name: fetch server token for messaging
+        env:
+          SERVER_TOKEN: ${{ secrets.SERVER_TOKEN }}
+        run: |
+          mkdir -p ./resources/messaging
+          echo $SERVER_TOKEN > ./resources/messaging/cloud_messaging.json
       - uses: actions/setup-java@v1
         with:
           java-version: '12.x'

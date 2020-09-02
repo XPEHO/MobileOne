@@ -1,9 +1,11 @@
+import 'package:MobileOne/dao/messaging_dao.dart';
 import 'package:MobileOne/pages/splash.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
+import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/user_service.dart';
@@ -34,6 +36,8 @@ main() {
     var _authService = AuthenticationServiceMock();
     GetIt.I.registerSingleton<AuthenticationService>(_authService);
 
+    GetIt.I.registerSingleton<MessagingDao>(MessagingDao());
+    GetIt.I.registerSingleton<MessagingService>(MessagingService());
     var _prefService = PreferencesServiceMock();
     GetIt.I.registerSingleton<PreferencesService>(_prefService);
     final _analyticsService = AnalyticsServiceMock();

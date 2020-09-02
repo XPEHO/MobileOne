@@ -21,6 +21,12 @@ jobs:
           FIREBASE_CONFIG: ${{ secrets.ANDROID_GOOGLE_SERVICES }}
         run: |
           echo $FIREBASE_CONFIG > ./android/app/google-services.json
+      - name: fetch server token for messaging
+        env:
+          SERVER_TOKEN: ${{ secrets.SERVER_TOKEN }}
+        run: |
+          mkdir -p ./resources/messaging
+          echo $SERVER_TOKEN > ./resources/messaging/cloud_messaging.json
       - name: Setup Java 12
         uses: actions/setup-java@v1
         with:

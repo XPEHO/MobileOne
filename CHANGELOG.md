@@ -33,8 +33,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add restart wishlist button
 - Add email/password verification on account deletion
 - Add about screen
-
-
+- Add notifications
 
 ### Changed
 
