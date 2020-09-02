@@ -72,12 +72,12 @@ class ItemsListProvider with ChangeNotifier {
     if (imageName != null) {
       GetIt.I.get<ImageService>().deleteFile(listUuid, imageName);
     }
-
     await wishlistService.deleteItemInList(
         listUuid: listUuid, itemUuid: itemUuid, imageName: imageName);
+    notifyListeners();
   }
 
-  validateItem({
+  Future<void> validateItem({
     @required String listUuid,
     @required String itemUuid,
     @required bool isValidated,

@@ -35,4 +35,9 @@ class WishlistsListProvider with ChangeNotifier {
     await wishlistService.leaveShare(listUuid, email);
     notifyListeners();
   }
+
+  flushWishlists() {
+    wishlistService.flushWishlists();
+    notifyListeners();
+  }
 }

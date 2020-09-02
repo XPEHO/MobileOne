@@ -170,7 +170,7 @@ class WishlistService {
   }) async {
     var uuid = Uuid();
     var newUuid = uuid.v4();
-    dao.addItemTolist(
+    await dao.addItemTolist(
         name: name,
         count: count,
         typeIndex: typeIndex,
@@ -178,15 +178,7 @@ class WishlistService {
         listUuid: listUuid,
         imageName: imageName,
         itemUuid: newUuid);
-    final item = WishlistItem();
-    item.uuid = newUuid;
-    item.label = name;
-    item.quantity = count;
-    item.imageUrl = imageLink;
-    item.imageName = imageName;
-    item.unit = typeIndex;
-    item.isValidated = false;
-    _itemlists[listUuid].add(item);
+    await fetchItemList(listUuid);
   }
 
   Future<void> updateItemInList({
@@ -206,14 +198,7 @@ class WishlistService {
         imageLink: imageLink,
         listUuid: listUuid,
         imageName: imageName);
-
-    final item =
-        _itemlists[listUuid].firstWhere((element) => element.uuid == itemUuid);
-    item.label = name;
-    item.quantity = count;
-    item.imageUrl = imageLink;
-    item.imageName = imageName;
-    item.unit = typeIndex;
+    await fetchItemList(listUuid);
   }
 
   deleteItemInList({
@@ -224,9 +209,9 @@ class WishlistService {
     if (imageName != null) {
       GetIt.I.get<ImageService>().deleteFile(listUuid, imageName);
     }
-    dao.deleteItemInList(
+    await dao.deleteItemInList(
         listUuid: listUuid, itemUuid: itemUuid, imageName: imageName);
-    _itemlists[listUuid].removeWhere((element) => element.uuid == itemUuid);
+    await fetchItemList(listUuid);
   }
 
   validateItem({
@@ -236,9 +221,7 @@ class WishlistService {
   }) async {
     dao.validateItem(
         listUuid: listUuid, itemUuid: itemUuid, isValidated: isValidated);
-    _itemlists[listUuid]
-        .firstWhere((element) => element.uuid == itemUuid)
-        .isValidated = isValidated;
+    await fetchItemList(listUuid);
   }
 
   List<dynamic> filterLists(String filterText) {
@@ -253,6 +236,10 @@ class WishlistService {
 
   uncheckAllItems({@required String listUuid}) async {
     await dao.uncheckAllItems(listUuid: listUuid);
+    _flush();
+  }
+
+  flushWishlists() {
     _flush();
   }
 }

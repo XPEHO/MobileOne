@@ -14,6 +14,7 @@ import 'package:MobileOne/widgets/widget_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Lists extends StatefulWidget {
   State<StatefulWidget> createState() {
@@ -27,14 +28,21 @@ class ListsState extends State<Lists> {
   var _userService = GetIt.I.get<UserService>();
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
+  var _wishlistProvider = GetIt.I.get<WishlistsListProvider>();
   var share = GetIt.I.get<ShareService>();
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
   @override
   void initState() {
     _analytics.setCurrentPage("isOnListPage");
     super.initState();
   }
 
-  var numberOfShare;
+  void _onRefresh() async {
+    _wishlistProvider.flushWishlists();
+    _refreshController.refreshCompleted();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,23 +52,27 @@ class ListsState extends State<Lists> {
           builder: (context, wishlistsListProvider, child) {
         return Scaffold(
           backgroundColor: _colorsApp.colorTheme,
-          body: SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.2,
-                    child: logo(),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.3,
-                    child: allMyLists(context, wishlistsListProvider),
-                  ),
-                  Container(
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    child: allSharedLists(context, wishlistsListProvider),
-                  ),
-                ],
+          body: SmartRefresher(
+            controller: _refreshController,
+            onRefresh: _onRefresh,
+            child: SafeArea(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.2,
+                      child: logo(),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.3,
+                      child: allMyLists(context, wishlistsListProvider),
+                    ),
+                    Container(
+                      height: MediaQuery.of(context).size.height * 0.4,
+                      child: allSharedLists(context, wishlistsListProvider),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -265,7 +277,7 @@ class ListsState extends State<Lists> {
   }
 
   void createList() async {
-    await GetIt.I.get<WishlistsListProvider>().addWishlist(context);
+    await _wishlistProvider.addWishlist(context);
   }
 
   void openOpenedListPage(String uuid, bool isGuest) {

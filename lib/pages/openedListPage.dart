@@ -134,7 +134,7 @@ class OpenedListPageState extends State<OpenedListPage> {
                     if (direction == DismissDirection.endToStart) {
                       return await buildDeleteShowDialog(context);
                     } else {
-                      validateItem(
+                      await validateItem(
                         listUuid: wishlistHead.uuid,
                         item: wishlist[index],
                       );
@@ -363,8 +363,8 @@ class OpenedListPageState extends State<OpenedListPage> {
         listUuid: listUuid, itemUuid: itemUuid, imageName: imageName);
   }
 
-  void validateItem({String listUuid, WishlistItem item}) {
-    GetIt.I.get<ItemsListProvider>().validateItem(
+  Future<void> validateItem({String listUuid, WishlistItem item}) async {
+    await GetIt.I.get<ItemsListProvider>().validateItem(
           listUuid: listUuid,
           itemUuid: item.uuid,
           isValidated: true,
