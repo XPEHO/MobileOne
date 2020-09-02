@@ -1,6 +1,7 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class SplashPageState extends State<SplashPage>
   final _userService = GetIt.I.get<UserService>();
   final _authenticationService = GetIt.I.get<AuthenticationService>();
   final _preferencesService = GetIt.I.get<PreferencesService>();
+  var _messagingService = GetIt.I.get<MessagingService>();
   AnimationController _controllerLogo;
   Animation<Offset> _offsetAnimationLogo;
 
@@ -111,6 +113,7 @@ class SplashPageState extends State<SplashPage>
         autologin = true;
       }
       if (_userService.user != null) {
+        await _messagingService.setUserAppToken(_userService.user.email);
         openMainPage();
       }
       return autologin;

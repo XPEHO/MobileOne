@@ -18,11 +18,11 @@ import 'package:MobileOne/pages/share_two.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
 import 'package:MobileOne/localization/delegate.dart';
@@ -41,14 +41,18 @@ import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
+import 'dao/messaging_dao.dart';
+
 GetIt getIt = GetIt.instance;
 
 void instantiateServices() {
   getIt.registerSingleton(FirebaseAuth.instance);
   getIt.registerSingleton(AnalyticsService());
   getIt.registerSingleton(PreferencesService());
-
   getIt.registerSingleton(UserService());
+  getIt.registerSingleton(MessagingDao());
+  getIt.registerSingleton(MessagingService());
+
   getIt.registerSingleton(LoyaltyCardsDao());
   getIt.registerSingleton(LoyaltyCardsService());
 
@@ -92,35 +96,12 @@ class MyApp extends StatefulWidget {
 
 class MyAppState extends State<MyApp> {
   final _preferencesService = GetIt.I.get<PreferencesService>();
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final _messagingService = GetIt.I.get<MessagingService>();
 
   @override
   void initState() {
     super.initState();
-
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        debugPrint("onMessage: $message");
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        debugPrint("onLaunch: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        debugPrint("onResume: $message");
-      },
-    );
-
-    _firebaseMessaging.requestNotificationPermissions(
-        const IosNotificationSettings(
-            sound: true, badge: true, alert: true, provisional: true));
-
-    _firebaseMessaging.onIosSettingsRegistered
-        .listen((IosNotificationSettings settings) {});
-
-    _firebaseMessaging.getToken().then((String token) {
-      assert(token != null);
-      debugPrint("token : $token");
-    });
+    _messagingService.configureMessaging();
   }
 
   @override

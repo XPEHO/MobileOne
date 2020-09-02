@@ -141,5 +141,7 @@
     "version": "Version : ",
     "website": "Site web : ",
     "company": "Développé par : ",
-    "xpeho_website": "https://xpeho.fr/"
+    "xpeho_website": "https://xpeho.fr/",
+    "share_notif_title": "Partage",
+    "share_notif_body": " vous a partagé une liste"
 }

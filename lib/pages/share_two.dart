@@ -4,6 +4,7 @@ import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/widgets/widget_list.dart';
 import 'package:MobileOne/pages/share_one.dart';
@@ -18,6 +19,8 @@ class ShareTwo extends StatefulWidget {
 
 class ShareStateTwoState extends State<ShareTwo> {
   var _analytics = GetIt.I.get<AnalyticsService>();
+  var _userService = GetIt.I.get<UserService>();
+  var _messagingService = GetIt.I.get<MessagingService>();
   final _myController = TextEditingController();
 
   var userService = GetIt.I.get<UserService>();
@@ -116,6 +119,12 @@ class ShareStateTwoState extends State<ShareTwo> {
                                   searchTermEmail.toLowerCase(), _selectedUuid);
                               shareProvider.addGuestToDataBase(
                                   searchTermEmail.toLowerCase(), _selectedUuid);
+                              _messagingService.setNotification(
+                                  destEmail: searchTermEmail,
+                                  title:
+                                      getString(context, "share_notif_title"),
+                                  body: _userService.user.email +
+                                      getString(context, "share_notif_body"));
                               openSharePage();
                             } else {
                               shareProvider.addSharedToDataBase(
@@ -124,6 +133,13 @@ class ShareStateTwoState extends State<ShareTwo> {
                               shareProvider.addGuestToDataBase(
                                   contactSelected.emails.elementAt(0).value,
                                   _selectedUuid);
+                              _messagingService.setNotification(
+                                  destEmail:
+                                      contactSelected.emails.elementAt(0).value,
+                                  title:
+                                      getString(context, "share_notif_title"),
+                                  body: _userService.user.email +
+                                      getString(context, "share_notif_body"));
                               openSharePage();
                             }
                           },

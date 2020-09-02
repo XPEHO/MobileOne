@@ -2,6 +2,8 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/messaging_service.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_share_contact.dart';
 import 'package:contacts_service/contacts_service.dart';
@@ -19,6 +21,8 @@ class ShareOne extends StatefulWidget {
 
 class ShareStateOneState extends State<ShareOne> {
   var _analytics = GetIt.I.get<AnalyticsService>();
+  var _messagingService = GetIt.I.get<MessagingService>();
+  var _userService = GetIt.I.get<UserService>();
   var uuid = Uuid();
   var newUuid;
   final _myController = TextEditingController();
@@ -191,6 +195,11 @@ class ShareStateOneState extends State<ShareOne> {
           } else {
             shareProvider.addSharedToDataBase(searchTermEmail, previousList);
             shareProvider.addGuestToDataBase(searchTermEmail, previousList);
+            _messagingService.setNotification(
+                destEmail: searchTermEmail,
+                title: getString(context, "share_notif_title"),
+                body: _userService.user.email +
+                    getString(context, "share_notif_body"));
             openSharePage();
           }
         }
@@ -274,7 +283,11 @@ class ShareStateOneState extends State<ShareOne> {
                   contactSelected.emails.elementAt(0).value, previousList);
               shareProvider.addGuestToDataBase(
                   contactSelected.emails.elementAt(0).value, previousList);
-
+              _messagingService.setNotification(
+                  destEmail: contactSelected.emails.elementAt(0).value,
+                  title: getString(context, "share_notif_title"),
+                  body: _userService.user.email +
+                      getString(context, "share_notif_body"));
               openSharePage();
             }
           },

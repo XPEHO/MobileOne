@@ -3,6 +3,7 @@ import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,6 +13,7 @@ import 'package:uuid/uuid.dart';
 
 class WishlistService {
   final WishlistDao dao = GetIt.I.get<WishlistDao>();
+  final MessagingService messagingService = GetIt.I.get<MessagingService>();
   final UserService userService = GetIt.I.get<UserService>();
   var _analytics = GetIt.I.get<AnalyticsService>();
 

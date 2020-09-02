@@ -42,6 +42,7 @@ lib/generated_plugin_registrant.dart
 # Firebase
 /android/app/google-services.json
 /ios/Runner/GoogleService-Info.plist
+/resources/messaging/cloud_messaging.json
 
 # Android settings
 android/app/.settings/
