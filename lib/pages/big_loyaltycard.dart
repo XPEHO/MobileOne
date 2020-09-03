@@ -43,11 +43,6 @@ class CardsState extends State<Cards> with TickerProviderStateMixin {
     _scaleController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 200));
     _scale = Tween(begin: 1.0, end: 0.7).animate(_scaleController);
-
-    Future.delayed(Duration(milliseconds: 400), () {
-      _rotationController.forward();
-      _scaleController.forward();
-    });
   }
 
   void _openDialog(String title, Widget content) {
@@ -224,6 +219,9 @@ class CardsState extends State<Cards> with TickerProviderStateMixin {
     _rotationController.isCompleted
         ? _rotationController.reverse()
         : _rotationController.forward();
+    _scaleController.isCompleted
+        ? _scaleController.reverse()
+        : _scaleController.forward();
   }
 
   goToLoyaltyCardsPage(context) async {
