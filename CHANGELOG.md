@@ -112,9 +112,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - reduce the writing size of the navigation bar
 - Optimise Big loyalty card
 - "my shares " title is not on appbar 
-- LoyaltyCards : User can now validate the loyalty card name changes
-- Find a name 
-
+- LoyaltyCards : User can now validate the loyalty card name changes 
+- Fixed app name
 
 ### Security
 

@@ -51,7 +51,7 @@ class MessagingService {
 
   Future<String> getServerToken() async {
     String data =
-        await rootBundle.loadString('resources/messaging/cloud_messaging.json');
+        await rootBundle.loadString('assets/messaging/cloud_messaging.json');
     Map<String, dynamic> _result = json.decode(data);
 
     return _result["serverToken"];

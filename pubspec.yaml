@@ -89,7 +89,7 @@ flutter:
   assets:
     - resources/lang/en.json
     - resources/lang/fr.json
-    - resources/messaging/cloud_messaging.json
+    - assets/messaging/cloud_messaging.json
     - assets/images/
     - pubspec.yaml
 
