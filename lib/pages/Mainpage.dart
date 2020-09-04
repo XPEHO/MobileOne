@@ -54,6 +54,7 @@ class MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    bottomBackground = _colorsApp.colorTheme;
     GetIt.I.get<UserPictureProvider>().selectedPicturePath = GetIt.I
         .get<PreferencesService>()
         .getString('picture' + GetIt.I.get<UserService>().user.uid);

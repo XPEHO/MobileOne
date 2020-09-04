@@ -116,6 +116,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fixed app name
 - Shared contacts : User can now see all the contacts of a shared list
 - LoyaltyCards : The big card don't rotate on card opening
+- MainPage : Bottom floating action button background is now green on app start
 - Fixed about screen
 
 ### Security
