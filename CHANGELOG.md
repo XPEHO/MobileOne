@@ -114,6 +114,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - "my shares " title is not on appbar 
 - LoyaltyCards : User can now validate the loyalty card name changes 
 - Fixed app name
+- Shared contacts : User can now see all the contacts of a shared list
 - LoyaltyCards : The big card don't rotate on card opening
 
 ### Security

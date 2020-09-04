@@ -66,16 +66,19 @@ class WidgetShareListWithSomeoneState
                 top: 15,
               ),
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.12,
+                height: 20 + (45 * _emails.length.toDouble()),
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Column(
                   children: <Widget>[
-                    Text(
-                      getString(context, "shared_with"),
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.bold,
-                        color: WHITE,
+                    Container(
+                      height: 20,
+                      child: Text(
+                        getString(context, "shared_with"),
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: WHITE,
+                        ),
                       ),
                     ),
                     Expanded(
@@ -84,32 +87,36 @@ class WidgetShareListWithSomeoneState
                         itemCount: _emails.length,
                         itemBuilder: (BuildContext ctxt, int index) {
                           var emailSelected = _emails[index];
-                          return Row(
-                            children: <Widget>[
-                              Container(
-                                width: MediaQuery.of(context).size.width * 0.4,
-                                child: Text(
-                                  _emails[index],
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                    color: WHITE,
+                          return Container(
+                            height: 45,
+                            child: Row(
+                              children: <Widget>[
+                                Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: Text(
+                                    _emails[index],
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: WHITE,
+                                    ),
                                   ),
                                 ),
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  shareProvider.deleteShared(
-                                      _listUuid, emailSelected);
-                                },
-                                child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Icon(
-                                      Icons.delete_forever,
-                                      size: 30,
-                                      color: GREY,
-                                    )),
-                              ),
-                            ],
+                                GestureDetector(
+                                  onTap: () {
+                                    shareProvider.deleteShared(
+                                        _listUuid, emailSelected);
+                                  },
+                                  child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.delete_forever,
+                                        size: 30,
+                                        color: GREY,
+                                      )),
+                                ),
+                              ],
+                            ),
                           );
                         },
                       ),
