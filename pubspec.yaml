@@ -54,6 +54,8 @@ dependencies:
   flutter_local_notifications: ^1.4.4+4
   firebase_messaging: ^7.0.0
   pull_to_refresh: ^1.6.1
+  package_info: ^0.4.3
+  url_launcher: ^5.5.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -91,7 +93,6 @@ flutter:
     - resources/lang/fr.json
     - assets/messaging/cloud_messaging.json
     - assets/images/
-    - pubspec.yaml
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

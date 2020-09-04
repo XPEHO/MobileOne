@@ -13,6 +13,7 @@ import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/utility/arguments.dart';
+import 'package:MobileOne/widgets/widget_about_screen.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
@@ -26,8 +27,6 @@ import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_email_sender/flutter_email_sender.dart';
-import 'package:flutter/services.dart';
-import 'package:yaml/yaml.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -204,50 +203,9 @@ class MainPageState extends State<MainPage> {
   void aboutScreen() {
     showDialog(
         context: context,
-        builder: (_) {
-          return AlertDialog(
-              title: Text(
-                  getString(context, "about") + getString(context, "app_name")),
-              actions: [
-                FlatButton(
-                  child: Text('CANCEL'),
-                  onPressed: Navigator.of(context).pop,
-                ),
-              ],
-              content: aboutApp());
+        builder: (BuildContext context) {
+          return AboutScreen();
         });
-  }
-
-  aboutApp() {
-    String version;
-    return Wrap(
-      children: [
-        Text(
-          getString(context, "name_of_app") + getString(context, "app_name"),
-        ),
-        FutureBuilder(
-          future: rootBundle.loadString("pubspec.yaml"),
-          builder: (context, snapshot) {
-            version = "Unknown";
-            if (snapshot.hasData) {
-              var yaml = loadYaml(snapshot.data());
-              version = yaml["version"];
-            }
-
-            return Container(
-              child: Text(
-                  getString(context, "version") + '${version.split("+")[0]}'),
-            );
-          },
-        ),
-        Text(
-          getString(context, "company") + getString(context, "company_name"),
-        ),
-        Text(
-          getString(context, "website") + getString(context, "xpeho_website"),
-        ),
-      ],
-    );
   }
 
   onBottomBarIndexSelected(index) {

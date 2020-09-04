@@ -8,6 +8,7 @@ import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/splash.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
+import 'package:MobileOne/providers/package_info_provider.dart';
 import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/providers/wishlist_head_provider.dart';
@@ -69,6 +70,7 @@ void instantiateServices() {
   getIt.registerSingleton(LoyaltyCardsProvider());
   getIt.registerSingleton(UserPictureProvider());
   getIt.registerSingleton(WishlistHeadProvider());
+  getIt.registerSingleton(PackageInfoProvider());
 
   getIt.registerSingleton(ShareService());
 }

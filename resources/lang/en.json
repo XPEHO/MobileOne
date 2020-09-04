@@ -141,7 +141,9 @@
     "version": "App version : ",
     "website": "Web site : ",
     "company": "Developped by : ",
-    "xpeho_website": "https://xpeho.fr/",
+    "xpeho_website": "https://xpeho.fr",
     "share_notif_title": "Share",
-    "share_notif_body": " has shared you a list"
+    "share_notif_body": " has shared you a list",
+    "leave_about_screen": "Close",
+    "cant_launch_url": "Can't open url"
 }
