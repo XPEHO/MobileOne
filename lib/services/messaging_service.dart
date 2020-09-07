@@ -49,6 +49,10 @@ class MessagingService {
     await _messagingDao.setUserAppToken(userEmail, _appToken);
   }
 
+  deleteUserAppToken(String userEmail) async {
+    await _messagingDao.deleteUserAppToken(userEmail);
+  }
+
   Future<String> getServerToken() async {
     String data =
         await rootBundle.loadString('assets/messaging/cloud_messaging.json');

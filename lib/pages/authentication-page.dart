@@ -2,6 +2,7 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/messaging_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -31,6 +32,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   var _userService = GetIt.I.get<UserService>();
   var _authenticationService = GetIt.I.get<AuthenticationService>();
   var _messagingService = GetIt.I.get<MessagingService>();
+  var _preferencesService = GetIt.I.get<PreferencesService>();
 
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
@@ -187,7 +189,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
     _authenticationService.googleSignIn().then((User user) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('mode', "google");
-      await _messagingService.setUserAppToken(user.email);
+      await setUserAppToken();
       _userService.user = user;
       Fluttertoast.showToast(msg: getString(context, 'google_signin'));
       openMainPage(context);
@@ -356,7 +358,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
         await prefs.setString('email', _email);
         await prefs.setString('password', _password);
 
-        await _messagingService.setUserAppToken(_userService.user.email);
+        await setUserAppToken();
 
         openMainPage(context);
         Fluttertoast.showToast(msg: getString(context, 'signed_in'));
@@ -370,6 +372,12 @@ class AuthenticationPageState extends State<AuthenticationPage> {
           Fluttertoast.showToast(msg: getString(context, 'no_user_found'));
           break;
       }
+    }
+  }
+
+  Future<void> setUserAppToken() async {
+    if (_preferencesService.enableNotifications) {
+      await _messagingService.setUserAppToken(_userService.user.email);
     }
   }
 

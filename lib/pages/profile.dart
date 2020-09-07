@@ -119,6 +119,18 @@ class ProfileState extends State<Profile> {
                   height: MediaQuery.of(context).size.height * 0.1,
                   width: MediaQuery.of(context).size.width,
                 ),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.1,
+            width: MediaQuery.of(context).size.width,
+            child: InkWell(
+              onTap: goToSettingsPage,
+              child: RectangleTextIcon(
+                getString(context, "settings"),
+                Icons.arrow_forward_ios,
+                GREY,
+              ),
+            ),
+          ),
           (_isPasswordUser())
               ? Container(
                   height: MediaQuery.of(context).size.height * 0.1,
@@ -287,6 +299,10 @@ class ProfileState extends State<Profile> {
         msg: getString(context, 'no_user'),
       );
     }
+  }
+
+  goToSettingsPage() {
+    Navigator.of(context).pushNamed('/settings');
   }
 
   goToChangePasswordPage() {

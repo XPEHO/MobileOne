@@ -7,6 +7,13 @@ class MessagingDao {
     );
   }
 
+  deleteUserAppToken(String userEmail) async {
+    await FirebaseFirestore.instance
+        .collection("appTokens")
+        .doc(userEmail)
+        .delete();
+  }
+
   Future<String> getUserAppToken(String email) async {
     final token = await FirebaseFirestore.instance
         .collection("appTokens")

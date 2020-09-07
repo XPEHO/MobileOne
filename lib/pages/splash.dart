@@ -113,7 +113,9 @@ class SplashPageState extends State<SplashPage>
         autologin = true;
       }
       if (_userService.user != null) {
-        await _messagingService.setUserAppToken(_userService.user.email);
+        if (_preferencesService.enableNotifications) {
+          await _messagingService.setUserAppToken(_userService.user.email);
+        }
         openMainPage();
       }
       return autologin;

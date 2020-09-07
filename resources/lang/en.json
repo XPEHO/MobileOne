@@ -145,5 +145,7 @@
     "share_notif_title": "Share",
     "share_notif_body": " has shared you a list",
     "leave_about_screen": "Close",
-    "cant_launch_url": "Can't open url"
+    "cant_launch_url": "Can't open url",
+    "settings": "Settings",
+    "notifications": "Notifications :"
 }

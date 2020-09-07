@@ -5,6 +5,7 @@ import 'package:MobileOne/pages/big_loyaltycard.dart';
 import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/pages/loyaltycards_page.dart';
 import 'package:MobileOne/pages/profile.dart';
+import 'package:MobileOne/pages/settings_page.dart';
 import 'package:MobileOne/pages/splash.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
@@ -146,6 +147,7 @@ class MyAppState extends State<MyApp> {
         "/loyaltycards": (contaxt) => LoyaltyCards(),
         "/profile": (context) => Profile(),
         "/createItem": (context) => EditItemPage(),
+        "/settings": (context) => SettingsPage(),
       },
     );
   }
