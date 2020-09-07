@@ -147,5 +147,7 @@
     "leave_about_screen": "Close",
     "cant_launch_url": "Can't open url",
     "settings": "Settings",
-    "notifications": "Notifications :"
+    "notifications": "Notifications :",
+    "open_item_page": "Add an item",
+    "open_recipes_page": "Add a recipe"
 }

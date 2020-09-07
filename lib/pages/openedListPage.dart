@@ -71,14 +71,7 @@ class OpenedListPageState extends State<OpenedListPage> {
       child: Scaffold(
         appBar: buildAppBar(context, wishlistHead),
         backgroundColor: _colorsApp.colorTheme,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            openItemPage(
-                getString(context, 'popup_add'), wishlistHead.uuid, null);
-          },
-          child: Icon(Icons.add),
-          backgroundColor: _colorsApp.buttonColor,
-        ),
+        floatingActionButton: buildFloatingActionButton(wishlistHead),
         body: Builder(
           builder: (context) {
             if (items == null) {
@@ -100,6 +93,40 @@ class OpenedListPageState extends State<OpenedListPage> {
           },
         ),
       ),
+    );
+  }
+
+  FloatingActionButton buildFloatingActionButton(Wishlist wishlistHead) {
+    return FloatingActionButton(
+      onPressed: () {
+        return PopupMenuButton<int>(
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              key: Key("openItemPage"),
+              value: 1,
+              child: Text(getString(context, 'open_item_page')),
+            ),
+            PopupMenuItem(
+              key: Key("openRecipesPage"),
+              value: 2,
+              child: Text(getString(context, 'open_recipes_page')),
+            ),
+          ],
+          icon: Icon(Icons.more_vert, color: WHITE),
+          onSelected: (value) {
+            switch (value) {
+              case 1:
+                openItemPage(
+                    getString(context, 'popup_add'), wishlistHead.uuid, null);
+                break;
+              case 2:
+                break;
+            }
+          },
+        );
+      },
+      child: Icon(Icons.add),
+      backgroundColor: _colorsApp.buttonColor,
     );
   }
 
