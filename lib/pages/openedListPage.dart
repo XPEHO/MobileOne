@@ -66,21 +66,6 @@ class OpenedListPageState extends State<OpenedListPage> {
     );
   }
 
-  List<WishlistItem> getSortedList(List<WishlistItem> items) {
-    items.sort((WishlistItem a, WishlistItem b) {
-      final isAValidate = a.isValidated;
-      final isBValidate = b.isValidated;
-      if (isAValidate == isBValidate) {
-        return 0;
-      } else if (isAValidate) {
-        return 1;
-      } else {
-        return -1;
-      }
-    });
-    return items;
-  }
-
   Widget content(Wishlist wishlistHead, List<WishlistItem> items) {
     return SafeArea(
       child: Scaffold(
@@ -101,14 +86,13 @@ class OpenedListPageState extends State<OpenedListPage> {
                 child: Text(getString(context, "loading")),
               );
             }
-            List<WishlistItem> wishlist = getSortedList(items);
 
             return Column(
               children: <Widget>[
                 progressindicator(),
                 Expanded(
-                  child: (wishlist.length > 0)
-                      ? buildList(context, wishlist, wishlistHead)
+                  child: (items.length > 0)
+                      ? buildList(context, items, wishlistHead)
                       : emptyList(),
                 )
               ],

@@ -118,6 +118,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - LoyaltyCards : The big card don't rotate on card opening
 - MainPage : Bottom floating action button background is now green on app start
 - Fixed about screen
+- Items sort : The items in a list are now sorted alphabeti
 
 ### Security
 

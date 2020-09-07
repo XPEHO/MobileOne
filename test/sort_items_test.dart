@@ -11,7 +11,7 @@ import 'package:get_it/get_it.dart';
 import 'samples/sample.dart';
 
 void main() {
-  test("Sort the items in a wishlist", () {
+  group('Items sort tests', () {
     //Given
     GetIt.I.registerSingleton<WishlistDao>(WishlistDao());
     GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
@@ -22,19 +22,66 @@ void main() {
 
     final service = WishlistService();
 
-    List<WishlistItem> list = [
-      aWishlistItem(label: "b"),
-      aWishlistItem(label: "c"),
-      aWishlistItem(label: "a")
-    ];
+    test("Sort the items in a wishlist by label", () {
+      //Given
+      List<WishlistItem> list = [
+        aWishlistItem(label: "z"),
+        aWishlistItem(label: "a"),
+        aWishlistItem(label: "u"),
+        aWishlistItem(label: "M"),
+        aWishlistItem(label: "B"),
+      ];
 
-    //When
-    List<WishlistItem> result = service.sortItemsInList(list);
+      //When
+      List<WishlistItem> result = service.sortItemsInList(list);
 
-    //Then
-    expect(result == null, false);
-    expect(result.isNotEmpty, true);
-    expect(result.first.label == "a", true);
-    expect(result.last.label == "c", true);
+      //Then
+      expect(result == null, false);
+      expect(result.isNotEmpty, true);
+      expect(result.first.label == "a", true);
+      expect(result.last.label == "z", true);
+    });
+
+    test("Sort the items in a wishlist by validation", () {
+      //Given
+      List<WishlistItem> list = [
+        aWishlistItem(label: "", isValidated: false),
+        aWishlistItem(label: "", isValidated: true),
+        aWishlistItem(label: "", isValidated: false),
+      ];
+
+      //When
+      List<WishlistItem> result = service.sortItemsInList(list);
+
+      //Then
+      expect(result == null, false);
+      expect(result.isNotEmpty, true);
+      expect(result.first.isValidated, false);
+      expect(result.last.isValidated, true);
+    });
+
+    test("Sort the items in a wishlist by label and validation", () {
+      //Given
+      List<WishlistItem> list = [
+        aWishlistItem(label: "z", isValidated: false),
+        aWishlistItem(label: "a", isValidated: false),
+        aWishlistItem(label: "u", isValidated: false),
+        aWishlistItem(label: "M", isValidated: true),
+        aWishlistItem(label: "B", isValidated: true),
+      ];
+
+      //When
+      List<WishlistItem> result = service.sortItemsInList(list);
+
+      //Then
+      expect(result == null, false);
+      expect(result.isNotEmpty, true);
+      expect(result.first.label == "a", true);
+      expect(result.first.isValidated, false);
+      expect(result[result.length - 2].label == "B", true);
+      expect(result[result.length - 2].isValidated, true);
+      expect(result.last.label == "M", true);
+      expect(result.last.isValidated, true);
+    });
   });
 }

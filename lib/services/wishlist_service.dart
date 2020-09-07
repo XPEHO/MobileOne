@@ -135,9 +135,15 @@ class WishlistService {
 
   List<WishlistItem> sortItemsInList(List<WishlistItem> itemList) {
     if (itemList != null) {
-      itemList.sort((a, b) => a.label.compareTo(b.label));
-      itemList.sort((a, b) =>
-          a.isValidated.toString().compareTo(b.isValidated.toString()));
+      itemList.sort((a, b) {
+        if (a.isValidated == b.isValidated) {
+          return a.label.toLowerCase().compareTo(b.label.toLowerCase());
+        } else if (a.isValidated) {
+          return 1;
+        } else {
+          return -1;
+        }
+      });
     }
 
     return itemList;
