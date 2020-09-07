@@ -67,9 +67,9 @@ class WishlistService {
         await dao.fetchShareLists(userService.user.uid);
     var data;
     if (shareLists?.data() == null) {
-      data = Map();
+      data = Map<String, dynamic>();
     } else {
-      data = shareLists.data() ?? Map();
+      data = shareLists.data() ?? Map<String, dynamic>();
     }
     _shareLists[userService.user.uid] = data;
     return data;

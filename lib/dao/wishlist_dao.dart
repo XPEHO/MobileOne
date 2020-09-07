@@ -19,10 +19,14 @@ class WishlistDao {
         .doc(userUuid)
         .get()
         .then((value) {
-      value.data().isNotEmpty
-          ? wishlistName =
-              "Wishlist " + (value.data()["lists"].length + 1).toString()
-          : wishlistName = "Wishlist 1";
+      if (value.data() != null) {
+        value.data().isNotEmpty
+            ? wishlistName =
+                "Wishlist " + (value.data()["lists"].length + 1).toString()
+            : wishlistName = "Wishlist 1";
+      } else {
+        wishlistName = "Wishlist 1";
+      }
     });
 
     //Create a wishlist
