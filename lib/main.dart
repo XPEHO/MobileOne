@@ -1,15 +1,20 @@
 import 'dart:async';
 import 'package:MobileOne/dao/loyalty_cards_dao.dart';
+import 'package:MobileOne/dao/recipes_dao.dart';
 import 'package:MobileOne/dao/wishlist_dao.dart';
 import 'package:MobileOne/pages/big_loyaltycard.dart';
 import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/pages/loyaltycards_page.dart';
+import 'package:MobileOne/pages/opened_recipe_page.dart';
 import 'package:MobileOne/pages/profile.dart';
+import 'package:MobileOne/pages/recipes_page.dart';
 import 'package:MobileOne/pages/settings_page.dart';
 import 'package:MobileOne/pages/splash.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/providers/package_info_provider.dart';
+import 'package:MobileOne/providers/recipeItems_provider.dart';
+import 'package:MobileOne/providers/recipes_provider.dart';
 import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/providers/wishlist_head_provider.dart';
@@ -21,6 +26,7 @@ import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/messaging_service.dart';
+import 'package:MobileOne/services/recipes_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
@@ -54,6 +60,11 @@ void instantiateServices() {
   getIt.registerSingleton(UserService());
   getIt.registerSingleton(MessagingDao());
   getIt.registerSingleton(MessagingService());
+
+  getIt.registerSingleton(RecipesDao());
+  getIt.registerSingleton(RecipesService());
+  getIt.registerSingleton(RecipesProvider());
+  getIt.registerSingleton(RecipeItemsProvider());
 
   getIt.registerSingleton(LoyaltyCardsDao());
   getIt.registerSingleton(LoyaltyCardsService());
@@ -148,6 +159,8 @@ class MyAppState extends State<MyApp> {
         "/profile": (context) => Profile(),
         "/createItem": (context) => EditItemPage(),
         "/settings": (context) => SettingsPage(),
+        "/recipes": (context) => RecipesPage(),
+        "/openedRecipePage": (context) => OpenedRecipePage(),
       },
     );
   }

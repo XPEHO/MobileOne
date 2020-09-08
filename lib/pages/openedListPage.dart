@@ -27,7 +27,8 @@ class OpenedListPage extends StatefulWidget {
   OpenedListPageState createState() => OpenedListPageState();
 }
 
-class OpenedListPageState extends State<OpenedListPage> {
+class OpenedListPageState extends State<OpenedListPage>
+    with SingleTickerProviderStateMixin {
   var _analytics = GetIt.I.get<AnalyticsService>();
 
   final _myController = TextEditingController();
@@ -38,10 +39,63 @@ class OpenedListPageState extends State<OpenedListPage> {
 
   var currentValue;
 
+  bool isOpened = false;
+  AnimationController _animationController;
+  Animation<Color> _animateColor;
+  Animation<double> _animateIcon;
+  Animation<double> _animateButton;
+  Curve _curve = Curves.easeOut;
+
   @override
   void initState() {
     _analytics.setCurrentPage("isOnOpenedListPage");
+
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 500))
+          ..addListener(() {
+            setState(() {});
+          });
+    _animateIcon =
+        Tween<double>(begin: 0.0, end: 1.0).animate(_animationController);
+    _animateColor = ColorTween(
+      begin: _colorsApp.buttonColor,
+      end: RED,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.00,
+        1.00,
+        curve: _curve,
+      ),
+    ));
+    _animateButton = Tween<double>(
+      begin: 56.0,
+      end: -14.0,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Interval(
+        0.0,
+        0.75,
+        curve: _curve,
+      ),
+    ));
+
     super.initState();
+  }
+
+  @override
+  dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  animate() {
+    if (!isOpened) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+    isOpened = !isOpened;
   }
 
   @override
@@ -96,37 +150,88 @@ class OpenedListPageState extends State<OpenedListPage> {
     );
   }
 
-  FloatingActionButton buildFloatingActionButton(Wishlist wishlistHead) {
-    return FloatingActionButton(
-      onPressed: () {
-        return PopupMenuButton<int>(
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              key: Key("openItemPage"),
-              value: 1,
-              child: Text(getString(context, 'open_item_page')),
+  Widget buildFloatingActionButton(Wishlist wishlistHead) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _animateButton.value * 2,
+            0.0,
+          ),
+          child: Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Visibility(
+                  visible: isOpened,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text(
+                      getString(context, 'open_recipes_page'),
+                      style: TextStyle(color: WHITE),
+                    ),
+                  ),
+                ),
+                FloatingActionButton(
+                    heroTag: "Button 3",
+                    backgroundColor: _colorsApp.buttonColor,
+                    child: Icon(Icons.note_add),
+                    onPressed: () {
+                      openRecipesPage();
+                      animate();
+                    }),
+              ],
             ),
-            PopupMenuItem(
-              key: Key("openRecipesPage"),
-              value: 2,
-              child: Text(getString(context, 'open_recipes_page')),
+          ),
+        ),
+        Transform(
+          transform: Matrix4.translationValues(
+            0.0,
+            _animateButton.value,
+            0.0,
+          ),
+          child: Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Visibility(
+                  visible: isOpened,
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Text(
+                      getString(context, 'open_item_page'),
+                      style: TextStyle(color: WHITE),
+                    ),
+                  ),
+                ),
+                FloatingActionButton(
+                    heroTag: "Button 2",
+                    backgroundColor: _colorsApp.buttonColor,
+                    child: Icon(Icons.add),
+                    onPressed: () {
+                      openItemPage(getString(context, 'popup_add'),
+                          wishlistHead.uuid, null, false);
+                      animate();
+                    }),
+              ],
             ),
-          ],
-          icon: Icon(Icons.more_vert, color: WHITE),
-          onSelected: (value) {
-            switch (value) {
-              case 1:
-                openItemPage(
-                    getString(context, 'popup_add'), wishlistHead.uuid, null);
-                break;
-              case 2:
-                break;
-            }
-          },
-        );
-      },
-      child: Icon(Icons.add),
-      backgroundColor: _colorsApp.buttonColor,
+          ),
+        ),
+        Container(
+          child: FloatingActionButton(
+            heroTag: "Button 1",
+            backgroundColor: _animateColor.value,
+            onPressed: animate,
+            child: AnimatedIcon(
+              icon: AnimatedIcons.menu_close,
+              progress: _animateIcon,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -507,9 +612,17 @@ class OpenedListPageState extends State<OpenedListPage> {
         .pushNamed('/shareOne', arguments: ShareArguments(previousList: uuid));
   }
 
-  void openItemPage(String buttonName, String listUuid, String itemUuid) {
+  void openRecipesPage() {
+    Navigator.of(context).pushNamed('/recipes');
+  }
+
+  void openItemPage(
+      String buttonName, String listUuid, String itemUuid, bool isRecipe) {
     Navigator.of(context).pushNamed('/createItem',
         arguments: ItemArguments(
-            buttonName: buttonName, listUuid: listUuid, itemUuid: itemUuid));
+            buttonName: buttonName,
+            listUuid: listUuid,
+            itemUuid: itemUuid,
+            isRecipe: isRecipe));
   }
 }

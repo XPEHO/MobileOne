@@ -8,7 +8,8 @@ class ItemArguments {
   String buttonName;
   String listUuid;
   String itemUuid;
-  ItemArguments({this.buttonName, this.listUuid, this.itemUuid});
+  bool isRecipe;
+  ItemArguments({this.buttonName, this.listUuid, this.itemUuid, this.isRecipe});
 }
 
 class OpenedListArguments {

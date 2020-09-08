@@ -54,8 +54,8 @@ class WidgetItemState extends State<WidgetItem> {
           padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
           child: InkWell(
             onTap: () {
-              openItemPage(
-                  getString(context, 'popup_update'), _listUuid, _itemUuid);
+              openItemPage(getString(context, 'popup_update'), _listUuid,
+                  _itemUuid, false);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -124,8 +124,8 @@ class WidgetItemState extends State<WidgetItem> {
           padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
           child: InkWell(
             onTap: () {
-              openItemPage(
-                  getString(context, 'popup_update'), _listUuid, _itemUuid);
+              openItemPage(getString(context, 'popup_update'), _listUuid,
+                  _itemUuid, false);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -200,9 +200,13 @@ class WidgetItemState extends State<WidgetItem> {
     }
   }
 
-  void openItemPage(String buttonName, String listUuid, String itemUuid) {
+  void openItemPage(
+      String buttonName, String listUuid, String itemUuid, bool isRecipe) {
     Navigator.of(context).pushNamed('/createItem',
         arguments: ItemArguments(
-            buttonName: buttonName, listUuid: listUuid, itemUuid: itemUuid));
+            buttonName: buttonName,
+            listUuid: listUuid,
+            itemUuid: itemUuid,
+            isRecipe: isRecipe));
   }
 }

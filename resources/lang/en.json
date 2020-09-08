@@ -149,5 +149,7 @@
     "settings": "Settings",
     "notifications": "Notifications :",
     "open_item_page": "Add an item",
-    "open_recipes_page": "Add a recipe"
+    "open_recipes_page": "Add a recipe",
+    "empty_recipes": "No recipes for the moment",
+    "recipe_name": "Recipe "
 }

@@ -148,6 +148,8 @@
     "cant_launch_url": "Impossible d'ouvrir ce lien",
     "settings": "Paramètres",
     "notifications": "Notifications :",
-    "open_item_page": "Ajouter un objet",
-    "open_recipes_page": "Ajouter une recette"
+    "open_item_page": "Ajouter un article",
+    "open_recipes_page": "Ajouter une recette",
+    "empty_recipes": "Aucune recette pour le moment",
+    "recipe_name": "Recette "
 }

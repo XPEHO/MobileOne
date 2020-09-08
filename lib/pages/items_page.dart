@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:MobileOne/providers/recipeItems_provider.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/arguments/arguments.dart';
@@ -36,6 +37,7 @@ class EditItemPageState extends State<EditItemPage> {
   final _itemNameFocusNode = FocusNode();
   final _itemQuantityFocusNode = FocusNode();
   var _analytics = GetIt.I.get<AnalyticsService>();
+  var _recipeItemsProvider = GetIt.I.get<RecipeItemsProvider>();
   String _name;
   int _count = 1;
   String _type;
@@ -59,6 +61,7 @@ class EditItemPageState extends State<EditItemPage> {
   bool isInitialized;
   String imageType = "Default";
   String _localeId;
+  String _collection;
 
   Future<void> getItems() async {
     String labelValue;
@@ -66,7 +69,7 @@ class EditItemPageState extends State<EditItemPage> {
     String unitValue;
 
     await FirebaseFirestore.instance
-        .collection("items")
+        .collection(_collection)
         .doc(_args.listUuid)
         .get()
         .then((value) {
@@ -125,6 +128,7 @@ class EditItemPageState extends State<EditItemPage> {
   }
 
   void getData() {
+    _args.isRecipe ? _collection = "recipeItems" : _collection = "items";
     if (_args.buttonName == getString(context, "popup_update")) {
       _analytics.sendAnalyticsEvent("update_item");
       getItems();
@@ -541,15 +545,27 @@ class EditItemPageState extends State<EditItemPage> {
 
   void updapteItemInList(int _typeIndex) async {
     _analytics.sendAnalyticsEvent("update_item");
-    await _itemsListProvider.updateItemInList(
-      itemUuid: _args.itemUuid,
-      name: _name,
-      count: _count,
-      typeIndex: _typeIndex,
-      imageLink: imageLink,
-      listUuid: _args.listUuid,
-      imageName: _imageName,
-    );
+
+    _args.isRecipe
+        ? await _recipeItemsProvider.updateItemInRecipe(
+            itemUuid: _args.itemUuid,
+            name: _name,
+            count: _count,
+            typeIndex: _typeIndex,
+            imageLink: imageLink,
+            recipeUuid: _args.listUuid,
+            imageName: _imageName,
+          )
+        : await _itemsListProvider.updateItemInList(
+            itemUuid: _args.itemUuid,
+            name: _name,
+            count: _count,
+            typeIndex: _typeIndex,
+            imageLink: imageLink,
+            listUuid: _args.listUuid,
+            imageName: _imageName,
+          );
+
     FocusScope.of(context).unfocus();
     Navigator.of(context).pop();
     clearPopupFields();
@@ -557,14 +573,25 @@ class EditItemPageState extends State<EditItemPage> {
 
   void addItemToList(int _typeIndex) async {
     _analytics.sendAnalyticsEvent("add_item");
-    await _itemsListProvider.addItemTolist(
-      name: _name,
-      count: _count,
-      typeIndex: _typeIndex,
-      imageLink: imageLink,
-      listUuid: _args.listUuid,
-      imageName: _imageName,
-    );
+
+    _args.isRecipe
+        ? await _recipeItemsProvider.addItemToRecipe(
+            name: _name,
+            count: _count,
+            typeIndex: _typeIndex,
+            imageLink: imageLink,
+            recipeUuid: _args.listUuid,
+            imageName: _imageName,
+          )
+        : await _itemsListProvider.addItemTolist(
+            name: _name,
+            count: _count,
+            typeIndex: _typeIndex,
+            imageLink: imageLink,
+            listUuid: _args.listUuid,
+            imageName: _imageName,
+          );
+
     FocusScope.of(context).unfocus();
     Navigator.of(context).pop();
     clearPopupFields();
