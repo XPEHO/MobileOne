@@ -151,5 +151,7 @@
     "open_item_page": "Ajouter un article",
     "open_recipes_page": "Ajouter une recette",
     "empty_recipes": "Aucune recette pour le moment",
-    "recipe_name": "Recette "
+    "recipe_name": "Recette ",
+    "confirm_recipe_deletion": "Etes-vous sûr de vouloir supprimer cette recette ?",
+    "delete_recipe": "SUPPRIMER"
 }

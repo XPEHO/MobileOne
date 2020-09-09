@@ -8,7 +8,7 @@ class RecipeItemsProvider with ChangeNotifier {
 
   List<WishlistItem> getRecipeItems(String recipeUuid) {
     List<WishlistItem> recipeItems = recipesService.getRecipeItems(recipeUuid);
-    if (recipeItems == null || recipeItems.isEmpty) {
+    if (recipeItems == null) {
       recipesService
           .fetchRecipeItems(recipeUuid)
           .whenComplete(() => notifyListeners());
@@ -51,6 +51,16 @@ class RecipeItemsProvider with ChangeNotifier {
         imageLink: imageLink,
         recipeUuid: recipeUuid,
         imageName: imageName);
+    notifyListeners();
+  }
+
+  deleteItemInRecipe({
+    @required String recipeUuid,
+    @required String itemUuid,
+    @required String imageName,
+  }) async {
+    await recipesService.deleteItemInRecipe(
+        recipeUuid: recipeUuid, itemUuid: itemUuid, imageName: imageName);
     notifyListeners();
   }
 }

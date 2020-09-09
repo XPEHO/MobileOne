@@ -25,7 +25,7 @@ class RecipesDao {
       }
     });
 
-    FirebaseFirestore.instance.collection("recipes").doc(userUuid).set(
+    await FirebaseFirestore.instance.collection("recipes").doc(userUuid).set(
       {
         "$recipeUuid": {
           'label': recipeName,
@@ -128,7 +128,26 @@ class RecipesDao {
         SetOptions(merge: true),
       );
 
-  Future<DocumentSnapshot> fetchItemList(String listUuid) {
-    return FirebaseFirestore.instance.collection('items').doc(listUuid).get();
+  Future<void> deleteItemInRecipe({
+    @required String recipeUuid,
+    @required String itemUuid,
+    @required String imageName,
+  }) async {
+    await FirebaseFirestore.instance
+        .collection("recipeItems")
+        .doc(recipeUuid)
+        .update({itemUuid: FieldValue.delete()});
+  }
+
+  deleteRecipe(String recipeUuid, String userUid) async {
+    await FirebaseFirestore.instance
+        .collection("recipeItems")
+        .doc(recipeUuid)
+        .delete();
+
+    await FirebaseFirestore.instance
+        .collection("recipes")
+        .doc(userUid)
+        .update({recipeUuid: FieldValue.delete()});
   }
 }

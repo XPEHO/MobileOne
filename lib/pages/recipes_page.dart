@@ -1,3 +1,4 @@
+import 'package:MobileOne/data/recipe.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/recipes_provider.dart';
 import 'package:MobileOne/services/color_service.dart';
@@ -31,7 +32,7 @@ class RecipesPageState extends State<RecipesPage> {
     );
   }
 
-  Widget content(Map<String, dynamic> recipes) {
+  Widget content(List<Recipe> recipes) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -66,7 +67,7 @@ class RecipesPageState extends State<RecipesPage> {
     );
   }
 
-  Widget buildRecipes(BuildContext context, Map<String, dynamic> recipes) {
+  Widget buildRecipes(BuildContext context, List<Recipe> recipes) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: double.infinity,
@@ -74,72 +75,133 @@ class RecipesPageState extends State<RecipesPage> {
           padding: EdgeInsets.only(bottom: kFloatingActionButtonMargin + 64),
           itemCount: recipes.length,
           itemBuilder: (BuildContext ctxt, int index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: _colorsApp.greyColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(5),
+            return Dismissible(
+              confirmDismiss: (DismissDirection direction) async {
+                return await buildDeleteShowDialog(context);
+              },
+              background: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: RED,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    ),
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListTile(
-                    title: Text(recipes.values.toList()[index]["label"]),
-                    leading: SizedBox(
-                      width: 72,
-                      height: 72,
-                      child: Icon(Icons.note_add),
-                    ),
-                    trailing: IconButton(
-                      icon: Icon(
-                        Icons.edit,
-                        color: BLACK,
-                      ),
-                      onPressed: () =>
-                          openRecipePage(recipes.keys.toList()[index]),
-                    ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Icon(
+                          Icons.delete,
+                          color: WHITE,
+                        )),
                   ),
                 ),
               ),
+              secondaryBackground: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: RED,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(5),
+                    ),
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: Icon(
+                          Icons.delete,
+                          color: WHITE,
+                        )),
+                  ),
+                ),
+              ),
+              key: UniqueKey(),
+              child: buildRecipe(recipes, index),
+              onDismissed: (direction) {
+                _recipesProvider.deleteRecipe(recipes[index]);
+              },
             );
           }),
     );
   }
 
-  emptyRecipes() {
-    return SingleChildScrollView(
-      child: Center(
-        child: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.2,
-              child: Image.asset(
-                "assets/images/square-logo.png",
-                height: 100,
-                width: 100,
+  Padding buildRecipe(List<Recipe> recipes, int index) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: _colorsApp.greyColor,
+          borderRadius: BorderRadius.all(
+            Radius.circular(5),
+          ),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListTile(
+            title: Text(recipes[index].label),
+            leading: Icon(
+              Icons.local_dining,
+              size: 32.0,
+            ),
+            trailing: IconButton(
+              icon: Icon(
+                Icons.edit,
+                color: BLACK,
               ),
+              onPressed: () => openRecipePage(recipes[index]),
             ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Icon(Icons.note_add, size: 100, color: WHITE),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Text(
-                getString(context, "empty_recipes"),
-                style: TextStyle(color: WHITE, fontSize: 20),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  openRecipePage(String recipeUuid) {
-    Navigator.pushNamed(context, "/openedRecipePage", arguments: recipeUuid);
+  emptyRecipes() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Image.asset(
+            "assets/images/square-logo.png",
+            height: 100,
+            width: 100,
+          ),
+          Icon(Icons.local_dining, size: 100, color: WHITE),
+          Text(
+            getString(context, "empty_recipes"),
+            style: TextStyle(color: WHITE, fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+
+  buildDeleteShowDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(getString(context, 'confirm_recipe_deletion')),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(getString(context, 'delete_recipe'))),
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(getString(context, 'cancel_deletion')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  openRecipePage(Recipe recipe) {
+    Navigator.pushNamed(context, "/openedRecipePage", arguments: recipe);
   }
 
   void createRecipe() async {

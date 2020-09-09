@@ -169,16 +169,27 @@ class OpenedListPageState extends State<OpenedListPage>
                   visible: isOpened,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: Text(
-                      getString(context, 'open_recipes_page'),
-                      style: TextStyle(color: WHITE),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(),
+                          color: WHITE,
+                          borderRadius: BorderRadius.all(Radius.circular(4.0))),
+                      height: 40,
+                      width: 150,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          getString(context, 'open_recipes_page'),
+                          style: TextStyle(color: BLACK),
+                        ),
+                      ),
                     ),
                   ),
                 ),
                 FloatingActionButton(
                     heroTag: "Button 3",
                     backgroundColor: _colorsApp.buttonColor,
-                    child: Icon(Icons.note_add),
+                    child: Icon(Icons.local_dining),
                     onPressed: () {
                       openRecipesPage();
                       animate();
@@ -201,9 +212,20 @@ class OpenedListPageState extends State<OpenedListPage>
                   visible: isOpened,
                   child: Padding(
                     padding: const EdgeInsets.only(right: 8.0),
-                    child: Text(
-                      getString(context, 'open_item_page'),
-                      style: TextStyle(color: WHITE),
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(),
+                          color: WHITE,
+                          borderRadius: BorderRadius.all(Radius.circular(4.0))),
+                      height: 40,
+                      width: 150,
+                      child: Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          getString(context, 'open_item_page'),
+                          style: TextStyle(color: BLACK),
+                        ),
+                      ),
                     ),
                   ),
                 ),

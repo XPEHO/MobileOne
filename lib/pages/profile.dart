@@ -6,7 +6,9 @@ import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/recipes_service.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/widgets/text_icon.dart';
 import 'package:MobileOne/widgets/widget_deletion_confirmation.dart';
@@ -31,6 +33,8 @@ class ProfileState extends State<Profile> {
   final _auth = GetIt.I.get<FirebaseAuth>();
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
+  final _wishlistService = GetIt.I.get<WishlistService>();
+  final _recipesService = GetIt.I.get<RecipesService>();
 
   @override
   initState() {
@@ -280,6 +284,8 @@ class ProfileState extends State<Profile> {
     _prefService.sharedPreferences.remove("email");
     _prefService.sharedPreferences.remove("password");
     _prefService.sharedPreferences.remove("mode");
+    _wishlistService.flushWishlists();
+    _recipesService.flushRecipes();
     Navigator.of(context).pushNamedAndRemoveUntil(
         '/authentication', (Route<dynamic> route) => false);
     _userService.user = null;

@@ -1,14 +1,19 @@
 import 'package:MobileOne/arguments/arguments.dart';
+import 'package:MobileOne/dao/recipes_dao.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
+import 'package:MobileOne/providers/recipeItems_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/recipes_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -66,6 +71,11 @@ void main() {
   testWidgets("Take a picture of an item", (WidgetTester tester) async {
     // GIVEN
 
+    GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton<UserService>(UserService());
+    GetIt.I.registerSingleton<RecipesDao>(RecipesDao());
+    GetIt.I.registerSingleton<RecipesService>(RecipesService());
+    GetIt.I.registerSingleton<RecipeItemsProvider>(RecipeItemsProvider());
     final _itemsListMock = ItemsListProviderMock();
     GetIt.I.registerSingleton<ItemsListProvider>(_itemsListMock);
     final _imageService = ImageServiceMock();
@@ -90,6 +100,7 @@ void main() {
       listUuid: "",
       buttonName: "",
       itemUuid: "",
+      isRecipe: false,
     ));
 
     when(_imagePicker.getImage(

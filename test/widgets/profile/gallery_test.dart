@@ -1,3 +1,6 @@
+import 'package:MobileOne/dao/messaging_dao.dart';
+import 'package:MobileOne/dao/recipes_dao.dart';
+import 'package:MobileOne/dao/wishlist_dao.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/profile.dart';
@@ -9,9 +12,12 @@ import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
+import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/recipes_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -110,6 +116,12 @@ void main() {
     GetIt.I.registerSingleton<ShareService>(_shareService);
     final _loyaltycardsService = LoyaltyCardsServiceMock();
     GetIt.I.registerSingleton<LoyaltyCardsService>(_loyaltycardsService);
+    GetIt.I.registerSingleton<RecipesDao>(RecipesDao());
+    GetIt.I.registerSingleton<RecipesService>(RecipesService());
+    GetIt.I.registerSingleton<MessagingDao>(MessagingDao());
+    GetIt.I.registerSingleton<MessagingService>(MessagingService());
+    GetIt.I.registerSingleton<WishlistDao>(WishlistDao());
+    GetIt.I.registerSingleton<WishlistService>(WishlistService());
 
     final _loyaltycardsProvider = LoyaltyCardsProvider();
     GetIt.I.registerSingleton<LoyaltyCardsProvider>(_loyaltycardsProvider);

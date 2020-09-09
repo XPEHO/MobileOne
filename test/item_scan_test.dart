@@ -1,14 +1,19 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:MobileOne/dao/recipes_dao.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
+import 'package:MobileOne/providers/recipeItems_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/recipes_service.dart';
 import 'package:MobileOne/services/share_service.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
@@ -29,6 +34,11 @@ class LoyaltyCardsProvidermock extends Mock implements LoyaltyCardsProvider {}
 main() {
   group('Items scan tests', () {
     setSupportedLocales([Locale('fr', 'FR')]);
+    GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton<UserService>(UserService());
+    GetIt.I.registerSingleton<RecipesDao>(RecipesDao());
+    GetIt.I.registerSingleton<RecipesService>(RecipesService());
+    GetIt.I.registerSingleton<RecipeItemsProvider>(RecipeItemsProvider());
     final _imageService = ImageServiceMock();
     GetIt.I.registerSingleton<ImageService>(_imageService);
     var _itemsProvider = ItemsListProviderMock();

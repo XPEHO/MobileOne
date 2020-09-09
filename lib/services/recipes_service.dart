@@ -1,4 +1,5 @@
 import 'package:MobileOne/dao/recipes_dao.dart';
+import 'package:MobileOne/data/recipe.dart';
 import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,35 +7,59 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:uuid/uuid.dart';
 
+import 'image_service.dart';
+
 class RecipesService {
   final RecipesDao dao = GetIt.I.get<RecipesDao>();
   final UserService userService = GetIt.I.get<UserService>();
 
-  Map<String, dynamic> _recipes = {};
+  List<Recipe> _recipes;
   Map<String, List<WishlistItem>> _recipeItems = {};
 
   void _flush() {
-    _recipes = {};
+    _recipes = null;
   }
 
-  Map<String, dynamic> get recipes => _recipes;
+  List<Recipe> get recipes => _recipes;
 
-  Future<Map<String, dynamic>> fetchRecipes() async {
-    DocumentSnapshot recipes = await dao.fetchRecipes(userService.user.uid);
-    var data;
-    if (recipes?.data() == null) {
-      data = Map<String, dynamic>();
-    } else {
-      data = recipes.data() ?? Map<String, dynamic>();
+  List<Recipe> sortRecipes(List<Recipe> recipiesList) {
+    if (recipiesList != null) {
+      recipiesList.sort(
+          (a, b) => a.label.toLowerCase().compareTo(b.label.toLowerCase()));
     }
-    _recipes = data;
-    return data;
+
+    return recipiesList;
+  }
+
+  Future<List<Recipe>> fetchRecipes() async {
+    DocumentSnapshot snapshot = await dao.fetchRecipes(userService.user.uid);
+
+    final recipes = snapshot?.data();
+
+    if (recipes != null) {
+      List<Recipe> recipesList = recipes.entries.map((element) {
+        return Recipe.fromMap(element.key, element.value);
+      }).toList();
+
+      recipesList = sortRecipes(recipesList);
+
+      _recipes = recipesList;
+    }
+
+    return _recipes;
   }
 
   addRecipe(BuildContext context) async {
     final recipeUuid = Uuid().v4();
     await dao.addRecipe(recipeUuid, userService.user.uid, context);
-    _flush();
+    await fetchRecipes().then((value) async {
+      value.forEach((element) async {
+        if (element.recipeUuid == recipeUuid) {
+          await Navigator.of(context)
+              .pushNamed("/openedRecipePage", arguments: element);
+        }
+      });
+    });
   }
 
   List<WishlistItem> sortItemsInRecipe(List<WishlistItem> recipeItems) {
@@ -115,6 +140,30 @@ class RecipesService {
   changeRecipeLabel(String label, String recipeUuid) async {
     label == null ? label = "" : label = label;
     dao.changeRecipeLabel(label, recipeUuid, userService.user.uid);
+    _flush();
+  }
+
+  deleteItemInRecipe({
+    @required String recipeUuid,
+    @required String itemUuid,
+    @required String imageName,
+  }) async {
+    if (imageName != null) {
+      GetIt.I.get<ImageService>().deleteFile(recipeUuid, imageName);
+    }
+    await dao.deleteItemInRecipe(
+        recipeUuid: recipeUuid, itemUuid: itemUuid, imageName: imageName);
+    await fetchRecipeItems(recipeUuid);
+  }
+
+  deleteRecipe(Recipe recipe) async {
+    await dao.deleteRecipe(recipe.recipeUuid, userService.user.uid);
+    if (_recipes != null) {
+      _recipes.remove(recipe);
+    }
+  }
+
+  flushRecipes() {
     _flush();
   }
 }

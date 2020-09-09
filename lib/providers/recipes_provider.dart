@@ -1,3 +1,4 @@
+import 'package:MobileOne/data/recipe.dart';
 import 'package:MobileOne/services/recipes_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -5,9 +6,9 @@ import 'package:get_it/get_it.dart';
 class RecipesProvider with ChangeNotifier {
   final recipesService = GetIt.I.get<RecipesService>();
 
-  Map<String, dynamic> get recipes {
+  List<Recipe> get recipes {
     final recipes = recipesService.recipes;
-    if (recipes == null || recipes.isEmpty) {
+    if (recipes == null) {
       recipesService.fetchRecipes().then((value) => notifyListeners());
     }
     return recipes;
@@ -21,5 +22,9 @@ class RecipesProvider with ChangeNotifier {
   changeRecipeLabel(String label, String recipeUuid) async {
     recipesService.changeRecipeLabel(label, recipeUuid);
     notifyListeners();
+  }
+
+  deleteRecipe(Recipe recipe) async {
+    await recipesService.deleteRecipe(recipe);
   }
 }

@@ -30,10 +30,16 @@ class WidgetItemState extends State<WidgetItem> {
   void initState() {
     if (_itemlist.imageUrl != null) {
       _itemlist.imageUrl == "assets/images/canned-food.png"
-          ? _itemImage = AssetImage(_itemlist.imageUrl)
-          : _itemImage = NetworkImage(_itemlist.imageUrl);
+          ? _itemImage = _itemImage = Icon(
+              Icons.photo_camera,
+              size: 32,
+            )
+          : _itemImage = Image(image: NetworkImage(_itemlist.imageUrl));
     } else {
-      _itemImage = AssetImage("assets/images/canned-food.png");
+      _itemImage = _itemImage = Icon(
+        Icons.photo_camera,
+        size: 32,
+      );
     }
     super.initState();
   }
@@ -101,7 +107,7 @@ class WidgetItemState extends State<WidgetItem> {
                                   );
                             }),
                       ),
-                      Flexible(flex: 1, child: Image(image: _itemImage))
+                      Flexible(flex: 1, child: _itemImage)
                     ]),
                   ),
                   trailing: Icon(
@@ -151,7 +157,7 @@ class WidgetItemState extends State<WidgetItem> {
                           "x${_itemlist.quantity.toString()} ${getUnitText()}"),
                     ],
                   ),
-                  leading: Image(image: _itemImage),
+                  leading: _itemImage,
                   trailing: Icon(
                     Icons.navigate_next,
                     color: BLACK,

@@ -41,7 +41,7 @@ class EditItemPageState extends State<EditItemPage> {
   String _name;
   int _count = 1;
   String _type;
-  String imageLink = "assets/images/canned-food.png";
+  String imageLink;
   String _imageName;
   String _oldImageName;
 
@@ -79,8 +79,8 @@ class EditItemPageState extends State<EditItemPage> {
       if (value.data()[_args.itemUuid]["imageName"] != null) {
         _imageName = value.data()[_args.itemUuid]["imageName"];
       }
-      if (imageLink != "assets/images/canned-food.png") {
-        _itemImage = NetworkImage(imageLink);
+      if (imageLink != null) {
+        _itemImage = Image(image: NetworkImage(imageLink));
       }
       switch (value.data()[_args.itemUuid]["unit"]) {
         case 1:
@@ -114,7 +114,10 @@ class EditItemPageState extends State<EditItemPage> {
   void initState() {
     _analytics.setCurrentPage("isOnItemsPage");
     itemCountController.text = "1";
-    _itemImage = AssetImage("assets/images/canned-food.png");
+    _itemImage = Icon(
+      Icons.photo_camera,
+      size: 48,
+    );
     WidgetsBinding.instance.addPostFrameCallback((_) => getData());
     super.initState();
     _itemNameFocusNode.requestFocus();
@@ -194,7 +197,7 @@ class EditItemPageState extends State<EditItemPage> {
               color: WHITE,
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.40,
-              child: Image(image: _itemImage),
+              child: _itemImage,
             ),
             Padding(
               padding: const EdgeInsets.only(top: 15.0),
@@ -316,7 +319,7 @@ class EditItemPageState extends State<EditItemPage> {
         .then((image) => pickedImage = File(image.path));
 
     setState(() {
-      _itemImage = FileImage(pickedImage);
+      _itemImage = Image(image: FileImage(pickedImage));
     });
 
     imageType = "Picked";
@@ -645,7 +648,7 @@ class EditItemPageState extends State<EditItemPage> {
           article["product"]["brands"].toString());
       imageLink = article["product"]["image_url"];
       setState(() {
-        _itemImage = NetworkImage(imageLink);
+        _itemImage = Image(image: NetworkImage(imageLink));
       });
     } else {
       setState(() {

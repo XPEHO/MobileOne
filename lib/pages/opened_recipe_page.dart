@@ -1,3 +1,4 @@
+import 'package:MobileOne/data/recipe.dart';
 import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/recipeItems_provider.dart';
@@ -26,14 +27,16 @@ class OpenedRecipePageState extends State<OpenedRecipePage> {
 
   @override
   Widget build(BuildContext context) {
-    String _recipeUuid = ModalRoute.of(context).settings.arguments;
+    Recipe _recipe = ModalRoute.of(context).settings.arguments;
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<RecipeItemsProvider>(),
       child: Consumer<RecipeItemsProvider>(
           builder: (context, recipeItemsProvider, child) {
-        _myController.text = _recipesProvider.recipes[_recipeUuid]["label"];
-        return content(
-            recipeItemsProvider.getRecipeItems(_recipeUuid), _recipeUuid);
+        if (_recipe != null && _recipe.label != null) {
+          _myController.text = _recipe.label;
+        }
+        return content(recipeItemsProvider.getRecipeItems(_recipe.recipeUuid),
+            _recipe.recipeUuid);
       }),
     );
   }
@@ -56,15 +59,9 @@ class OpenedRecipePageState extends State<OpenedRecipePage> {
                 child: Text(getString(context, "loading")),
               );
             }
-            return Column(
-              children: <Widget>[
-                Expanded(
-                  child: (recipeItems.length > 0)
-                      ? buildRecipe(context, recipeItems, _recipeUuid)
-                      : emptyRecipe(),
-                )
-              ],
-            );
+            return (recipeItems.length > 0)
+                ? buildRecipe(context, recipeItems, _recipeUuid)
+                : emptyRecipe();
           },
         ),
       ),
@@ -102,61 +99,161 @@ class OpenedRecipePageState extends State<OpenedRecipePage> {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: double.infinity,
-      child: ListView.builder(
-          padding: EdgeInsets.only(bottom: kFloatingActionButtonMargin + 64),
-          itemCount: recipeItems.length,
-          itemBuilder: (BuildContext ctxt, int index) {
-            return Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                onTap: () => openItemPage(getString(context, 'popup_update'),
-                    _recipeUuid, recipeItems[index].uuid, true),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: _colorsApp.greyColor,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(5),
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ListTile(
-                      title: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(getProductName(recipeItems[index].label)),
-                          Text(getProductBrand(recipeItems[index].label)),
-                        ],
-                      ),
-                      subtitle: Row(
-                        children: <Widget>[
-                          Text(
-                              "x${recipeItems[index].quantity.toString()} ${getUnitText(recipeItems[index].unit)}"),
-                        ],
-                      ),
-                      leading: Image(
-                          image: getItemImage(recipeItems[index].imageUrl)),
-                      trailing: Icon(
-                        Icons.navigate_next,
-                        color: BLACK,
+      child: Column(
+        children: [
+          Icon(
+            Icons.local_dining,
+            color: WHITE,
+            size: 64,
+          ),
+          Expanded(
+            child: ListView.builder(
+                padding:
+                    EdgeInsets.only(bottom: kFloatingActionButtonMargin + 64),
+                itemCount: recipeItems.length,
+                itemBuilder: (BuildContext ctxt, int index) {
+                  return Dismissible(
+                    confirmDismiss: (DismissDirection direction) async {
+                      return await buildDeleteShowDialog(context);
+                    },
+                    background: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: RED,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Icon(
+                                Icons.delete,
+                                color: WHITE,
+                              )),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-            );
-          }),
+                    secondaryBackground: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: RED,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        child: Align(
+                          alignment: Alignment.centerRight,
+                          child: Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Icon(
+                                Icons.delete,
+                                color: WHITE,
+                              )),
+                        ),
+                      ),
+                    ),
+                    key: UniqueKey(),
+                    child: buildItem(context, _recipeUuid, recipeItems, index),
+                    onDismissed: (direction) {
+                      deleteItemFromRecipe(
+                          recipeUuid: _recipeUuid,
+                          itemUuid: recipeItems[index].uuid,
+                          imageName: recipeItems[index].imageName);
+                    },
+                  );
+                }),
+          ),
+        ],
+      ),
     );
+  }
+
+  Padding buildItem(BuildContext context, String _recipeUuid,
+      List<WishlistItem> recipeItems, int index) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: InkWell(
+        onTap: () => openItemPage(getString(context, 'popup_update'),
+            _recipeUuid, recipeItems[index].uuid, true),
+        child: Container(
+          decoration: BoxDecoration(
+            color: _colorsApp.greyColor,
+            borderRadius: BorderRadius.all(
+              Radius.circular(5),
+            ),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ListTile(
+              title: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(getProductName(recipeItems[index].label)),
+                  Text(getProductBrand(recipeItems[index].label)),
+                ],
+              ),
+              subtitle: Row(
+                children: <Widget>[
+                  Text(
+                      "x${recipeItems[index].quantity.toString()} ${getUnitText(recipeItems[index].unit)}"),
+                ],
+              ),
+              leading: getItemImage(recipeItems[index].imageUrl),
+              trailing: Icon(
+                Icons.navigate_next,
+                color: BLACK,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  buildDeleteShowDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(getString(context, 'confirm_item_deletion')),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(getString(context, 'delete_item'))),
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(getString(context, 'cancel_deletion')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void deleteItemFromRecipe(
+      {String recipeUuid, String itemUuid, String imageName}) {
+    GetIt.I.get<RecipeItemsProvider>().deleteItemInRecipe(
+        recipeUuid: recipeUuid, itemUuid: itemUuid, imageName: imageName);
   }
 
   dynamic getItemImage(String url) {
     if (url != null) {
       return url == "assets/images/canned-food.png"
-          ? AssetImage(url)
-          : NetworkImage(url);
+          ? Icon(
+              Icons.photo_camera,
+              size: 32,
+            )
+          : Image(image: NetworkImage(url));
     } else {
-      return AssetImage("assets/images/canned-food.png");
+      return Icon(
+        Icons.photo_camera,
+        size: 32,
+      );
     }
   }
 
@@ -196,31 +293,21 @@ class OpenedRecipePageState extends State<OpenedRecipePage> {
   }
 
   emptyRecipe() {
-    return SingleChildScrollView(
-      child: Center(
-        child: Column(
-          children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.2,
-              child: Image.asset(
-                "assets/images/square-logo.png",
-                height: 100,
-                width: 100,
-              ),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Icon(Icons.add_shopping_cart, size: 100, color: WHITE),
-            ),
-            Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Text(
-                getString(context, "empty_items"),
-                style: TextStyle(color: WHITE, fontSize: 20),
-              ),
-            ),
-          ],
-        ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Image.asset(
+            "assets/images/square-logo.png",
+            height: 100,
+            width: 100,
+          ),
+          Icon(Icons.add_shopping_cart, size: 64, color: WHITE),
+          Text(
+            getString(context, "empty_items"),
+            style: TextStyle(color: WHITE, fontSize: 20),
+          ),
+        ],
       ),
     );
   }
