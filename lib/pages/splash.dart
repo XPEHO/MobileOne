@@ -105,7 +105,7 @@ class SplashPageState extends State<SplashPage>
     if (_preferencesService.getEmail() != null) {
       bool autologin = false;
       if (_preferencesService.isEmailPasswordMode()) {
-        _userService.user = await _authenticationService.signIn(
+        await _authenticationService.signIn(
             _preferencesService.getEmail(), _preferencesService.getPassword());
         autologin = true;
       } else if (_preferencesService.isGoogleMode()) {

@@ -2,8 +2,10 @@ import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -31,6 +33,9 @@ void main() {
   group('Forgotten password', () {
     final _firebaseAuth = MockFirebaseAuth();
     final _googleSignIn = MockGoogleSignIn();
+
+    GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton<UserService>(UserService());
 
     GetIt.I.registerSingleton<FirebaseAuth>(_firebaseAuth);
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);

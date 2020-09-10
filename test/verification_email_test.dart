@@ -1,5 +1,7 @@
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get_it/get_it.dart';
@@ -22,6 +24,8 @@ void main() {
     final _googleSignIn = MockGoogleSignIn();
     final _firebaseUser = MockUser();
 
+    GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton<UserService>(UserService());
     GetIt.I.registerSingleton<FirebaseAuth>(_firebaseAuth);
     GetIt.I.registerSingleton<User>(_firebaseUser);
 

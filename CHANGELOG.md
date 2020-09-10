@@ -123,6 +123,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Fixed about screen
 - Items sort : The items in a list are now sorted alphabeti
 - New account : A new account can now create a wishlist and share it
+- Authentication : user now have error messages on authentication/registration
 
 ### Security
 

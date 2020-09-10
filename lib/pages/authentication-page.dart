@@ -334,44 +334,42 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   }
 
   Future<void> signInUser() async {
-    try {
-      _userService.user =
-          await _authenticationService.signIn(_email, _password);
-
-      if (_userService.user != null) {
-        if (_userService.user.emailVerified == false) {
-          bool verif = await _authenticationService
-              .sendVerificationEmail(_userService.user);
-          switch (verif) {
-            case true:
-              Fluttertoast.showToast(
-                  msg: getString(context, 'verification_email_sent'));
-              break;
-            case false:
-              Fluttertoast.showToast(
-                  msg: getString(context, 'verification_email_error'));
-              break;
+    String result = await _authenticationService.signIn(_email, _password);
+    switch (result) {
+      case "wrong-password":
+        Fluttertoast.showToast(msg: getString(context, 'wrong_password'));
+        break;
+      case "user-not-found":
+        Fluttertoast.showToast(msg: getString(context, 'no_user_found'));
+        break;
+      case "success":
+        debugPrint(_userService.user.toString());
+        if (_userService.user != null) {
+          if (_userService.user.emailVerified == false) {
+            bool verif = await _authenticationService
+                .sendVerificationEmail(_userService.user);
+            switch (verif) {
+              case true:
+                Fluttertoast.showToast(
+                    msg: getString(context, 'verification_email_sent'));
+                break;
+              case false:
+                Fluttertoast.showToast(
+                    msg: getString(context, 'verification_email_error'));
+                break;
+            }
           }
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          await prefs.setString('mode', "emailpassword");
+          await prefs.setString('email', _email);
+          await prefs.setString('password', _password);
+
+          await setUserAppToken();
+
+          openMainPage(context);
+          Fluttertoast.showToast(msg: getString(context, 'signed_in'));
         }
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('mode', "emailpassword");
-        await prefs.setString('email', _email);
-        await prefs.setString('password', _password);
-
-        await setUserAppToken();
-
-        openMainPage(context);
-        Fluttertoast.showToast(msg: getString(context, 'signed_in'));
-      }
-    } catch (e) {
-      switch (e.code) {
-        case "ERROR_WRONG_PASSWORD":
-          Fluttertoast.showToast(msg: getString(context, 'wrong_password'));
-          break;
-        case "ERROR_USER_NOT_FOUND":
-          Fluttertoast.showToast(msg: getString(context, 'no_user_found'));
-          break;
-      }
+        break;
     }
   }
 

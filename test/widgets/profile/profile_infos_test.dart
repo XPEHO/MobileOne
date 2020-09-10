@@ -86,19 +86,18 @@ void main() {
     final auth = FirebaseAuthMock();
     final user = FirebaseUserMock();
     final _googleSignIn = MockGoogleSignIn();
-    final _userService = UserServiceMock();
     final _imageService = ImageServiceMock();
-    final _prefs = PreferencesMock();
     final _picture = UserPictureMock();
     final _analyticsService = AnalyticsServiceMock();
+    GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton<UserService>(UserService());
+    final _userService = UserService();
     GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);
     GetIt.instance.registerSingleton<FirebaseAuth>(auth);
     GetIt.instance.registerSingleton<User>(user);
     GetIt.I.registerSingleton<AuthenticationService>(AuthenticationService());
-    GetIt.I.registerSingleton<UserService>(_userService);
     GetIt.I.registerSingleton<ImageService>(_imageService);
-    GetIt.I.registerSingleton<PreferencesService>(_prefs);
     GetIt.I.registerSingleton<UserPictureProvider>(_picture);
     final _colorService = ColorServiceMock();
     GetIt.I.registerSingleton<ColorService>(_colorService);
@@ -127,7 +126,7 @@ void main() {
 
     when(user.providerData).thenReturn(List.of([]));
 
-    when(_userService.user).thenReturn(user);
+    _userService.user = user;
 
     //WHEN
     await tester.pumpWidget(widget);

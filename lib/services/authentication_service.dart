@@ -1,4 +1,5 @@
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/user_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -7,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AuthenticationService {
   final _authService = GetIt.I.get<FirebaseAuth>();
   final _googleService = GetIt.I.get<GoogleSignIn>();
+  final _userService = GetIt.I.get<UserService>();
   var _analytics = GetIt.I.get<AnalyticsService>();
   Future<User> googleSignInSilently() async {
     final GoogleSignInAccount googleUser =
@@ -37,14 +39,18 @@ class AuthenticationService {
     return (await _authService.signInWithCredential(credential)).user;
   }
 
-  Future<User> signIn(String email, String password) async {
+  Future<String> signIn(String email, String password) async {
     _analytics.loging();
-    User _user = (await _authService.signInWithEmailAndPassword(
-      email: email,
-      password: password,
-    ))
-        .user;
-    return _user;
+    try {
+      UserCredential result = await _authService.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      _userService.user = result.user;
+    } catch (e) {
+      return e.code;
+    }
+    return "success";
   }
 
   Future<String> register(String email, String password) async {
@@ -53,16 +59,16 @@ class AuthenticationService {
         email: email,
         password: password,
       );
-      return "success";
     } catch (e) {
-      if (e.code == "ERROR_INVALID_EMAIL") {
+      if (e.code == "invalid-email") {
         return "format_error";
-      } else if (e.code == "ERROR_EMAIL_ALREADY_IN_USE") {
+      } else if (e.code == "email-already-in-use") {
         return "email_already_exist";
       } else {
         return e.message;
       }
     }
+    return "success";
   }
 
   Future<bool> sendVerificationEmail(User _user) async {
