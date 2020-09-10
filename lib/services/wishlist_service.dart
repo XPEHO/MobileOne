@@ -248,4 +248,9 @@ class WishlistService {
   flushWishlists() {
     _flush();
   }
+
+  Future<void> addRecipeToList(String recipeUuid, String listUuid) async {
+    await dao.addRecipeToList(recipeUuid, listUuid);
+    await fetchItemList(listUuid);
+  }
 }

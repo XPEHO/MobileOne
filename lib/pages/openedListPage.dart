@@ -191,7 +191,7 @@ class OpenedListPageState extends State<OpenedListPage>
                     backgroundColor: _colorsApp.buttonColor,
                     child: Icon(Icons.local_dining),
                     onPressed: () {
-                      openRecipesPage();
+                      openRecipesPage(wishlistHead.uuid);
                       animate();
                     }),
               ],
@@ -634,8 +634,8 @@ class OpenedListPageState extends State<OpenedListPage>
         .pushNamed('/shareOne', arguments: ShareArguments(previousList: uuid));
   }
 
-  void openRecipesPage() {
-    Navigator.of(context).pushNamed('/recipes');
+  void openRecipesPage(String listUuid) {
+    Navigator.of(context).pushNamed('/recipes', arguments: listUuid);
   }
 
   void openItemPage(

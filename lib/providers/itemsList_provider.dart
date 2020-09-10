@@ -91,4 +91,9 @@ class ItemsListProvider with ChangeNotifier {
     await wishlistService.uncheckAllItems(listUuid: listUuid);
     notifyListeners();
   }
+
+  Future<void> addRecipeToList(String recipeUuid, String listUuid) async {
+    await wishlistService.addRecipeToList(recipeUuid, listUuid);
+    notifyListeners();
+  }
 }

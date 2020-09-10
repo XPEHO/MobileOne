@@ -343,4 +343,36 @@ class WishlistDao {
         .doc(listUuid)
         .set(tmpMap);
   }
+
+  Future<void> addRecipeToList(String recipeUuid, String listUuid) async {
+    Map<String, dynamic> recipeItemsMap;
+    var listItemsCount;
+
+    await FirebaseFirestore.instance
+        .collection("recipeItems")
+        .doc(recipeUuid)
+        .get()
+        .then((value) => recipeItemsMap = value.data());
+
+    await FirebaseFirestore.instance
+        .collection("wishlists")
+        .doc(listUuid)
+        .get()
+        .then((value) {
+      listItemsCount = value.data()["itemCounts"];
+    });
+
+    await FirebaseFirestore.instance
+        .collection("wishlists")
+        .doc(listUuid)
+        .update({
+      "itemCounts":
+          (int.parse(listItemsCount) + recipeItemsMap.length).toString()
+    });
+
+    await FirebaseFirestore.instance.collection("items").doc(listUuid).set(
+          recipeItemsMap,
+          SetOptions(merge: true),
+        );
+  }
 }

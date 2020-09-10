@@ -1,5 +1,6 @@
 import 'package:MobileOne/data/recipe.dart';
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/recipes_provider.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:flutter/material.dart';
@@ -20,19 +21,21 @@ class RecipesPage extends StatefulWidget {
 class RecipesPageState extends State<RecipesPage> {
   var _colorsApp = GetIt.I.get<ColorService>();
   var _recipesProvider = GetIt.I.get<RecipesProvider>();
+  var _itemsListProvider = GetIt.I.get<ItemsListProvider>();
 
   @override
   Widget build(BuildContext context) {
+    String _listUuid = ModalRoute.of(context).settings.arguments;
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<RecipesProvider>(),
       child:
           Consumer<RecipesProvider>(builder: (context, recipesProvider, child) {
-        return content(recipesProvider.recipes);
+        return content(recipesProvider.recipes, _listUuid);
       }),
     );
   }
 
-  Widget content(List<Recipe> recipes) {
+  Widget content(List<Recipe> recipes, String _listUuid) {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -56,7 +59,7 @@ class RecipesPageState extends State<RecipesPage> {
               children: <Widget>[
                 Expanded(
                   child: (recipes.length > 0)
-                      ? buildRecipes(context, recipes)
+                      ? buildRecipes(context, recipes, _listUuid)
                       : emptyRecipes(),
                 )
               ],
@@ -67,7 +70,8 @@ class RecipesPageState extends State<RecipesPage> {
     );
   }
 
-  Widget buildRecipes(BuildContext context, List<Recipe> recipes) {
+  Widget buildRecipes(
+      BuildContext context, List<Recipe> recipes, String _listUuid) {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: double.infinity,
@@ -120,7 +124,7 @@ class RecipesPageState extends State<RecipesPage> {
                 ),
               ),
               key: UniqueKey(),
-              child: buildRecipe(recipes, index),
+              child: buildRecipe(recipes, index, _listUuid),
               onDismissed: (direction) {
                 _recipesProvider.deleteRecipe(recipes[index]);
               },
@@ -129,7 +133,12 @@ class RecipesPageState extends State<RecipesPage> {
     );
   }
 
-  Padding buildRecipe(List<Recipe> recipes, int index) {
+  addRecipeToList(String recipeUuid, String listUuid) async {
+    await _itemsListProvider.addRecipeToList(recipeUuid, listUuid);
+    Navigator.of(context).pop();
+  }
+
+  Padding buildRecipe(List<Recipe> recipes, int index, String _listUuid) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -147,12 +156,24 @@ class RecipesPageState extends State<RecipesPage> {
               Icons.local_dining,
               size: 32.0,
             ),
-            trailing: IconButton(
-              icon: Icon(
-                Icons.edit,
-                color: BLACK,
-              ),
-              onPressed: () => openRecipePage(recipes[index]),
+            trailing: Wrap(
+              children: <Widget>[
+                IconButton(
+                  icon: Icon(
+                    Icons.edit,
+                    color: BLACK,
+                  ),
+                  onPressed: () => openRecipePage(recipes[index]),
+                ),
+                IconButton(
+                  icon: Icon(
+                    Icons.add,
+                    color: BLACK,
+                  ),
+                  onPressed: () =>
+                      addRecipeToList(recipes[index].recipeUuid, _listUuid),
+                ),
+              ],
             ),
           ),
         ),
