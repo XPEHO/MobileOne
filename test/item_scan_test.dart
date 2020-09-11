@@ -86,22 +86,5 @@ main() {
       expect(_editItemPageState.imageLink,
           "https://static.openfoodfacts.org/images/products/316/893/000/5476/front_fr.13.200.jpg");
     });
-
-    test('An error should appear when an item is unknown', () async {
-      //GIVEN
-      var response = await http
-          .get("https://world.openfoodfacts.org/api/v0/product/31476.json");
-      Map<String, dynamic> article = jsonDecode(response.body);
-
-      //WHEN
-      if (article["product"] == null) {
-        _editItemPageState.alert =
-            "Malheureusement, nous ne parvenons pas à trouver cet article";
-      }
-
-      //THEN
-      expect(_editItemPageState.alert,
-          "Malheureusement, nous ne parvenons pas à trouver cet article");
-    });
   });
 }

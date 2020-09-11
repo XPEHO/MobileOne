@@ -54,6 +54,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Update Global Ui
 - Update Lists ui
 - Update OpenedListPage : User can now click on an item
+- Update item page
 
 ### Deprecated
 

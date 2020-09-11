@@ -45,7 +45,6 @@ class EditItemPageState extends State<EditItemPage> {
   String _imageName;
   String _oldImageName;
 
-  String alert = "";
   String label = "";
   String quantity = "";
   String unit = "";
@@ -142,47 +141,72 @@ class EditItemPageState extends State<EditItemPage> {
   Widget build(BuildContext context) {
     _args = Arguments.value(context);
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: _colorsApp.colorTheme,
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+          ),
+          onPressed: () {
+            goToPreviousPage();
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.check,
+            ),
+            onPressed: () {
+              _onValidate();
+            },
+          ),
+        ],
+      ),
       backgroundColor: _colorsApp.colorTheme,
       body: SafeArea(
-        child: Container(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.max,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.4,
-                  child: buildImageAndButtons(context),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.2,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: buildTextField(context),
-                  ),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  child: buildQuantity(context),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.15,
-                  child: buildUnit(context),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  child: buildValidationButton(context),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.1,
-                  child: buildErrorMessage(),
-                ),
-              ],
+        child: Column(
+          children: <Widget>[
+            Flexible(
+              flex: 1,
+              fit: FlexFit.loose,
+              child: Container(
+                child: buildImageAndButtons(context),
+              ),
             ),
-          ),
+            Flexible(
+              flex: 2,
+              fit: FlexFit.tight,
+              child: Container(child: Center(child: buildTextField(context))),
+            ),
+            Flexible(
+              flex: 2,
+              fit: FlexFit.tight,
+              child: Container(
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    Flexible(
+                      flex: 1,
+                      child: buildDecrementCounter(),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: buildQuantityText(),
+                    ),
+                    Flexible(
+                      flex: 1,
+                      child: buildIncrementCounter(context),
+                    ),
+                    Flexible(
+                      flex: 2,
+                      child: buildUnit(context),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -191,70 +215,197 @@ class EditItemPageState extends State<EditItemPage> {
   Row buildImageAndButtons(BuildContext context) {
     return Row(
       children: [
-        Stack(
-          children: [
-            Container(
+        Flexible(
+          flex: 1,
+          child: InkWell(
+            onTap: () {
+              if (_itemImage is Image) {
+                openBigImage();
+              }
+            },
+            child: Container(
+              height: double.infinity,
+              width: double.infinity,
               color: WHITE,
-              width: MediaQuery.of(context).size.width * 0.8,
-              height: MediaQuery.of(context).size.height * 0.40,
               child: _itemImage,
             ),
-            Padding(
-              padding: const EdgeInsets.only(top: 15.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  icon: Icon(
-                    Icons.arrow_back,
-                  ),
-                  onPressed: () {
-                    goToPreviousPage();
-                  },
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
-        Container(
-          width: MediaQuery.of(context).size.width * 0.2,
-          height: MediaQuery.of(context).size.height * 0.40,
-          color: Colors.lime[600],
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                icon: Icon(
-                  Icons.mic,
-                  color: WHITE,
-                  size: 24,
+        Expanded(
+          flex: 2,
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: double.infinity,
+                    color: Colors.lime[600],
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.mic,
+                        color: WHITE,
+                        size: 24,
+                      ),
+                      onPressed: () => recordAudio(),
+                    ),
+                  ),
                 ),
-                onPressed: () => recordAudio(),
-              ),
-              IconButton(
-                icon: SvgPicture.asset(
-                  "assets/images/qr-code.svg",
-                  color: WHITE,
-                  width: 24,
-                  height: 24,
+                Expanded(
+                  child: Container(
+                    height: double.infinity,
+                    color: _colorsApp.buttonColor,
+                    child: IconButton(
+                      icon: SvgPicture.asset(
+                        "assets/images/qr-code.svg",
+                        color: WHITE,
+                        width: 24,
+                        height: 24,
+                      ),
+                      onPressed: () => scanAnItem(),
+                    ),
+                  ),
                 ),
-                onPressed: () => scanAnItem(),
-              ),
-              IconButton(
-                key: Key("item_picture_button"),
-                icon: Icon(
-                  Icons.camera,
-                  color: WHITE,
-                  size: 24,
+                Expanded(
+                  child: Container(
+                    height: double.infinity,
+                    color: Colors.teal,
+                    child: IconButton(
+                      key: Key("item_picture_button"),
+                      icon: Icon(
+                        Icons.camera,
+                        color: WHITE,
+                        size: 24,
+                      ),
+                      onPressed: () {
+                        _analytics.sendAnalyticsEvent("takePictureOfItem");
+                        pickImage();
+                      },
+                    ),
+                  ),
                 ),
-                onPressed: () {
-                  _analytics.sendAnalyticsEvent("takePictureOfItem");
-                  pickImage();
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget buildUnit(BuildContext context) {
+    final items = <String>[
+      getString(context, 'item_unit'),
+      getString(context, 'item_liters'),
+      getString(context, 'item_grams'),
+      getString(context, 'item_kilos')
+    ];
+
+    if (_type == null || _type.isEmpty) {
+      _type = getString(context, 'item_unit');
+    }
+
+    return Container(
+      child: DropdownButtonFormField<String>(
+        decoration: InputDecoration(
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: TRANSPARENT),
+            borderRadius: BorderRadius.all(Radius.circular(15)),
+          ),
+          filled: true,
+          fillColor: _colorsApp.greyColor,
+        ),
+        hint: Text(
+          getString(context, 'item_type'),
+        ),
+        onChanged: (text) {
+          setState(() {
+            _type = text;
+          });
+        },
+        value: _type,
+        items: items.map((String value) {
+          return new DropdownMenuItem<String>(
+            value: value,
+            child: new Text(value, style: TextStyle(color: GREY, fontSize: 13)),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget buildDecrementCounter() {
+    return BubbleButton(
+      icon: Icon(Icons.remove, color: WHITE),
+      color: Colors.lime[600],
+      onPressed: () => decrementCounter(),
+    );
+  }
+
+  Widget buildQuantityText() {
+    return TextField(
+      focusNode: _itemQuantityFocusNode,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(5),
+      ],
+      style: TextStyle(
+        fontSize: 18,
+      ),
+      key: Key("item_count_label"),
+      textAlign: TextAlign.center,
+      decoration: InputDecoration(
+        contentPadding: EdgeInsets.all(10),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: TRANSPARENT),
+        ),
+        filled: true,
+        fillColor: Colors.grey[300],
+        hintText: getString(context, 'item_count'),
+      ),
+      keyboardType: TextInputType.number,
+      controller: itemCountController,
+      onChanged: (text) => handleSubmittedItemCount(int.parse(text)),
+    );
+  }
+
+  Widget buildIncrementCounter(BuildContext context) {
+    return BubbleButton(
+      icon: Icon(Icons.add, color: WHITE),
+      color: Colors.lime[600],
+      onPressed: () => incrementCounter(),
+    );
+  }
+
+  Widget buildTextField(BuildContext context) {
+    return TextField(
+      focusNode: _itemNameFocusNode,
+      key: Key("item_name_label"),
+      textAlign: TextAlign.center,
+      textInputAction: TextInputAction.next,
+      onSubmitted: (_) => _itemQuantityFocusNode.requestFocus(),
+      decoration: InputDecoration(
+        hintText: getString(context, 'item_name'),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: TRANSPARENT),
+        ),
+        filled: true,
+        fillColor: Colors.grey[300],
+      ),
+      controller: itemNameController,
+      onChanged: (text) => handleSubmittedItemName(text),
+    );
+  }
+
+  Future<void> openBigImage() async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: SingleChildScrollView(
+            child: _itemImage,
+          ),
+        );
+      },
     );
   }
 
@@ -319,35 +470,13 @@ class EditItemPageState extends State<EditItemPage> {
         .then((image) => pickedImage = File(image.path));
 
     setState(() {
-      _itemImage = Image(image: FileImage(pickedImage));
+      _itemImage = Image(
+        image: FileImage(pickedImage),
+        fit: BoxFit.cover,
+      );
     });
 
     imageType = "Picked";
-  }
-
-  Text buildErrorMessage() {
-    return Text(
-      alert,
-      style: TextStyle(color: RED, fontWeight: FontWeight.bold, fontSize: 12),
-    );
-  }
-
-  Row buildValidationButton(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        RaisedButton(
-          color: Colors.lime[600],
-          onPressed: () {
-            _onValidate();
-          },
-          child: Text(
-            _args.buttonName,
-            style: TextStyle(color: WHITE, fontWeight: FontWeight.bold),
-          ),
-        ),
-      ],
-    );
   }
 
   int getTypeIndex() {
@@ -364,124 +493,6 @@ class EditItemPageState extends State<EditItemPage> {
     }
   }
 
-  Widget buildUnit(BuildContext context) {
-    final items = <String>[
-      getString(context, 'item_unit'),
-      getString(context, 'item_liters'),
-      getString(context, 'item_grams'),
-      getString(context, 'item_kilos')
-    ];
-
-    if (_type == null || _type.isEmpty) {
-      _type = getString(context, 'item_unit');
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        child: DropdownButtonFormField<String>(
-          decoration: InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: TRANSPARENT),
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-            ),
-            filled: true,
-            fillColor: _colorsApp.greyColor,
-          ),
-          hint: Text(
-            getString(context, 'item_type'),
-          ),
-          onChanged: (text) {
-            setState(() {
-              _type = text;
-            });
-          },
-          value: _type,
-          items: items.map((String value) {
-            return new DropdownMenuItem<String>(
-              value: value,
-              child:
-                  new Text(value, style: TextStyle(color: GREY, fontSize: 13)),
-            );
-          }).toList(),
-        ),
-      ),
-    );
-  }
-
-  Row buildQuantity(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          child: BubbleButton(
-            icon: Icon(Icons.remove, color: WHITE),
-            color: Colors.lime[600],
-            onPressed: () => decrementCounter(),
-          ),
-        ),
-        Container(
-          width: MediaQuery.of(context).size.width * 0.2,
-          child: Padding(
-            padding: const EdgeInsets.only(right: 8.0, left: 8.0),
-            child: TextField(
-              focusNode: _itemQuantityFocusNode,
-              onSubmitted: (_) => _onValidate(),
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(5),
-              ],
-              style: TextStyle(
-                fontSize: 18,
-              ),
-              key: Key("item_count_label"),
-              textAlign: TextAlign.center,
-              decoration: InputDecoration(
-                contentPadding: EdgeInsets.all(10),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: TRANSPARENT),
-                ),
-                filled: true,
-                fillColor: Colors.grey[300],
-                hintText: getString(context, 'item_count'),
-              ),
-              keyboardType: TextInputType.number,
-              controller: itemCountController,
-              onChanged: (text) => handleSubmittedItemCount(int.parse(text)),
-            ),
-          ),
-        ),
-        Container(
-          child: BubbleButton(
-            icon: Icon(Icons.add, color: WHITE),
-            color: Colors.lime[600],
-            onPressed: () => incrementCounter(),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildTextField(BuildContext context) {
-    return TextField(
-      focusNode: _itemNameFocusNode,
-      key: Key("item_name_label"),
-      textAlign: TextAlign.center,
-      textInputAction: TextInputAction.next,
-      onSubmitted: (_) => _itemQuantityFocusNode.requestFocus(),
-      decoration: InputDecoration(
-        hintText: getString(context, 'item_name'),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: TRANSPARENT),
-        ),
-        filled: true,
-        fillColor: Colors.grey[300],
-      ),
-      controller: itemNameController,
-      onChanged: (text) => handleSubmittedItemName(text),
-    );
-  }
-
   void clearPopupFields() {
     itemCountController.clear();
     itemNameController.clear();
@@ -496,9 +507,7 @@ class EditItemPageState extends State<EditItemPage> {
         _type == null ||
         itemNameController.text == "" ||
         itemCountController.text == "") {
-      setState(() {
-        alert = getString(context, "popup_alert");
-      });
+      Fluttertoast.showToast(msg: getString(context, "popup_alert"));
     } else {
       if (_args.buttonName == getString(context, "popup_update")) {
         waitForImageUpload(true);
@@ -648,12 +657,13 @@ class EditItemPageState extends State<EditItemPage> {
           article["product"]["brands"].toString());
       imageLink = article["product"]["image_url"];
       setState(() {
-        _itemImage = Image(image: NetworkImage(imageLink));
+        _itemImage = Image(
+          image: NetworkImage(imageLink),
+          fit: BoxFit.cover,
+        );
       });
     } else {
-      setState(() {
-        alert = getString(context, "cant_find_article");
-      });
+      Fluttertoast.showToast(msg: getString(context, "cant_find_article"));
     }
 
     imageType = "Scanned";
