@@ -24,6 +24,7 @@ class OpenedRecipePageState extends State<OpenedRecipePage> {
   var _colorsApp = GetIt.I.get<ColorService>();
   var _recipesProvider = GetIt.I.get<RecipesProvider>();
   final _myController = TextEditingController();
+  final _nameFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +74,9 @@ class OpenedRecipePageState extends State<OpenedRecipePage> {
       backgroundColor: _colorsApp.colorTheme,
       shadowColor: TRANSPARENT,
       title: TextField(
+        onTap: () => _myController.selection = TextSelection(
+            baseOffset: 0, extentOffset: _myController.text.length),
+        focusNode: _nameFocusNode,
         style: TextStyle(
           color: WHITE,
         ),
@@ -91,6 +95,32 @@ class OpenedRecipePageState extends State<OpenedRecipePage> {
           _recipesProvider.changeRecipeLabel(_myController.text, _recipeUuid);
         },
       ),
+      actions: [
+        popupMenuButton(),
+      ],
+    );
+  }
+
+  PopupMenuButton<int> popupMenuButton() {
+    return PopupMenuButton<int>(
+      key: Key("recipeMenu"),
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          key: Key("renameRecipe"),
+          value: 1,
+          child: Text(getString(context, 'rename')),
+        ),
+      ],
+      icon: Icon(Icons.more_vert, color: WHITE),
+      onSelected: (value) {
+        switch (value) {
+          case 1:
+            _nameFocusNode.requestFocus();
+            _myController.selection = TextSelection(
+                baseOffset: 0, extentOffset: _myController.text.length);
+            break;
+        }
+      },
     );
   }
 

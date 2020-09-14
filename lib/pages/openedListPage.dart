@@ -47,6 +47,7 @@ class OpenedListPageState extends State<OpenedListPage>
   Animation<double> _animateButton;
   Curve _curve = Curves.easeOut;
   ColorSwatch _selectedColor;
+  final _nameFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -370,6 +371,9 @@ class OpenedListPageState extends State<OpenedListPage>
     return AppBar(
         backgroundColor: _colorsApp.colorTheme,
         title: TextField(
+          onTap: () => _myController.selection = TextSelection(
+              baseOffset: 0, extentOffset: _myController.text.length),
+          focusNode: _nameFocusNode,
           style: TextStyle(
             color: WHITE,
           ),
@@ -424,7 +428,12 @@ class OpenedListPageState extends State<OpenedListPage>
                 key: Key("leaveShare"),
                 value: 3,
                 child: Text(getString(context, 'leave_share')),
-              )
+              ),
+              PopupMenuItem(
+                key: Key("renameWishlist"),
+                value: 5,
+                child: Text(getString(context, 'rename')),
+              ),
             ]
           : [
               PopupMenuItem(
@@ -440,6 +449,11 @@ class OpenedListPageState extends State<OpenedListPage>
                 key: Key("restartWishlist"),
                 value: 4,
                 child: Text(getString(context, 'restart_wishlist')),
+              ),
+              PopupMenuItem(
+                key: Key("renameWishlist"),
+                value: 5,
+                child: Text(getString(context, 'rename')),
               ),
             ],
       icon: Icon(Icons.more_vert, color: WHITE),
@@ -469,6 +483,11 @@ class OpenedListPageState extends State<OpenedListPage>
             break;
           case 4:
             confirmWishlistRestart(wishlistHead.uuid);
+            break;
+          case 5:
+            _nameFocusNode.requestFocus();
+            _myController.selection = TextSelection(
+                baseOffset: 0, extentOffset: _myController.text.length);
             break;
         }
       },

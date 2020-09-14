@@ -156,5 +156,6 @@
     "delete_recipe": "SUPPRIMER",
     "picker_title": "Choisissez une couleur",
     "picker_submit": "VALIDER",
-    "picker_cancel": "ANNULER"
+    "picker_cancel": "ANNULER",
+    "rename": "Renommer"
 }
