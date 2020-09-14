@@ -12,23 +12,15 @@ class CurvePainter extends CustomPainter {
 
   var _wishlistService = GetIt.I.get<WishlistService>();
 
-  double _lightness = .8;
-  double _saturation = 1;
   Color _color = Colors.white;
 
-  getPastelColor() {
+  getColor() {
     if (wishlist.color == null) {
       int generatedColor = generateColor();
-      _color = HSLColor.fromColor(Color(generatedColor))
-          .withLightness(_lightness)
-          .withSaturation(_saturation)
-          .toColor();
+      _color = HSLColor.fromColor(Color(generatedColor)).toColor();
       _wishlistService.setWishlistColor(wishlist.uuid, generatedColor, false);
     } else {
-      _color = HSLColor.fromColor(Color(wishlist.color))
-          .withLightness(_lightness)
-          .withSaturation(_saturation)
-          .toColor();
+      _color = HSLColor.fromColor(Color(wishlist.color)).toColor();
     }
   }
 
@@ -51,7 +43,7 @@ class CurvePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    getPastelColor();
+    getColor();
     Path path = Path();
     Paint paint = Paint();
 
