@@ -22,4 +22,9 @@ class WishlistHeadProvider with ChangeNotifier {
   List<dynamic> filteredLists(String filterText) {
     return wishlistService.filterLists(filterText);
   }
+
+  setWishlistColor(String wishlistUuid, int color, bool flush) async {
+    await wishlistService.setWishlistColor(wishlistUuid, color, true);
+    notifyListeners();
+  }
 }

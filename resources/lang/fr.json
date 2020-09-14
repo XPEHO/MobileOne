@@ -153,5 +153,8 @@
     "empty_recipes": "Aucune recette pour le moment",
     "recipe_name": "Recette ",
     "confirm_recipe_deletion": "Etes-vous sûr de vouloir supprimer cette recette ?",
-    "delete_recipe": "SUPPRIMER"
+    "delete_recipe": "SUPPRIMER",
+    "picker_title": "Choisissez une couleur",
+    "picker_submit": "VALIDER",
+    "picker_cancel": "ANNULER"
 }

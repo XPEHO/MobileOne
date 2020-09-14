@@ -375,4 +375,16 @@ class WishlistDao {
           SetOptions(merge: true),
         );
   }
+
+  setWishlistColor(String wishlistUuid, int color) async {
+    await FirebaseFirestore.instance
+        .collection("wishlists")
+        .doc(wishlistUuid)
+        .set(
+      {
+        "color": color,
+      },
+      SetOptions(merge: true),
+    );
+  }
 }

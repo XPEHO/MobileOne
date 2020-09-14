@@ -12,6 +12,7 @@ import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animation_progress_bar/flutter_animation_progress_bar.dart';
+import 'package:flutter_material_color_picker/flutter_material_color_picker.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -45,6 +46,7 @@ class OpenedListPageState extends State<OpenedListPage>
   Animation<double> _animateIcon;
   Animation<double> _animateButton;
   Curve _curve = Curves.easeOut;
+  ColorSwatch _selectedColor;
 
   @override
   void initState() {
@@ -337,6 +339,33 @@ class OpenedListPageState extends State<OpenedListPage>
     );
   }
 
+  void openColorPicker(Widget content, String wishlistUuid) {
+    showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          contentPadding: const EdgeInsets.all(6.0),
+          title: Text(getString(context, "picker_title")),
+          content: content,
+          actions: [
+            FlatButton(
+              child: Text(getString(context, "picker_cancel")),
+              onPressed: Navigator.of(context).pop,
+            ),
+            FlatButton(
+              child: Text(getString(context, "picker_submit")),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _wishlistProvider.setWishlistColor(
+                    wishlistUuid, _selectedColor.value, true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   AppBar buildAppBar(BuildContext context, Wishlist wishlistHead) {
     return AppBar(
         backgroundColor: _colorsApp.colorTheme,
@@ -361,6 +390,23 @@ class OpenedListPageState extends State<OpenedListPage>
           },
         ),
         actions: [
+          FlatButton(
+            onPressed: () {
+              openColorPicker(
+                MaterialColorPicker(
+                  selectedColor: _selectedColor,
+                  allowShades: false,
+                  onMainColorChange: (color) =>
+                      setState(() => _selectedColor = color),
+                ),
+                wishlistHead.uuid,
+              );
+            },
+            child: Icon(
+              Icons.color_lens,
+              color: WHITE,
+            ),
+          ),
           popupMenuButton(wishlistHead),
         ]);
   }

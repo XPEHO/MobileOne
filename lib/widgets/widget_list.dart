@@ -30,7 +30,7 @@ class WidgetListsState extends State<WidgetLists> {
             );
           }
           return CustomPaint(
-            painter: CurvePainter(),
+            painter: CurvePainter(wishlist),
             child: Container(
               width: MediaQuery.of(context).size.width * 0.23,
               height: MediaQuery.of(context).size.width * 0.05,

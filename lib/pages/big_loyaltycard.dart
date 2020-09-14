@@ -1,3 +1,4 @@
+import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
@@ -45,28 +46,27 @@ class CardsState extends State<Cards> with TickerProviderStateMixin {
     _scale = Tween(begin: 1.0, end: 0.7).animate(_scaleController);
   }
 
-  void _openDialog(String title, Widget content) {
+  void openColorPicker(Widget content) {
     showDialog(
       context: context,
       builder: (_) {
         return AlertDialog(
           contentPadding: const EdgeInsets.all(6.0),
-          title: Text(title),
+          title: Text(getString(context, "picker_title")),
           content: content,
           actions: [
             FlatButton(
-              child: Text('CANCEL'),
+              child: Text(getString(context, "picker_cancel")),
               onPressed: Navigator.of(context).pop,
             ),
             FlatButton(
-              child: Text('SUBMIT'),
+              child: Text(getString(context, "picker_submit")),
               onPressed: () {
                 Navigator.of(context).pop();
-
                 setState(() {
                   _mainColor = _tempMainColor;
                 });
-                addColorToDabase();
+                updateLoyaltyCardColor();
               },
             ),
           ],
@@ -75,18 +75,7 @@ class CardsState extends State<Cards> with TickerProviderStateMixin {
     );
   }
 
-  void _openMainColorPicker() async {
-    _openDialog(
-      "Main Color picker",
-      MaterialColorPicker(
-        selectedColor: _mainColor,
-        allowShades: false,
-        onMainColorChange: (color) => setState(() => _tempMainColor = color),
-      ),
-    );
-  }
-
-  addColorToDabase() async {
+  updateLoyaltyCardColor() async {
     await _loyaltycardsProvider.updateLoyaltycardsColor(
         (_mainColor != Colors.blue)
             ? '#${_mainColor.value.toRadixString(16)}'
@@ -108,7 +97,14 @@ class CardsState extends State<Cards> with TickerProviderStateMixin {
         actions: [
           FlatButton(
             onPressed: () {
-              _openMainColorPicker();
+              openColorPicker(
+                MaterialColorPicker(
+                  selectedColor: _mainColor,
+                  allowShades: false,
+                  onMainColorChange: (color) =>
+                      setState(() => _tempMainColor = color),
+                ),
+              );
             },
             child: Icon(
               Icons.color_lens,

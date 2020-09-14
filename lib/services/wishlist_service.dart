@@ -253,4 +253,11 @@ class WishlistService {
     await dao.addRecipeToList(recipeUuid, listUuid);
     await fetchItemList(listUuid);
   }
+
+  setWishlistColor(String wishlistUuid, int color, bool flush) async {
+    if (flush) {
+      _wishlists[wishlistUuid].color = color;
+    }
+    await dao.setWishlistColor(wishlistUuid, color);
+  }
 }

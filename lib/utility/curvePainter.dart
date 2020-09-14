@@ -1,17 +1,35 @@
 import 'dart:math';
 
+import 'package:MobileOne/data/wishlist.dart';
+import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class CurvePainter extends CustomPainter {
+  final Wishlist wishlist;
+
+  CurvePainter(this.wishlist);
+
+  var _wishlistService = GetIt.I.get<WishlistService>();
+
   double _lightness = .8;
   double _saturation = 1;
   Color _color = Colors.white;
 
   getPastelColor() {
-    _color = HSLColor.fromColor(Color(generateColor()))
-        .withLightness(_lightness)
-        .withSaturation(_saturation)
-        .toColor();
+    if (wishlist.color == null) {
+      int generatedColor = generateColor();
+      _color = HSLColor.fromColor(Color(generatedColor))
+          .withLightness(_lightness)
+          .withSaturation(_saturation)
+          .toColor();
+      _wishlistService.setWishlistColor(wishlist.uuid, generatedColor, false);
+    } else {
+      _color = HSLColor.fromColor(Color(wishlist.color))
+          .withLightness(_lightness)
+          .withSaturation(_saturation)
+          .toColor();
+    }
   }
 
   String generateRandomHexColor() {
