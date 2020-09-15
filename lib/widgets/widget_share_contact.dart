@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'dart:math';
+import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:flutter/material.dart';
@@ -29,10 +30,17 @@ class WidgetShareContactState extends State<WidgetShareContact> {
                   backgroundImage: MemoryImage(widget.avatar),
                 )
               : (widget.email.length > 2)
-                  ? CircleAvatar(
-                      backgroundColor: Colors
-                          .primaries[Random().nextInt(Colors.primaries.length)],
-                      child: Text(widget.name.substring(0, 2)))
+                  ? (widget.name != null)
+                      ? CircleAvatar(
+                          backgroundColor: Colors.primaries[
+                              Random().nextInt(Colors.primaries.length)],
+                          child: Text(widget.name.substring(0, 2)))
+                      : CircleAvatar(
+                          backgroundColor: Colors.primaries[
+                              Random().nextInt(Colors.primaries.length)],
+                          child: Text(
+                              getString(context, "undefined_contact_name")
+                                  .substring(0, 2)))
                   : CircleAvatar(
                       backgroundColor: Colors
                           .primaries[Random().nextInt(Colors.primaries.length)],
@@ -44,14 +52,23 @@ class WidgetShareContactState extends State<WidgetShareContact> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: <Widget>[
-                  Text(
-                    widget.name,
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: WHITE,
-                    ),
-                  ),
+                  (widget.name != null)
+                      ? Text(
+                          widget.name,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: WHITE,
+                          ),
+                        )
+                      : Text(
+                          getString(context, "undefined_contact_name"),
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: WHITE,
+                          ),
+                        ),
                   Text(
                     widget.email,
                     style: TextStyle(

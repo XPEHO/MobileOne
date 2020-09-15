@@ -162,5 +162,6 @@
     "nobody": "personne",
     "refresh": "Chargement...",
     "refresh_complete": "Rafraichissement réussi",
-    "refresh_failed": "Rafraichissement échoué"
+    "refresh_failed": "Rafraichissement échoué",
+    "undefined_contact_name": "Nom non défini"
 }

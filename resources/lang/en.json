@@ -162,5 +162,6 @@
     "nobody": "nobody",
     "refresh": "Loading...",
     "refresh_complete": "Refresh complete",
-    "refresh_failed": "Refresh failed"
+    "refresh_failed": "Refresh failed",
+    "undefined_contact_name": "Undefined name"
 }

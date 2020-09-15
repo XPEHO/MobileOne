@@ -3,6 +3,7 @@ import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/messaging_service.dart';
+import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_share_contact.dart';
@@ -27,6 +28,7 @@ class ShareStateOneState extends State<ShareOne> {
   var newUuid;
   final _myController = TextEditingController();
   var shareProvider = GetIt.I.get<ShareProvider>();
+  var shareService = GetIt.I.get<ShareService>();
   var _colorsApp = GetIt.I.get<ColorService>();
   String emailRegexp =
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
@@ -67,18 +69,10 @@ class ShareStateOneState extends State<ShareOne> {
   }
 
   filterContact() {
-    List<Contact> _contacts = [];
-    _contacts.addAll(contacts);
-    if (_myController.text.isNotEmpty) {
-      _contacts.retainWhere((contact) {
-        String searchTerm = _myController.text.toLowerCase();
-        String contactName = contact.displayName.toLowerCase();
-        return contactName.contains(searchTerm);
-      });
-      setState(() {
-        contactsFilter = _contacts;
-      });
-    }
+    setState(() {
+      contactsFilter =
+          shareService.filterContacts(contacts, _myController.text);
+    });
   }
 
   Widget build(BuildContext context) {
@@ -87,23 +81,25 @@ class ShareStateOneState extends State<ShareOne> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       backgroundColor: _colorsApp.colorTheme,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          header(context),
-          (_argsShare.isOnlyOneStep == false)
-              ? headerSteps(context)
-              : Container(height: MediaQuery.of(context).size.height * 0.1),
-          searchContact(context),
-          searchNewContact(context, _argsShare.previousList),
-          loader == false
-              ? Center(
-                  child: CircularProgressIndicator(),
-                )
-              : Container(
-                  height: MediaQuery.of(context).size.height * 0.64,
-                  child: buildListView(isSearching, _argsShare.previousList)),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            header(context),
+            (_argsShare.isOnlyOneStep == false)
+                ? headerSteps(context)
+                : Container(height: MediaQuery.of(context).size.height * 0.1),
+            searchContact(context),
+            searchNewContact(context, _argsShare.previousList),
+            loader == false
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Container(
+                    height: MediaQuery.of(context).size.height * 0.64,
+                    child: buildListView(isSearching, _argsShare.previousList)),
+          ],
+        ),
       ),
     );
   }
@@ -211,9 +207,7 @@ class ShareStateOneState extends State<ShareOne> {
           child: (_myController.text.length > 2)
               ? WidgetShareContact(
                   name: _myController.text, email: _myController.text)
-              : Container(
-                  height: 1,
-                ),
+              : Container(),
         ),
       ),
     );
