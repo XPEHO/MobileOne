@@ -54,70 +54,70 @@ class LoyaltyCardsWidgetState extends State<LoyaltyCardsWidget> {
     cardColor = Color(_loyaltyCardsService.getColorFromHex(_card["color"]));
     return Padding(
       padding: const EdgeInsets.only(top: 10.0),
-      child: Stack(
-        children: <Widget>[
-          Container(
-            height: MediaQuery.of(context).size.height * 0.21,
-            width: MediaQuery.of(context).size.width * 0.75,
-            decoration: BoxDecoration(
-              color: cardColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5),
-                topRight: Radius.circular(22),
-                bottomLeft: Radius.circular(22),
-                bottomRight: Radius.circular(22),
-              ),
-            ),
-          ),
-          Positioned(
-            left: MediaQuery.of(context).size.width * 0.1,
-            top: MediaQuery.of(context).size.width * 0.04,
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.17,
-              width: MediaQuery.of(context).size.width * 0.60,
+      child: InkWell(
+        onTap: () {
+          openCardsPage();
+        },
+        child: Stack(
+          children: <Widget>[
+            Container(
+              height: MediaQuery.of(context).size.height * 0.21,
+              width: MediaQuery.of(context).size.width * 0.75,
               decoration: BoxDecoration(
-                color: WHITE,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(5),
+                color: cardColor,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(5),
+                  topRight: Radius.circular(22),
+                  bottomLeft: Radius.circular(22),
+                  bottomRight: Radius.circular(22),
                 ),
               ),
-              child: Center(
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.09,
-                        width: 180,
-                        child: GestureDetector(
-                          onTap: () {
-                            openCardsPage();
-                          },
+            ),
+            Positioned(
+              left: MediaQuery.of(context).size.width * 0.1,
+              top: MediaQuery.of(context).size.width * 0.04,
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.17,
+                width: MediaQuery.of(context).size.width * 0.60,
+                decoration: BoxDecoration(
+                  color: WHITE,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(5),
+                  ),
+                ),
+                child: Center(
+                  child: Column(
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 0.09,
+                          width: 180,
                           child: getBarcodeWidget(),
                         ),
                       ),
-                    ),
-                    buildNamePadding(context),
-                  ],
+                      buildNamePadding(context),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          Positioned(
-            top: MediaQuery.of(context).size.width * 0.02,
-            left: MediaQuery.of(context).size.width * 0.02,
-            child: Container(
-              height: 10,
-              width: 10,
-              decoration: BoxDecoration(
-                color: WHITE,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(50),
+            Positioned(
+              top: MediaQuery.of(context).size.width * 0.02,
+              left: MediaQuery.of(context).size.width * 0.02,
+              child: Container(
+                height: 10,
+                width: 10,
+                decoration: BoxDecoration(
+                  color: WHITE,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(50),
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
