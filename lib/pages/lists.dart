@@ -70,23 +70,27 @@ class ListsState extends State<Lists> {
             controller: _refreshController,
             onRefresh: _onRefresh,
             child: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.2,
+              child: Column(
+                children: <Widget>[
+                  Flexible(
+                    flex: 1,
+                    child: Container(
                       child: logo(),
                     ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.3,
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
                       child: allMyLists(context, wishlistsListProvider),
                     ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.4,
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: Container(
                       child: allSharedLists(context, wishlistsListProvider),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -101,17 +105,25 @@ class ListsState extends State<Lists> {
       padding: const EdgeInsets.only(top: 16.0),
       child: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, bottom: 16),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                getString(context, 'shared_with_me'),
-                style: TextStyle(color: WHITE),
+          Flexible(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  getString(context, 'shared_with_me'),
+                  style: TextStyle(color: WHITE),
+                ),
               ),
             ),
           ),
-          buildFuturBuilderGuest(wishlistsListProvider),
+          Flexible(
+            flex: 2,
+            child: Container(
+              child: buildFuturBuilderGuest(wishlistsListProvider),
+            ),
+          ),
         ],
       ),
     );
@@ -123,19 +135,24 @@ class ListsState extends State<Lists> {
       padding: const EdgeInsets.only(top: 16.0),
       child: Column(
         children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, bottom: 16),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                getString(context, 'all_my_lists'),
-                style: TextStyle(color: WHITE),
+          Flexible(
+            flex: 1,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  getString(context, 'all_my_lists'),
+                  style: TextStyle(color: WHITE),
+                ),
               ),
             ),
           ),
-          Container(
-            height: MediaQuery.of(context).size.height * 0.17,
-            child: buildFuturBuilderList(wishlistsListProvider),
+          Flexible(
+            flex: 2,
+            child: Container(
+              child: buildFuturBuilderList(wishlistsListProvider),
+            ),
           ),
         ],
       ),
@@ -144,9 +161,10 @@ class ListsState extends State<Lists> {
 
   Padding logo() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding:
+          const EdgeInsets.only(left: 8.0, right: 8.0, bottom: 8.0, top: 16.0),
       child:
-          Image.asset('assets/images/square-logo.png', width: 100, height: 100),
+          Image.asset('assets/images/square-logo.png', width: 80, height: 80),
     );
   }
 
@@ -176,15 +194,13 @@ class ListsState extends State<Lists> {
 
   Container emptyShare() {
     return Container(
-      width: MediaQuery.of(context).size.width,
-      height: MediaQuery.of(context).size.height * 0.3,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          Icon(Icons.share, size: 90, color: _colorsApp.greyColor),
+          Icon(Icons.share, size: 50, color: _colorsApp.greyColor),
           Text(
             getString(context, "no_sharing"),
-            style: TextStyle(fontSize: 25, color: _colorsApp.greyColor),
+            style: TextStyle(fontSize: 20, color: _colorsApp.greyColor),
           ),
         ],
       ),
@@ -228,7 +244,6 @@ class ListsState extends State<Lists> {
                   openOpenedListPage(lists[index], false);
                 },
                 child: Container(
-                  height: 100,
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: WidgetLists(
@@ -262,12 +277,9 @@ class ListsState extends State<Lists> {
       return emptyShare();
     } else {
       return Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height * 0.17,
         child: Padding(
           padding: const EdgeInsets.only(left: 8.0),
           child: Container(
-            height: 100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: guestList.length,

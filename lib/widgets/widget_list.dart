@@ -33,7 +33,6 @@ class WidgetListsState extends State<WidgetLists> {
             painter: CurvePainter(wishlist),
             child: Container(
               width: MediaQuery.of(context).size.width * 0.23,
-              height: MediaQuery.of(context).size.width * 0.05,
               child: Column(
                 children: <Widget>[
                   Padding(

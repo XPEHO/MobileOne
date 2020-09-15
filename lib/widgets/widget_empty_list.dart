@@ -25,7 +25,7 @@ class EmptyLists extends StatelessWidget {
             Icon(
               icon,
               color: textAndIconColor,
-              size: 50,
+              size: 30,
             ),
           ],
         ),
