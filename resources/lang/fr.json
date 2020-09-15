@@ -158,5 +158,8 @@
     "picker_submit": "VALIDER",
     "picker_cancel": "ANNULER",
     "coming_soon": "Prochainement !",
-    "rename": "Renommer"
+    "rename": "Renommer",
+    "refresh": "Chargement...",
+    "refresh_complete": "Rafraichissement réussi",
+    "refresh_failed": "Rafraichissement échoué"
 }

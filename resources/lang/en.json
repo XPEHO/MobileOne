@@ -158,5 +158,8 @@
     "picker_submit": "SUBMIT",
     "picker_cancel": "CANCEL",
     "coming_soon": "Coming soon !",
-    "rename": "Rename"
+    "rename": "Rename",
+    "refresh": "Loading...",
+    "refresh_complete": "Refresh complete",
+    "refresh_failed": "Refresh failed"
 }

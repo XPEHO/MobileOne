@@ -132,6 +132,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Color : don't use different blue anymore
 - Google auth : temporarily disable google auth button
 - Color : colors are not pastel anymore
+- Pull to refresh : messages are now translated
 
 ### Security
 

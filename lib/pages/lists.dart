@@ -53,6 +53,20 @@ class ListsState extends State<Lists> {
         return Scaffold(
           backgroundColor: _colorsApp.colorTheme,
           body: SmartRefresher(
+            header: WaterDropHeader(
+              refresh: Text(
+                getString(context, "refresh"),
+                style: TextStyle(color: WHITE),
+              ),
+              complete: Text(
+                getString(context, "refresh_complete"),
+                style: TextStyle(color: WHITE),
+              ),
+              failed: Text(
+                getString(context, "refresh_failed"),
+                style: TextStyle(color: WHITE),
+              ),
+            ),
             controller: _refreshController,
             onRefresh: _onRefresh,
             child: SafeArea(
