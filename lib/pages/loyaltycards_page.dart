@@ -60,7 +60,7 @@ class LoyaltyCardsState extends State<LoyaltyCards> {
               height: MediaQuery.of(context).size.height * 0.21,
               width: MediaQuery.of(context).size.width * 0.75,
               decoration: BoxDecoration(
-                color: BLUE,
+                color: _colorsApp.buttonColor,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(5),
                   topRight: Radius.circular(22),
@@ -91,7 +91,7 @@ class LoyaltyCardsState extends State<LoyaltyCards> {
                       "assets/images/qr-code.svg",
                       width: 70,
                       height: 70,
-                      color: BLUE,
+                      color: _colorsApp.buttonColor,
                     ),
                   ),
                 ),

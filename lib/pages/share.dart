@@ -82,7 +82,7 @@ class ShareState extends State<Share> {
                   child: EmptyLists(
                     icon: Icons.add_shopping_cart,
                     text: getString(context, "create_list"),
-                    color: _colorsApp.microColor,
+                    color: _colorsApp.buttonColor,
                     textAndIconColor: WHITE,
                   ),
                 ),
