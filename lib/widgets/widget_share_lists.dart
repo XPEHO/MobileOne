@@ -66,7 +66,9 @@ class WidgetShareListWithSomeoneState
                 top: 15,
               ),
               child: Container(
-                height: 20 + (45 * _emails.length.toDouble()),
+                height: _emails.isNotEmpty
+                    ? 20 + (45 * _emails.length.toDouble())
+                    : 20.0 + 45.0,
                 width: MediaQuery.of(context).size.width * 0.6,
                 child: Column(
                   children: <Widget>[
@@ -82,44 +84,59 @@ class WidgetShareListWithSomeoneState
                       ),
                     ),
                     Expanded(
-                      child: ListView.builder(
-                        scrollDirection: Axis.vertical,
-                        itemCount: _emails.length,
-                        itemBuilder: (BuildContext ctxt, int index) {
-                          var emailSelected = _emails[index];
-                          return Container(
-                            height: 45,
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: Text(
-                                    _emails[index],
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      color: WHITE,
-                                    ),
+                      child: _emails.isNotEmpty
+                          ? ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              itemCount: _emails.length,
+                              itemBuilder: (BuildContext ctxt, int index) {
+                                var emailSelected = _emails[index];
+                                return Container(
+                                  height: 45,
+                                  child: Row(
+                                    children: <Widget>[
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.4,
+                                        child: Text(
+                                          _emails[index],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            color: WHITE,
+                                          ),
+                                        ),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          shareProvider.deleteShared(
+                                              _listUuid, emailSelected);
+                                        },
+                                        child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Icon(
+                                              Icons.delete_forever,
+                                              size: 30,
+                                              color: GREY,
+                                            )),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            )
+                          : Container(
+                              height: 45,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  getString(context, "nobody"),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    color: WHITE,
                                   ),
                                 ),
-                                GestureDetector(
-                                  onTap: () {
-                                    shareProvider.deleteShared(
-                                        _listUuid, emailSelected);
-                                  },
-                                  child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Icon(
-                                        Icons.delete_forever,
-                                        size: 30,
-                                        color: GREY,
-                                      )),
-                                ),
-                              ],
+                              ),
                             ),
-                          );
-                        },
-                      ),
                     )
                   ],
                 ),

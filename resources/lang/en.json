@@ -159,6 +159,7 @@
     "picker_cancel": "CANCEL",
     "coming_soon": "Coming soon !",
     "rename": "Rename",
+    "nobody": "nobody",
     "refresh": "Loading...",
     "refresh_complete": "Refresh complete",
     "refresh_failed": "Refresh failed"
