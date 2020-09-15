@@ -1,3 +1,4 @@
+import 'package:MobileOne/dao/user_dao.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
@@ -25,6 +26,7 @@ void main() {
     final _firebaseUser = MockUser();
 
     GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton<UserDao>(UserDao());
     GetIt.I.registerSingleton<UserService>(UserService());
     GetIt.I.registerSingleton<FirebaseAuth>(_firebaseAuth);
     GetIt.I.registerSingleton<User>(_firebaseUser);

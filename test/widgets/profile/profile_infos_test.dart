@@ -1,5 +1,6 @@
 import 'package:MobileOne/dao/messaging_dao.dart';
 import 'package:MobileOne/dao/recipes_dao.dart';
+import 'package:MobileOne/dao/user_dao.dart';
 import 'package:MobileOne/dao/wishlist_dao.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
@@ -90,6 +91,7 @@ void main() {
     final _picture = UserPictureMock();
     final _analyticsService = AnalyticsServiceMock();
     GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton<UserDao>(UserDao());
     GetIt.I.registerSingleton<UserService>(UserService());
     final _userService = UserService();
     GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);

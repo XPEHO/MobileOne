@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui';
 
 import 'package:MobileOne/dao/recipes_dao.dart';
+import 'package:MobileOne/dao/user_dao.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
@@ -35,6 +36,7 @@ main() {
   group('Items scan tests', () {
     setSupportedLocales([Locale('fr', 'FR')]);
     GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton<UserDao>(UserDao());
     GetIt.I.registerSingleton<UserService>(UserService());
     GetIt.I.registerSingleton<RecipesDao>(RecipesDao());
     GetIt.I.registerSingleton<RecipesService>(RecipesService());

@@ -1,5 +1,6 @@
 import 'package:MobileOne/arguments/arguments.dart';
 import 'package:MobileOne/dao/recipes_dao.dart';
+import 'package:MobileOne/dao/user_dao.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
 import 'package:MobileOne/pages/items_page.dart';
@@ -72,6 +73,7 @@ void main() {
     // GIVEN
 
     GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton<UserDao>(UserDao());
     GetIt.I.registerSingleton<UserService>(UserService());
     GetIt.I.registerSingleton<RecipesDao>(RecipesDao());
     GetIt.I.registerSingleton<RecipesService>(RecipesService());

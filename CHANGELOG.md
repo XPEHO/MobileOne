@@ -127,6 +127,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Items sort : The items in a list are now sorted alphabeti
 - New account : A new account can now create a wishlist and share it
 - Authentication : user now have error messages on authentication/registration
+- Account : User recipes and messagin token are now deleted on user account deletion
 - Loyalty cards : user can now click on the whole card to open the big card
 - Color : don't use different blue anymore
 - Google auth : temporarily disable google auth button

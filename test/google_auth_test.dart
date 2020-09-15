@@ -1,3 +1,4 @@
+import 'package:MobileOne/dao/user_dao.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
@@ -50,6 +51,7 @@ void main() {
     final _expectedUser = MockUser();
 
     GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton(UserDao());
     GetIt.I.registerSingleton<UserService>(UserService());
 
     GetIt.I.registerSingleton<GoogleSignIn>(_googleSignIn);

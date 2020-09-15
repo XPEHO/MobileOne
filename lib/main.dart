@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:MobileOne/dao/loyalty_cards_dao.dart';
 import 'package:MobileOne/dao/recipes_dao.dart';
+import 'package:MobileOne/dao/user_dao.dart';
 import 'package:MobileOne/dao/wishlist_dao.dart';
 import 'package:MobileOne/pages/big_loyaltycard.dart';
 import 'package:MobileOne/pages/items_page.dart';
@@ -57,6 +58,7 @@ void instantiateServices() {
   getIt.registerSingleton(FirebaseAuth.instance);
   getIt.registerSingleton(AnalyticsService());
   getIt.registerSingleton(PreferencesService());
+  getIt.registerSingleton(UserDao());
   getIt.registerSingleton(UserService());
   getIt.registerSingleton(MessagingDao());
   getIt.registerSingleton(MessagingService());
