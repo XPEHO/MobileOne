@@ -172,6 +172,18 @@ class AuthenticationPageState extends State<AuthenticationPage> {
 
   RaisedButton buildGoogleButton(BuildContext context) {
     return RaisedButton.icon(
+      onPressed: () {},
+      label: Text(
+        getString(context, 'coming_soon'),
+        style: TextStyle(color: GREY, fontWeight: FontWeight.bold),
+      ),
+      color: Colors.grey[600],
+      icon: new Image.asset(
+        'assets/images/Google_g.png',
+        width: 20,
+      ),
+    );
+    /*return RaisedButton.icon(
       onPressed: () => onGoogleButtonPressed(context),
       label: Text(
         getString(context, 'google'),
@@ -182,7 +194,7 @@ class AuthenticationPageState extends State<AuthenticationPage> {
         'assets/images/Google_g.png',
         width: 20,
       ),
-    );
+    );*/
   }
 
   onGoogleButtonPressed(BuildContext context) async {
