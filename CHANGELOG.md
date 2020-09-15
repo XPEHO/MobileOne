@@ -134,6 +134,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Color : colors are not pastel anymore
 - UI : fixed too big screens
 - Pull to refresh : messages are now translated
+- Accessibility : text size can't be modified by the phone settings anymore
 
 ### Security
 

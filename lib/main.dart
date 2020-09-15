@@ -125,6 +125,12 @@ class MyAppState extends State<MyApp> {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     _preferencesService.initSharedPreferences();
     return MaterialApp(
+      builder: (context, child) {
+        return MediaQuery(
+          child: child,
+          data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+        );
+      },
       supportedLocales: getSupportedLocales(),
       localizationsDelegates: [
         const AppLocalizationsDelegate(),
