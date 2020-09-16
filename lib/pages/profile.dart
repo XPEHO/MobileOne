@@ -86,20 +86,24 @@ class ProfileState extends State<Profile> {
                           ),
                         ),
                       ),
-                      Container(
-                        height: MediaQuery.of(context).size.height * 0.1,
-                        width: MediaQuery.of(context).size.width,
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            user.email,
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: WHITE,
+                      user?.displayName != null
+                          ? Container(
+                              height: MediaQuery.of(context).size.height * 0.1,
+                              width: MediaQuery.of(context).size.width,
+                              child: Align(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  user.email,
+                                  style: TextStyle(
+                                    fontSize: 13,
+                                    color: WHITE,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : Container(
+                              height: MediaQuery.of(context).size.height * 0.1,
                             ),
-                          ),
-                        ),
-                      ),
                     ],
                   ),
                 ),

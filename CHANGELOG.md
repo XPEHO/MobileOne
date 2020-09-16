@@ -137,6 +137,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Pull to refresh : messages are now translated
 - Share contact : User can now have contacts without a name
 - Accessibility : text size can't be modified by the phone settings anymore
+- Profile page : Email will be displayed only one time if there is no displayname
 - Mainpage : share page title is not displayed anymore
 
 ### Security
