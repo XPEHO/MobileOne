@@ -127,9 +127,6 @@ class MainPageState extends State<MainPage> {
         builder: (context, provider, _) => Scaffold(
           appBar: AppBar(
             backgroundColor: _colorsApp.colorTheme,
-            title: (_floatingButtonAction == goToSharedPage)
-                ? Center(child: Text(getString(context, "my_shares")))
-                : Text(""),
           ),
           backgroundColor: bottomBackground,
           body: PageStorage(bucket: _bucket, child: _currentScreen),
