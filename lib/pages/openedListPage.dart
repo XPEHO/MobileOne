@@ -356,6 +356,7 @@ class OpenedListPageState extends State<OpenedListPage>
             FlatButton(
               child: Text(getString(context, "picker_submit")),
               onPressed: () {
+                _analytics.sendAnalyticsEvent("changeWishlistColor");
                 Navigator.of(context).pop();
                 _wishlistProvider.setWishlistColor(
                     wishlistUuid, _selectedColor.value, true);

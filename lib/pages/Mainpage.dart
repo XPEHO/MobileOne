@@ -91,10 +91,10 @@ class MainPageState extends State<MainPage> {
   }
 
   Future _getImage() async {
-    _analytics.sendAnalyticsEvent("change_picture_from_camera");
     final pickedFile = await _imageService.pickCamera(30, 720, 720);
 
     if (pickedFile != null) {
+      _analytics.sendAnalyticsEvent("uploadPictureFromCamera");
       GallerySaver.saveImage(
         pickedFile.path,
         albumName: getString(context, "app_name"),

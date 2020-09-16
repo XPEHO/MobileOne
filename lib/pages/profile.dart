@@ -220,7 +220,6 @@ class ProfileState extends State<Profile> {
   }
 
   Widget _buildProfilePicture(User user) {
-    _analytics.sendAnalyticsEvent("change_picture_from_gallery");
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<UserPictureProvider>(),
       child: Consumer<UserPictureProvider>(
@@ -272,6 +271,7 @@ class ProfileState extends State<Profile> {
   Future _selectPicture(provider) async {
     final pickedFile = await _imageService.pickGallery();
     if (pickedFile != null) {
+      _analytics.sendAnalyticsEvent("uploadPictureFromGallery");
       _pictureProvider.deleteUserPicture();
       StorageReference ref =
           _pictureProvider.getStorageRef(File(pickedFile.path));

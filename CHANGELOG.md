@@ -140,6 +140,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Accessibility : text size can't be modified by the phone settings anymore
 - Profile page : Email will be displayed only one time if there is no displayname
 - Mainpage : share page title is not displayed anymore
+- Analytics : Added new analytics
 
 ### Security
 

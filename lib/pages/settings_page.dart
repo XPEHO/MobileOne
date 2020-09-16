@@ -1,4 +1,5 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
@@ -19,11 +20,13 @@ class SettingsPageState extends State<SettingsPage> {
   final _preferencesService = GetIt.I.get<PreferencesService>();
   final _messagingService = GetIt.I.get<MessagingService>();
   final _userService = GetIt.I.get<UserService>();
+  var _analytics = GetIt.I.get<AnalyticsService>();
 
   bool _enableNotifications = true;
 
   @override
   void initState() {
+    _analytics.setCurrentPage("isOnSettingsPage");
     _enableNotifications = _preferencesService.enableNotifications;
     super.initState();
   }
@@ -89,8 +92,10 @@ class SettingsPageState extends State<SettingsPage> {
     _enableNotifications = value;
     _preferencesService.enableNotifications = value;
     if (value) {
+      _analytics.sendAnalyticsEvent("enableNotifications");
       _messagingService.setUserAppToken(_userService.user.email);
     } else {
+      _analytics.sendAnalyticsEvent("disableNotifications");
       _messagingService.deleteUserAppToken(_userService.user.email);
     }
   }

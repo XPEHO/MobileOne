@@ -3,6 +3,7 @@ import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/recipeItems_provider.dart';
 import 'package:MobileOne/providers/recipes_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:flutter/material.dart';
@@ -23,8 +24,15 @@ class OpenedRecipePage extends StatefulWidget {
 class OpenedRecipePageState extends State<OpenedRecipePage> {
   var _colorsApp = GetIt.I.get<ColorService>();
   var _recipesProvider = GetIt.I.get<RecipesProvider>();
+  var _analytics = GetIt.I.get<AnalyticsService>();
   final _myController = TextEditingController();
   final _nameFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    _analytics.setCurrentPage("isOnOpenedRecipePage");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -115,6 +123,7 @@ class OpenedRecipePageState extends State<OpenedRecipePage> {
       onSelected: (value) {
         switch (value) {
           case 1:
+            _analytics.sendAnalyticsEvent("renameARecipe");
             _nameFocusNode.requestFocus();
             _myController.selection = TextSelection(
                 baseOffset: 0, extentOffset: _myController.text.length);

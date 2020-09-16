@@ -2,6 +2,7 @@ import 'package:MobileOne/data/recipe.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/recipes_provider.dart';
+import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -22,6 +23,13 @@ class RecipesPageState extends State<RecipesPage> {
   var _colorsApp = GetIt.I.get<ColorService>();
   var _recipesProvider = GetIt.I.get<RecipesProvider>();
   var _itemsListProvider = GetIt.I.get<ItemsListProvider>();
+  var _analytics = GetIt.I.get<AnalyticsService>();
+
+  @override
+  void initState() {
+    _analytics.setCurrentPage("isOnRecipesPage");
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -126,6 +134,7 @@ class RecipesPageState extends State<RecipesPage> {
               key: UniqueKey(),
               child: buildRecipe(recipes, index, _listUuid),
               onDismissed: (direction) {
+                _analytics.sendAnalyticsEvent("deleteARecipe");
                 _recipesProvider.deleteRecipe(recipes[index]);
               },
             );
@@ -134,6 +143,7 @@ class RecipesPageState extends State<RecipesPage> {
   }
 
   addRecipeToList(String recipeUuid, String listUuid) async {
+    _analytics.sendAnalyticsEvent("addRecipeToList");
     await _itemsListProvider.addRecipeToList(recipeUuid, listUuid);
     Navigator.of(context).pop();
   }
@@ -226,6 +236,7 @@ class RecipesPageState extends State<RecipesPage> {
   }
 
   void createRecipe() async {
+    _analytics.sendAnalyticsEvent("createARecipe");
     await _recipesProvider.addRecipe(context);
   }
 
