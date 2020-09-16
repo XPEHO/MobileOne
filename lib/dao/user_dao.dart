@@ -104,5 +104,11 @@ class UserDao {
         .collection("appTokens")
         .doc(user.email)
         .delete();
+
+    //Delete userPicture
+    await FirebaseFirestore.instance
+        .collection("userPicture")
+        .doc(user.uid)
+        .delete();
   }
 }

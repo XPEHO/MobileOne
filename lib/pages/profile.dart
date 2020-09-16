@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:MobileOne/data/user_picture.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/pages/change_password.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
@@ -13,6 +14,7 @@ import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/widgets/text_icon.dart';
 import 'package:MobileOne/widgets/widget_deletion_confirmation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get_it/get_it.dart';
@@ -35,6 +37,7 @@ class ProfileState extends State<Profile> {
   var _colorsApp = GetIt.I.get<ColorService>();
   final _wishlistService = GetIt.I.get<WishlistService>();
   final _recipesService = GetIt.I.get<RecipesService>();
+  final _pictureProvider = GetIt.I.get<UserPictureProvider>();
 
   @override
   initState() {
@@ -222,20 +225,22 @@ class ProfileState extends State<Profile> {
       value: GetIt.I.get<UserPictureProvider>(),
       child: Consumer<UserPictureProvider>(
         builder: (context, provider, _) {
-          CircleAvatar userPicture;
+          CircleAvatar circlePicture;
+          UserPicture userPicture = _pictureProvider.getUserPicture();
 
-          String selectedPicturePath = provider.selectedPicturePath;
-          if (selectedPicturePath != null) {
-            userPicture = CircleAvatar(
+          if (userPicture != null &&
+              userPicture.path != null &&
+              userPicture.path.isNotEmpty) {
+            circlePicture = CircleAvatar(
               backgroundColor: WHITE,
-              backgroundImage: FileImage(
-                File(selectedPicturePath),
+              backgroundImage: NetworkImage(
+                userPicture.path,
               ),
               radius: 30.0,
             );
           } else {
             if (user.photoURL != null && user.photoURL.isNotEmpty) {
-              userPicture = CircleAvatar(
+              circlePicture = CircleAvatar(
                 backgroundColor: WHITE,
                 backgroundImage: NetworkImage(
                   user.photoURL,
@@ -243,7 +248,7 @@ class ProfileState extends State<Profile> {
                 radius: 30.0,
               );
             } else {
-              userPicture = CircleAvatar(
+              circlePicture = CircleAvatar(
                 backgroundColor: WHITE,
                 child: Icon(
                   Icons.person,
@@ -254,11 +259,10 @@ class ProfileState extends State<Profile> {
               );
             }
           }
-
           return GestureDetector(
             key: Key(KEY_GALLERY),
             onTap: () => _selectPicture(provider),
-            child: userPicture,
+            child: circlePicture,
           );
         },
       ),
@@ -268,13 +272,17 @@ class ProfileState extends State<Profile> {
   Future _selectPicture(provider) async {
     final pickedFile = await _imageService.pickGallery();
     if (pickedFile != null) {
-      provider.selectedPicturePath = pickedFile.path;
-      _savePicturePreferencesGallery(pickedFile.path);
+      _pictureProvider.deleteUserPicture();
+      StorageReference ref =
+          _pictureProvider.getStorageRef(File(pickedFile.path));
+      StorageUploadTask uploadTask =
+          _pictureProvider.uploadItemPicture(ref, File(pickedFile.path));
+      uploadTask.onComplete.then((_) {
+        ref.getDownloadURL().then((fileURL) {
+          _pictureProvider.setUserPicture(fileURL);
+        });
+      });
     }
-  }
-
-  _savePicturePreferencesGallery(String _picture) async {
-    _prefService.setString("picture" + _userService.user.uid, _picture);
   }
 
   bool _isPasswordUser() {
@@ -290,6 +298,7 @@ class ProfileState extends State<Profile> {
     _prefService.sharedPreferences.remove("mode");
     _wishlistService.flushWishlists();
     _recipesService.flushRecipes();
+    _pictureProvider.flushPicture();
     Navigator.of(context).pushNamedAndRemoveUntil(
         '/authentication', (Route<dynamic> route) => false);
     _userService.user = null;

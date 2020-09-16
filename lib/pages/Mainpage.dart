@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:MobileOne/localization/localization.dart';
@@ -10,16 +11,14 @@ import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
-import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_about_screen.dart';
 import 'package:barcode_scan/barcode_scan.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/image_service.dart';
-import 'package:MobileOne/services/preferences_service.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:gallery_saver/gallery_saver.dart';
@@ -37,8 +36,7 @@ class MainPage extends StatefulWidget {
 
 class MainPageState extends State<MainPage> {
   final _imageService = GetIt.I.get<ImageService>();
-  final _prefService = GetIt.I.get<PreferencesService>();
-  final _userService = GetIt.I.get<UserService>();
+  final _pictureProvider = GetIt.I.get<UserPictureProvider>();
   Widget _currentScreen = Lists();
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
@@ -55,9 +53,6 @@ class MainPageState extends State<MainPage> {
   @override
   void initState() {
     bottomBackground = _colorsApp.colorTheme;
-    GetIt.I.get<UserPictureProvider>().selectedPicturePath = GetIt.I
-        .get<PreferencesService>()
-        .getString('picture' + GetIt.I.get<UserService>().user.uid);
     super.initState();
     _actions = [
       scanLoyaltyCardsBareCode,
@@ -95,27 +90,27 @@ class MainPageState extends State<MainPage> {
     }
   }
 
-  _savePicturePreferences(String _picture, User user) async {
-    _prefService.setString('picture' + user.uid, _picture);
-  }
-
   Future _getImage() async {
     _analytics.sendAnalyticsEvent("change_picture_from_camera");
-    // Pick picture
-    final pickedFile = await _imageService.pickCamera(100, 1080, 1080);
+    final pickedFile = await _imageService.pickCamera(30, 720, 720);
 
     if (pickedFile != null) {
-      // Save picture path into Provider
-      GetIt.I.get<UserPictureProvider>().selectedPicturePath = pickedFile.path;
-
-      // Save image into phone gallery
       GallerySaver.saveImage(
         pickedFile.path,
         albumName: getString(context, "app_name"),
       );
 
-      // Save select picture path to shared preferences
-      _savePicturePreferences(pickedFile.path, _userService.user);
+      _pictureProvider.deleteUserPicture();
+
+      StorageReference ref =
+          _pictureProvider.getStorageRef(File(pickedFile.path));
+      StorageUploadTask uploadTask =
+          _pictureProvider.uploadItemPicture(ref, File(pickedFile.path));
+      uploadTask.onComplete.then((_) {
+        ref.getDownloadURL().then((fileURL) {
+          _pictureProvider.setUserPicture(fileURL);
+        });
+      });
     }
   }
 

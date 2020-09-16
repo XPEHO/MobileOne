@@ -1,9 +1,12 @@
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/preferences_service.dart';
+import 'package:MobileOne/services/recipes_service.dart';
 import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +24,9 @@ class DeletionConfirmationPopupWidgetState
   var _authService = GetIt.I.get<AuthenticationService>();
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
+  final _wishlistService = GetIt.I.get<WishlistService>();
+  final _recipesService = GetIt.I.get<RecipesService>();
+  final _pictureProvider = GetIt.I.get<UserPictureProvider>();
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = new TextEditingController();
@@ -291,6 +297,9 @@ class DeletionConfirmationPopupWidgetState
     _prefService.sharedPreferences.remove("email");
     _prefService.sharedPreferences.remove("password");
     _prefService.sharedPreferences.remove("mode");
+    _wishlistService.flushWishlists();
+    _recipesService.flushRecipes();
+    _pictureProvider.flushPicture();
     Navigator.of(context).pushNamedAndRemoveUntil(
         '/authentication', (Route<dynamic> route) => false);
     _userService.user = null;

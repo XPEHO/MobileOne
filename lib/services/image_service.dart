@@ -7,7 +7,11 @@ class ImageService {
   final _picker = ImagePicker();
 
   Future<PickedFile> pickGallery() {
-    return _picker.getImage(source: ImageSource.gallery);
+    return _picker.getImage(
+        source: ImageSource.gallery,
+        imageQuality: 30,
+        maxWidth: 720,
+        maxHeight: 720);
   }
 
   Future<PickedFile> pickCamera(

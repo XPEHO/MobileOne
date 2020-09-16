@@ -39,6 +39,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add recipes
 - Add possiblity to add a recipe to a list
 - Add choose wishlist color
+- Add user can now save a picture
 
 ### Changed
 

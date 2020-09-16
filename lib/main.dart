@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:MobileOne/dao/loyalty_cards_dao.dart';
+import 'package:MobileOne/dao/picture_dao.dart';
 import 'package:MobileOne/dao/recipes_dao.dart';
 import 'package:MobileOne/dao/user_dao.dart';
 import 'package:MobileOne/dao/wishlist_dao.dart';
@@ -27,6 +28,7 @@ import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/messaging_service.dart';
+import 'package:MobileOne/services/picture_service.dart';
 import 'package:MobileOne/services/recipes_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
@@ -62,6 +64,8 @@ void instantiateServices() {
   getIt.registerSingleton(UserService());
   getIt.registerSingleton(MessagingDao());
   getIt.registerSingleton(MessagingService());
+  getIt.registerSingleton(PictureDao());
+  getIt.registerSingleton(PictureService());
 
   getIt.registerSingleton(RecipesDao());
   getIt.registerSingleton(RecipesService());
