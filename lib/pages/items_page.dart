@@ -78,7 +78,7 @@ class EditItemPageState extends State<EditItemPage> {
       if (value.data()[_args.itemUuid]["imageName"] != null) {
         _imageName = value.data()[_args.itemUuid]["imageName"];
       }
-      if (imageLink != null) {
+      if (imageLink != null && imageLink != "assets/images/canned-food.png") {
         _itemImage = Image(image: NetworkImage(imageLink));
       }
       switch (value.data()[_args.itemUuid]["unit"]) {
