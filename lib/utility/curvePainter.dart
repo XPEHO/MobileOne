@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:MobileOne/data/wishlist.dart';
-import 'package:MobileOne/services/wishlist_service.dart';
+import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
@@ -10,7 +10,7 @@ class CurvePainter extends CustomPainter {
 
   CurvePainter(this.wishlist);
 
-  var _wishlistService = GetIt.I.get<WishlistService>();
+  var _wishlistProvider = GetIt.I.get<WishlistHeadProvider>();
 
   Color _color = Colors.white;
 
@@ -18,7 +18,7 @@ class CurvePainter extends CustomPainter {
     if (wishlist.color == null) {
       int generatedColor = generateColor();
       _color = HSLColor.fromColor(Color(generatedColor)).toColor();
-      _wishlistService.setWishlistColor(wishlist.uuid, generatedColor, false);
+      _wishlistProvider.setWishlistColor(wishlist.uuid, generatedColor, false);
     } else {
       _color = HSLColor.fromColor(Color(wishlist.color)).toColor();
     }

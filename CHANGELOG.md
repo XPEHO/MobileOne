@@ -141,6 +141,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Profile page : Email will be displayed only one time if there is no displayname
 - Mainpage : share page title is not displayed anymore
 - Analytics : Added new analytics
+- Wishlist color : wishslist color is now fixed on a new wishlist
 - Item image : items with old images now have an icon
 
 ### Security
