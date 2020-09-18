@@ -465,18 +465,25 @@ class EditItemPageState extends State<EditItemPage> {
   }
 
   Future<void> pickImage() async {
-    await _imageService
-        .pickCamera(30, 720, 720)
-        .then((image) => pickedImage = File(image.path));
+    String path;
 
-    setState(() {
-      _itemImage = Image(
-        image: FileImage(pickedImage),
-        fit: BoxFit.cover,
-      );
+    await _imageService.pickCamera(30, 720, 720).then((image) {
+      if (image != null && image.path != null) {
+        path = image.path;
+      }
     });
 
-    imageType = "Picked";
+    if (path != null) {
+      pickedImage = File(path);
+      setState(() {
+        _itemImage = Image(
+          image: FileImage(pickedImage),
+          fit: BoxFit.cover,
+        );
+      });
+
+      imageType = "Picked";
+    }
   }
 
   int getTypeIndex() {
