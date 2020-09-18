@@ -92,6 +92,7 @@ flutter:
     - resources/lang/en.json
     - resources/lang/fr.json
     - assets/messaging/cloud_messaging.json
+    - assets/messaging/email.json
     - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see

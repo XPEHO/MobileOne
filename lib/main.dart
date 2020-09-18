@@ -24,8 +24,10 @@ import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/pages/share_one.dart';
 import 'package:MobileOne/pages/share_two.dart';
+import 'package:MobileOne/rest/email_rest_client.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/email_service.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/picture_service.dart';
@@ -66,6 +68,8 @@ void instantiateServices() {
   getIt.registerSingleton(MessagingService());
   getIt.registerSingleton(PictureDao());
   getIt.registerSingleton(PictureService());
+  getIt.registerSingleton(EmailRestClient());
+  getIt.registerSingleton(EmailService());
 
   getIt.registerSingleton(RecipesDao());
   getIt.registerSingleton(RecipesService());

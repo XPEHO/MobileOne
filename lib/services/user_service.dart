@@ -38,4 +38,8 @@ class UserService with ChangeNotifier {
     }
     return false;
   }
+
+  Future<bool> checkUserExistence(String email) async {
+    return await _userDao.checkUserExistence(email);
+  }
 }

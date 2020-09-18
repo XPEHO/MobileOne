@@ -111,4 +111,16 @@ class UserDao {
         .doc(user.uid)
         .delete();
   }
+
+  Future<bool> checkUserExistence(String email) async {
+    var result = await FirebaseFirestore.instance
+        .collection("appTokens")
+        .doc(email)
+        .get();
+
+    if (result.data() != null) {
+      return true;
+    }
+    return false;
+  }
 }

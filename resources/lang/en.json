@@ -163,5 +163,7 @@
     "refresh": "Loading...",
     "refresh_complete": "Refresh complete",
     "refresh_failed": "Refresh failed",
-    "undefined_contact_name": "Undefined name"
+    "undefined_contact_name": "Undefined name",
+    "subscribe_to_simplist": "Subscribe to the SimpList beta",
+    "email_text": "You can now subscibe to our app to see the shopping lists shared by your friends following one of these links : <br/>iOS : <a href=\"https://testflight.apple.com/join/3mYKhddp\">https://testflight.apple.com/join/3mYKhddp</a><br/>android : <a href=\"https://appdistribution.firebase.dev/i/c0f0bb4294980686\">https://appdistribution.firebase.dev/i/c0f0bb4294980686</a>"
 }

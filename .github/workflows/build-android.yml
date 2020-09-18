@@ -21,6 +21,12 @@ jobs:
         run: |
           mkdir -p ./assets/messaging
           echo $SERVER_TOKEN > ./assets/messaging/cloud_messaging.json
+      - name: fetch email credentials
+        env:
+          EMAIL_CREDENTIALS: ${{ secrets.EMAIL_CREDENTIALS }}
+        run: |
+          mkdir -p ./assets/messaging
+          echo $EMAIL_CREDENTIALS > ./assets/messaging/email.json
       - uses: actions/setup-java@v1
         with:
           java-version: '12.x'
