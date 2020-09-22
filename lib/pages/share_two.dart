@@ -128,6 +128,7 @@ class ShareStateTwoState extends State<ShareTwo> {
                               height: 100,
                               child: WidgetLists(
                                 listUuid: wishlists[index].uuid,
+                                isGuest: false,
                               ),
                             ),
                           ),

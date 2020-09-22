@@ -48,21 +48,21 @@ class CurvePainter extends CustomPainter {
     Paint paint = Paint();
 
     path = Path();
-    path.lineTo(0, size.height * 0.75);
-    path.lineTo(size.height * 0.1, size.height * 0.7);
-    path.lineTo(size.height * 0.15, size.height * 0.75);
-    path.lineTo(size.height * 0.2, size.height * 0.7);
-    path.lineTo(size.height * 0.25, size.height * 0.75);
-    path.lineTo(size.height * 0.3, size.height * 0.7);
-    path.lineTo(size.height * 0.35, size.height * 0.75);
-    path.lineTo(size.height * 0.4, size.height * 0.7);
-    path.lineTo(size.height * 0.45, size.height * 0.7);
-    path.lineTo(size.height * 0.5, size.height * 0.75);
-    path.lineTo(size.height * 0.55, size.height * 0.6);
-    path.lineTo(size.height * 0.6, size.height * 0.7);
-    path.lineTo(size.height * 0.65, size.height * 0.75);
-    path.lineTo(size.height * 0.7, size.height * 0.7);
-    path.lineTo(size.width, size.height * 0.75);
+    path.lineTo(0, size.height * 0.85);
+    path.lineTo(size.height * 0.1, size.height * 0.8);
+    path.lineTo(size.height * 0.15, size.height * 0.85);
+    path.lineTo(size.height * 0.2, size.height * 0.8);
+    path.lineTo(size.height * 0.25, size.height * 0.85);
+    path.lineTo(size.height * 0.3, size.height * 0.8);
+    path.lineTo(size.height * 0.35, size.height * 0.85);
+    path.lineTo(size.height * 0.4, size.height * 0.8);
+    path.lineTo(size.height * 0.45, size.height * 0.8);
+    path.lineTo(size.height * 0.5, size.height * 0.85);
+    path.lineTo(size.height * 0.55, size.height * 0.7);
+    path.lineTo(size.height * 0.6, size.height * 0.8);
+    path.lineTo(size.height * 0.65, size.height * 0.85);
+    path.lineTo(size.height * 0.7, size.height * 0.8);
+    path.lineTo(size.width, size.height * 0.85);
     path.lineTo(size.width, 0);
 
     path.close();

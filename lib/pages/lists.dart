@@ -243,13 +243,9 @@ class ListsState extends State<Lists> {
                 onTap: () {
                   openOpenedListPage(lists[index], false);
                 },
-                child: Container(
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: WidgetLists(
-                      listUuid: lists[index],
-                    ),
-                  ),
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: WidgetLists(listUuid: lists[index], isGuest: false),
                 ));
           },
         ),
@@ -276,27 +272,24 @@ class ListsState extends State<Lists> {
     if (guestList.isEmpty) {
       return emptyShare();
     } else {
-      return Container(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8.0),
-          child: Container(
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: guestList.length,
-              itemBuilder: (BuildContext ctxt, index) {
-                return GestureDetector(
-                    onTap: () {
-                      openOpenedListPage(guestList[index], true);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: WidgetLists(
-                        listUuid: guestList[index],
-                      ),
-                    ));
-              },
-            ),
-          ),
+      return Padding(
+        padding: const EdgeInsets.only(left: 8.0),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: guestList.length,
+          itemBuilder: (BuildContext ctxt, index) {
+            return Container(
+              child: GestureDetector(
+                  onTap: () {
+                    openOpenedListPage(guestList[index], true);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child:
+                        WidgetLists(listUuid: guestList[index], isGuest: true),
+                  )),
+            );
+          },
         ),
       );
     }

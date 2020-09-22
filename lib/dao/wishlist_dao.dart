@@ -1,3 +1,4 @@
+import 'package:MobileOne/data/owner_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,8 @@ class WishlistDao {
   Future<DocumentSnapshot> fetchShareLists(String userUuid) =>
       FirebaseFirestore.instance.collection("shared").doc(userUuid).get();
 
-  Future<void> addWishlist(String wishlistUuid, String userUuid) async {
+  Future<void> addWishlist(
+      String wishlistUuid, String userUuid, String userEmail) async {
     String wishlistName;
 
     await FirebaseFirestore.instance
@@ -37,6 +39,8 @@ class WishlistDao {
       'itemCounts': "0",
       'label': wishlistName,
       'timestamp': new DateTime.now(),
+      'owner': userUuid,
+      'ownerEmail': userEmail,
     });
 
     //Check if the user already have a wishlist
@@ -126,10 +130,13 @@ class WishlistDao {
   Future<DocumentSnapshot> fetchWishlist(String uuid) =>
       FirebaseFirestore.instance.collection("wishlists").doc(uuid).get();
 
-  changeWishlistLabel(String label, String listUuid) =>
+  changeWishlistLabel(
+          String label, String listUuid, String userUid, String userEmail) =>
       FirebaseFirestore.instance.collection("wishlists").doc(listUuid).set(
         {
           "label": label,
+          "owner": userUid,
+          "ownerEmail": userEmail,
         },
         SetOptions(merge: true),
       );
@@ -386,5 +393,42 @@ class WishlistDao {
       },
       SetOptions(merge: true),
     );
+  }
+
+  Future<OwnerDetails> getOwnerDetails(String listUuid) async {
+    String ownerUid;
+    String email;
+    String path;
+
+    await FirebaseFirestore.instance
+        .collection("wishlists")
+        .doc(listUuid)
+        .get()
+        .then((value) {
+      if (value != null && value.data() != null) {
+        if (value.data()["owner"] != null) {
+          ownerUid = value.data()["owner"];
+        }
+        if (value.data()["ownerEmail"] != null) {
+          email = value.data()["ownerEmail"];
+        }
+      }
+    });
+
+    if (ownerUid != null) {
+      await FirebaseFirestore.instance
+          .collection("userPicture")
+          .doc(ownerUid)
+          .get()
+          .then((value) {
+        if (value != null && value.data() != null) {
+          if (value.data()["path"] != null) {
+            path = value.data()["path"];
+          }
+        }
+      });
+    }
+
+    return OwnerDetails.fromMap(path, email);
   }
 }

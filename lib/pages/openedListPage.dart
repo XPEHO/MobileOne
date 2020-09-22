@@ -371,29 +371,38 @@ class OpenedListPageState extends State<OpenedListPage>
   AppBar buildAppBar(BuildContext context, Wishlist wishlistHead) {
     return AppBar(
         backgroundColor: _colorsApp.colorTheme,
-        title: TextField(
-          onTap: () => _myController.selection = TextSelection(
-              baseOffset: 0, extentOffset: _myController.text.length),
-          focusNode: _nameFocusNode,
-          style: TextStyle(
-            color: WHITE,
-          ),
-          controller: _myController,
-          textAlign: TextAlign.center,
-          decoration: InputDecoration(
-            hintText: getString(context, "wishlist_name"),
-            hintStyle: TextStyle(color: _colorsApp.greyColor),
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: TRANSPARENT),
-            ),
-            filled: true,
-            fillColor: Colors.transparent,
-          ),
-          onSubmitted: (_) {
-            _wishlistProvider.changeWishlistLabel(
-                _myController.text, wishlistHead.uuid);
-          },
-        ),
+        title: _args.isGuest
+            ? Center(
+                child: Text(
+                  _myController.text,
+                  style: TextStyle(
+                    color: WHITE,
+                  ),
+                ),
+              )
+            : TextField(
+                onTap: () => _myController.selection = TextSelection(
+                    baseOffset: 0, extentOffset: _myController.text.length),
+                focusNode: _nameFocusNode,
+                style: TextStyle(
+                  color: WHITE,
+                ),
+                controller: _myController,
+                textAlign: TextAlign.center,
+                decoration: InputDecoration(
+                  hintText: getString(context, "wishlist_name"),
+                  hintStyle: TextStyle(color: _colorsApp.greyColor),
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: TRANSPARENT),
+                  ),
+                  filled: true,
+                  fillColor: Colors.transparent,
+                ),
+                onSubmitted: (_) {
+                  _wishlistProvider.changeWishlistLabel(
+                      _myController.text, wishlistHead.uuid);
+                },
+              ),
         actions: [
           FlatButton(
             onPressed: () {
@@ -429,11 +438,6 @@ class OpenedListPageState extends State<OpenedListPage>
                 key: Key("leaveShare"),
                 value: 3,
                 child: Text(getString(context, 'leave_share')),
-              ),
-              PopupMenuItem(
-                key: Key("renameWishlist"),
-                value: 5,
-                child: Text(getString(context, 'rename')),
               ),
             ]
           : [

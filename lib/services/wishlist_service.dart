@@ -1,4 +1,5 @@
 import 'package:MobileOne/dao/wishlist_dao.dart';
+import 'package:MobileOne/data/owner_details.dart';
 import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/services/analytics_services.dart';
@@ -22,6 +23,7 @@ class WishlistService {
   Map<String, dynamic> _shareLists = {};
   Map<String, dynamic> _ownerLists = {};
   Map<String, dynamic> _guestLists = {};
+  Map<String, OwnerDetails> _ownerDetails = {};
 
   void _flush() {
     _wishlists = {};
@@ -29,6 +31,7 @@ class WishlistService {
     _shareLists = {};
     _ownerLists = {};
     _guestLists = {};
+    _ownerDetails = {};
   }
 
   List get ownerLists => _ownerLists[userService.user.uid];
@@ -77,8 +80,9 @@ class WishlistService {
 
   addWishlist(BuildContext context) async {
     final wishlistUuid = Uuid().v4();
-    await dao.addWishlist(wishlistUuid, userService.user.uid).whenComplete(() =>
-        Navigator.of(context).pushNamed('/openedListPage',
+    await dao
+        .addWishlist(wishlistUuid, userService.user.uid, userService.user.email)
+        .whenComplete(() => Navigator.of(context).pushNamed('/openedListPage',
             arguments:
                 OpenedListArguments(listUuid: wishlistUuid, isGuest: false)));
     _flush();
@@ -109,7 +113,8 @@ class WishlistService {
 
   changeWishlistLabel(String label, String listUuid) async {
     label == null ? label = "" : label = label;
-    dao.changeWishlistLabel(label, listUuid);
+    dao.changeWishlistLabel(
+        label, listUuid, userService.user.uid, userService.user.email);
     _wishlists[listUuid].label = label;
   }
 
@@ -262,5 +267,15 @@ class WishlistService {
       _wishlists[wishlistUuid].color = color;
     }
     await dao.setWishlistColor(wishlistUuid, color);
+  }
+
+  Future<OwnerDetails> getOwnerDetails(String listUuid) async {
+    if (_ownerDetails.containsKey(listUuid)) {
+      return _ownerDetails[listUuid];
+    } else {
+      OwnerDetails ownerDetails = await dao.getOwnerDetails(listUuid);
+      _ownerDetails.addAll({listUuid: ownerDetails});
+      return _ownerDetails[listUuid];
+    }
   }
 }
