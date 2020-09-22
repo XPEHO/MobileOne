@@ -137,7 +137,10 @@ class WishlistService {
     if (itemList != null) {
       itemList.sort((a, b) {
         if (a.isValidated == b.isValidated) {
-          return a.label.toLowerCase().compareTo(b.label.toLowerCase());
+          if (a.label != null && b.label != null) {
+            return a.label.toLowerCase().compareTo(b.label.toLowerCase());
+          }
+          return 0;
         } else if (a.isValidated) {
           return 1;
         } else {

@@ -145,6 +145,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Wishlist color : wishslist color is now fixed on a new wishlist
 - Item image : items with old images now have an icon
 - Camera : fixed error on camera cancel
+- Sort : fixed tolowercase error
 
 ### Security
 
