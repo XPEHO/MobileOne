@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:MobileOne/providers/recipeItems_provider.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/widgets/widget_voice_record.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/arguments/arguments.dart';
 import 'package:MobileOne/services/image_service.dart';
@@ -56,11 +57,11 @@ class EditItemPageState extends State<EditItemPage> {
   ItemArguments _args;
   var _itemImage;
   File pickedImage;
-  final SpeechToText speech = SpeechToText();
-  bool isInitialized;
   String imageType = "Default";
-  String _localeId;
   String _collection;
+
+  bool isInitialized = false;
+  final SpeechToText speech = SpeechToText();
 
   Future<void> getItems() async {
     String labelValue;
@@ -125,8 +126,6 @@ class EditItemPageState extends State<EditItemPage> {
 
   initializeSpeech() async {
     isInitialized = await speech.initialize();
-    var systemLocale = await speech.systemLocale();
-    _localeId = systemLocale.localeId;
   }
 
   void getData() {
@@ -411,56 +410,21 @@ class EditItemPageState extends State<EditItemPage> {
 
   recordAudio() async {
     if (isInitialized) {
-      await buildRecordPopup();
-      await speech.cancel();
-      await speech.stop();
+      String result = await buildRecordPopup();
+      _name = result;
+      setState(() {
+        itemNameController.text = result;
+      });
     } else {
       Fluttertoast.showToast(msg: getString(context, 'microphone_access'));
     }
   }
 
-  listenRecord() async {
-    await speech.listen(
-      localeId: _localeId,
-      partialResults: false,
-      onResult: (result) {
-        setState(() {
-          itemNameController.text = result.recognizedWords;
-          _name = result.recognizedWords;
-          Navigator.of(context).pop();
-        });
-      },
-    );
-  }
-
-  Future<bool> buildRecordPopup() async {
+  Future<String> buildRecordPopup() async {
     return showDialog(
         context: context,
         builder: (BuildContext context) {
-          listenRecord();
-          return new AlertDialog(
-            backgroundColor: _colorsApp.microColor,
-            scrollable: true,
-            content: Container(
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Icon(
-                    Icons.mic,
-                    color: WHITE,
-                    size: 36,
-                  ),
-                  Text(
-                    getString(context, "talk"),
-                    style: TextStyle(color: WHITE),
-                  ),
-                ],
-              ),
-            ),
-          );
+          return WidgetVoiceRecord(speech: speech);
         });
   }
 
