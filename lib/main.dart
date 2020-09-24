@@ -36,6 +36,7 @@ import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/pages/authentication-page.dart';
 import 'package:MobileOne/localization/delegate.dart';
@@ -143,7 +144,9 @@ class MyAppState extends State<MyApp> {
       localizationsDelegates: [
         const AppLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate
       ],
       localeResolutionCallback:
           (Locale locale, Iterable<Locale> supportedLocales) {

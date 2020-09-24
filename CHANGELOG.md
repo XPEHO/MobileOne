@@ -147,6 +147,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Item image : items with old images now have an icon
 - Camera : fixed error on camera cancel
 - Sort : fixed tolowercase error
+- iOS : fixed copy/paste menu
 
 ### Security
 
