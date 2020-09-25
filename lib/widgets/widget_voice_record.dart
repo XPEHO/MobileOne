@@ -47,12 +47,13 @@ class WidgetVoiceRecordState extends State<WidgetVoiceRecord> {
                   : getString(context, "talk"),
               style: TextStyle(color: WHITE),
             ),
-            IconButton(
-              icon: Icon(Icons.check),
+            FlatButton(
+              child: Icon(
+                Icons.check,
+                color: _colorsApp.buttonColor,
+              ),
               color: WHITE,
               onPressed: () async {
-                await widget.speech.cancel();
-                await widget.speech.stop();
                 Navigator.of(context).pop(_recordResult);
               },
             )

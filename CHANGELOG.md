@@ -148,6 +148,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Camera : fixed error on camera cancel
 - Sort : fixed tolowercase error
 - iOS : fixed copy/paste menu
+- Voice recognition : user can now use voice recognition on iOS
 
 ### Security
 

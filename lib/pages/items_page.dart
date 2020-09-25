@@ -121,11 +121,6 @@ class EditItemPageState extends State<EditItemPage> {
     WidgetsBinding.instance.addPostFrameCallback((_) => getData());
     super.initState();
     _itemNameFocusNode.requestFocus();
-    initializeSpeech();
-  }
-
-  initializeSpeech() async {
-    isInitialized = await speech.initialize();
   }
 
   void getData() {
@@ -409,8 +404,11 @@ class EditItemPageState extends State<EditItemPage> {
   }
 
   recordAudio() async {
+    isInitialized = await speech.initialize();
     if (isInitialized) {
       String result = await buildRecordPopup();
+      speech.cancel();
+      speech.stop();
       _name = result;
       setState(() {
         itemNameController.text = result;
