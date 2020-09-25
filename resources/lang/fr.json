@@ -165,5 +165,17 @@
     "refresh_failed": "Rafraichissement échoué",
     "undefined_contact_name": "Nom non défini",
     "subscribe_to_simplist": "Inscrivez-vous à la bêta de SimpList",
-    "email_text": "Vous pouvez désormais rejoindre notre application et voir les listes partagées par vos amis via l'un de ces liens : <br/>iOS : <a href=\"https://testflight.apple.com/join/3mYKhddp\">https://testflight.apple.com/join/3mYKhddp</a><br/>android : <a href=\"https://appdistribution.firebase.dev/i/c0f0bb4294980686\">https://appdistribution.firebase.dev/i/c0f0bb4294980686</a>"
+    "email_text": "Vous pouvez désormais rejoindre notre application et voir les listes partagées par vos amis via l'un de ces liens : <br/>iOS : <a href=\"https://testflight.apple.com/join/3mYKhddp\">https://testflight.apple.com/join/3mYKhddp</a><br/>android : <a href=\"https://appdistribution.firebase.dev/i/c0f0bb4294980686\">https://appdistribution.firebase.dev/i/c0f0bb4294980686</a>",
+    "first_auth_needed": "Vous devez vous connecter au moins une fois avec un email/mot de passe",
+    "scan_to_auth": "Scannez votre empreinte pour vous connecter",
+    "cancel_fingerprint_button": "ANNULER",
+    "go_to_settings": "PARAMETRES",
+    "go_to_settings_desc": "Aucune empreinte enregistrée, rendez-vous dans les paramètres pour en ajouter une",
+    "lockout_text": "Veuillez activer la reconnaissance d'empreinte",
+    "no_fingerprint_title": "Aucune empreinte",
+    "fingerprint_not_recognized": "Empreinte non reconnue",
+    "fingerprint_button": "Empreinte",
+    "biometrics_check": "Souhaitez-vous activer la connection via empreinte pour vos prochaines connections ?",
+    "biometrics_confirm": "OUI",
+    "biometrics_cancel": "NON"
 }

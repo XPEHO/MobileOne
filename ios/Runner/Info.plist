@@ -55,6 +55,8 @@
 	<string>Photo are used for items and profile</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This app requires microphone access to function properly</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Why is my app authenticating using face id?</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

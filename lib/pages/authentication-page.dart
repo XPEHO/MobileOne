@@ -7,11 +7,14 @@ import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/services/authentication_service.dart';
 import 'package:get_it/get_it.dart';
+import 'package:local_auth/auth_strings.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../localization/localization.dart';
+import 'package:local_auth/local_auth.dart';
 
 const KEY_AUTH_PAGE_TEXT = "authentication_page_text";
 
@@ -40,6 +43,8 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   IconData _iconVisibility = Icons.visibility_off;
   bool _passwordVisibility = true;
 
+  bool _isFingerprintAvailable = false;
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -58,7 +63,27 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   @override
   void initState() {
     _analytics.setCurrentPage("isOnAuthenticationPage");
+    checkBiometricsExistence();
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_preferencesService.getBool("isBiometricsEnable") != null &&
+          _preferencesService.getBool("isBiometricsEnable") == true) {
+        biometricsAuth();
+      }
+    });
+  }
+
+  checkBiometricsExistence() async {
+    bool _isBiometricsAvailable =
+        await LocalAuthentication().canCheckBiometrics;
+    if (_isBiometricsAvailable) {
+      List<BiometricType> _biometrics =
+          await LocalAuthentication().getAvailableBiometrics();
+      setState(() {
+        _isFingerprintAvailable =
+            _biometrics.contains(BiometricType.fingerprint);
+      });
+    }
   }
 
   @override
@@ -114,7 +139,6 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                 ),
               ),
               buildGoogleButton(context),
-
               /*Flexible(
                 flex: 1,
                 child: buildFacebookButton(context),
@@ -355,6 +379,14 @@ class AuthenticationPageState extends State<AuthenticationPage> {
         Fluttertoast.showToast(msg: getString(context, 'no_user_found'));
         break;
       case "success":
+        if (_isFingerprintAvailable &&
+            _preferencesService.getString("biometricsEmail") == null &&
+            _preferencesService.getString("biometricsPassword") == null &&
+            _preferencesService.getBool("isBiometricsEnable") == null) {
+          bool isBiometricsEnable = await openBiometricsCheck();
+          await _preferencesService.setBool(
+              "isBiometricsEnable", isBiometricsEnable);
+        }
         debugPrint(_userService.user.toString());
         if (_userService.user != null) {
           if (_userService.user.emailVerified == false) {
@@ -371,10 +403,16 @@ class AuthenticationPageState extends State<AuthenticationPage> {
                 break;
             }
           }
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('mode', "emailpassword");
-          await prefs.setString('email', _email);
-          await prefs.setString('password', _password);
+          await _preferencesService.setString('mode', "emailpassword");
+          await _preferencesService.setString('email', _email);
+          await _preferencesService.setString('password', _password);
+          if (_preferencesService.getBool("isBiometricsEnable") != null &&
+              _preferencesService.getBool("isBiometricsEnable") == true) {
+            debugPrint("passed");
+            await _preferencesService.setString(
+                'biometricsPassword', _password);
+            await _preferencesService.setString('biometricsEmail', _email);
+          }
 
           await setUserAppToken();
 
@@ -382,6 +420,66 @@ class AuthenticationPageState extends State<AuthenticationPage> {
           Fluttertoast.showToast(msg: getString(context, 'signed_in'));
         }
         break;
+    }
+  }
+
+  openBiometricsCheck() async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          content: Text(getString(context, 'biometrics_check')),
+          actions: <Widget>[
+            FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: Text(getString(context, 'biometrics_confirm'))),
+            FlatButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(getString(context, 'biometrics_cancel')),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  biometricsAuth() async {
+    if (_preferencesService.getString("biometricsEmail") != null &&
+        _preferencesService.getString("biometricsPassword") != null) {
+      try {
+        IOSAuthMessages iosMessages = IOSAuthMessages(
+          cancelButton: getString(context, "cancel_fingerprint_button"),
+          goToSettingsButton: getString(context, "go_to_settings"),
+          goToSettingsDescription: getString(context, "go_to_settings_desc"),
+          lockOut: getString(context, "lockout_text"),
+        );
+        AndroidAuthMessages androidMessages = AndroidAuthMessages(
+          cancelButton: getString(context, "cancel_fingerprint_button"),
+          goToSettingsButton: getString(context, "go_to_settings"),
+          goToSettingsDescription: getString(context, "go_to_settings_desc"),
+          signInTitle: getString(context, "authentication_page_text"),
+          fingerprintRequiredTitle: getString(context, "no_fingerprint_title"),
+          fingerprintNotRecognized:
+              getString(context, "fingerprint_not_recognized"),
+        );
+        bool authenticated =
+            await LocalAuthentication().authenticateWithBiometrics(
+                localizedReason: getString(
+                  context,
+                  "scan_to_auth",
+                ),
+                androidAuthStrings: androidMessages,
+                iOSAuthStrings: iosMessages,
+                useErrorDialogs: true,
+                stickyAuth: true);
+        if (authenticated) {
+          _email = _preferencesService.getString("biometricsEmail");
+          _password = _preferencesService.getString("biometricsPassword");
+          signInUser();
+        }
+      } on PlatformException catch (e) {
+        debugPrint("Biometrics auth error : " + e.message);
+      }
     }
   }
 

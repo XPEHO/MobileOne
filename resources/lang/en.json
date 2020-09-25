@@ -165,5 +165,17 @@
     "refresh_failed": "Refresh failed",
     "undefined_contact_name": "Undefined name",
     "subscribe_to_simplist": "Subscribe to the SimpList beta",
-    "email_text": "You can now subscibe to our app to see the shopping lists shared by your friends following one of these links : <br/>iOS : <a href=\"https://testflight.apple.com/join/3mYKhddp\">https://testflight.apple.com/join/3mYKhddp</a><br/>android : <a href=\"https://appdistribution.firebase.dev/i/c0f0bb4294980686\">https://appdistribution.firebase.dev/i/c0f0bb4294980686</a>"
+    "email_text": "You can now subscibe to our app to see the shopping lists shared by your friends following one of these links : <br/>iOS : <a href=\"https://testflight.apple.com/join/3mYKhddp\">https://testflight.apple.com/join/3mYKhddp</a><br/>android : <a href=\"https://appdistribution.firebase.dev/i/c0f0bb4294980686\">https://appdistribution.firebase.dev/i/c0f0bb4294980686</a>",
+    "first_auth_needed": "You have to authenticate at least one time with email/password",
+    "scan_to_auth": "Scan your fingerprint to authenticate",
+    "cancel_fingerprint_button": "CANCEL",
+    "go_to_settings": "SETTINGS",
+    "go_to_settings_desc": "No fingerprint available, go to the settings to add one",
+    "lockout_text": "Please enable fingerprint authentication",
+    "no_fingerprint_title": "No fingerprint",
+    "fingerprint_not_recognized": "Fingerprint not recognized",
+    "fingerprint_button": "Fingerprint",
+    "biometrics_check": "Do you want to enable the fingerprint authentication for the nexts authentications ?",
+    "biometrics_confirm": "YES",
+    "biometrics_cancel": "NO"
 }
