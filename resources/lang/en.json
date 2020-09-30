@@ -177,5 +177,8 @@
     "fingerprint_button": "Fingerprint",
     "biometrics_check": "Do you want to enable the fingerprint authentication for the nexts authentications ?",
     "biometrics_confirm": "YES",
-    "biometrics_cancel": "NO"
+    "biometrics_cancel": "NO",
+    "empty_category": "No category",
+    "food_category": "Food",
+    "recipy_category": "Recipy"
 }

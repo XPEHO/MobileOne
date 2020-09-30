@@ -1,3 +1,5 @@
+import 'package:MobileOne/data/categories.dart';
+import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/localization/localization.dart';
 
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
@@ -32,6 +34,7 @@ class ListsState extends State<Lists> {
   var share = GetIt.I.get<ShareService>();
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
+  List<Categories> _categories = [];
 
   @override
   void initState() {
@@ -40,7 +43,7 @@ class ListsState extends State<Lists> {
   }
 
   void _onRefresh() async {
-    _wishlistProvider.flushWishlists();
+    _wishlistProvider.flushWishlists(_userService.user.email);
     _refreshController.refreshCompleted();
   }
 
@@ -81,13 +84,13 @@ class ListsState extends State<Lists> {
                   Flexible(
                     flex: 1,
                     child: Container(
-                      child: allMyLists(context, wishlistsListProvider),
+                      child: allSharedLists(context, wishlistsListProvider),
                     ),
                   ),
                   Flexible(
                     flex: 1,
                     child: Container(
-                      child: allSharedLists(context, wishlistsListProvider),
+                      child: getAllCategories(wishlistsListProvider),
                     ),
                   ),
                 ],
@@ -97,6 +100,48 @@ class ListsState extends State<Lists> {
         );
       }),
     );
+  }
+
+  Widget getAllCategories(WishlistsListProvider wishlistsListProvider) {
+    _categories = wishlistsListProvider.getCategories(context);
+    List<List<Wishlist>> ownerLists = wishlistsListProvider.ownerLists;
+
+    if (ownerLists.isEmpty) {
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                _categories.where((element) => element.id == null).first.label,
+                style: TextStyle(color: WHITE),
+              ),
+            ),
+          ),
+          Container(
+            width: double.infinity,
+            height: 100,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: GestureDetector(
+                  onTap: () {
+                    createList();
+                  },
+                  child: buildEmptyTemplate()),
+            ),
+          ),
+        ],
+      );
+    } else {
+      return ListView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: ownerLists.length,
+        itemBuilder: (BuildContext ctxt, index) {
+          return allMyLists(context, ownerLists[index]);
+        },
+      );
+    }
   }
 
   Padding allSharedLists(
@@ -129,33 +174,36 @@ class ListsState extends State<Lists> {
     );
   }
 
-  Padding allMyLists(
-      BuildContext context, WishlistsListProvider wishlistsListProvider) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child: Column(
-        children: <Widget>[
-          Flexible(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  getString(context, 'all_my_lists'),
-                  style: TextStyle(color: WHITE),
-                ),
-              ),
+  Widget allMyLists(BuildContext context, List<Wishlist> wishlists) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0, bottom: 16.0),
+          child: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              wishlists.first != null &&
+                      wishlists.first.categoryId != null &&
+                      wishlists.first.categoryId != "0"
+                  ? _categories
+                      .where(
+                          (element) => element.id == wishlists.first.categoryId)
+                      .first
+                      .label
+                  : _categories
+                      .where((element) => element.id == null)
+                      .first
+                      .label,
+              style: TextStyle(color: WHITE),
             ),
           ),
-          Flexible(
-            flex: 2,
-            child: Container(
-              child: buildFuturBuilderList(wishlistsListProvider),
-            ),
-          ),
-        ],
-      ),
+        ),
+        Container(
+          width: double.infinity,
+          height: 100,
+          child: buildFuturBuilderList(wishlists),
+        ),
+      ],
     );
   }
 
@@ -207,50 +255,39 @@ class ListsState extends State<Lists> {
     );
   }
 
-  buildFuturBuilderList(WishlistsListProvider provider) {
+  buildFuturBuilderList(List<Wishlist> wishlists) {
     return Builder(
       builder: (context) {
-        final ownerLists = provider.ownerLists;
-        if (ownerLists == null)
+        if (wishlists == null)
           return Center(
             child: CircularProgressIndicator(),
           );
         else {
-          return contentList(ownerLists);
+          return contentList(wishlists);
         }
       },
     );
   }
 
-  Widget contentList(List lists) {
-    if (lists.isEmpty) {
-      return Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: GestureDetector(
-            onTap: () {
-              createList();
-            },
-            child: buildEmptyTemplate()),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.only(left: 8.0),
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: lists.length,
-          itemBuilder: (BuildContext ctxt, index) {
-            return GestureDetector(
-                onTap: () {
-                  openOpenedListPage(lists[index], false);
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: WidgetLists(listUuid: lists[index], isGuest: false),
-                ));
-          },
-        ),
-      );
-    }
+  Widget contentList(List<Wishlist> wishlists) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8.0),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: wishlists.length,
+        itemBuilder: (BuildContext ctxt, index) {
+          return GestureDetector(
+              onTap: () {
+                openOpenedListPage(wishlists[index].uuid, false);
+              },
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: WidgetLists(
+                    listUuid: wishlists[index].uuid, isGuest: false),
+              ));
+        },
+      ),
+    );
   }
 
   buildFuturBuilderGuest(WishlistsListProvider provider) {

@@ -1,3 +1,5 @@
+import 'package:MobileOne/data/categories.dart';
+import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -5,12 +7,33 @@ import 'package:get_it/get_it.dart';
 class WishlistsListProvider with ChangeNotifier {
   final wishlistService = GetIt.I.get<WishlistService>();
 
-  List get ownerLists {
+  List<List<Wishlist>> get ownerLists {
     final ownerLists = wishlistService.ownerLists;
+    List<List<Wishlist>> categories = [];
     if (ownerLists == null) {
       wishlistService.fetchOwnerLists().then((value) => notifyListeners());
     }
-    return ownerLists;
+    if (ownerLists != null) {
+      List<Wishlist> wishlistsList = [];
+      ownerLists.forEach((element) {
+        Wishlist wishlist = getWishlist(element);
+        if (wishlist != null) {
+          wishlistsList.add(wishlist);
+        }
+      });
+      if (wishlistsList.isNotEmpty) {
+        categories = wishlistService.chunk(wishlistsList);
+      }
+    }
+    return categories;
+  }
+
+  Wishlist getWishlist(uuid) {
+    Wishlist wishlist = wishlistService.getwishlist(uuid);
+    if (wishlist == null) {
+      wishlistService.fetchWishlist(uuid).whenComplete(() => notifyListeners());
+    }
+    return wishlist;
   }
 
   List guestLists(String email) {
@@ -36,8 +59,25 @@ class WishlistsListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  flushWishlists() {
-    wishlistService.flushWishlists();
+  flushWishlists(String email) {
+    wishlistService.fetchOwnerLists().then((value) => notifyListeners());
+    wishlistService.fetchGuestLists(email).then((value) => notifyListeners());
+  }
+
+  List<Categories> getCategories(BuildContext context) {
+    List<Categories> categories = wishlistService.getCategories();
+    if (categories.isEmpty) {
+      wishlistService.fetchCategories(context).then((value) {
+        if (value != null) {
+          categories = value;
+        }
+      });
+    }
+    return categories;
+  }
+
+  changeWishlistCategory(String wishlistUuid, String categoryId) async {
+    wishlistService.changeWishlistCategory(wishlistUuid, categoryId);
     notifyListeners();
   }
 }

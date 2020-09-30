@@ -1,7 +1,9 @@
 import 'package:MobileOne/dao/wishlist_dao.dart';
+import 'package:MobileOne/data/categories.dart';
 import 'package:MobileOne/data/owner_details.dart';
 import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/data/wishlist_item.dart';
+import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/messaging_service.dart';
@@ -24,6 +26,7 @@ class WishlistService {
   Map<String, dynamic> _ownerLists = {};
   Map<String, dynamic> _guestLists = {};
   Map<String, OwnerDetails> _ownerDetails = {};
+  List<Categories> _categories = [];
 
   void _flush() {
     _wishlists = {};
@@ -32,6 +35,7 @@ class WishlistService {
     _ownerLists = {};
     _guestLists = {};
     _ownerDetails = {};
+    _categories = [];
   }
 
   List get ownerLists => _ownerLists[userService.user.uid];
@@ -277,5 +281,49 @@ class WishlistService {
       _ownerDetails.addAll({listUuid: ownerDetails});
       return _ownerDetails[listUuid];
     }
+  }
+
+  List<Categories> getCategories() => _categories;
+
+  Future<List<Categories>> fetchCategories(BuildContext context) async {
+    _categories
+        .add(Categories.fromMap(null, getString(context, "empty_category")));
+    List<Map<String, dynamic>> map = await dao.getCategories();
+    map.forEach((element) {
+      switch (element["id"]) {
+        case "78amWnyUJe3ekEs9FD53":
+          _categories.add(Categories.fromMap(
+              element["id"], getString(context, "recipy_category")));
+          break;
+        case "8jzs8g05JvvVQ87DI9wL":
+          _categories.add(Categories.fromMap(
+              element["id"], getString(context, "food_category")));
+          break;
+        default:
+          _categories.add(Categories.fromMap(element["id"], element["label"]));
+          break;
+      }
+    });
+
+    return _categories;
+  }
+
+  changeWishlistCategory(String wishlistUuid, String categoryId) async {
+    dao.changeWishlistCategory(wishlistUuid, categoryId);
+    _wishlists[wishlistUuid].categoryId = categoryId;
+  }
+
+  List<List<Wishlist>> chunk(List<Wishlist> wishlists) {
+    return wishlists
+        .map((e) => e.categoryId)
+        .toSet()
+        .map((categoryId) => filterByCategory(wishlists, categoryId))
+        .toList();
+  }
+
+  List<Wishlist> filterByCategory(List<Wishlist> wishlists, String categoryId) {
+    return wishlists
+        .where((element) => element.categoryId == categoryId)
+        .toList();
   }
 }

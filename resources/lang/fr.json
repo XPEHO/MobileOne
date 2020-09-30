@@ -177,5 +177,8 @@
     "fingerprint_button": "Empreinte",
     "biometrics_check": "Souhaitez-vous activer la connection via empreinte pour vos prochaines connections ?",
     "biometrics_confirm": "OUI",
-    "biometrics_cancel": "NON"
+    "biometrics_cancel": "NON",
+    "empty_category": "Sans catégorie",
+    "food_category": "Nourriture",
+    "recipy_category": "Recette"
 }

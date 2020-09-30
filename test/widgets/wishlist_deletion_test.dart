@@ -1,4 +1,7 @@
 import 'package:MobileOne/arguments/arguments.dart';
+import 'package:MobileOne/dao/messaging_dao.dart';
+import 'package:MobileOne/dao/user_dao.dart';
+import 'package:MobileOne/dao/wishlist_dao.dart';
 import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/localization/delegate.dart';
 import 'package:MobileOne/localization/supported.dart';
@@ -6,10 +9,15 @@ import 'package:MobileOne/pages/openedListPage.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/providers/wishlist_head_provider.dart';
+import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/messaging_service.dart';
+import 'package:MobileOne/services/preferences_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
+import 'package:MobileOne/services/user_service.dart';
+import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -60,6 +68,8 @@ class LoyaltyCardsServiceMock extends Mock implements LoyaltyCardsService {}
 
 class LoyaltyCardsProvidermock extends Mock implements LoyaltyCardsProvider {}
 
+class WishlistDaoMock extends Mock implements WishlistDao {}
+
 void main() {
   setSupportedLocales([Locale('fr', 'FR')]);
 
@@ -68,10 +78,18 @@ void main() {
     //Given
     final _itemsListProvider = MockItemsListProvider();
     final _wishlistHeadProvider = MockWishlistHeadProvider();
+    GetIt.I.registerSingleton<AnalyticsService>(AnalyticsService());
+    GetIt.I.registerSingleton<UserDao>(UserDao());
+    GetIt.I.registerSingleton<PreferencesService>(PreferencesService());
+    GetIt.I.registerSingleton<UserService>(UserService());
+    GetIt.I.registerSingleton<MessagingDao>(MessagingDao());
+    GetIt.I.registerSingleton<MessagingService>(MessagingService());
+    final wishlistDao = WishlistDaoMock();
+    GetIt.I.registerSingleton<WishlistDao>(wishlistDao);
+    GetIt.I.registerSingleton<WishlistService>(WishlistService());
+    GetIt.I.registerSingleton<WishlistsListProvider>(WishlistsListProvider());
     GetIt.I.registerSingleton<ItemsListProvider>(_itemsListProvider);
     GetIt.I.registerSingleton<WishlistHeadProvider>(_wishlistHeadProvider);
-    final _analyticsService = AnalyticsServiceMock();
-    GetIt.I.registerSingleton<AnalyticsService>(_analyticsService);
 
     final _colorService = ColorServiceMock();
     GetIt.I.registerSingleton<ColorService>(_colorService);
@@ -81,6 +99,9 @@ void main() {
     GetIt.I.registerSingleton<LoyaltyCardsService>(_loyaltycardsService);
     final _loyaltycardsProvider = LoyaltyCardsProvider();
     GetIt.I.registerSingleton<LoyaltyCardsProvider>(_loyaltycardsProvider);
+
+    when(wishlistDao.getCategories())
+        .thenAnswer((realInvocation) => Future.value([]));
 
     final wishlist = MockWishlist();
     when(wishlist.label).thenReturn("test");

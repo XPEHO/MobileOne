@@ -43,6 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add owner picture on shared list
 - Add invitation email on inexistent user
 - Add fingerprint authentication
+- Add wishlists categories
 
 ### Changed
 
