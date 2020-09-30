@@ -40,6 +40,8 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
 
+  var _localAuth = LocalAuthentication();
+
   IconData _iconVisibility = Icons.visibility_off;
   bool _passwordVisibility = true;
 
@@ -74,11 +76,10 @@ class AuthenticationPageState extends State<AuthenticationPage> {
   }
 
   checkBiometricsExistence() async {
-    bool _isBiometricsAvailable =
-        await LocalAuthentication().canCheckBiometrics;
+    bool _isBiometricsAvailable = await _localAuth.canCheckBiometrics;
     if (_isBiometricsAvailable) {
       List<BiometricType> _biometrics =
-          await LocalAuthentication().getAvailableBiometrics();
+          await _localAuth.getAvailableBiometrics();
       setState(() {
         _isFingerprintAvailable =
             _biometrics.contains(BiometricType.fingerprint);
@@ -462,16 +463,15 @@ class AuthenticationPageState extends State<AuthenticationPage> {
           fingerprintNotRecognized:
               getString(context, "fingerprint_not_recognized"),
         );
-        bool authenticated =
-            await LocalAuthentication().authenticateWithBiometrics(
-                localizedReason: getString(
-                  context,
-                  "scan_to_auth",
-                ),
-                androidAuthStrings: androidMessages,
-                iOSAuthStrings: iosMessages,
-                useErrorDialogs: true,
-                stickyAuth: true);
+        bool authenticated = await _localAuth.authenticateWithBiometrics(
+            localizedReason: getString(
+              context,
+              "scan_to_auth",
+            ),
+            androidAuthStrings: androidMessages,
+            iOSAuthStrings: iosMessages,
+            useErrorDialogs: true,
+            stickyAuth: true);
         if (authenticated) {
           _email = _preferencesService.getString("biometricsEmail");
           _password = _preferencesService.getString("biometricsPassword");
