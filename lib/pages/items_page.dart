@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:MobileOne/providers/recipeItems_provider.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/widgets/widget_icon_text_button.dart';
 import 'package:MobileOne/widgets/widget_voice_record.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:MobileOne/arguments/arguments.dart';
@@ -17,7 +18,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
 import 'package:speech_to_text/speech_to_text.dart';
@@ -233,50 +233,28 @@ class EditItemPageState extends State<EditItemPage> {
             child: Row(
               children: [
                 Expanded(
-                  child: Container(
-                    height: double.infinity,
-                    color: Colors.lime[600],
-                    child: IconButton(
-                      icon: Icon(
-                        Icons.mic,
-                        color: WHITE,
-                        size: 24,
-                      ),
-                      onPressed: () => recordAudio(),
-                    ),
+                  child: IconTextButton(
+                    iconData: Icons.mic,
+                    onPressed: () => recordAudio(),
+                    backgroundColor: Colors.lime[600],
+                    text: "Label",
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    height: double.infinity,
-                    color: _colorsApp.buttonColor,
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        "assets/images/qr-code.svg",
-                        color: WHITE,
-                        width: 24,
-                        height: 24,
-                      ),
-                      onPressed: () => scanAnItem(),
-                    ),
+                  child: IconTextButton(
+                    iconAsset: "assets/images/qr-code.svg",
+                    onPressed: () => scanAnItem(),
+                    backgroundColor: _colorsApp.buttonColor,
+                    text: "Scan",
                   ),
                 ),
                 Expanded(
-                  child: Container(
-                    height: double.infinity,
-                    color: Colors.teal,
-                    child: IconButton(
-                      key: Key("item_picture_button"),
-                      icon: Icon(
-                        Icons.camera,
-                        color: WHITE,
-                        size: 24,
-                      ),
-                      onPressed: () {
-                        _analytics.sendAnalyticsEvent("takePictureOfItem");
-                        pickImage();
-                      },
-                    ),
+                  child: IconTextButton(
+                    key: Key("item_picture_button"),
+                    iconData: Icons.camera,
+                    onPressed: () => pickImage(),
+                    backgroundColor: Colors.teal,
+                    text: "Photo",
                   ),
                 ),
               ],
@@ -427,6 +405,7 @@ class EditItemPageState extends State<EditItemPage> {
   }
 
   Future<void> pickImage() async {
+    _analytics.sendAnalyticsEvent("takePictureOfItem");
     String path;
 
     await _imageService.pickCamera(30, 720, 720).then((image) {
