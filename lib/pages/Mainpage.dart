@@ -6,6 +6,7 @@ import 'package:MobileOne/pages/bottom_bar.dart';
 import 'package:MobileOne/pages/loyaltycards_page.dart';
 import 'package:MobileOne/pages/lists.dart';
 import 'package:MobileOne/pages/profile.dart';
+import 'package:MobileOne/permissions/permissions.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
@@ -66,27 +67,12 @@ class MainPageState extends State<MainPage> {
   }
 
   Future<void> askPermissions() async {
-    PermissionStatus permissionStatus = await _getContactPermission();
+    PermissionStatus permissionStatus = await getContactPermission();
 
     if (permissionStatus != PermissionStatus.granted) {
       goToSharePage();
     } else {
       goToShareOnePage();
-    }
-  }
-
-  Future<PermissionStatus> _getContactPermission() async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.contacts);
-    if (permission != PermissionStatus.granted &&
-        permission != PermissionStatus.restricted) {
-      Map<PermissionGroup, PermissionStatus> permissionStatus =
-          await PermissionHandler()
-              .requestPermissions([PermissionGroup.contacts]);
-      return permissionStatus[PermissionGroup.contacts] ??
-          PermissionStatus.unknown;
-    } else {
-      return permission;
     }
   }
 

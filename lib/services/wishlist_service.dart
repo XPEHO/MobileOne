@@ -39,7 +39,7 @@ class WishlistService {
   Future<List> fetchOwnerLists() async {
     DocumentSnapshot ownerLists =
         await dao.fetchOwnerLists(userService.user.uid);
-    var data;
+    List data;
     if (ownerLists?.data() == null) {
       data = List();
     } else {

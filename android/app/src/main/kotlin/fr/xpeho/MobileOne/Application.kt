@@ -1,19 +1,17 @@
 package fr.xpeho.MobileOne
 
 import io.flutter.app.FlutterApplication
-import io.flutter.plugin.common.PluginRegistry
-import io.flutter.plugin.common.PluginRegistry.PluginRegistrantCallback
-import io.flutter.plugins.GeneratedPluginRegistrant
+import io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin
 import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService
+import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService.setPluginRegistrant
 
-class Application : FlutterApplication(), PluginRegistrantCallback {
+class Application : FlutterApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        FlutterFirebaseMessagingService.setPluginRegistrant(this);
+        setPluginRegistrant {
+            FirebaseMessagingPlugin.registerWith(it.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"))
+        }
     }
 
-    override fun registerWith(registry: PluginRegistry?) {
-        io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin.registerWith(registry?.registrarFor("io.flutter.plugins.firebasemessaging.FirebaseMessagingPlugin"));
-    }
 }

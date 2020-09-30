@@ -2,6 +2,7 @@ import 'package:MobileOne/arguments/arguments.dart';
 import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/localization/localization.dart';
+import 'package:MobileOne/permissions/permissions.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
@@ -667,27 +668,12 @@ class OpenedListPageState extends State<OpenedListPage>
   }
 
   Future<void> askPermissions(Object uuid) async {
-    PermissionStatus permissionStatus = await _getContactPermission();
+    PermissionStatus permissionStatus = await getContactPermission();
 
     if (permissionStatus != PermissionStatus.granted) {
       openedListsPage();
     } else {
       openSharePage(uuid);
-    }
-  }
-
-  Future<PermissionStatus> _getContactPermission() async {
-    PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.contacts);
-    if (permission != PermissionStatus.granted &&
-        permission != PermissionStatus.restricted) {
-      Map<PermissionGroup, PermissionStatus> permissionStatus =
-          await PermissionHandler()
-              .requestPermissions([PermissionGroup.contacts]);
-      return permissionStatus[PermissionGroup.contacts] ??
-          PermissionStatus.unknown;
-    } else {
-      return permission;
     }
   }
 

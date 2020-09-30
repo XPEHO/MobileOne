@@ -103,12 +103,12 @@ void main() async {
   await Firebase.initializeApp();
   instantiateServices();
 
-  Crashlytics.instance.enableInDevMode = true;
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
 
   runZoned(() {
     runApp(MyApp());
-  }, onError: Crashlytics.instance.recordError);
+  }, onError: FirebaseCrashlytics.instance.recordError);
 }
 
 class MyApp extends StatefulWidget {
