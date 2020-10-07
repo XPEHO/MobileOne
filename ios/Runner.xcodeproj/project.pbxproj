@@ -471,7 +471,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/MobileOne.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 48;
 				DEVELOPMENT_TEAM = H5ZMR627PF;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -484,6 +484,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.xpeho.MobileOneIOS;
 				PRODUCT_NAME = SimpList;
 				PROVISIONING_PROFILE_SPECIFIER = "MobileOne distribution profile";
@@ -608,7 +609,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/MobileOne.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 48;
 				DEVELOPMENT_TEAM = H5ZMR627PF;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -621,6 +622,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.xpeho.MobileOneIOS;
 				PRODUCT_NAME = SimpList;
 				PROVISIONING_PROFILE_SPECIFIER = "MobileOne distribution profile";
@@ -640,7 +642,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/MobileOne.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 35;
+				CURRENT_PROJECT_VERSION = 48;
 				DEVELOPMENT_TEAM = H5ZMR627PF;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -653,6 +655,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
+				MARKETING_VERSION = 1.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = fr.xpeho.MobileOneIOS;
 				PRODUCT_NAME = SimpList;
 				PROVISIONING_PROFILE_SPECIFIER = "MobileOne distribution profile";

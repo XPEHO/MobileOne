@@ -44,26 +44,6 @@ class ItemsListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateItemInList({
-    @required String itemUuid,
-    @required String name,
-    @required int count,
-    @required int typeIndex,
-    @required String imageLink,
-    @required String listUuid,
-    @required String imageName,
-  }) async {
-    await wishlistService.updateItemInList(
-        itemUuid: itemUuid,
-        name: name,
-        count: count,
-        typeIndex: typeIndex,
-        imageLink: imageLink,
-        listUuid: listUuid,
-        imageName: imageName);
-    notifyListeners();
-  }
-
   deleteItemInList({
     @required String listUuid,
     @required String itemUuid,
@@ -94,6 +74,10 @@ class ItemsListProvider with ChangeNotifier {
 
   Future<void> addRecipeToList(String recipeUuid, String listUuid) async {
     await wishlistService.addRecipeToList(recipeUuid, listUuid);
+    notifyListeners();
+  }
+
+  fireUpdate() {
     notifyListeners();
   }
 }

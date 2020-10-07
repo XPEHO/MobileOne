@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:MobileOne/providers/recipeItems_provider.dart';
+import 'package:MobileOne/data/unit.dart';
+import 'package:MobileOne/providers/wishlist_item_provider.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/widgets/widget_icon_text_button.dart';
 import 'package:MobileOne/widgets/widget_voice_record.dart';
@@ -9,17 +10,17 @@ import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'dart:io';
 import 'package:MobileOne/localization/localization.dart';
-import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/widgets/bubble_button.dart';
 import 'package:barcode_scan/barcode_scan.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:path/path.dart' as path;
 
@@ -37,191 +38,135 @@ class EditItemPageState extends State<EditItemPage> {
   final itemCountController = new TextEditingController();
   final _itemNameFocusNode = FocusNode();
   final _itemQuantityFocusNode = FocusNode();
+
+  // services
   var _analytics = GetIt.I.get<AnalyticsService>();
-  var _recipeItemsProvider = GetIt.I.get<RecipeItemsProvider>();
-  String _name;
-  int _count = 1;
-  String _type;
-  String imageLink;
-  String _imageName;
-  String _oldImageName;
-
-  String label = "";
-  String quantity = "";
-  String unit = "";
-
-  var _itemsListProvider = GetIt.I.get<ItemsListProvider>();
   var _imageService = GetIt.I.get<ImageService>();
   var _colorsApp = GetIt.I.get<ColorService>();
 
   ItemArguments _args;
-  var _itemImage;
-  File pickedImage;
-  String imageType = "Default";
-  String _collection;
+  PickedFile _pickedImage;
 
   bool isInitialized = false;
   final SpeechToText speech = SpeechToText();
-
-  Future<void> getItems() async {
-    String labelValue;
-    String quantityValue;
-    String unitValue;
-
-    await FirebaseFirestore.instance
-        .collection(_collection)
-        .doc(_args.listUuid)
-        .get()
-        .then((value) {
-      labelValue = value.data()[_args.itemUuid]["label"];
-      quantityValue = value.data()[_args.itemUuid]["quantity"].toString();
-      imageLink = value.data()[_args.itemUuid]["image"];
-      if (value.data()[_args.itemUuid]["imageName"] != null) {
-        _imageName = value.data()[_args.itemUuid]["imageName"];
-      }
-      if (imageLink != null && imageLink != "assets/images/canned-food.png") {
-        _itemImage = Image(image: NetworkImage(imageLink));
-      }
-      switch (value.data()[_args.itemUuid]["unit"]) {
-        case 1:
-          unitValue = getString(context, 'item_unit');
-          break;
-        case 2:
-          unitValue = getString(context, 'item_liters');
-          break;
-        case 3:
-          unitValue = getString(context, 'item_grams');
-          break;
-        case 4:
-          unitValue = getString(context, 'item_kilos');
-          break;
-        default:
-          unitValue = getString(context, 'item_unit');
-          break;
-      }
-    });
-
-    setState(() {
-      itemNameController.text = labelValue;
-      itemCountController.text = quantityValue;
-      _type = unitValue;
-      _name = labelValue;
-      _count = int.parse(quantityValue);
-    });
-  }
 
   @override
   void initState() {
     _analytics.setCurrentPage("isOnItemsPage");
     itemCountController.text = "1";
-    _itemImage = Icon(
-      Icons.photo_camera,
-      size: 48,
-    );
-    WidgetsBinding.instance.addPostFrameCallback((_) => getData());
     super.initState();
     _itemNameFocusNode.requestFocus();
-  }
-
-  void getData() {
-    _args.isRecipe ? _collection = "recipeItems" : _collection = "items";
-    if (_args.buttonName == getString(context, "popup_update")) {
-      _analytics.sendAnalyticsEvent("update_item");
-      getItems();
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     _args = Arguments.value(context);
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: _colorsApp.colorTheme,
-        leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back,
-          ),
-          onPressed: () {
-            goToPreviousPage();
-          },
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              Icons.check,
-            ),
-            onPressed: () {
-              _onValidate();
-            },
-          ),
-        ],
-      ),
-      backgroundColor: _colorsApp.colorTheme,
-      body: SafeArea(
-        child: Column(
-          children: <Widget>[
-            Flexible(
-              flex: 1,
-              fit: FlexFit.loose,
-              child: Container(
-                child: buildImageAndButtons(context),
+    return ChangeNotifierProvider.value(
+      value: WishlistItemProvider(_args.listUuid, _args.itemUuid),
+      child: Consumer<WishlistItemProvider>(
+        builder: (context, provider, _) {
+          return Scaffold(
+            appBar: buildAppBar(provider),
+            backgroundColor: _colorsApp.colorTheme,
+            body: SafeArea(
+              child: Column(
+                children: <Widget>[
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.loose,
+                    child: Container(
+                      child: buildImageAndButtons(context, provider),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.loose,
+                    child: Container(
+                        child:
+                            Center(child: buildTextField(context, provider))),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    fit: FlexFit.loose,
+                    child: Container(
+                      width: double.infinity,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          Flexible(
+                            flex: 1,
+                            child: buildDecrementCounter(provider),
+                          ),
+                          Flexible(
+                            flex: 2,
+                            child: buildQuantityText(provider),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: buildIncrementCounter(provider),
+                          ),
+                          Flexible(
+                            flex: 2,
+                            child: buildUnit(context, provider),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            Flexible(
-              flex: 2,
-              fit: FlexFit.tight,
-              child: Container(child: Center(child: buildTextField(context))),
-            ),
-            Flexible(
-              flex: 2,
-              fit: FlexFit.tight,
-              child: Container(
-                width: double.infinity,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Flexible(
-                      flex: 1,
-                      child: buildDecrementCounter(),
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: buildQuantityText(),
-                    ),
-                    Flexible(
-                      flex: 1,
-                      child: buildIncrementCounter(context),
-                    ),
-                    Flexible(
-                      flex: 2,
-                      child: buildUnit(context),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
-  Row buildImageAndButtons(BuildContext context) {
+  AppBar buildAppBar(WishlistItemProvider provider) {
+    return AppBar(
+      backgroundColor: _colorsApp.colorTheme,
+      leading: IconButton(
+        icon: Icon(
+          Icons.arrow_back,
+        ),
+        onPressed: () {
+          goToPreviousPage();
+        },
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(
+            Icons.check,
+          ),
+          onPressed: () {
+            _onValidate(provider);
+          },
+        ),
+      ],
+    );
+  }
+
+  Row buildImageAndButtons(
+      BuildContext context, WishlistItemProvider provider) {
     return Row(
       children: [
         Flexible(
           flex: 1,
           child: InkWell(
             onTap: () {
-              if (_itemImage is Image) {
-                openBigImage();
+              if (provider.imageUrl != null) {
+                openBigImage(provider);
               }
             },
             child: Container(
               height: double.infinity,
               width: double.infinity,
               color: WHITE,
-              child: _itemImage,
+              child: _pickedImage != null
+                  ? Image.file(File(_pickedImage.path))
+                  : provider.imageUrl != null
+                      ? Image.network(provider.imageUrl)
+                      : Icon(Icons.photo_outlined),
             ),
           ),
         ),
@@ -235,7 +180,7 @@ class EditItemPageState extends State<EditItemPage> {
                 Expanded(
                   child: IconTextButton(
                     iconData: Icons.mic,
-                    onPressed: () => recordAudio(),
+                    onPressed: () => recordAudio(provider),
                     backgroundColor: Colors.lime[600],
                     text: "Label",
                   ),
@@ -243,7 +188,7 @@ class EditItemPageState extends State<EditItemPage> {
                 Expanded(
                   child: IconTextButton(
                     iconAsset: "assets/images/qr-code.svg",
-                    onPressed: () => scanAnItem(),
+                    onPressed: () => scanAnItem(provider),
                     backgroundColor: _colorsApp.buttonColor,
                     text: "Scan",
                   ),
@@ -251,8 +196,8 @@ class EditItemPageState extends State<EditItemPage> {
                 Expanded(
                   child: IconTextButton(
                     key: Key("item_picture_button"),
-                    iconData: Icons.camera,
-                    onPressed: () => pickImage(),
+                    iconData: Icons.camera_alt_outlined,
+                    onPressed: () => pickImage(provider),
                     backgroundColor: Colors.teal,
                     text: "Photo",
                   ),
@@ -265,17 +210,13 @@ class EditItemPageState extends State<EditItemPage> {
     );
   }
 
-  Widget buildUnit(BuildContext context) {
+  Widget buildUnit(BuildContext context, WishlistItemProvider provider) {
     final items = <String>[
       getString(context, 'item_unit'),
       getString(context, 'item_liters'),
       getString(context, 'item_grams'),
       getString(context, 'item_kilos')
     ];
-
-    if (_type == null || _type.isEmpty) {
-      _type = getString(context, 'item_unit');
-    }
 
     return Container(
       child: DropdownButtonFormField<String>(
@@ -292,10 +233,10 @@ class EditItemPageState extends State<EditItemPage> {
         ),
         onChanged: (text) {
           setState(() {
-            _type = text;
+            provider.unit = toUnitId(context, text);
           });
         },
-        value: _type,
+        value: toStringUnit(context, provider.unit),
         items: items.map((String value) {
           return new DropdownMenuItem<String>(
             value: value,
@@ -306,15 +247,16 @@ class EditItemPageState extends State<EditItemPage> {
     );
   }
 
-  Widget buildDecrementCounter() {
+  Widget buildDecrementCounter(WishlistItemProvider provider) {
     return BubbleButton(
       icon: Icon(Icons.remove, color: WHITE),
       color: Colors.lime[600],
-      onPressed: () => decrementCounter(),
+      onPressed: () => decrementCounter(provider),
     );
   }
 
-  Widget buildQuantityText() {
+  Widget buildQuantityText(WishlistItemProvider provider) {
+    itemCountController.text = provider.quantity.toString();
     return TextField(
       focusNode: _itemQuantityFocusNode,
       inputFormatters: [
@@ -336,19 +278,20 @@ class EditItemPageState extends State<EditItemPage> {
       ),
       keyboardType: TextInputType.number,
       controller: itemCountController,
-      onChanged: (text) => handleSubmittedItemCount(int.parse(text)),
+      onChanged: (text) => handleSubmittedItemCount(int.parse(text), provider),
     );
   }
 
-  Widget buildIncrementCounter(BuildContext context) {
+  Widget buildIncrementCounter(WishlistItemProvider provider) {
     return BubbleButton(
       icon: Icon(Icons.add, color: WHITE),
       color: Colors.lime[600],
-      onPressed: () => incrementCounter(),
+      onPressed: () => incrementCounter(provider),
     );
   }
 
-  Widget buildTextField(BuildContext context) {
+  Widget buildTextField(BuildContext context, WishlistItemProvider provider) {
+    itemNameController.text = provider.label;
     return TextField(
       focusNode: _itemNameFocusNode,
       key: Key("item_name_label"),
@@ -364,33 +307,30 @@ class EditItemPageState extends State<EditItemPage> {
         fillColor: Colors.grey[300],
       ),
       controller: itemNameController,
-      onChanged: (text) => handleSubmittedItemName(text),
+      onChanged: (text) => provider.label = text,
     );
   }
 
-  Future<void> openBigImage() async {
+  Future<void> openBigImage(WishlistItemProvider provider) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           content: SingleChildScrollView(
-            child: _itemImage,
+            child: Image.network(provider.imageUrl),
           ),
         );
       },
     );
   }
 
-  recordAudio() async {
+  recordAudio(WishlistItemProvider provider) async {
     isInitialized = await speech.initialize();
     if (isInitialized) {
       String result = await buildRecordPopup();
       speech.cancel();
       speech.stop();
-      _name = result;
-      setState(() {
-        itemNameController.text = result;
-      });
+      provider.audioLabel = result;
     } else {
       Fluttertoast.showToast(msg: getString(context, 'microphone_access'));
     }
@@ -404,191 +344,90 @@ class EditItemPageState extends State<EditItemPage> {
         });
   }
 
-  Future<void> pickImage() async {
+  Future<void> pickImage(WishlistItemProvider provider) async {
     _analytics.sendAnalyticsEvent("takePictureOfItem");
-    String path;
 
     await _imageService.pickCamera(30, 720, 720).then((image) {
       if (image != null && image.path != null) {
-        path = image.path;
+        setState(() {
+          _pickedImage = image;
+        });
       }
     });
-
-    if (path != null) {
-      pickedImage = File(path);
-      setState(() {
-        _itemImage = Image(
-          image: FileImage(pickedImage),
-          fit: BoxFit.cover,
-        );
-      });
-
-      imageType = "Picked";
-    }
   }
 
-  int getTypeIndex() {
-    if (_type == getString(context, 'item_unit')) {
-      return 1;
-    } else if (_type == getString(context, 'item_liters')) {
-      return 2;
-    } else if (_type == getString(context, 'item_grams')) {
-      return 3;
-    } else if (_type == getString(context, 'item_kilos')) {
-      return 4;
-    } else {
-      return 1;
-    }
-  }
-
-  void clearPopupFields() {
-    itemCountController.clear();
-    itemNameController.clear();
-    _name = null;
-    _count = 1;
-    _type = null;
-  }
-
-  _onValidate() async {
-    if (itemNameController == null ||
-        itemCountController == null ||
-        _type == null ||
-        itemNameController.text == "" ||
-        itemCountController.text == "") {
+  _onValidate(WishlistItemProvider provider) async {
+    if (!provider.canValidate()) {
       Fluttertoast.showToast(msg: getString(context, "popup_alert"));
     } else {
-      if (_args.buttonName == getString(context, "popup_update")) {
-        waitForImageUpload(true);
-      } else {
-        waitForImageUpload(false);
-      }
+      waitForImageUpload(provider);
     }
   }
 
-  void waitForImageUpload(bool upload) {
-    int _typeIndex = getTypeIndex();
-    _oldImageName = _imageName;
-    if (imageType == "Picked") {
-      StorageReference ref = getStorageRef();
+  void waitForImageUpload(WishlistItemProvider provider) async {
+    if (_pickedImage != null) {
+      StorageReference ref = getStorageRef(provider);
       StorageUploadTask uploadTask = uploadItemPicture(ref);
-      uploadTask.onComplete.then((_) {
-        ref.getDownloadURL().then((fileURL) {
-          imageLink = fileURL;
-          if (upload) {
-            updapteItemInList(_typeIndex);
-            if (_oldImageName != null) {
-              _imageService.deleteFile(_args.listUuid, _oldImageName);
-            }
-          } else {
-            addItemToList(_typeIndex);
-          }
-        });
-      });
-    } else if (imageType == "Scanned") {
-      _imageName = null;
-      if (upload) {
-        updapteItemInList(_typeIndex);
-        if (_oldImageName != null) {
-          _imageService.deleteFile(_args.listUuid, _oldImageName);
-        }
-      } else {
-        addItemToList(_typeIndex);
-      }
+      await uploadTask.onComplete;
+      var fileURL = await ref.getDownloadURL();
+      provider.imageUrl = fileURL;
+    }
+
+    bool update = provider.itemUuid != null;
+    if (update) {
+      updapteItemInList(provider);
     } else {
-      if (upload) {
-        updapteItemInList(_typeIndex);
-      } else {
-        addItemToList(_typeIndex);
-      }
+      addItemToList(provider);
     }
   }
 
-  void updapteItemInList(int _typeIndex) async {
+  void updapteItemInList(WishlistItemProvider provider) async {
     _analytics.sendAnalyticsEvent("update_item");
 
-    _args.isRecipe
-        ? await _recipeItemsProvider.updateItemInRecipe(
-            itemUuid: _args.itemUuid,
-            name: _name,
-            count: _count,
-            typeIndex: _typeIndex,
-            imageLink: imageLink,
-            recipeUuid: _args.listUuid,
-            imageName: _imageName,
-          )
-        : await _itemsListProvider.updateItemInList(
-            itemUuid: _args.itemUuid,
-            name: _name,
-            count: _count,
-            typeIndex: _typeIndex,
-            imageLink: imageLink,
-            listUuid: _args.listUuid,
-            imageName: _imageName,
-          );
+    provider.updateItemInList();
 
     FocusScope.of(context).unfocus();
-    Navigator.of(context).pop();
-    clearPopupFields();
+    Navigator.of(context).pop(true);
   }
 
-  void addItemToList(int _typeIndex) async {
+  void addItemToList(WishlistItemProvider provider) async {
     _analytics.sendAnalyticsEvent("add_item");
 
-    _args.isRecipe
-        ? await _recipeItemsProvider.addItemToRecipe(
-            name: _name,
-            count: _count,
-            typeIndex: _typeIndex,
-            imageLink: imageLink,
-            recipeUuid: _args.listUuid,
-            imageName: _imageName,
-          )
-        : await _itemsListProvider.addItemTolist(
-            name: _name,
-            count: _count,
-            typeIndex: _typeIndex,
-            imageLink: imageLink,
-            listUuid: _args.listUuid,
-            imageName: _imageName,
-          );
+    await provider.addItemTolist();
 
     FocusScope.of(context).unfocus();
-    Navigator.of(context).pop();
-    clearPopupFields();
+    Navigator.of(context).pop(true);
   }
 
-  StorageReference getStorageRef() {
-    _imageName = path.basename(pickedImage.path);
-    return _imageService.uploadFile(_args.listUuid, pickedImage);
+  StorageReference getStorageRef(WishlistItemProvider provider) {
+    if (provider.imageName != null) {
+      _imageService.deleteFile(_args.listUuid, provider.imageName);
+    }
+    provider.imageName = path.basename(_pickedImage.path);
+    return _imageService.uploadFile(_args.listUuid, File(_pickedImage.path));
   }
 
   StorageUploadTask uploadItemPicture(StorageReference storageReference) {
-    return storageReference.putFile(pickedImage);
+    return storageReference.putFile(File(_pickedImage.path));
   }
 
-  void handleSubmittedItemCount(int input) {
-    _count = input;
+  void handleSubmittedItemCount(int input, WishlistItemProvider provider) {
+    provider.quantity = input;
   }
 
-  void handleSubmittedItemName(String input) {
-    _name = input;
-  }
-
-  void incrementCounter() {
+  void incrementCounter(WishlistItemProvider provider) {
     _analytics.sendAnalyticsEvent("increment_counter_quantity");
-    _count = _count + 1;
-    itemCountController.text = (_count).toString();
+    provider.increaseQuantity();
   }
 
-  void decrementCounter() {
-    if (_count > 0) {
+  void decrementCounter(WishlistItemProvider provider) {
+    if (provider.canDecrement()) {
       _analytics.sendAnalyticsEvent("decrement_counter_quantity");
-      _count = _count - 1;
-      itemCountController.text = (_count).toString();
+      provider.decreaseQuantity();
     }
   }
 
-  Future<void> scanAnItem() async {
+  Future<void> scanAnItem(WishlistItemProvider provider) async {
     var result = await BarcodeScanner.scan();
 
     var response = await http.get(
@@ -597,27 +436,17 @@ class EditItemPageState extends State<EditItemPage> {
             ".json");
     Map<String, dynamic> article = jsonDecode(response.body);
     if (article["product"] != null) {
-      itemNameController.text = article["product"]["product_name"].toString() +
-          " - " +
-          article["product"]["brands"].toString();
-      handleSubmittedItemName(article["product"]["product_name"].toString() +
-          " - " +
-          article["product"]["brands"].toString());
-      imageLink = article["product"]["image_url"];
-      setState(() {
-        _itemImage = Image(
-          image: NetworkImage(imageLink),
-          fit: BoxFit.cover,
-        );
-      });
+      String productName = article["product"]["product_name"].toString() ?? "";
+      String brand = article["product"]["brands"].toString() ?? "";
+      String itemLabel = "$productName - $brand";
+      provider.label = itemLabel;
+      provider.imageUrl = article["product"]["image_url"];
     } else {
       Fluttertoast.showToast(msg: getString(context, "cant_find_article"));
     }
-
-    imageType = "Scanned";
   }
 
   goToPreviousPage() {
-    Navigator.of(context).pop();
+    Navigator.of(context).pop(false);
   }
 }

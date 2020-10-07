@@ -5,11 +5,9 @@ class ShareArguments {
 }
 
 class ItemArguments {
-  String buttonName;
   String listUuid;
   String itemUuid;
-  bool isRecipe;
-  ItemArguments({this.buttonName, this.listUuid, this.itemUuid, this.isRecipe});
+  ItemArguments({this.listUuid, this.itemUuid});
 }
 
 class OpenedListArguments {

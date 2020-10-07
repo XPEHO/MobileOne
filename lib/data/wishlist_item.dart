@@ -18,4 +18,6 @@ class WishlistItem {
     this.unit = map["unit"];
     this.imageName = map["imageName"];
   }
+
+  bool hasImage() => imageUrl != null && imageUrl.isNotEmpty;
 }

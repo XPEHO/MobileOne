@@ -208,7 +208,15 @@ class WishlistService {
     @required String listUuid,
     @required String imageName,
   }) async {
-    dao.updateItemInList(
+    WishlistItem oldItem =
+        _itemlists[listUuid].where((element) => element.uuid == itemUuid).first;
+    oldItem.imageName = imageName;
+    oldItem.imageUrl = imageLink;
+    oldItem.isValidated = false;
+    oldItem.label = name;
+    oldItem.quantity = count;
+    oldItem.unit = typeIndex;
+    await dao.updateItemInList(
         itemUuid: itemUuid,
         name: name,
         count: count,

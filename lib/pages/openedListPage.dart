@@ -110,8 +110,7 @@ class OpenedListPageState extends State<OpenedListPage>
               backgroundColor: _colorsApp.buttonColor,
               child: Icon(Icons.add),
               onPressed: () {
-                openItemPage(getString(context, 'popup_add'), wishlistHead.uuid,
-                    null, false);
+                openItemPage(wishlistHead.uuid, null);
               }),
         ),
       ],
@@ -619,13 +618,11 @@ class OpenedListPageState extends State<OpenedListPage>
     Navigator.of(context).pushNamed('/recipes', arguments: listUuid);
   }
 
-  void openItemPage(
-      String buttonName, String listUuid, String itemUuid, bool isRecipe) {
-    Navigator.of(context).pushNamed('/createItem',
-        arguments: ItemArguments(
-            buttonName: buttonName,
-            listUuid: listUuid,
-            itemUuid: itemUuid,
-            isRecipe: isRecipe));
+  openItemPage(String listUuid, String itemUuid) async {
+    var created = await Navigator.of(context).pushNamed('/createItem',
+        arguments: ItemArguments(listUuid: listUuid, itemUuid: itemUuid));
+    if (created) {
+      _itemListProvider.fireUpdate();
+    }
   }
 }

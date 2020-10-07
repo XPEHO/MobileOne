@@ -31,21 +31,28 @@ class WidgetItemState extends State<WidgetItem> {
     if (_itemlist.imageUrl != null) {
       _itemlist.imageUrl == "assets/images/canned-food.png"
           ? _itemImage = _itemImage = Icon(
-              Icons.photo_camera,
-              size: 32,
+              Icons.photo_outlined,
+              size: 48,
+              color: Colors.grey[400],
             )
-          : _itemImage = Image(image: NetworkImage(_itemlist.imageUrl));
+          : _itemImage = Image(
+              image: NetworkImage(_itemlist.imageUrl),
+              width: 48,
+              height: 48,
+            );
     } else {
       _itemImage = _itemImage = Icon(
-        Icons.photo_camera,
-        size: 32,
+        Icons.photo_outlined,
+        size: 48,
+        color: Colors.grey[400],
       );
     }
     super.initState();
   }
 
+  @override
   Widget build(BuildContext context) {
-    final completeName = _itemlist.label;
+    final completeName = _itemlist.label ?? "";
     if (_itemlist.isValidated) {
       return buildValidatedItem(completeName);
     } else {
@@ -60,8 +67,10 @@ class WidgetItemState extends State<WidgetItem> {
           padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
           child: InkWell(
             onTap: () {
-              openItemPage(getString(context, 'popup_update'), _listUuid,
-                  _itemUuid, false);
+              openItemPage(
+                _listUuid,
+                _itemUuid,
+              );
             },
             child: Container(
               decoration: BoxDecoration(
@@ -130,8 +139,7 @@ class WidgetItemState extends State<WidgetItem> {
           padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
           child: InkWell(
             onTap: () {
-              openItemPage(getString(context, 'popup_update'), _listUuid,
-                  _itemUuid, false);
+              openItemPage(_listUuid, _itemUuid);
             },
             child: Container(
               decoration: BoxDecoration(
@@ -206,13 +214,13 @@ class WidgetItemState extends State<WidgetItem> {
     }
   }
 
-  void openItemPage(
-      String buttonName, String listUuid, String itemUuid, bool isRecipe) {
-    Navigator.of(context).pushNamed('/createItem',
-        arguments: ItemArguments(
-            buttonName: buttonName,
-            listUuid: listUuid,
-            itemUuid: itemUuid,
-            isRecipe: isRecipe));
+  openItemPage(String listUuid, String itemUuid) async {
+    var updated = await Navigator.of(context).pushNamed(
+      '/createItem',
+      arguments: ItemArguments(listUuid: listUuid, itemUuid: itemUuid),
+    );
+    if (updated) {
+      GetIt.I.get<ItemsListProvider>().fireUpdate();
+    }
   }
 }

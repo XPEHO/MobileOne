@@ -354,11 +354,7 @@ class OpenedRecipePageState extends State<OpenedRecipePage> {
   void openItemPage(
       String buttonName, String recipeUuid, String itemUuid, bool isRecipe) {
     Navigator.of(context).pushNamed('/createItem',
-        arguments: ItemArguments(
-            buttonName: buttonName,
-            listUuid: recipeUuid,
-            itemUuid: itemUuid,
-            isRecipe: isRecipe));
+        arguments: ItemArguments(listUuid: recipeUuid, itemUuid: itemUuid));
   }
 
   void closePage() {
