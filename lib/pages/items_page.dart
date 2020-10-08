@@ -439,7 +439,7 @@ class EditItemPageState extends State<EditItemPage> {
       String productName = article["product"]["product_name"].toString() ?? "";
       String brand = article["product"]["brands"].toString() ?? "";
       String itemLabel = "$productName - $brand";
-      provider.label = itemLabel;
+      provider.scanLabel = itemLabel;
       provider.imageUrl = article["product"]["image_url"];
     } else {
       Fluttertoast.showToast(msg: getString(context, "cant_find_article"));

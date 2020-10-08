@@ -38,6 +38,11 @@ class WishlistItemProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  set scanLabel(value) {
+    label = value;
+    notifyListeners();
+  }
+
   get imageName => _imageName;
 
   set imageName(String imageName) {
