@@ -30,7 +30,8 @@ class IconTextButton extends StatelessWidget {
       child: InkWell(
         onTap: () => this.onPressed(),
         child: Container(
-          height: double.infinity,
+          height: 76.0,
+          width: 76.0,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

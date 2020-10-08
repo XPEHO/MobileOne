@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:MobileOne/data/unit.dart';
 import 'package:MobileOne/providers/wishlist_item_provider.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/widgets/quantity.dart';
 import 'package:MobileOne/widgets/widget_icon_text_button.dart';
 import 'package:MobileOne/widgets/widget_voice_record.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -12,7 +13,6 @@ import 'dart:io';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/utility/colors.dart';
-import 'package:MobileOne/widgets/bubble_button.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -68,53 +68,37 @@ class EditItemPageState extends State<EditItemPage> {
           return Scaffold(
             appBar: buildAppBar(provider),
             backgroundColor: _colorsApp.colorTheme,
-            body: SafeArea(
-              child: Column(
-                children: <Widget>[
-                  Flexible(
-                    flex: 1,
-                    fit: FlexFit.loose,
-                    child: Container(
-                      child: buildImageAndButtons(context, provider),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    fit: FlexFit.loose,
-                    child: Container(
-                        child:
-                            Center(child: buildTextField(context, provider))),
-                  ),
-                  Flexible(
-                    flex: 1,
-                    fit: FlexFit.loose,
-                    child: Container(
-                      width: double.infinity,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Flexible(
-                            flex: 1,
-                            child: buildDecrementCounter(provider),
-                          ),
-                          Flexible(
-                            flex: 2,
-                            child: buildQuantityText(provider),
-                          ),
-                          Flexible(
-                            flex: 1,
-                            child: buildIncrementCounter(provider),
-                          ),
-                          Flexible(
-                            flex: 2,
-                            child: buildUnit(context, provider),
-                          ),
-                        ],
+            body: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                buildImageAndButtons(context, provider),
+                Spacer(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  child: buildTextField(context, provider),
+                ),
+                Spacer(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Quantity(
+                        provider,
+                        _itemQuantityFocusNode,
+                        itemCountController,
                       ),
                     ),
-                  ),
-                ],
-              ),
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: buildUnit(context, provider),
+                      ),
+                    ),
+                  ],
+                ),
+                Spacer(),
+              ],
             ),
           );
         },
@@ -146,67 +130,51 @@ class EditItemPageState extends State<EditItemPage> {
     );
   }
 
-  Row buildImageAndButtons(
+  Widget buildImageAndButtons(
       BuildContext context, WishlistItemProvider provider) {
-    return Row(
-      children: [
-        Flexible(
-          flex: 1,
-          child: InkWell(
-            onTap: () {
-              if (provider.imageUrl != null) {
-                openBigImage(provider);
-              }
-            },
-            child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              color: WHITE,
-              child: _pickedImage != null
-                  ? Image.file(File(_pickedImage.path))
-                  : provider.imageUrl != null
-                      ? Image.network(provider.imageUrl)
-                      : Icon(Icons.photo_outlined),
+    return Container(
+      width: double.infinity,
+      child: Row(
+        children: [
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                if (provider.imageUrl != null) {
+                  openBigImage(provider);
+                }
+              },
+              child: Container(
+                height: 76.0,
+                color: WHITE,
+                child: _pickedImage != null
+                    ? Image.file(File(_pickedImage.path))
+                    : provider.imageUrl != null
+                        ? Image.network(provider.imageUrl)
+                        : Icon(Icons.photo_outlined),
+              ),
             ),
           ),
-        ),
-        Expanded(
-          flex: 2,
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            child: Row(
-              children: [
-                Expanded(
-                  child: IconTextButton(
-                    iconData: Icons.mic,
-                    onPressed: () => recordAudio(provider),
-                    backgroundColor: Colors.lime[600],
-                    text: "Label",
-                  ),
-                ),
-                Expanded(
-                  child: IconTextButton(
-                    iconAsset: "assets/images/qr-code.svg",
-                    onPressed: () => scanAnItem(provider),
-                    backgroundColor: _colorsApp.buttonColor,
-                    text: "Scan",
-                  ),
-                ),
-                Expanded(
-                  child: IconTextButton(
-                    key: Key("item_picture_button"),
-                    iconData: Icons.camera_alt_outlined,
-                    onPressed: () => pickImage(provider),
-                    backgroundColor: Colors.teal,
-                    text: "Photo",
-                  ),
-                ),
-              ],
-            ),
+          IconTextButton(
+            iconData: Icons.mic,
+            onPressed: () => recordAudio(provider),
+            backgroundColor: Colors.lime[600],
+            text: "Label",
           ),
-        ),
-      ],
+          IconTextButton(
+            iconAsset: "assets/images/qr-code.svg",
+            onPressed: () => scanAnItem(provider),
+            backgroundColor: _colorsApp.buttonColor,
+            text: "Scan",
+          ),
+          IconTextButton(
+            key: Key("item_picture_button"),
+            iconData: Icons.camera_alt_outlined,
+            onPressed: () => pickImage(provider),
+            backgroundColor: Colors.teal,
+            text: "Photo",
+          ),
+        ],
+      ),
     );
   }
 
@@ -218,75 +186,30 @@ class EditItemPageState extends State<EditItemPage> {
       getString(context, 'item_kilos')
     ];
 
-    return Container(
-      child: DropdownButtonFormField<String>(
-        decoration: InputDecoration(
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: TRANSPARENT),
-            borderRadius: BorderRadius.all(Radius.circular(15)),
-          ),
-          filled: true,
-          fillColor: _colorsApp.greyColor,
-        ),
-        hint: Text(
-          getString(context, 'item_type'),
-        ),
-        onChanged: (text) {
-          setState(() {
-            provider.unit = toUnitId(context, text);
-          });
-        },
-        value: toStringUnit(context, provider.unit),
-        items: items.map((String value) {
-          return new DropdownMenuItem<String>(
-            value: value,
-            child: new Text(value, style: TextStyle(color: GREY, fontSize: 13)),
-          );
-        }).toList(),
-      ),
-    );
-  }
-
-  Widget buildDecrementCounter(WishlistItemProvider provider) {
-    return BubbleButton(
-      icon: Icon(Icons.remove, color: WHITE),
-      color: Colors.lime[600],
-      onPressed: () => decrementCounter(provider),
-    );
-  }
-
-  Widget buildQuantityText(WishlistItemProvider provider) {
-    itemCountController.text = provider.quantity.toString();
-    return TextField(
-      focusNode: _itemQuantityFocusNode,
-      inputFormatters: [
-        LengthLimitingTextInputFormatter(5),
-      ],
-      style: TextStyle(
-        fontSize: 18,
-      ),
-      key: Key("item_count_label"),
-      textAlign: TextAlign.center,
+    return DropdownButtonFormField<String>(
       decoration: InputDecoration(
-        contentPadding: EdgeInsets.all(10),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: TRANSPARENT),
+          borderRadius: BorderRadius.all(Radius.circular(4)),
         ),
         filled: true,
-        fillColor: Colors.grey[300],
-        hintText: getString(context, 'item_count'),
+        fillColor: _colorsApp.greyColor,
       ),
-      keyboardType: TextInputType.number,
-      controller: itemCountController,
-      onChanged: (text) => handleSubmittedItemCount(int.parse(text), provider),
-    );
-  }
-
-  Widget buildIncrementCounter(WishlistItemProvider provider) {
-    return BubbleButton(
-      icon: Icon(Icons.add, color: WHITE),
-      color: Colors.lime[600],
-      onPressed: () => incrementCounter(provider),
+      hint: Text(
+        getString(context, 'item_type'),
+      ),
+      onChanged: (text) {
+        setState(() {
+          provider.unit = toUnitId(context, text);
+        });
+      },
+      value: toStringUnit(context, provider.unit),
+      items: items.map((String value) {
+        return new DropdownMenuItem<String>(
+          value: value,
+          child: new Text(value, style: TextStyle(color: GREY, fontSize: 13)),
+        );
+      }).toList(),
     );
   }
 
@@ -302,6 +225,14 @@ class EditItemPageState extends State<EditItemPage> {
         hintText: getString(context, 'item_name'),
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: TRANSPARENT),
+          borderRadius: BorderRadius.circular(0.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.lime[600],
+            width: 1.0,
+          ),
+          borderRadius: BorderRadius.circular(0.0),
         ),
         filled: true,
         fillColor: Colors.grey[300],
@@ -409,22 +340,6 @@ class EditItemPageState extends State<EditItemPage> {
 
   StorageUploadTask uploadItemPicture(StorageReference storageReference) {
     return storageReference.putFile(File(_pickedImage.path));
-  }
-
-  void handleSubmittedItemCount(int input, WishlistItemProvider provider) {
-    provider.quantity = input;
-  }
-
-  void incrementCounter(WishlistItemProvider provider) {
-    _analytics.sendAnalyticsEvent("increment_counter_quantity");
-    provider.increaseQuantity();
-  }
-
-  void decrementCounter(WishlistItemProvider provider) {
-    if (provider.canDecrement()) {
-      _analytics.sendAnalyticsEvent("decrement_counter_quantity");
-      provider.decreaseQuantity();
-    }
   }
 
   Future<void> scanAnItem(WishlistItemProvider provider) async {
