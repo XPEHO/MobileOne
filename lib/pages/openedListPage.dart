@@ -18,6 +18,7 @@ import 'package:flutter_material_color_picker/flutter_material_color_picker.dart
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+import 'package:reorderables/reorderables.dart';
 import '../localization/localization.dart';
 import 'package:MobileOne/utility/colors.dart';
 
@@ -77,14 +78,16 @@ class OpenedListPageState extends State<OpenedListPage>
             }
             _myController.text = wishlist?.label ?? "";
             return content(
-                wishlist, itemsListProvider.getItemList(_args.listUuid));
+                wishlist,
+                itemsListProvider.getItemList(_args.listUuid),
+                itemsListProvider);
           });
         },
       ),
     );
   }
 
-  Widget content(Wishlist wishlistHead, List<WishlistItem> items) {
+  Widget content(Wishlist wishlistHead, List<WishlistItem> items, provider) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: _colorsApp.colorTheme,
@@ -92,7 +95,7 @@ class OpenedListPageState extends State<OpenedListPage>
         body: CustomScrollView(
           slivers: <Widget>[
             buildAppBar(context, wishlistHead),
-            buildList(context, items, wishlistHead),
+            buildList(context, items, wishlistHead, provider),
           ],
         ),
       ),
@@ -117,92 +120,90 @@ class OpenedListPageState extends State<OpenedListPage>
     );
   }
 
-  Widget buildList(
-      BuildContext context, List<WishlistItem> items, Wishlist wishlistHead) {
-    return items == null
-        ? SliverList(
-            delegate: SliverChildBuilderDelegate(
-            (context, index) => Center(
-              child: Text(getString(context, "loading")),
-            ),
-            childCount: 1,
-          ))
-        : items.length > 0
-            ? SliverList(
-                delegate: SliverChildBuilderDelegate(
-                  (context, index) => Container(
-                    child: Dismissible(
-                        confirmDismiss: (DismissDirection direction) async {
-                          if (direction == DismissDirection.endToStart) {
-                            return await buildDeleteShowDialog(context);
-                          } else {
-                            await validateItem(
-                              listUuid: wishlistHead.uuid,
-                              item: items[index],
-                            );
-                            _analytics.sendAnalyticsEvent("check_item");
-                            return false;
-                          }
-                        },
-                        background: Padding(
-                          padding: const EdgeInsets.only(top: 10.0, left: 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: GREEN,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: WHITE,
-                                  )),
-                            ),
-                          ),
-                        ),
-                        secondaryBackground: Padding(
-                          padding: const EdgeInsets.only(top: 10.0, right: 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: RED,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(5),
-                              ),
-                            ),
-                            child: Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: WHITE,
-                                  )),
-                            ),
-                          ),
-                        ),
-                        key: UniqueKey(),
-                        child: WidgetItem(
-                            items[index], wishlistHead.uuid, items[index].uuid),
-                        onDismissed: (direction) {
-                          if (direction == DismissDirection.endToStart) {
-                            deleteItemFromList(
-                                listUuid: wishlistHead.uuid,
-                                itemUuid: items[index].uuid,
-                                imageName: items[index].imageName);
-                            _analytics.sendAnalyticsEvent("delete_item");
-                          }
-                        }),
-                  ),
-                  childCount: items.length,
-                ),
-              )
-            : SliverToBoxAdapter(
-                child: emptyList(),
+  Widget buildList(BuildContext context, List<WishlistItem> items,
+      Wishlist wishlistHead, ItemsListProvider provider) {
+    var listItems = buildListItems(wishlistHead, items);
+    return listItems.length > 0
+        ? ReorderableSliverList(
+            delegate: ReorderableSliverChildListDelegate(listItems),
+            onReorder: (int oldIndex, int newIndex) {
+              provider.onReorder(wishlistHead.uuid, oldIndex, newIndex);
+            },
+          )
+        : SliverToBoxAdapter(
+            child: emptyList(),
+          );
+  }
+
+  List<Widget> buildListItems(wishlistHead, List<WishlistItem> items) {
+    if (items == null) {
+      return List.generate(1, (index) => Text(getString(context, "loading")));
+    }
+    return List.generate(
+        items.length, (index) => buildListItem(wishlistHead, items, index));
+  }
+
+  Widget buildListItem(wishlistHead, items, index) {
+    return Container(
+      child: Dismissible(
+          confirmDismiss: (DismissDirection direction) async {
+            if (direction == DismissDirection.endToStart) {
+              return await buildDeleteShowDialog(context);
+            } else {
+              await validateItem(
+                listUuid: wishlistHead.uuid,
+                item: items[index],
               );
+              _analytics.sendAnalyticsEvent("check_item");
+              return false;
+            }
+          },
+          background: Container(
+            decoration: BoxDecoration(
+              color: GREEN,
+              borderRadius: BorderRadius.all(
+                Radius.circular(0),
+              ),
+            ),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                  padding: const EdgeInsets.only(left: 24.0),
+                  child: Icon(
+                    Icons.check,
+                    color: WHITE,
+                  )),
+            ),
+          ),
+          secondaryBackground: Container(
+            decoration: BoxDecoration(
+              color: RED,
+              borderRadius: BorderRadius.all(
+                Radius.circular(0),
+              ),
+            ),
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                  padding: const EdgeInsets.only(right: 24.0),
+                  child: Icon(
+                    Icons.delete,
+                    color: WHITE,
+                  )),
+            ),
+          ),
+          key: UniqueKey(),
+          child: WidgetItem(items[index], wishlistHead.uuid, items[index].uuid),
+          onDismissed: (direction) {
+            if (direction == DismissDirection.endToStart) {
+              deleteItemFromList(
+                  listUuid: wishlistHead.uuid,
+                  itemUuid: items[index].uuid,
+                  imageName: items[index].imageName);
+              _analytics.sendAnalyticsEvent("delete_item");
+            }
+          }),
+    );
   }
 
   void openColorPicker(Widget content, String wishlistUuid) {

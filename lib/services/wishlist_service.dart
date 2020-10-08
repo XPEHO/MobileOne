@@ -145,16 +145,18 @@ class WishlistService {
   List<WishlistItem> sortItemsInList(List<WishlistItem> itemList) {
     if (itemList != null) {
       itemList.sort((a, b) {
-        if (a.isValidated == b.isValidated) {
-          if (a.label != null && b.label != null) {
-            return a.label.toLowerCase().compareTo(b.label.toLowerCase());
-          }
-          return 0;
-        } else if (a.isValidated) {
-          return 1;
-        } else {
-          return -1;
+        if (a.isValidated != b.isValidated) {
+          return a.isValidated ? 1 : -1;
         }
+
+        if (a.order != b.order) {
+          return a.order.compareTo(b.order);
+        }
+
+        String aLabel = a.label?.toLowerCase() ?? "";
+        String bLabel = b.label?.toLowerCase() ?? "";
+
+        return aLabel.compareTo(bLabel);
       });
     }
 
@@ -208,22 +210,15 @@ class WishlistService {
     @required String listUuid,
     @required String imageName,
   }) async {
-    WishlistItem oldItem =
+    WishlistItem editedItem =
         _itemlists[listUuid].where((element) => element.uuid == itemUuid).first;
-    oldItem.imageName = imageName;
-    oldItem.imageUrl = imageLink;
-    oldItem.isValidated = false;
-    oldItem.label = name;
-    oldItem.quantity = count;
-    oldItem.unit = typeIndex;
-    await dao.updateItemInList(
-        itemUuid: itemUuid,
-        name: name,
-        count: count,
-        typeIndex: typeIndex,
-        imageLink: imageLink,
-        listUuid: listUuid,
-        imageName: imageName);
+    editedItem.imageName = imageName;
+    editedItem.imageUrl = imageLink;
+    editedItem.isValidated = false;
+    editedItem.label = name;
+    editedItem.quantity = count;
+    editedItem.unit = typeIndex;
+    await dao.updateItemInList(listUuid: listUuid, item: editedItem);
     await fetchItemList(listUuid);
   }
 
@@ -245,9 +240,13 @@ class WishlistService {
     @required String itemUuid,
     @required bool isValidated,
   }) async {
-    dao.validateItem(
-        listUuid: listUuid, itemUuid: itemUuid, isValidated: isValidated);
-    await fetchItemList(listUuid);
+    _itemlists[listUuid]
+        .firstWhere((element) => element.uuid == itemUuid)
+        ?.isValidated = isValidated;
+    dao
+        .validateItem(
+            listUuid: listUuid, itemUuid: itemUuid, isValidated: isValidated)
+        .then((value) => fetchItemList(listUuid));
   }
 
   List<dynamic> filterLists(String filterText) {
@@ -333,5 +332,19 @@ class WishlistService {
     return wishlists
         .where((element) => element.categoryId == categoryId)
         .toList();
+  }
+
+  void reorder(String listUuid, int oldIndex, int newIndex) {
+    var items = _itemlists[listUuid];
+    items.insert(newIndex, items.removeAt(oldIndex));
+    items
+        .asMap()
+        .map((key, value) {
+          return MapEntry(key, value.order = key);
+        })
+        .values
+        .forEach((element) {
+          dao.updateItems(listUuid, items);
+        });
   }
 }

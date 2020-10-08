@@ -19,13 +19,15 @@ someWishlists(List<Wishlist> list) {
   return map;
 }
 
-WishlistItem aWishlistItem(
-    {String imageUrl = "",
-    bool isValidated = false,
-    String label = "a",
-    int quantity = 0,
-    int unit = 0,
-    String imageName = ""}) {
+WishlistItem aWishlistItem({
+  String imageUrl = "",
+  bool isValidated = false,
+  String label = "a",
+  int quantity = 0,
+  int unit = 0,
+  String imageName = "",
+  int order = 0,
+}) {
   return WishlistItem.fromMap(
     "",
     {
@@ -35,6 +37,7 @@ WishlistItem aWishlistItem(
       "quantity": quantity,
       "unit": unit,
       "imageName": imageName,
+      "order": order,
     },
   );
 }

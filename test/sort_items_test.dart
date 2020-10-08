@@ -44,6 +44,23 @@ void main() {
       expect(result.last.label == "z", true);
     });
 
+    test("Sort the items in a wishlist by order", () {
+      //Given
+      List<WishlistItem> list = [
+        aWishlistItem(label: "a", order: 2),
+        aWishlistItem(label: "b", order: 1),
+      ];
+
+      //When
+      List<WishlistItem> result = service.sortItemsInList(list);
+
+      //Then
+      expect(result == null, false);
+      expect(result.isNotEmpty, true);
+      expect(result.first.label == "b", true);
+      expect(result.last.label == "a", true);
+    });
+
     test("Sort the items in a wishlist by validation", () {
       //Given
       List<WishlistItem> list = [

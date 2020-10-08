@@ -80,4 +80,9 @@ class ItemsListProvider with ChangeNotifier {
   fireUpdate() {
     notifyListeners();
   }
+
+  void onReorder(String listUuid, int oldIndex, int newIndex) {
+    wishlistService.reorder(listUuid, oldIndex, newIndex);
+    notifyListeners();
+  }
 }
