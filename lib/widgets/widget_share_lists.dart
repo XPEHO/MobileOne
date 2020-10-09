@@ -1,9 +1,8 @@
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/share_provider.dart';
-
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
-import 'package:MobileOne/widgets/widget_list.dart';
+import 'package:MobileOne/widgets/widget_little_list.dart';
 import 'package:flutter/material.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:get_it/get_it.dart';
@@ -55,7 +54,7 @@ class WidgetShareListWithSomeoneState
               child: Container(
                 width: MediaQuery.of(context).size.width * 0.23,
                 height: MediaQuery.of(context).size.width * 0.3,
-                child: WidgetLists(
+                child: WidgetLittleLists(
                   listUuid: _listUuid,
                   isGuest: false,
                 ),

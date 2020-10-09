@@ -27,4 +27,9 @@ class WishlistHeadProvider with ChangeNotifier {
     await wishlistService.setWishlistColor(wishlistUuid, color, true);
     notifyListeners();
   }
+
+  setWishlistProgression(String wishlistUuid, int progression) async {
+    await wishlistService.setWishlistProgression(wishlistUuid, progression);
+    notifyListeners();
+  }
 }

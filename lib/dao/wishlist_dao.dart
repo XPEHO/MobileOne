@@ -459,4 +459,16 @@ class WishlistDao {
         .doc(listUuid)
         .update(data);
   }
+
+  setWishlistProgression(String wishlistUuid, int progression) async {
+    await FirebaseFirestore.instance
+        .collection("wishlists")
+        .doc(wishlistUuid)
+        .set(
+      {
+        "progression": progression,
+      },
+      SetOptions(merge: true),
+    );
+  }
 }
