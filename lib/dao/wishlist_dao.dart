@@ -1,4 +1,5 @@
 import 'package:MobileOne/data/owner_details.dart';
+import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -271,24 +272,13 @@ class WishlistDao {
   }
 
   Future<void> updateItemInList({
-    @required String itemUuid,
-    @required String name,
-    @required int count,
-    @required int typeIndex,
-    @required String imageLink,
     @required String listUuid,
-    @required String imageName,
+    @required WishlistItem item,
   }) async {
-    await FirebaseFirestore.instance.collection("items").doc(listUuid).update({
-      itemUuid: {
-        'label': name,
-        'quantity': count,
-        'unit': typeIndex,
-        'image': imageLink,
-        'isValidated': false,
-        'imageName': imageName,
-      }
-    });
+    await FirebaseFirestore.instance
+        .collection("items")
+        .doc(listUuid)
+        .update({item.uuid: item.toMap()});
   }
 
   Future<void> deleteItemInList({
@@ -460,5 +450,13 @@ class WishlistDao {
       },
       SetOptions(merge: true),
     );
+  }
+
+  void updateItems(String listUuid, List<WishlistItem> items) async {
+    var data = Map.fromEntries(items.map((e) => MapEntry(e.uuid, e.toMap())));
+    await FirebaseFirestore.instance
+        .collection("items")
+        .doc(listUuid)
+        .update(data);
   }
 }

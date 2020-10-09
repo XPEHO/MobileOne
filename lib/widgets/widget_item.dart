@@ -53,54 +53,50 @@ class WidgetItemState extends State<WidgetItem> {
   @override
   Widget build(BuildContext context) {
     final completeName = _itemlist.label ?? "";
-    if (_itemlist.isValidated) {
-      return buildValidatedItem(completeName);
-    } else {
-      return buildItem(completeName);
-    }
+
+    return buildItem(completeName);
   }
 
-  Builder buildValidatedItem(String completeName) {
-    return Builder(
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-          child: InkWell(
-            onTap: () {
-              openItemPage(
-                _listUuid,
-                _itemUuid,
-              );
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: _colorsApp.greyColor,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(5),
+  Widget buildItem(String completeName) {
+    var productName = getProductName(completeName);
+    var brand = getProductBrand(completeName);
+    return InkWell(
+      onTap: () {
+        openItemPage(_listUuid, _itemUuid);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: _colorsApp.greyColor,
+          borderRadius: BorderRadius.all(
+            Radius.circular(0),
+          ),
+        ),
+        child: ListTile(
+          contentPadding: EdgeInsets.all(4.0),
+          title: Text(
+            "$productName\n$brand",
+            style: TextStyle(fontSize: 12.0),
+          ),
+          subtitle: Text(
+            "x${_itemlist.quantity.toString()} ${getUnitText()}",
+            style: TextStyle(
+              fontSize: 10,
+            ),
+          ),
+          leading: Container(
+            height: double.infinity,
+            width: 96,
+            child: Row(
+              children: [
+                Flexible(
+                  child: Icon(
+                    Icons.drag_indicator,
+                    size: 16,
+                    color: Colors.grey[400],
+                  ),
                 ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  title: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(getProductName(completeName)),
-                      Text(getProductBrand(completeName)),
-                    ],
-                  ),
-                  subtitle: Row(
-                    children: <Widget>[
-                      Text(
-                          "x${_itemlist.quantity.toString()} ${getUnitText()}"),
-                    ],
-                  ),
-                  leading: SizedBox(
-                    width: 72,
-                    height: 72,
-                    child: Row(children: <Widget>[
-                      Flexible(
+                _itemlist.isValidated
+                    ? Flexible(
                         flex: 1,
                         child: IconButton(
                             padding: EdgeInsets.only(right: 12.0),
@@ -115,67 +111,22 @@ class WidgetItemState extends State<WidgetItem> {
                                     isValidated: false,
                                   );
                             }),
-                      ),
-                      Flexible(flex: 1, child: _itemImage)
-                    ]),
-                  ),
-                  trailing: Icon(
-                    Icons.navigate_next,
-                    color: BLACK,
-                  ),
+                      )
+                    : Container(),
+                Expanded(
+                  flex: 2,
+                  child: _itemImage,
                 ),
-              ),
+              ],
             ),
           ),
-        );
-      },
-    );
-  }
-
-  Builder buildItem(String completeName) {
-    return Builder(
-      builder: (context) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
-          child: InkWell(
-            onTap: () {
-              openItemPage(_listUuid, _itemUuid);
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                color: _colorsApp.greyColor,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(5),
-                ),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  title: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(getProductName(completeName)),
-                      Text(getProductBrand(completeName)),
-                    ],
-                  ),
-                  subtitle: Row(
-                    children: <Widget>[
-                      Text(
-                          "x${_itemlist.quantity.toString()} ${getUnitText()}"),
-                    ],
-                  ),
-                  leading: _itemImage,
-                  trailing: Icon(
-                    Icons.navigate_next,
-                    color: BLACK,
-                  ),
-                ),
-              ),
-            ),
+          trailing: Icon(
+            Icons.navigate_next,
+            size: 16,
+            color: Colors.grey[400],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
