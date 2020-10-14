@@ -294,7 +294,7 @@ class WishlistService {
 
   Future<List<Categories>> fetchCategories(BuildContext context) async {
     _categories
-        .add(Categories.fromMap(null, getString(context, "empty_category")));
+        .add(Categories.fromMap(null, getString(context, "null_category")));
     List<Map<String, dynamic>> map = await dao.getCategories();
     map.forEach((element) {
       switch (element["id"]) {
@@ -320,12 +320,24 @@ class WishlistService {
     _wishlists[wishlistUuid].categoryId = categoryId;
   }
 
-  List<List<Wishlist>> chunk(List<Wishlist> wishlists) {
-    return wishlists
+  Map<String, List<Wishlist>> chunk(List<Wishlist> wishlists) {
+    Map<String, List<Wishlist>> categories = {};
+
+    List<List<Wishlist>> sortedWishlists = wishlists
         .map((e) => e.categoryId)
         .toSet()
         .map((categoryId) => filterByCategory(wishlists, categoryId))
         .toList();
+
+    sortedWishlists.forEach((element) {
+      if (element.first.categoryId != "0") {
+        categories[element.first.categoryId] = element;
+      } else {
+        categories["no_category"] = element;
+      }
+    });
+
+    return categories;
   }
 
   List<Wishlist> filterByCategory(List<Wishlist> wishlists, String categoryId) {
@@ -346,5 +358,10 @@ class WishlistService {
         .forEach((element) {
           dao.updateItems(listUuid, items);
         });
+  }
+
+  setWishlistProgression(String wishlistUuid, int progression) async {
+    await dao.setWishlistProgression(wishlistUuid, progression);
+    _wishlists[wishlistUuid].progression = progression;
   }
 }

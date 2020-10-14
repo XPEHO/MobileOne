@@ -5,9 +5,9 @@ import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/user_service.dart';
-import 'package:MobileOne/widgets/widget_list.dart';
 import 'package:MobileOne/pages/share_one.dart';
 import 'package:MobileOne/utility/colors.dart';
+import 'package:MobileOne/widgets/widget_little_list.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -85,14 +85,14 @@ class ShareStateTwoState extends State<ShareTwo> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(
-                top: 50.0,
-                right: 300,
-              ),
-              child: Text(
-                getString(context, 'my_lists'),
-                style: TextStyle(
-                  color: WHITE,
+              padding: const EdgeInsets.only(left: 8.0, top: 24.0),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  getString(context, 'my_lists'),
+                  style: TextStyle(
+                    color: WHITE,
+                  ),
                 ),
               ),
             ),
@@ -126,7 +126,7 @@ class ShareStateTwoState extends State<ShareTwo> {
                             padding: const EdgeInsets.all(8.0),
                             child: Container(
                               height: 100,
-                              child: WidgetLists(
+                              child: WidgetLittleLists(
                                 listUuid: wishlists[index].uuid,
                                 isGuest: false,
                               ),

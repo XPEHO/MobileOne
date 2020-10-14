@@ -7,6 +7,7 @@ class Wishlist {
   int color;
   String _categoryId;
   Timestamp timestamp;
+  int progression;
 
   Wishlist.fromMap(String uuid, Map<String, dynamic> properties) {
     this.uuid = uuid;
@@ -15,6 +16,7 @@ class Wishlist {
     this.timestamp = properties["timestamp"];
     this.color = properties["color"];
     this.categoryId = properties["categoryId"];
+    this.progression = properties["progression"];
   }
 
   set categoryId(String categoryId) {

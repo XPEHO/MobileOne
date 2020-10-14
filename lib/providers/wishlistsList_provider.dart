@@ -7,9 +7,9 @@ import 'package:get_it/get_it.dart';
 class WishlistsListProvider with ChangeNotifier {
   final wishlistService = GetIt.I.get<WishlistService>();
 
-  List<List<Wishlist>> get ownerLists {
+  Map<String, List<Wishlist>> get ownerLists {
     final ownerLists = wishlistService.ownerLists;
-    List<List<Wishlist>> categories = [];
+    Map<String, List<Wishlist>> categories = {};
     if (ownerLists == null) {
       wishlistService.fetchOwnerLists().then((value) => notifyListeners());
     }
@@ -71,6 +71,7 @@ class WishlistsListProvider with ChangeNotifier {
         if (value != null) {
           categories = value;
         }
+        notifyListeners();
       });
     }
     return categories;

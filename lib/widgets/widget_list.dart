@@ -25,12 +25,12 @@ class WidgetListsState extends State<WidgetLists> {
     child: Icon(
       Icons.person,
       color: Colors.grey,
-      size: 15,
+      size: 24,
     ),
-    radius: 15.0,
+    radius: 24.0,
   );
-  Widget _email = Container();
   OwnerDetails ownerDetails;
+  Widget _email = Container();
 
   getOwnerDetails() async {
     ownerDetails = await _wishlistService.getOwnerDetails(widget.listUuid);
@@ -39,7 +39,7 @@ class WidgetListsState extends State<WidgetLists> {
         _avatar = CircleAvatar(
           backgroundColor: WHITE,
           backgroundImage: NetworkImage(ownerDetails.path),
-          radius: 15.0,
+          radius: 24.0,
         );
       });
     }
@@ -48,10 +48,11 @@ class WidgetListsState extends State<WidgetLists> {
         _email = Padding(
           padding: const EdgeInsets.only(top: 4.0),
           child: Center(
-            child: Text(
-              ownerDetails.email.substring(0, 2).toUpperCase(),
-              style: TextStyle(
-                  color: BLACK, fontSize: 12.0, fontWeight: FontWeight.bold),
+            child: FittedBox(
+              child: Text(
+                ownerDetails.email,
+                style: TextStyle(color: BLACK, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         );
@@ -61,9 +62,7 @@ class WidgetListsState extends State<WidgetLists> {
 
   @override
   void initState() {
-    if (widget.isGuest) {
-      getOwnerDetails();
-    }
+    getOwnerDetails();
     super.initState();
   }
 
@@ -82,40 +81,65 @@ class WidgetListsState extends State<WidgetLists> {
           return CustomPaint(
             painter: CurvePainter(wishlist),
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.23,
+              width: MediaQuery.of(context).size.width * 0.75,
               child: Column(
                 children: <Widget>[
-                  widget.isGuest
-                      ? MediaQuery.of(context).size.height <= 800 &&
-                              MediaQuery.of(context).size.width <= 480
-                          ? _email
-                          : Padding(
-                              padding: const EdgeInsets.only(top: 8.0),
-                              child: _avatar,
-                            )
-                      : Container(),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8.0),
-                    child: Container(
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 1,
+                    child: Center(
                       child: Text(
                         wishlist?.label ?? "",
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                             color: BLACK,
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 32.0),
                       ),
                     ),
                   ),
-                  Column(
-                    children: [
-                      Text(
-                        "${wishlist?.itemCount} ${getString(context, 'items')}" ??
-                            "",
-                        style:
-                            TextStyle(color: Colors.grey[900], fontSize: 8.0),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 1,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: _avatar,
+                        ),
+                        _email,
+                      ],
+                    ),
+                  ),
+                  Flexible(
+                    fit: FlexFit.tight,
+                    flex: 1,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FittedBox(
+                              child: Text(
+                                "${wishlist?.itemCount} ${getString(context, 'items')}" ??
+                                    "",
+                                style: TextStyle(color: Colors.grey[900]),
+                              ),
+                            ),
+                            FittedBox(
+                              child: Text(
+                                wishlist?.progression != null
+                                    ? "${wishlist?.progression} %"
+                                    : "${getString(context, 'null_progression')}",
+                                style: TextStyle(color: Colors.grey[900]),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),

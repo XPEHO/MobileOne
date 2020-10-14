@@ -55,7 +55,7 @@
     "forgotten_password_page_text": "Réinitialiser votre mot de passe",
     "reset_password_email_sent": "Un email vous a été envoyé",
     "submit_button": "Valider",
-    "shared_with_me": "Partagé avec moi : ",
+    "shared_with_me": "Partagé avec moi",
     "hint_name_new_list": "Alimentations, sports ...",
     "items": "articles",
     "item_type": "Type",
@@ -178,7 +178,9 @@
     "biometrics_check": "Souhaitez-vous activer la connection via empreinte pour vos prochaines connections ?",
     "biometrics_confirm": "OUI",
     "biometrics_cancel": "NON",
-    "empty_category": "Sans catégorie",
+    "null_category": "Sans catégorie",
     "food_category": "Nourriture",
-    "recipy_category": "Recette"
+    "recipy_category": "Recette",
+    "null_progression": "0%",
+    "empty_category": "Cette catégorie est vide"
 }

@@ -1,4 +1,5 @@
 import 'package:MobileOne/data/wishlist_item.dart';
+import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/services/image_service.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,12 @@ class ItemsListProvider with ChangeNotifier {
   }) async {
     await wishlistService.validateItem(
         listUuid: listUuid, itemUuid: itemUuid, isValidated: isValidated);
+    int progression = progress(listUuid);
+    if (progression != null) {
+      await GetIt.I
+          .get<WishlistHeadProvider>()
+          .setWishlistProgression(listUuid, progression);
+    }
     notifyListeners();
   }
 

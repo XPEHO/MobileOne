@@ -10,7 +10,7 @@ class EmptyLists extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.22,
+      width: MediaQuery.of(context).size.width * 0.75,
       child: Card(
         elevation: 3,
         color: color,
@@ -20,12 +20,12 @@ class EmptyLists extends StatelessWidget {
             Text(
               text,
               textAlign: TextAlign.center,
-              style: TextStyle(color: textAndIconColor),
+              style: TextStyle(color: textAndIconColor, fontSize: 24),
             ),
             Icon(
               icon,
               color: textAndIconColor,
-              size: 30,
+              size: 64,
             ),
           ],
         ),
