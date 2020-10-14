@@ -95,6 +95,7 @@ class OpenedListPageState extends State<OpenedListPage>
         body: CustomScrollView(
           slivers: <Widget>[
             buildAppBar(context, wishlistHead),
+            buildProgressionBar(),
             buildList(context, items, wishlistHead, provider),
           ],
         ),
@@ -455,17 +456,23 @@ class OpenedListPageState extends State<OpenedListPage>
     );
   }
 
-  Visibility progressindicator() {
+  Widget buildProgressionBar() {
     int progress = GetIt.I.get<ItemsListProvider>().progress(_args.listUuid);
-    return Visibility(
-      visible: (progress > 0) ? true : false,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: FAProgressBar(
-          currentValue: progress,
-          displayText: '%',
-          changeColorValue: 0,
-          changeProgressColor: _colorsApp.buttonColor,
+
+    return SliverToBoxAdapter(
+      child: Visibility(
+        visible: (progress > 0) ? true : false,
+        child: Container(
+          color: Colors.grey[200],
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FAProgressBar(
+              currentValue: progress,
+              displayText: '%',
+              changeColorValue: 0,
+              changeProgressColor: _colorsApp.buttonColor,
+            ),
+          ),
         ),
       ),
     );

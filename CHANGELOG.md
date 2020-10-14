@@ -153,6 +153,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - iOS : fixed copy/paste menu
 - Voice recognition : user can now use voice recognition on iOS
 - Scan : The item label is now set when a barcode is scanned
+- Progression : user can now see the progress bar
 
 ### Security
 
