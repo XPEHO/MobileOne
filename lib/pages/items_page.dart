@@ -3,6 +3,7 @@ import 'package:MobileOne/data/unit.dart';
 import 'package:MobileOne/providers/wishlist_item_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/tutorial_service.dart';
 import 'package:MobileOne/widgets/quantity.dart';
 import 'package:MobileOne/widgets/widget_icon_text_button.dart';
 import 'package:MobileOne/widgets/widget_voice_record.dart';
@@ -24,6 +25,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:path/path.dart' as path;
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class EditItemPage extends StatefulWidget {
   EditItemPage({
@@ -45,12 +47,23 @@ class EditItemPageState extends State<EditItemPage> {
   var _imageService = GetIt.I.get<ImageService>();
   var _colorsApp = GetIt.I.get<ColorService>();
   final _wishlistsListProvider = GetIt.I.get<WishlistsListProvider>();
+  final _tutorialService = GetIt.I.get<TutorialService>();
 
   ItemArguments _args;
   PickedFile _pickedImage;
 
   bool isInitialized = false;
   final SpeechToText speech = SpeechToText();
+
+  List<TargetFocus> targets = List();
+  GlobalKey tutorialKey = GlobalKey(debugLabel: "Item image");
+  GlobalKey tutorialKey1 = GlobalKey(debugLabel: "Voice record");
+  GlobalKey tutorialKey2 = GlobalKey(debugLabel: "Barcode scan");
+  GlobalKey tutorialKey3 = GlobalKey(debugLabel: "Take picture");
+  GlobalKey tutorialKey4 = GlobalKey(debugLabel: "Label");
+  GlobalKey tutorialKey5 = GlobalKey(debugLabel: "Quantity");
+  GlobalKey tutorialKey6 = GlobalKey(debugLabel: "Unit");
+  GlobalKey tutorialKey7 = GlobalKey(debugLabel: "Validate");
 
   @override
   void initState() {
@@ -60,8 +73,84 @@ class EditItemPageState extends State<EditItemPage> {
     _itemNameFocusNode.requestFocus();
   }
 
+  void initTargets() {
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Item image",
+        key: tutorialKey,
+        title: getString(context, "tutorial_item_image_title"),
+        text: getString(context, "tutorial_item_image_text"),
+        positionTop: 300,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Voice record",
+        key: tutorialKey1,
+        title: getString(context, "tutorial_voice_record_title"),
+        text: getString(context, "tutorial_voice_record_text"),
+        positionTop: 200,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Barcode scan",
+        key: tutorialKey2,
+        title: getString(context, "tutorial_barcode_scan_title"),
+        text: getString(context, "tutorial_barcode_scan_text"),
+        positionTop: 200,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Take picture",
+        key: tutorialKey3,
+        title: getString(context, "tutorial_take_item_picture_title"),
+        text: getString(context, "tutorial_take_item_picture_text"),
+        positionTop: 200,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Label",
+        key: tutorialKey4,
+        title: getString(context, "tutorial_label_title"),
+        text: getString(context, "tutorial_label_text"),
+        positionBottom: 30,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Quantity",
+        key: tutorialKey5,
+        title: getString(context, "tutorial_quantity_title"),
+        text: getString(context, "tutorial_quantity_text"),
+        positionTop: 150,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Unit",
+        key: tutorialKey6,
+        title: getString(context, "tutorial_unit_title"),
+        text: getString(context, "tutorial_unit_text"),
+        positionTop: 200,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Validate",
+        key: tutorialKey7,
+        title: getString(context, "tutorial_validate_title"),
+        text: getString(context, "tutorial_validate_text"),
+        positionTop: 100,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    initTargets();
     _args = Arguments.value(context);
     GetIt.I
         .get<WishlistItemProvider>()
@@ -87,6 +176,7 @@ class EditItemPageState extends State<EditItemPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Padding(
+                      key: tutorialKey5,
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Quantity(
                         provider,
@@ -125,6 +215,15 @@ class EditItemPageState extends State<EditItemPage> {
       actions: [
         IconButton(
           icon: Icon(
+            Icons.help,
+          ),
+          onPressed: () {
+            _tutorialService.showTutorial(targets, context);
+          },
+        ),
+        IconButton(
+          key: tutorialKey7,
+          icon: Icon(
             Icons.check,
           ),
           onPressed: () {
@@ -143,6 +242,7 @@ class EditItemPageState extends State<EditItemPage> {
         children: [
           Expanded(
             child: InkWell(
+              key: tutorialKey,
               onTap: () {
                 if (provider.imageUrl != null) {
                   openBigImage(provider);
@@ -160,19 +260,21 @@ class EditItemPageState extends State<EditItemPage> {
             ),
           ),
           IconTextButton(
+            key: tutorialKey1,
             iconData: Icons.mic,
             onPressed: () => recordAudio(provider),
             backgroundColor: Colors.lime[600],
             text: "Label",
           ),
           IconTextButton(
+            key: tutorialKey2,
             iconAsset: "assets/images/qr-code.svg",
             onPressed: () => scanAnItem(provider),
             backgroundColor: _colorsApp.buttonColor,
             text: "Scan",
           ),
           IconTextButton(
-            key: Key("item_picture_button"),
+            key: tutorialKey3,
             iconData: Icons.camera_alt_outlined,
             onPressed: () => pickImage(provider),
             backgroundColor: Colors.teal,
@@ -197,6 +299,7 @@ class EditItemPageState extends State<EditItemPage> {
     ];
 
     return DropdownButtonFormField<String>(
+      key: tutorialKey6,
       decoration: InputDecoration(
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: TRANSPARENT),
@@ -226,8 +329,8 @@ class EditItemPageState extends State<EditItemPage> {
   Widget buildTextField(BuildContext context, WishlistItemProvider provider) {
     itemNameController.text = provider.label;
     return TextField(
+      key: tutorialKey4,
       focusNode: _itemNameFocusNode,
-      key: Key("item_name_label"),
       textAlign: TextAlign.center,
       textInputAction: TextInputAction.next,
       onSubmitted: (_) => _itemQuantityFocusNode.requestFocus(),

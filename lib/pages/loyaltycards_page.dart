@@ -2,12 +2,16 @@ import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/tutorial_service.dart';
 import 'package:MobileOne/utility/colors.dart';
+import 'package:MobileOne/widgets/widget_custom_drawer.dart';
 import 'package:MobileOne/widgets/widget_loyaltyCards.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:tutorial_coach_mark/target_position.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class LoyaltyCards extends StatefulWidget {
   @override
@@ -20,14 +24,36 @@ class LoyaltyCardsState extends State<LoyaltyCards> {
   String uuidOfCard;
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
+  final _tutorialService = GetIt.I.get<TutorialService>();
+
+  List<TargetFocus> targets = List();
+
   @override
   void initState() {
     _analytics.setCurrentPage("isOnLoyaltyCardPage");
     super.initState();
   }
 
+  void initTargets() {
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Scan a card",
+        position: TargetPosition(
+            Size(40, 40),
+            Offset(
+              (MediaQuery.of(context).size.width / 2) - 20,
+              MediaQuery.of(context).size.height - 80,
+            )),
+        title: getString(context, "tutorial_scan_card_title"),
+        text: getString(context, "tutorial_scan_card_text"),
+        positionBottom: 200,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    initTargets();
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<LoyaltyCardsProvider>(),
       child: Consumer<LoyaltyCardsProvider>(
@@ -42,6 +68,13 @@ class LoyaltyCardsState extends State<LoyaltyCards> {
   Widget content(Map<String, dynamic> card) {
     final cards = card ?? {};
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: _colorsApp.colorTheme,
+      ),
+      drawer: CustomDrawer(
+        context: context,
+        targets: targets,
+      ),
       backgroundColor: _colorsApp.colorTheme,
       body: SafeArea(
         child:

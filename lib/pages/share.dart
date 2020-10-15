@@ -4,7 +4,9 @@ import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/tutorial_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
+import 'package:MobileOne/widgets/widget_custom_drawer.dart';
 import 'package:MobileOne/widgets/widget_empty_list.dart';
 import 'package:MobileOne/widgets/widget_share_lists.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,8 @@ import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:MobileOne/utility/colors.dart';
+import 'package:tutorial_coach_mark/target_position.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class Share extends StatefulWidget {
   ShareState createState() => ShareState();
@@ -21,6 +25,10 @@ class Share extends StatefulWidget {
 class ShareState extends State<Share> {
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
+  final _tutorialService = GetIt.I.get<TutorialService>();
+  var previousList;
+
+  List<TargetFocus> targets = List();
 
   @override
   void initState() {
@@ -28,9 +36,56 @@ class ShareState extends State<Share> {
     super.initState();
   }
 
-  var previousList;
+  void initTargets() {
+    double circleWidth = MediaQuery.of(context).size.width * 0.8;
+    double circleHeight = MediaQuery.of(context).size.width * 0.8;
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Add a list",
+        position: TargetPosition(
+            Size(40, 40),
+            Offset(
+              (MediaQuery.of(context).size.width / 2) - 20,
+              MediaQuery.of(context).size.height - 80,
+            )),
+        title: getString(context, "tutorial_share_list_title"),
+        text: getString(context, "tutorial_share_list_text"),
+        positionBottom: 200,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Share direct wishlist",
+        position: TargetPosition(
+            Size(circleWidth, circleHeight),
+            Offset(
+              MediaQuery.of(context).size.width / 2 - (circleWidth / 2),
+              MediaQuery.of(context).size.height / 2 - (circleHeight / 2),
+            )),
+        title: getString(context, "tutorial_share_direct_wishlist_title"),
+        text: getString(context, "tutorial_share_direct_wishlist_text"),
+        positionBottom: 40,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Delete wishlist",
+        position: TargetPosition(
+            Size(circleWidth, circleHeight),
+            Offset(
+              MediaQuery.of(context).size.width / 2 - (circleWidth / 2),
+              MediaQuery.of(context).size.height / 2 - (circleHeight / 2),
+            )),
+        title: getString(context, "tutorial_delete_share_title"),
+        text: getString(context, "tutorial_delete_share_text"),
+        positionBottom: 40,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    initTargets();
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<ShareProvider>(),
       child: Consumer<ShareProvider>(
@@ -54,6 +109,13 @@ class ShareState extends State<Share> {
 
   Widget content(List wishlist) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: _colorsApp.colorTheme,
+      ),
+      drawer: CustomDrawer(
+        context: context,
+        targets: targets,
+      ),
       backgroundColor: _colorsApp.colorTheme,
       body:
           (wishlist.length != 0) ? buildLIstView(wishlist) : buildEmptyShare(),

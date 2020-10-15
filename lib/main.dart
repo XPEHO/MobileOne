@@ -35,6 +35,7 @@ import 'package:MobileOne/services/picture_service.dart';
 import 'package:MobileOne/services/recipes_service.dart';
 import 'package:MobileOne/services/share_service.dart';
 import 'package:MobileOne/services/loyalty_cards_service.dart';
+import 'package:MobileOne/services/tutorial_service.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
@@ -98,6 +99,7 @@ void instantiateServices() {
 
   getIt.registerSingleton(ShareService());
   getIt.registerSingleton(WishlistItemProvider());
+  getIt.registerSingleton(TutorialService());
 }
 
 void main() async {
