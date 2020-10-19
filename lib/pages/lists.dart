@@ -123,10 +123,13 @@ class ListsState extends State<Lists> with TickerProviderStateMixin {
     Map<String, List<Wishlist>> ownerLists = wishlistsListProvider.ownerLists;
 
     tabs.add(
-      FittedBox(
-        child: Text(
-          getString(context, 'null_category'),
-          style: TextStyle(color: WHITE),
+      Container(
+        height: 36,
+        child: FittedBox(
+          child: Text(
+            getString(context, 'null_category'),
+            style: TextStyle(color: WHITE),
+          ),
         ),
       ),
     );
@@ -136,10 +139,13 @@ class ListsState extends State<Lists> with TickerProviderStateMixin {
         (element) {
           if (ownerLists.containsKey(element.id)) {
             tabs.add(
-              FittedBox(
-                child: Text(
-                  element.label,
-                  style: TextStyle(color: WHITE),
+              Container(
+                height: 36,
+                child: FittedBox(
+                  child: Text(
+                    element.label,
+                    style: TextStyle(color: WHITE),
+                  ),
                 ),
               ),
             );
@@ -149,10 +155,13 @@ class ListsState extends State<Lists> with TickerProviderStateMixin {
     }
 
     tabs.add(
-      FittedBox(
-        child: Text(
-          getString(context, 'shared_with_me'),
-          style: TextStyle(color: WHITE),
+      Container(
+        height: 36,
+        child: FittedBox(
+          child: Text(
+            getString(context, 'shared_with_me'),
+            style: TextStyle(color: WHITE),
+          ),
         ),
       ),
     );
