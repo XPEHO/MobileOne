@@ -183,7 +183,12 @@ class EditItemPageState extends State<EditItemPage> {
       getString(context, 'item_unit'),
       getString(context, 'item_liters'),
       getString(context, 'item_grams'),
-      getString(context, 'item_kilos')
+      getString(context, 'item_kilos'),
+      getString(context, "item_packs"),
+      getString(context, "item_boxes"),
+      getString(context, "item_bottles"),
+      getString(context, "item_cans"),
+      getString(context, "item_cartons"),
     ];
 
     return DropdownButtonFormField<String>(
