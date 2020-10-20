@@ -77,12 +77,19 @@ class WidgetItemState extends State<WidgetItem> {
             "$productName\n$brand",
             style: TextStyle(fontSize: 12.0),
           ),
-          subtitle: Text(
-            "x${_itemlist.quantity.toString()} ${getUnitText()}",
-            style: TextStyle(
-              fontSize: 10,
-            ),
-          ),
+          subtitle: _itemlist.quantity > 0
+              ? Text(
+                  "x${_itemlist.quantity.toString()} ${getUnitText()}",
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                )
+              : Text(
+                  getString(context, "undefined_quantity"),
+                  style: TextStyle(
+                    fontSize: 10,
+                  ),
+                ),
           leading: Container(
             height: double.infinity,
             width: 96,
