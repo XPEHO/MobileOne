@@ -182,5 +182,6 @@
     "food_category": "Food",
     "recipy_category": "Recipy",
     "null_progression": "0%",
-    "empty_category": "This category is empty"
+    "empty_category": "This category is empty",
+    "undefined_quantity": "Undefined quantity"
 }

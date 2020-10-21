@@ -182,5 +182,6 @@
     "food_category": "Nourriture",
     "recipy_category": "Recette",
     "null_progression": "0%",
-    "empty_category": "Cette catégorie est vide"
+    "empty_category": "Cette catégorie est vide",
+    "undefined_quantity": "Quantité non définie"
 }
