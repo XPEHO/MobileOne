@@ -1,6 +1,7 @@
 import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
+import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/utility/colors.dart';
@@ -25,6 +26,7 @@ class WidgetItemState extends State<WidgetItem> {
   WidgetItemState(this._itemlist, this._listUuid, this._itemUuid);
   var _itemImage;
   var _colorsApp = GetIt.I.get<ColorService>();
+  final _wishlistsListProvider = GetIt.I.get<WishlistsListProvider>();
 
   @override
   void initState() {
@@ -117,6 +119,8 @@ class WidgetItemState extends State<WidgetItem> {
                                     itemUuid: _itemlist.uuid,
                                     isValidated: false,
                                   );
+                              _wishlistsListProvider
+                                  .setWishlistModificationTime(_listUuid);
                             }),
                       )
                     : Container(),

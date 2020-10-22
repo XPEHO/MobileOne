@@ -22,7 +22,9 @@ class WishlistsListProvider with ChangeNotifier {
         }
       });
       if (wishlistsList.isNotEmpty) {
-        categories = wishlistService.chunk(wishlistsList);
+        Map<String, List<Wishlist>> tmpCategories =
+            wishlistService.chunk(wishlistsList);
+        categories = wishlistService.sortByModification(tmpCategories);
       }
     }
     return categories;
@@ -79,6 +81,11 @@ class WishlistsListProvider with ChangeNotifier {
 
   changeWishlistCategory(String wishlistUuid, String categoryId) async {
     wishlistService.changeWishlistCategory(wishlistUuid, categoryId);
+    notifyListeners();
+  }
+
+  setWishlistModificationTime(String wishlistUuid) {
+    wishlistService.setWishlistModificationTime(wishlistUuid);
     notifyListeners();
   }
 }
