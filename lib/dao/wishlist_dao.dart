@@ -40,6 +40,7 @@ class WishlistDao {
       'itemCounts': "0",
       'label': wishlistName,
       'timestamp': new DateTime.now(),
+      'lastModification': new DateTime.now(),
       'owner': userUuid,
       'ownerEmail': userEmail,
     });
@@ -232,7 +233,10 @@ class WishlistDao {
     await FirebaseFirestore.instance
         .collection("wishlists")
         .doc(listUuid)
-        .update({"itemCounts": (int.parse(listItemsCount) + 1).toString()});
+        .update({
+      "itemCounts": (int.parse(listItemsCount) + 1).toString(),
+      'lastModification': new DateTime.now(),
+    });
 
     await FirebaseFirestore.instance
         .collection("items")
@@ -276,6 +280,13 @@ class WishlistDao {
     @required WishlistItem item,
   }) async {
     await FirebaseFirestore.instance
+        .collection("wishlists")
+        .doc(listUuid)
+        .update({
+      'lastModification': new DateTime.now(),
+    });
+
+    await FirebaseFirestore.instance
         .collection("items")
         .doc(listUuid)
         .update({item.uuid: item.toMap()});
@@ -299,7 +310,10 @@ class WishlistDao {
     await FirebaseFirestore.instance
         .collection("wishlists")
         .doc(listUuid)
-        .update({"itemCounts": (int.parse(listItemsCount) - 1).toString()});
+        .update({
+      "itemCounts": (int.parse(listItemsCount) - 1).toString(),
+      'lastModification': new DateTime.now(),
+    });
 
     await FirebaseFirestore.instance
         .collection("items")
@@ -312,6 +326,13 @@ class WishlistDao {
     @required String itemUuid,
     @required bool isValidated,
   }) async {
+    await FirebaseFirestore.instance
+        .collection("wishlists")
+        .doc(listUuid)
+        .update({
+      'lastModification': new DateTime.now(),
+    });
+
     await FirebaseFirestore.instance.collection("items").doc(listUuid).set(
       {
         itemUuid: {
@@ -364,7 +385,8 @@ class WishlistDao {
         .doc(listUuid)
         .update({
       "itemCounts":
-          (int.parse(listItemsCount) + recipeItemsMap.length).toString()
+          (int.parse(listItemsCount) + recipeItemsMap.length).toString(),
+      'lastModification': new DateTime.now(),
     });
 
     await FirebaseFirestore.instance.collection("items").doc(listUuid).set(
@@ -447,6 +469,7 @@ class WishlistDao {
         .set(
       {
         "categoryId": categoryId,
+        'lastModification': new DateTime.now(),
       },
       SetOptions(merge: true),
     );

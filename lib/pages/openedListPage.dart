@@ -155,6 +155,8 @@ class OpenedListPageState extends State<OpenedListPage>
                 listUuid: wishlistHead.uuid,
                 item: items[index],
               );
+              _wishlistsListProvider
+                  .setWishlistModificationTime(wishlistHead.uuid);
               _analytics.sendAnalyticsEvent("check_item");
               return false;
             }
@@ -202,6 +204,8 @@ class OpenedListPageState extends State<OpenedListPage>
                   itemUuid: items[index].uuid,
                   imageName: items[index].imageName);
               _analytics.sendAnalyticsEvent("delete_item");
+              _wishlistsListProvider
+                  .setWishlistModificationTime(wishlistHead.uuid);
             }
           }),
     );
@@ -339,6 +343,7 @@ class OpenedListPageState extends State<OpenedListPage>
                     .first
                     .id);
           });
+          _wishlistsListProvider.setWishlistModificationTime(wishlist.uuid);
         },
         value: _type,
         items: _categories.map((Categories value) {
@@ -415,6 +420,8 @@ class OpenedListPageState extends State<OpenedListPage>
             break;
           case 4:
             confirmWishlistRestart(wishlistHead.uuid);
+            _wishlistsListProvider
+                .setWishlistModificationTime(wishlistHead.uuid);
             break;
           case 5:
             _nameFocusNode.requestFocus();

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:MobileOne/data/unit.dart';
 import 'package:MobileOne/providers/wishlist_item_provider.dart';
+import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/widgets/quantity.dart';
 import 'package:MobileOne/widgets/widget_icon_text_button.dart';
@@ -43,6 +44,7 @@ class EditItemPageState extends State<EditItemPage> {
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _imageService = GetIt.I.get<ImageService>();
   var _colorsApp = GetIt.I.get<ColorService>();
+  final _wishlistsListProvider = GetIt.I.get<WishlistsListProvider>();
 
   ItemArguments _args;
   PickedFile _pickedImage;
@@ -327,6 +329,8 @@ class EditItemPageState extends State<EditItemPage> {
 
     provider.updateItemInList(_args.listUuid, _args.itemUuid);
 
+    _wishlistsListProvider.setWishlistModificationTime(_args.listUuid);
+
     FocusScope.of(context).unfocus();
     Navigator.of(context).pop(true);
   }
@@ -335,6 +339,8 @@ class EditItemPageState extends State<EditItemPage> {
     _analytics.sendAnalyticsEvent("add_item");
 
     await provider.addItemTolist(_args.listUuid);
+
+    _wishlistsListProvider.setWishlistModificationTime(_args.listUuid);
 
     FocusScope.of(context).unfocus();
     Navigator.of(context).pop(true);

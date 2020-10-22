@@ -346,6 +346,30 @@ class WishlistService {
         .toList();
   }
 
+  Map<String, List<Wishlist>> sortByModification(
+      Map<String, List<Wishlist>> categories) {
+    if (categories != null) {
+      categories.forEach((key, value) {
+        value.sort((a, b) {
+          if (a.lastModification != null && b.lastModification != null) {
+            if (a.lastModification
+                .toDate()
+                .isAfter(b.lastModification.toDate())) {
+              return 0;
+            } else {
+              return 1;
+            }
+          } else if (a.lastModification != null) {
+            return 0;
+          } else {
+            return 1;
+          }
+        });
+      });
+    }
+    return categories;
+  }
+
   void reorder(String listUuid, int oldIndex, int newIndex) {
     var items = _itemlists[listUuid];
     items.insert(newIndex, items.removeAt(oldIndex));
@@ -363,5 +387,12 @@ class WishlistService {
   setWishlistProgression(String wishlistUuid, int progression) async {
     await dao.setWishlistProgression(wishlistUuid, progression);
     _wishlists[wishlistUuid].progression = progression;
+  }
+
+  setWishlistModificationTime(String wishlistUuid) {
+    if (_wishlists != null && _wishlists[wishlistUuid] != null) {
+      _wishlists[wishlistUuid].lastModification =
+          Timestamp.fromDate(DateTime.now());
+    }
   }
 }
