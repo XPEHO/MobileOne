@@ -20,6 +20,7 @@ import 'package:MobileOne/providers/recipes_provider.dart';
 import 'package:MobileOne/providers/share_provider.dart';
 import 'package:MobileOne/providers/user_picture_provider.dart';
 import 'package:MobileOne/providers/wishlist_head_provider.dart';
+import 'package:MobileOne/providers/wishlist_item_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/pages/share.dart';
 import 'package:MobileOne/pages/share_one.dart';
@@ -96,6 +97,7 @@ void instantiateServices() {
   getIt.registerSingleton(PackageInfoProvider());
 
   getIt.registerSingleton(ShareService());
+  getIt.registerSingleton(WishlistItemProvider());
 }
 
 void main() async {

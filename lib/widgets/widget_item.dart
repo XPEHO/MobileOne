@@ -166,6 +166,21 @@ class WidgetItemState extends State<WidgetItem> {
       case 4:
         return getString(context, 'item_kilos');
         break;
+      case 5:
+        return getString(context, "item_packs");
+        break;
+      case 6:
+        return getString(context, "item_boxes");
+        break;
+      case 7:
+        return getString(context, "item_bottles");
+        break;
+      case 8:
+        return getString(context, "item_cans");
+        break;
+      case 9:
+        return getString(context, "item_cartons");
+        break;
       default:
         return getString(context, 'item_unit');
         break;

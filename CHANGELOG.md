@@ -157,6 +157,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Progression : user can now see the progress bar
 - Tabbar : lists menu tabbar is now bigger
 - Quantity : a message is now displayed if the quantity of an item is set to 0
+- Item creation : user can now create new items and define the properties
 
 ### Security
 

@@ -61,12 +61,15 @@ class EditItemPageState extends State<EditItemPage> {
   @override
   Widget build(BuildContext context) {
     _args = Arguments.value(context);
+    GetIt.I
+        .get<WishlistItemProvider>()
+        .fetchItem(_args.listUuid, _args.itemUuid);
     return ChangeNotifierProvider.value(
-      value: WishlistItemProvider(_args.listUuid, _args.itemUuid),
+      value: GetIt.I.get<WishlistItemProvider>(),
       child: Consumer<WishlistItemProvider>(
         builder: (context, provider, _) {
           return Scaffold(
-            appBar: buildAppBar(provider),
+            appBar: buildAppBar(provider, _args),
             backgroundColor: _colorsApp.colorTheme,
             body: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -106,7 +109,7 @@ class EditItemPageState extends State<EditItemPage> {
     );
   }
 
-  AppBar buildAppBar(WishlistItemProvider provider) {
+  AppBar buildAppBar(WishlistItemProvider provider, ItemArguments _args) {
     return AppBar(
       backgroundColor: _colorsApp.colorTheme,
       leading: IconButton(
@@ -114,7 +117,7 @@ class EditItemPageState extends State<EditItemPage> {
           Icons.arrow_back,
         ),
         onPressed: () {
-          goToPreviousPage();
+          goToPreviousPage(provider);
         },
       ),
       actions: [
@@ -123,7 +126,7 @@ class EditItemPageState extends State<EditItemPage> {
             Icons.check,
           ),
           onPressed: () {
-            _onValidate(provider);
+            _onValidate(provider, _args);
           },
         ),
       ],
@@ -292,15 +295,16 @@ class EditItemPageState extends State<EditItemPage> {
     });
   }
 
-  _onValidate(WishlistItemProvider provider) async {
+  _onValidate(WishlistItemProvider provider, ItemArguments _args) async {
     if (!provider.canValidate()) {
       Fluttertoast.showToast(msg: getString(context, "popup_alert"));
     } else {
-      waitForImageUpload(provider);
+      waitForImageUpload(provider, _args);
     }
   }
 
-  void waitForImageUpload(WishlistItemProvider provider) async {
+  void waitForImageUpload(
+      WishlistItemProvider provider, ItemArguments _args) async {
     if (_pickedImage != null) {
       StorageReference ref = getStorageRef(provider);
       StorageUploadTask uploadTask = uploadItemPicture(ref);
@@ -309,27 +313,28 @@ class EditItemPageState extends State<EditItemPage> {
       provider.imageUrl = fileURL;
     }
 
-    bool update = provider.itemUuid != null;
+    bool update = _args.itemUuid != null;
     if (update) {
-      updapteItemInList(provider);
+      updapteItemInList(provider, _args);
     } else {
-      addItemToList(provider);
+      addItemToList(provider, _args);
     }
   }
 
-  void updapteItemInList(WishlistItemProvider provider) async {
+  void updapteItemInList(
+      WishlistItemProvider provider, ItemArguments _args) async {
     _analytics.sendAnalyticsEvent("update_item");
 
-    provider.updateItemInList();
+    provider.updateItemInList(_args.listUuid, _args.itemUuid);
 
     FocusScope.of(context).unfocus();
     Navigator.of(context).pop(true);
   }
 
-  void addItemToList(WishlistItemProvider provider) async {
+  void addItemToList(WishlistItemProvider provider, ItemArguments _args) async {
     _analytics.sendAnalyticsEvent("add_item");
 
-    await provider.addItemTolist();
+    await provider.addItemTolist(_args.listUuid);
 
     FocusScope.of(context).unfocus();
     Navigator.of(context).pop(true);
@@ -366,7 +371,8 @@ class EditItemPageState extends State<EditItemPage> {
     }
   }
 
-  goToPreviousPage() {
+  goToPreviousPage(WishlistItemProvider provider) {
+    provider.uninitialise();
     Navigator.of(context).pop(false);
   }
 }
