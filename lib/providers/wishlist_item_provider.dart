@@ -5,32 +5,30 @@ import 'package:get_it/get_it.dart';
 
 class WishlistItemProvider with ChangeNotifier {
   WishlistService wishlistService = GetIt.I.get();
-  final String listUuid;
-  final String itemUuid;
 
   var label = "";
   var quantity = 1;
   var _unit = 1;
   var _imageUrl;
   var _imageName;
+  bool _isInitialised = false;
 
-  WishlistItemProvider(this.listUuid, this.itemUuid) {
-    _fetchItem();
-  }
+  void fetchItem(String listUuid, String itemUuid) {
+    if (!_isInitialised) {
+      var _item = itemUuid != null
+          ? wishlistService
+              .getItemList(listUuid)
+              .where((element) => element.uuid == itemUuid)
+              .first
+          : emptyItem();
 
-  void _fetchItem() {
-    var _item = itemUuid != null
-        ? wishlistService
-            .getItemList(listUuid)
-            .where((element) => element.uuid == itemUuid)
-            .first
-        : emptyItem();
-
-    label = _item.label;
-    quantity = _item.quantity;
-    _unit = _item.unit;
-    _imageUrl = _item.imageUrl;
-    _imageName = _item.imageName;
+      label = _item.label;
+      quantity = _item.quantity;
+      _unit = _item.unit;
+      _imageUrl = _item.imageUrl;
+      _imageName = _item.imageName;
+      _isInitialised = true;
+    }
   }
 
   set audioLabel(value) {
@@ -75,7 +73,7 @@ class WishlistItemProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateItemInList() async {
+  Future<void> updateItemInList(String listUuid, String itemUuid) async {
     await wishlistService.updateItemInList(
         itemUuid: itemUuid,
         name: label,
@@ -84,6 +82,7 @@ class WishlistItemProvider with ChangeNotifier {
         imageLink: _imageUrl,
         listUuid: listUuid,
         imageName: _imageName);
+    _isInitialised = false;
     notifyListeners();
   }
 
@@ -91,7 +90,7 @@ class WishlistItemProvider with ChangeNotifier {
     return label.isNotEmpty;
   }
 
-  Future<void> addItemTolist() async {
+  Future<void> addItemTolist(String listUuid) async {
     await wishlistService.addItemTolist(
         name: label,
         count: quantity,
@@ -99,6 +98,7 @@ class WishlistItemProvider with ChangeNotifier {
         imageLink: _imageUrl,
         listUuid: listUuid,
         imageName: _imageName);
+    _isInitialised = false;
     notifyListeners();
   }
 
@@ -111,6 +111,11 @@ class WishlistItemProvider with ChangeNotifier {
 
   void decreaseQuantity() {
     quantity -= 1;
+    notifyListeners();
+  }
+
+  void uninitialise() {
+    _isInitialised = false;
     notifyListeners();
   }
 }
