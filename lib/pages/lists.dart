@@ -1,15 +1,15 @@
 import 'package:MobileOne/data/categories.dart';
 import 'package:MobileOne/data/wishlist.dart';
 import 'package:MobileOne/localization/localization.dart';
-
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/share_service.dart';
-
+import 'package:MobileOne/services/tutorial_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/utility/colors.dart';
+import 'package:MobileOne/widgets/widget_custom_drawer.dart';
 import 'package:MobileOne/widgets/widget_empty_list.dart';
 import 'package:MobileOne/widgets/widget_emty_template.dart';
 import 'package:MobileOne/widgets/widget_list.dart';
@@ -17,6 +17,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:tutorial_coach_mark/target_position.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 
 class Lists extends StatefulWidget {
   State<StatefulWidget> createState() {
@@ -31,11 +33,14 @@ class ListsState extends State<Lists> with TickerProviderStateMixin {
   var _analytics = GetIt.I.get<AnalyticsService>();
   var _colorsApp = GetIt.I.get<ColorService>();
   var _wishlistProvider = GetIt.I.get<WishlistsListProvider>();
+  final _tutorialService = GetIt.I.get<TutorialService>();
   var share = GetIt.I.get<ShareService>();
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
   TabController _tabController;
   int _tabIndex = 0;
+
+  List<TargetFocus> targets = List();
 
   @override
   void initState() {
@@ -48,8 +53,26 @@ class ListsState extends State<Lists> with TickerProviderStateMixin {
     _refreshController.refreshCompleted();
   }
 
+  void initTargets() {
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Add a list",
+        position: TargetPosition(
+            Size(40, 40),
+            Offset(
+              (MediaQuery.of(context).size.width / 2) - 20,
+              MediaQuery.of(context).size.height - 80,
+            )),
+        title: getString(context, "tutorial_add_list_title"),
+        text: getString(context, "tutorial_add_list_text"),
+        positionBottom: 200,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    initTargets();
     return ChangeNotifierProvider.value(
       value: GetIt.I.get<WishlistsListProvider>(),
       child: Consumer<WishlistsListProvider>(
@@ -59,6 +82,13 @@ class ListsState extends State<Lists> with TickerProviderStateMixin {
         _tabController = TabController(
             initialIndex: _tabIndex, length: _tabs.length, vsync: this);
         return Scaffold(
+          appBar: AppBar(
+            backgroundColor: _colorsApp.colorTheme,
+          ),
+          drawer: CustomDrawer(
+            context: context,
+            targets: targets,
+          ),
           backgroundColor: _colorsApp.colorTheme,
           body: SmartRefresher(
             header: WaterDropHeader(

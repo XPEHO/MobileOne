@@ -9,6 +9,7 @@ import 'package:MobileOne/providers/wishlist_head_provider.dart';
 import 'package:MobileOne/providers/wishlistsList_provider.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
+import 'package:MobileOne/services/tutorial_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:MobileOne/widgets/widget_item.dart';
@@ -19,6 +20,7 @@ import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import '../localization/localization.dart';
 import 'package:MobileOne/utility/colors.dart';
 
@@ -39,6 +41,7 @@ class OpenedListPageState extends State<OpenedListPage>
   final _wishlistProvider = GetIt.I.get<WishlistHeadProvider>();
   final _wishlistsListProvider = GetIt.I.get<WishlistsListProvider>();
   final _itemListProvider = GetIt.I.get<ItemsListProvider>();
+  final _tutorialService = GetIt.I.get<TutorialService>();
   var _colorsApp = GetIt.I.get<ColorService>();
   OpenedListArguments _args;
 
@@ -51,14 +54,60 @@ class OpenedListPageState extends State<OpenedListPage>
   List<Categories> _categories = [];
   Color _appBarColor;
 
+  List<TargetFocus> targets = List();
+  GlobalKey tutorialKey = GlobalKey(debugLabel: "Wishlist name");
+  GlobalKey tutorialKey1 = GlobalKey(debugLabel: "Wishlist color");
+  GlobalKey tutorialKey2 = GlobalKey(debugLabel: "Wishlist category");
+  GlobalKey tutorialKey3 = GlobalKey(debugLabel: "item creation");
+
   @override
   void initState() {
     _analytics.setCurrentPage("isOnOpenedListPage");
     super.initState();
   }
 
+  void initTargets() {
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Wishlist name",
+        key: tutorialKey,
+        title: getString(context, "tutorial_wishlist_name_title"),
+        text: getString(context, "tutorial_wishlist_name_text"),
+        positionTop: 200,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Wishlist color",
+        key: tutorialKey1,
+        title: getString(context, "tutorial_wishlist_color_title"),
+        text: getString(context, "tutorial_wishlist_color_text"),
+        positionTop: 200,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "Wishlist category",
+        key: tutorialKey2,
+        title: getString(context, "tutorial_wishlist_category_title"),
+        text: getString(context, "tutorial_wishlist_category_text"),
+        positionTop: 300,
+      ),
+    );
+    targets.add(
+      _tutorialService.createTarget(
+        identifier: "item creation",
+        key: tutorialKey3,
+        title: getString(context, "tutorial_item_creation_title"),
+        text: getString(context, "tutorial_item_creation_text"),
+        positionBottom: 200,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    initTargets();
     _args = Arguments.value(context);
     return MultiProvider(
       providers: [
@@ -110,6 +159,7 @@ class OpenedListPageState extends State<OpenedListPage>
       children: [
         Container(
           child: FloatingActionButton(
+              key: tutorialKey3,
               heroTag: "Button 1",
               backgroundColor: _colorsApp.buttonColor,
               child: Icon(Icons.add),
@@ -259,6 +309,7 @@ class OpenedListPageState extends State<OpenedListPage>
               ),
             )
           : TextField(
+              key: tutorialKey,
               onTap: () => _myController.selection = TextSelection(
                   baseOffset: 0, extentOffset: _myController.text.length),
               focusNode: _nameFocusNode,
@@ -290,6 +341,7 @@ class OpenedListPageState extends State<OpenedListPage>
       ),
       actions: [
         FlatButton(
+          key: tutorialKey1,
           onPressed: () {
             openColorPicker(
               MaterialColorPicker(
@@ -328,6 +380,7 @@ class OpenedListPageState extends State<OpenedListPage>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 96.0, vertical: 8.0),
       child: DropdownButton<String>(
+        key: tutorialKey2,
         iconEnabledColor: WHITE,
         dropdownColor: _appBarColor,
         hint: Text(
@@ -371,6 +424,11 @@ class OpenedListPageState extends State<OpenedListPage>
                 value: 3,
                 child: Text(getString(context, 'leave_share')),
               ),
+              PopupMenuItem(
+                key: Key("launchTutorial"),
+                value: 6,
+                child: Text(getString(context, 'help_text')),
+              ),
             ]
           : [
               PopupMenuItem(
@@ -391,6 +449,11 @@ class OpenedListPageState extends State<OpenedListPage>
                 key: Key("renameWishlist"),
                 value: 5,
                 child: Text(getString(context, 'rename')),
+              ),
+              PopupMenuItem(
+                key: Key("launchTutorial"),
+                value: 6,
+                child: Text(getString(context, 'help_text')),
               ),
             ],
       icon: Icon(Icons.more_vert, color: WHITE),
@@ -427,6 +490,9 @@ class OpenedListPageState extends State<OpenedListPage>
             _nameFocusNode.requestFocus();
             _myController.selection = TextSelection(
                 baseOffset: 0, extentOffset: _myController.text.length);
+            break;
+          case 6:
+            _tutorialService.showTutorial(targets, context);
             break;
         }
       },

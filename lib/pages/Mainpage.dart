@@ -14,7 +14,6 @@ import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/utility/colors.dart';
 import 'package:MobileOne/utility/arguments.dart';
-import 'package:MobileOne/widgets/widget_about_screen.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +25,6 @@ import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get_it/get_it.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -106,9 +104,6 @@ class MainPageState extends State<MainPage> {
       value: GetIt.I.get<UserPictureProvider>(),
       child: Consumer<UserPictureProvider>(
         builder: (context, provider, _) => Scaffold(
-          appBar: AppBar(
-            backgroundColor: _colorsApp.colorTheme,
-          ),
           backgroundColor: bottomBackground,
           body: PageStorage(bucket: _bucket, child: _currentScreen),
           floatingActionButton: FloatingActionButton(
@@ -127,64 +122,9 @@ class MainPageState extends State<MainPage> {
               child: BottomBar(onBottomBarIndexSelected),
             ),
           ),
-          drawer: Drawer(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                DrawerHeader(
-                  child: Column(
-                    children: [
-                      Text(getString(context, "app_name")),
-                      Image.asset(
-                        "assets/images/square-logo.png",
-                        width: 100,
-                        height: 100,
-                      ),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    color: _colorsApp.buttonColor,
-                  ),
-                ),
-                ListTile(
-                  title: Text(getString(context, "feedback_text")),
-                  onTap: () {
-                    sendFeedback();
-                  },
-                ),
-                ListTile(
-                  title: Text(getString(context, "about") +
-                      getString(context, "app_name")),
-                  onTap: () {
-                    aboutScreen();
-                  },
-                ),
-              ],
-            ),
-          ),
         ),
       ),
     );
-  }
-
-  sendFeedback() async {
-    final _controller = TextEditingController();
-    Navigator.pop(context);
-    final Email email = Email(
-      body: _controller.text,
-      subject: getString(context, 'feedback'),
-      recipients: ['xpeho.mobile@gmail.com'],
-    );
-
-    await FlutterEmailSender.send(email);
-  }
-
-  void aboutScreen() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AboutScreen();
-        });
   }
 
   onBottomBarIndexSelected(index) {
