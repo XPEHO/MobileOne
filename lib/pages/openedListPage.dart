@@ -387,27 +387,59 @@ class OpenedListPageState extends State<OpenedListPage>
           getString(context, 'item_type'),
         ),
         onChanged: (text) {
-          setState(() {
-            _type = text;
-            _wishlistsListProvider.changeWishlistCategory(
-                wishlist.uuid,
-                _categories
-                    .where((element) => element.label == _type)
-                    .first
-                    .id);
-          });
-          _wishlistsListProvider.setWishlistModificationTime(wishlist.uuid);
+          if (text == getString(context, "manage_categories")) {
+            openCategoriesPage();
+          } else {
+            setState(() {
+              _type = text;
+              _wishlistsListProvider.changeWishlistCategory(
+                  wishlist.uuid,
+                  _categories
+                      .where((element) => element.label == _type)
+                      .first
+                      .id);
+            });
+            _wishlistsListProvider.setWishlistModificationTime(wishlist.uuid);
+          }
         },
         value: _type,
-        items: _categories.map((Categories value) {
-          return new DropdownMenuItem<String>(
-            value: value.label,
-            child: new Text(value.label,
-                style: TextStyle(color: WHITE, fontSize: 18)),
-          );
-        }).toList(),
+        items: getItems(),
       ),
     );
+  }
+
+  List<DropdownMenuItem<String>> getItems() {
+    List<DropdownMenuItem<String>> list = _categories.map((Categories value) {
+      return new DropdownMenuItem<String>(
+        value: value.label,
+        child:
+            new Text(value.label, style: TextStyle(color: WHITE, fontSize: 18)),
+      );
+    }).toList();
+    list.add(
+      new DropdownMenuItem<String>(
+        value: getString(
+          context,
+          "manage_categories",
+        ),
+        child: new Row(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 8.0),
+              child: Icon(
+                Icons.edit,
+                color: WHITE,
+              ),
+            ),
+            Text(
+              getString(context, "manage_categories"),
+              style: TextStyle(color: WHITE, fontSize: 18),
+            ),
+          ],
+        ),
+      ),
+    );
+    return list;
   }
 
   PopupMenuButton<int> popupMenuButton(Wishlist wishlistHead) {
@@ -697,6 +729,10 @@ class OpenedListPageState extends State<OpenedListPage>
 
   void openRecipesPage(String listUuid) {
     Navigator.of(context).pushNamed('/recipes', arguments: listUuid);
+  }
+
+  void openCategoriesPage() {
+    Navigator.of(context).pushNamed('/categories');
   }
 
   openItemPage(String listUuid, String itemUuid) async {

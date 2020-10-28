@@ -1,11 +1,13 @@
 import 'package:MobileOne/data/categories.dart';
 import 'package:MobileOne/data/wishlist.dart';
+import 'package:MobileOne/services/categories_service.dart';
 import 'package:MobileOne/services/wishlist_service.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class WishlistsListProvider with ChangeNotifier {
   final wishlistService = GetIt.I.get<WishlistService>();
+  final categoriesService = GetIt.I.get<CategoriesService>();
 
   Map<String, List<Wishlist>> get ownerLists {
     final ownerLists = wishlistService.ownerLists;
@@ -67,9 +69,9 @@ class WishlistsListProvider with ChangeNotifier {
   }
 
   List<Categories> getCategories(BuildContext context) {
-    List<Categories> categories = wishlistService.getCategories();
+    List<Categories> categories = categoriesService.getCategories();
     if (categories.isEmpty) {
-      wishlistService.fetchCategories(context).then((value) {
+      categoriesService.fetchCategories(context).then((value) {
         if (value != null) {
           categories = value;
         }

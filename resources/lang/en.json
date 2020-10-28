@@ -236,5 +236,11 @@
     "tutorial_unit_title": "Item unit",
     "tutorial_unit_text": "By clicking on this menu you can choose the item unit",
     "tutorial_validate_title": "Validate",
-    "tutorial_validate_text": "Once all the informations are set, you can validate the item to create it and add it to the wishlist"
+    "tutorial_validate_text": "Once all the informations are set, you can validate the item to create it and add it to the wishlist",
+    "manage_categories": "Edit",
+    "categories_title": "Categories",
+    "cant_edit_category": "You can't edit a default category",
+    "category_label": "Enter a name",
+    "cant_delete_category": "This category contains a list",
+    "fill_category_label": "Please fill the category name"
 }

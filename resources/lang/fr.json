@@ -236,5 +236,11 @@
     "tutorial_unit_title": "Unité",
     "tutorial_unit_text": "Ici vous pouvez cliquer sur le menu afin de choisir l'unité de mesure de l'article",
     "tutorial_validate_title": "Validation",
-    "tutorial_validate_text": "Une fois toutes les informations remplies, vous pouvez valider votre article et l'ajouter à votre liste"
+    "tutorial_validate_text": "Une fois toutes les informations remplies, vous pouvez valider votre article et l'ajouter à votre liste",
+    "manage_categories": "Modifier",
+    "categories_title": "Catégories",
+    "cant_edit_category": "Vous ne pouvez pas modifier une catégorie par défaut",
+    "category_label": "Entrez un nom",
+    "cant_delete_category": "Cette catégorie contient une liste",
+    "fill_category_label": "Veuillez entrer un nom"
 }

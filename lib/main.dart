@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'package:MobileOne/dao/categories_dao.dart';
 import 'package:MobileOne/dao/loyalty_cards_dao.dart';
 import 'package:MobileOne/dao/picture_dao.dart';
 import 'package:MobileOne/dao/recipes_dao.dart';
 import 'package:MobileOne/dao/user_dao.dart';
 import 'package:MobileOne/dao/wishlist_dao.dart';
 import 'package:MobileOne/pages/big_loyaltycard.dart';
+import 'package:MobileOne/pages/categories_page.dart';
 import 'package:MobileOne/pages/items_page.dart';
 import 'package:MobileOne/pages/loyaltycards_page.dart';
 import 'package:MobileOne/pages/opened_recipe_page.dart';
@@ -12,6 +14,7 @@ import 'package:MobileOne/pages/profile.dart';
 import 'package:MobileOne/pages/recipes_page.dart';
 import 'package:MobileOne/pages/settings_page.dart';
 import 'package:MobileOne/pages/splash.dart';
+import 'package:MobileOne/providers/categories_provider.dart';
 import 'package:MobileOne/providers/itemsList_provider.dart';
 import 'package:MobileOne/providers/loyalty_cards_provider.dart';
 import 'package:MobileOne/providers/package_info_provider.dart';
@@ -27,6 +30,7 @@ import 'package:MobileOne/pages/share_one.dart';
 import 'package:MobileOne/pages/share_two.dart';
 import 'package:MobileOne/rest/email_rest_client.dart';
 import 'package:MobileOne/services/analytics_services.dart';
+import 'package:MobileOne/services/categories_service.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/email_service.dart';
 import 'package:MobileOne/services/image_service.dart';
@@ -81,11 +85,14 @@ void instantiateServices() {
 
   getIt.registerSingleton(LoyaltyCardsDao());
   getIt.registerSingleton(LoyaltyCardsService());
+  getIt.registerSingleton(WishlistDao());
+  getIt.registerSingleton(WishlistService());
+  getIt.registerSingleton(CategoriesDao());
+  getIt.registerSingleton(CategoriesService());
+  getIt.registerSingleton(CategoriesProvider());
 
   getIt.registerSingleton(GoogleSignIn());
-  getIt.registerSingleton(WishlistDao());
 
-  getIt.registerSingleton(WishlistService());
   getIt.registerSingleton(AuthenticationService());
   getIt.registerSingleton(ColorService());
   getIt.registerSingleton(ImageService());
@@ -184,6 +191,7 @@ class MyAppState extends State<MyApp> {
         "/settings": (context) => SettingsPage(),
         "/recipes": (context) => RecipesPage(),
         "/openedRecipePage": (context) => OpenedRecipePage(),
+        "/categories": (context) => CategoriesPage(),
       },
     );
   }

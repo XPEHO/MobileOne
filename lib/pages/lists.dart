@@ -122,6 +122,7 @@ class ListsState extends State<Lists> with TickerProviderStateMixin {
                       child: Padding(
                         padding: const EdgeInsets.only(top: 18.0),
                         child: TabBar(
+                          isScrollable: true,
                           onTap: (index) => {
                             _tabIndex = index,
                           },
@@ -155,11 +156,9 @@ class ListsState extends State<Lists> with TickerProviderStateMixin {
     tabs.add(
       Container(
         height: 36,
-        child: FittedBox(
-          child: Text(
-            getString(context, 'null_category'),
-            style: TextStyle(color: WHITE),
-          ),
+        child: Text(
+          getString(context, 'null_category'),
+          style: TextStyle(color: WHITE, fontSize: 18),
         ),
       ),
     );
@@ -171,11 +170,9 @@ class ListsState extends State<Lists> with TickerProviderStateMixin {
             tabs.add(
               Container(
                 height: 36,
-                child: FittedBox(
-                  child: Text(
-                    element.label,
-                    style: TextStyle(color: WHITE),
-                  ),
+                child: Text(
+                  element.label,
+                  style: TextStyle(color: WHITE, fontSize: 18),
                 ),
               ),
             );
@@ -187,11 +184,9 @@ class ListsState extends State<Lists> with TickerProviderStateMixin {
     tabs.add(
       Container(
         height: 36,
-        child: FittedBox(
-          child: Text(
-            getString(context, 'shared_with_me'),
-            style: TextStyle(color: WHITE),
-          ),
+        child: Text(
+          getString(context, 'shared_with_me'),
+          style: TextStyle(color: WHITE, fontSize: 18),
         ),
       ),
     );

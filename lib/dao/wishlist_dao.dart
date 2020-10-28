@@ -444,23 +444,6 @@ class WishlistDao {
     return OwnerDetails.fromMap(path, email);
   }
 
-  Future<List<Map<String, dynamic>>> getCategories() async {
-    List<Map<String, dynamic>> categories = [];
-
-    await FirebaseFirestore.instance
-        .collection("defaultCategories")
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        if (element.data()["id"] != null && element.data()["label"] != null) {
-          categories.add(element.data());
-        }
-      });
-    });
-
-    return categories;
-  }
-
   Future<void> changeWishlistCategory(
       String wishlistUuid, String categoryId) async {
     await FirebaseFirestore.instance
