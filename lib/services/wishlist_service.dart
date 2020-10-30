@@ -6,16 +6,22 @@ import 'package:MobileOne/data/wishlist_item.dart';
 import 'package:MobileOne/localization/localization.dart';
 import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/local_db_service.dart';
 import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/user_service.dart';
 import 'package:MobileOne/utility/arguments.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore_platform_interface/src/timestamp.dart'
+    as firestore;
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:sembast/sembast.dart';
+import 'package:sembast/timestamp.dart' as sembast;
 import 'package:uuid/uuid.dart';
 
 class WishlistService {
   final WishlistDao dao = GetIt.I.get<WishlistDao>();
+  final LocalDbService dbService = GetIt.I.get<LocalDbService>();
   final MessagingService messagingService = GetIt.I.get<MessagingService>();
   final UserService userService = GetIt.I.get<UserService>();
   var _analytics = GetIt.I.get<AnalyticsService>();
@@ -38,7 +44,9 @@ class WishlistService {
     _categories = [];
   }
 
-  List get ownerLists => _ownerLists[userService.user.uid];
+  List get ownerLists {
+    return _ownerLists[userService.user.uid];
+  }
 
   Future<List> fetchOwnerLists() async {
     DocumentSnapshot ownerLists =
@@ -49,6 +57,10 @@ class WishlistService {
     } else {
       data = ownerLists.data()["lists"] ?? List();
     }
+    var ref = StoreRef<String, List<String>>.main();
+    await dbService.storeRecord(ref, "ownerLists", data);
+    var test = await dbService.getRecord(ref, "ownerLists");
+    debugPrint("ownerLists : " + test.toString());
     _ownerLists[userService.user.uid] = data;
     return data;
   }
@@ -63,6 +75,10 @@ class WishlistService {
     } else {
       data = guestLists.data()["lists"] ?? List();
     }
+    var ref = StoreRef<String, List<String>>.main();
+    await dbService.storeRecord(ref, "guestLists", data);
+    var test = await dbService.getRecord(ref, "guestLists");
+    debugPrint("guestLists : " + test.toString());
     _guestLists[email] = data;
     return data;
   }
@@ -78,8 +94,85 @@ class WishlistService {
     } else {
       data = shareLists.data() ?? Map<String, dynamic>();
     }
+    var ref = StoreRef<String, Map<String, dynamic>>.main();
+    await dbService.storeRecord(ref, "shareLists", data);
+    var test = await dbService.getRecord(ref, "shareLists");
+    debugPrint("shareLists : " + test.toString());
     _shareLists[userService.user.uid] = data;
     return data;
+  }
+
+  getwishlist(uuid) => _wishlists[uuid];
+
+  Future<Wishlist> fetchWishlist(String uuid) async {
+    final wishlistData = await dao.fetchWishlist(uuid);
+
+    if (wishlistData?.data() != null) {
+      Map<String, dynamic> map = wishlistData.data();
+      map["uuid"] = uuid;
+      debugPrint("map : " + map.toString());
+      /*var ref = StoreRef<String, Map<String, dynamic>>.main();
+      await dbService.storeRecord(ref, "wishlist", map);
+      var test = await dbService.findRecord(ref, "wishlist", "uuid = $uuid");
+      debugPrint("wishlist : " + test.toString());*/
+      final wishlist = Wishlist.fromMap(uuid, wishlistData.data());
+      _wishlists[uuid] = wishlist;
+      return wishlist;
+    }
+    return null;
+  }
+
+  List<WishlistItem> getItemList(String listUuid) =>
+      sortItemsInList(_itemlists[listUuid]);
+
+  Future<List<WishlistItem>> fetchItemList(String listUuid) async {
+    DocumentSnapshot snapshot = await dao.fetchItemList(listUuid);
+
+    final wishlist = snapshot?.data() ?? {};
+    List<WishlistItem> itemList = wishlist.entries.map((element) {
+      return WishlistItem.fromMap(element.key, element.value);
+    }).toList();
+
+    itemList = sortItemsInList(itemList);
+
+    _itemlists[listUuid] = itemList;
+
+    return itemList;
+  }
+
+  Future<OwnerDetails> getOwnerDetails(String listUuid) async {
+    if (_ownerDetails.containsKey(listUuid)) {
+      return _ownerDetails[listUuid];
+    } else {
+      OwnerDetails ownerDetails = await dao.getOwnerDetails(listUuid);
+      _ownerDetails.addAll({listUuid: ownerDetails});
+      return _ownerDetails[listUuid];
+    }
+  }
+
+  List<Categories> getCategories() => _categories;
+
+  Future<List<Categories>> fetchCategories(BuildContext context) async {
+    _categories
+        .add(Categories.fromMap(null, getString(context, "null_category")));
+    List<Map<String, dynamic>> map = await dao.getCategories();
+    map.forEach((element) {
+      switch (element["id"]) {
+        case "78amWnyUJe3ekEs9FD53":
+          _categories.add(Categories.fromMap(
+              element["id"], getString(context, "recipy_category")));
+          break;
+        case "8jzs8g05JvvVQ87DI9wL":
+          _categories.add(Categories.fromMap(
+              element["id"], getString(context, "food_category")));
+          break;
+        default:
+          _categories.add(Categories.fromMap(element["id"], element["label"]));
+          break;
+      }
+    });
+
+    return _categories;
   }
 
   addWishlist(BuildContext context) async {
@@ -104,42 +197,11 @@ class WishlistService {
     _flush();
   }
 
-  Future<Wishlist> fetchWishlist(String uuid) async {
-    final wishlistData = await dao.fetchWishlist(uuid);
-
-    if (wishlistData?.data() != null) {
-      final wishlist = Wishlist.fromMap(uuid, wishlistData.data());
-      _wishlists[uuid] = wishlist;
-      return wishlist;
-    }
-    return null;
-  }
-
   changeWishlistLabel(String label, String listUuid) async {
     label == null ? label = "" : label = label;
     dao.changeWishlistLabel(
         label, listUuid, userService.user.uid, userService.user.email);
     _wishlists[listUuid].label = label;
-  }
-
-  getwishlist(uuid) => _wishlists[uuid];
-
-  List<WishlistItem> getItemList(String listUuid) =>
-      sortItemsInList(_itemlists[listUuid]);
-
-  Future<List<WishlistItem>> fetchItemList(String listUuid) async {
-    DocumentSnapshot snapshot = await dao.fetchItemList(listUuid);
-
-    final wishlist = snapshot?.data() ?? {};
-    List<WishlistItem> itemList = wishlist.entries.map((element) {
-      return WishlistItem.fromMap(element.key, element.value);
-    }).toList();
-
-    itemList = sortItemsInList(itemList);
-
-    _itemlists[listUuid] = itemList;
-
-    return itemList;
   }
 
   List<WishlistItem> sortItemsInList(List<WishlistItem> itemList) {
@@ -278,41 +340,6 @@ class WishlistService {
       _wishlists[wishlistUuid].color = color;
     }
     await dao.setWishlistColor(wishlistUuid, color);
-  }
-
-  Future<OwnerDetails> getOwnerDetails(String listUuid) async {
-    if (_ownerDetails.containsKey(listUuid)) {
-      return _ownerDetails[listUuid];
-    } else {
-      OwnerDetails ownerDetails = await dao.getOwnerDetails(listUuid);
-      _ownerDetails.addAll({listUuid: ownerDetails});
-      return _ownerDetails[listUuid];
-    }
-  }
-
-  List<Categories> getCategories() => _categories;
-
-  Future<List<Categories>> fetchCategories(BuildContext context) async {
-    _categories
-        .add(Categories.fromMap(null, getString(context, "null_category")));
-    List<Map<String, dynamic>> map = await dao.getCategories();
-    map.forEach((element) {
-      switch (element["id"]) {
-        case "78amWnyUJe3ekEs9FD53":
-          _categories.add(Categories.fromMap(
-              element["id"], getString(context, "recipy_category")));
-          break;
-        case "8jzs8g05JvvVQ87DI9wL":
-          _categories.add(Categories.fromMap(
-              element["id"], getString(context, "food_category")));
-          break;
-        default:
-          _categories.add(Categories.fromMap(element["id"], element["label"]));
-          break;
-      }
-    });
-
-    return _categories;
   }
 
   changeWishlistCategory(String wishlistUuid, String categoryId) async {

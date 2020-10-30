@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:MobileOne/dao/local_db_dao.dart';
 import 'package:MobileOne/dao/loyalty_cards_dao.dart';
 import 'package:MobileOne/dao/picture_dao.dart';
 import 'package:MobileOne/dao/recipes_dao.dart';
@@ -30,6 +31,7 @@ import 'package:MobileOne/services/analytics_services.dart';
 import 'package:MobileOne/services/color_service.dart';
 import 'package:MobileOne/services/email_service.dart';
 import 'package:MobileOne/services/image_service.dart';
+import 'package:MobileOne/services/local_db_service.dart';
 import 'package:MobileOne/services/messaging_service.dart';
 import 'package:MobileOne/services/picture_service.dart';
 import 'package:MobileOne/services/recipes_service.dart';
@@ -84,7 +86,8 @@ void instantiateServices() {
 
   getIt.registerSingleton(GoogleSignIn());
   getIt.registerSingleton(WishlistDao());
-
+  getIt.registerSingleton(LocalDbDao());
+  getIt.registerSingleton(LocalDbService());
   getIt.registerSingleton(WishlistService());
   getIt.registerSingleton(AuthenticationService());
   getIt.registerSingleton(ColorService());
@@ -126,10 +129,12 @@ class MyApp extends StatefulWidget {
 class MyAppState extends State<MyApp> {
   final _preferencesService = GetIt.I.get<PreferencesService>();
   final _messagingService = GetIt.I.get<MessagingService>();
+  final _localDbService = GetIt.I.get<LocalDbService>();
 
   @override
   void initState() {
     super.initState();
+    _localDbService.initDb();
     _messagingService.configureMessaging();
   }
 
